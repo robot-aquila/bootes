@@ -12,6 +12,17 @@
 	</parent>
   
 	<dependencies>
+		<dependency>
+			<groupId>ru.prolib.aquila</groupId>
+			<artifactId>aquila-core</artifactId>
+			<version>${aquila.version}</version>
+		</dependency>
+		<dependency>
+		    <groupId>ru.prolib.aquila</groupId>
+		    <artifactId>aquila-web-utils</artifactId>
+		    <version>${aquila.version}</version>
+		</dependency>
+
 	</dependencies>
 	
 	<build>

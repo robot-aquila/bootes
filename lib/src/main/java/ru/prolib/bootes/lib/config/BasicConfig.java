@@ -1,0 +1,77 @@
+package ru.prolib.bootes.lib.config;
+
+import java.io.File;
+
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
+
+/**
+ * Note: This shouldn't contains any mandatory options.
+ */
+public class BasicConfig {
+	private final boolean showHelp, headless;
+	private final File dataDir, configFile;
+	
+	public BasicConfig(boolean help, boolean headless, File dataDir, File configFile) {
+		this.showHelp = help;
+		this.headless = headless;
+		this.dataDir = dataDir;
+		this.configFile = configFile;
+	}
+	
+	public boolean isShowHelp() {
+		return showHelp;
+	}
+	
+	public boolean isHeadless() {
+		return headless;
+	}
+	
+	public File getDataDirectory() {
+		return dataDir;
+	}
+	
+	public File getConfigFile() {
+		return configFile;
+	}
+	
+	@Override
+	public boolean equals(Object other) {
+		if ( other == this ) {
+			return true;
+		}
+		if ( other == null || other.getClass() != BasicConfig.class ) {
+			return false;
+		}
+		BasicConfig o = (BasicConfig) other;
+		return new EqualsBuilder()
+			.append(o.showHelp, showHelp)
+			.append(o.headless, headless)
+			.append(o.dataDir, dataDir)
+			.append(o.configFile, configFile)
+			.isEquals();
+	}
+	
+	@Override
+	public String toString() {
+		return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
+			.append("showHelp", showHelp)
+			.append("headless", headless)
+			.append("dataDir", dataDir)
+			.append("configFile", configFile)
+			.toString();
+	}
+	
+	@Override
+	public int hashCode() {
+		return new HashCodeBuilder(7117529, 995)
+			.append(showHelp)
+			.append(headless)
+			.append(dataDir)
+			.append(configFile)
+			.toHashCode();
+	}
+	
+}

@@ -38,8 +38,7 @@ public class TerminalConfigLoaderTest {
 	
 	@Test
 	public void testLoad_OnRealData() throws Exception {
-		data.put("qforts-l1-dir", "/path/data");
-		data.put("qforts-symbol-dir", "/path/symbol");
+		data.put("qforts-data-dir", "/path/data");
 		data.put("qforts-test-account", "ZOO-215");
 		data.put("qforts-test-balance", "550000");
 		
@@ -47,8 +46,7 @@ public class TerminalConfigLoaderTest {
 		
 		TerminalConfig actual = builder.build(basicConfig);
 		TerminalConfig expected = new TerminalConfigBuilder()
-			.withQFortsL1Directory(new File("/path/data"))
-			.withQFortsSymbolDirectory(new File("/path/symbol"))
+			.withQFortsDataDirectory(new File("/path/data"))
 			.withQFortsTestAccount(new Account("ZOO-215"))
 			.withQFortsTestBalance(CDecimalBD.ofRUB2("550000"))
 			.build(basicConfig);
@@ -57,8 +55,7 @@ public class TerminalConfigLoaderTest {
 
 	@Test
 	public void testLoad_OnMocks() throws Exception {
-		expect(opMock.getFileNotNull("qforts-l1-dir", new File("/my/data"))).andReturn(new File("/path/data"));
-		expect(opMock.getFileNotNull("qforts-symbol-dir", new File("/my/data"))).andReturn(new File("/path/symbol"));
+		expect(opMock.getFileNotNull("qforts-data-dir", new File("/my/data"))).andReturn(new File("/path/data"));
 		expect(opMock.getStringNotNull("qforts-test-account", "QFORTS-TEST")).andReturn("ZULU24");
 		expect(opMock.getStringNotNull("qforts-test-balance", "1000000")).andReturn("28000");
 		control.replay();
@@ -68,8 +65,7 @@ public class TerminalConfigLoaderTest {
 		control.verify();
 		TerminalConfig actual = builder.build(basicConfig);
 		TerminalConfig expected = new TerminalConfigBuilder()
-			.withQFortsL1Directory(new File("/path/data"))
-			.withQFortsSymbolDirectory(new File("/path/symbol"))
+			.withQFortsDataDirectory(new File("/path/data"))
 			.withQFortsTestAccount(new Account("ZULU24"))
 			.withQFortsTestBalance(CDecimalBD.ofRUB2("28000"))
 			.build(basicConfig);
@@ -82,19 +78,13 @@ public class TerminalConfigLoaderTest {
 		
 		service.configureOptions(options);
 		
-		assertEquals(4, options.getOptions().size());
+		assertEquals(3, options.getOptions().size());
 		assertEquals(Option.builder()
-				.longOpt("qforts-l1-dir")
+				.longOpt("qforts-data-dir")
 				.hasArg()
 				.argName("path")
-				.desc("Root directory of L1 data in FINAM export format.")
-				.build(), options.getOption("qforts-l1-dir"));
-		assertEquals(Option.builder()
-				.longOpt("qforts-symbol-dir")
-				.hasArg()
-				.argName("path")
-				.desc("Root directory of symbol data in MOEX export format.")
-				.build(), options.getOption("qforts-symbol-dir"));
+				.desc("Root directory of combined storage of L1 and symbol data.")
+				.build(), options.getOption("qforts-data-dir"));
 		assertEquals(Option.builder()
 				.longOpt("qforts-test-account")
 				.hasArg()

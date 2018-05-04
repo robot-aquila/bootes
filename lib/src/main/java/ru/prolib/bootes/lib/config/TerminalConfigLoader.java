@@ -11,24 +11,17 @@ public class TerminalConfigLoader {
 	public void load(TerminalConfigBuilder builder, OptionProvider optionProvider, BasicConfig basicConfig)
 		throws ConfigException
 	{
-		builder.withQFortsL1Directory(optionProvider.getFileNotNull("qforts-l1-dir", basicConfig.getDataDirectory()))
-			.withQFortsSymbolDirectory(optionProvider.getFileNotNull("qforts-symbol-dir", basicConfig.getDataDirectory()))
+		builder.withQFortsDataDirectory(optionProvider.getFileNotNull("qforts-data-dir", basicConfig.getDataDirectory()))
 			.withQFortsTestAccount(new Account(optionProvider.getStringNotNull("qforts-test-account", "QFORTS-TEST")))
 			.withQFortsTestBalance(CDecimalBD.ofRUB2(optionProvider.getStringNotNull("qforts-test-balance", "1000000")));
 	}
 	
 	public void configureOptions(Options options) {
 		options.addOption(Option.builder()
-				.longOpt("qforts-l1-dir")
+				.longOpt("qforts-data-dir")
 				.hasArg()
 				.argName("path")
-				.desc("Root directory of L1 data in FINAM export format.")
-				.build());
-		options.addOption(Option.builder()
-				.longOpt("qforts-symbol-dir")
-				.hasArg()
-				.argName("path")
-				.desc("Root directory of symbol data in MOEX export format.")
+				.desc("Root directory of combined storage of L1 and symbol data.")
 				.build());
 		options.addOption(Option.builder()
 				.longOpt("qforts-test-account")

@@ -9,7 +9,7 @@ import ru.prolib.aquila.core.BusinessEntities.CDecimalBD;
 public class TerminalConfigBuilder {
 	private Account qfTestAccount = new Account("TEST-ACCOUNT");
 	private CDecimal qfTestBalance = CDecimalBD.ofRUB2("1000000");
-	private File qfSymbolDir, qfL1Dir;
+	private File qfDataDir;
 
 	public TerminalConfig build(BasicConfig basicConfig) throws ConfigException {
 		if ( qfTestAccount == null ) {
@@ -24,17 +24,13 @@ public class TerminalConfigBuilder {
 		if ( ! CDecimalBD.RUB.equals(qfTestBalance.getUnit()) ) {
 			throw new ConfigException("Expected currency of test balance is RUB but: " + qfTestBalance.getUnit());
 		}
-		if ( qfSymbolDir == null ) {
-			throw new ConfigException("Directory of symbol data was not specified");
-		}
-		if ( qfL1Dir == null ) {
-			throw new ConfigException("Directory of L1 data was not specified");
+		if ( qfDataDir == null ) {
+			throw new ConfigException("Data directory was not specified");
 		}
 		return new TerminalConfig(
 				qfTestAccount,
 				qfTestBalance,
-				qfSymbolDir,
-				qfL1Dir
+				qfDataDir
 			);
 	}
 	
@@ -48,13 +44,8 @@ public class TerminalConfigBuilder {
 		return this;
 	}
 	
-	public TerminalConfigBuilder withQFortsSymbolDirectory(File dir) {
-		this.qfSymbolDir = dir;
-		return this;
-	}
-	
-	public TerminalConfigBuilder withQFortsL1Directory(File dir) {
-		this.qfL1Dir = dir;
+	public TerminalConfigBuilder withQFortsDataDirectory(File dir) {
+		this.qfDataDir = dir;
 		return this;
 	}
 	

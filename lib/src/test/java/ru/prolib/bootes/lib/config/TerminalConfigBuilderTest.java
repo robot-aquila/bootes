@@ -22,8 +22,7 @@ public class TerminalConfigBuilderTest {
 	
 	@Test
 	public void testWithQFortsTestAccount() throws Exception {
-		service.withQFortsSymbolDirectory(new File("foo"));
-		service.withQFortsL1Directory(new File("bar"));
+		service.withQFortsDataDirectory(new File("foo"));
 		
 		assertSame(service, service.withQFortsTestAccount(new Account("ZULU24")));
 		TerminalConfig actual = service.build(basicConfig);
@@ -32,8 +31,7 @@ public class TerminalConfigBuilderTest {
 	
 	@Test
 	public void testWithQFortsTestBalance() throws Exception {
-		service.withQFortsSymbolDirectory(new File("foo"));
-		service.withQFortsL1Directory(new File("bar"));
+		service.withQFortsDataDirectory(new File("foo"));
 
 		assertSame(service, service.withQFortsTestBalance(CDecimalBD.ofRUB2("500000")));
 		TerminalConfig actual = service.build(basicConfig);
@@ -41,27 +39,15 @@ public class TerminalConfigBuilderTest {
 	}
 	
 	@Test
-	public void testWithQFortsSymbolDirectory() throws Exception {
-		service.withQFortsL1Directory(new File("bar"));
-		
-		assertSame(service, service.withQFortsSymbolDirectory(new File("my/symbol-dir")));
+	public void testWithQFortsDataDirectory() throws Exception {
+		assertSame(service, service.withQFortsDataDirectory(new File("my/symbol-dir")));
 		TerminalConfig actual = service.build(basicConfig);
-		assertEquals(new File("my/symbol-dir"), actual.getQFortsSymbolDirectory());
-	}
-	
-	@Test
-	public void testWithQFortsL1Directory() throws Exception {
-		service.withQFortsSymbolDirectory(new File("foo"));
-		
-		assertSame(service, service.withQFortsL1Directory(new File("my/l1-dir")));
-		TerminalConfig actual = service.build(basicConfig);
-		assertEquals(new File("my/l1-dir"), actual.getQFortsL1Directory());
+		assertEquals(new File("my/symbol-dir"), actual.getQFortsDataDirectory());
 	}
 	
 	@Test
 	public void testBuild_Defaults() throws Exception {
-		service.withQFortsSymbolDirectory(new File("foo"));
-		service.withQFortsL1Directory(new File("bar"));
+		service.withQFortsDataDirectory(new File("foo"));
 
 		TerminalConfig actual = service.build(basicConfig);
 		assertEquals(new Account("TEST-ACCOUNT"), actual.getQForstTestAccount());
@@ -69,33 +55,18 @@ public class TerminalConfigBuilderTest {
 	}
 	
 	@Test
-	public void testBuild_ThrowsIfSymbolDirIsNotSpecified() throws Exception {
-		service.withQFortsL1Directory(new File("bar"));
-		
+	public void testBuild_ThrowsIfDataDirIsNotSpecified() throws Exception {
 		try {
 			service.build(basicConfig);
 			fail("Expected exception");
 		} catch ( ConfigException e ) {
-			assertEquals("Directory of symbol data was not specified", e.getMessage());
-		}
-	}
-	
-	@Test
-	public void testBuild_ThrowsIfL1DirIsNotSpecified() throws Exception {
-		service.withQFortsSymbolDirectory(new File("foo"));
-		
-		try {
-			service.build(basicConfig);
-			fail("Expected exception");
-		} catch ( ConfigException e ) {
-			assertEquals("Directory of L1 data was not specified", e.getMessage());
+			assertEquals("Data directory was not specified", e.getMessage());
 		}
 	}
 	
 	@Test
 	public void testBuild_ThrowsIfTestAccountIsNotSpecified() throws Exception {
-		service.withQFortsSymbolDirectory(new File("foo"));
-		service.withQFortsL1Directory(new File("bar"));
+		service.withQFortsDataDirectory(new File("foo"));
 
 		service.withQFortsTestAccount(null);
 		try {
@@ -108,8 +79,7 @@ public class TerminalConfigBuilderTest {
 	
 	@Test
 	public void testBuild_ThrowsIfTestBalanceIsNotSpecified() throws Exception {
-		service.withQFortsSymbolDirectory(new File("foo"));
-		service.withQFortsL1Directory(new File("bar"));
+		service.withQFortsDataDirectory(new File("foo"));
 
 		service.withQFortsTestBalance(null);
 		try {
@@ -122,8 +92,7 @@ public class TerminalConfigBuilderTest {
 	
 	@Test
 	public void testBuild_ThrowsIfTestBalanceIsOfWrongScale() throws Exception {
-		service.withQFortsSymbolDirectory(new File("foo"));
-		service.withQFortsL1Directory(new File("bar"));
+		service.withQFortsDataDirectory(new File("foo"));
 		
 		service.withQFortsTestBalance(CDecimalBD.ofRUB5("1000000"));
 		try {
@@ -136,8 +105,7 @@ public class TerminalConfigBuilderTest {
 	
 	@Test
 	public void testBuild_ThrowsIfTestBalanceIsOfWrongCurrency() throws Exception {
-		service.withQFortsSymbolDirectory(new File("foo"));
-		service.withQFortsL1Directory(new File("bar"));
+		service.withQFortsDataDirectory(new File("foo"));
 		
 		service.withQFortsTestBalance(CDecimalBD.ofUSD2("1000000"));
 		try {

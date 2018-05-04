@@ -13,17 +13,15 @@ import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 public class TerminalConfig {
 	private final Account qfTestAccount;
 	private final CDecimal qfTestBalance;
-	private final File qfSymbolDir, qfL1Dir;
+	private final File qfDataDir;
 	
 	public TerminalConfig(Account qfTestAccount,
 						  CDecimal qfTestBalance,
-						  File qfSymbolDir,
-						  File qfL1Dir)
+						  File qfDataDir)
 	{
 		this.qfTestAccount = qfTestAccount;
 		this.qfTestBalance = qfTestBalance;
-		this.qfSymbolDir = qfSymbolDir;
-		this.qfL1Dir = qfL1Dir;
+		this.qfDataDir = qfDataDir;
 	}
 
 	public Account getQForstTestAccount() {
@@ -34,12 +32,8 @@ public class TerminalConfig {
 		return qfTestBalance;
 	}
 	
-	public File getQFortsSymbolDirectory() {
-		return qfSymbolDir;
-	}
-	
-	public File getQFortsL1Directory() {
-		return qfL1Dir;
+	public File getQFortsDataDirectory() {
+		return qfDataDir;
 	}
 	
 	@Override
@@ -47,8 +41,7 @@ public class TerminalConfig {
 		return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
 			.append("qfTestAccount", qfTestAccount)
 			.append("qfTestBalance", qfTestBalance)
-			.append("qfSymbolDir", qfSymbolDir)
-			.append("qfL1Dir", qfL1Dir)
+			.append("qfDataDir", qfDataDir)
 			.toString();
 	}
 	
@@ -57,8 +50,7 @@ public class TerminalConfig {
 		return new HashCodeBuilder(83427, 200505)
 			.append(qfTestAccount)
 			.append(qfTestBalance)
-			.append(qfSymbolDir)
-			.append(qfL1Dir)
+			.append(qfDataDir)
 			.toHashCode();
 	}
 	
@@ -74,8 +66,7 @@ public class TerminalConfig {
 		return new EqualsBuilder()
 			.append(o.qfTestAccount, qfTestAccount)
 			.append(o.qfTestBalance, qfTestBalance)
-			.append(o.qfSymbolDir, qfSymbolDir)
-			.append(o.qfL1Dir, qfL1Dir)
+			.append(o.qfDataDir, qfDataDir)
 			.isEquals();
 	}
 	

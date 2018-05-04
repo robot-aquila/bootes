@@ -40,6 +40,16 @@
 			<version>${aquila.version}</version>
 		</dependency>
 		<dependency>
+			<groupId>ru.prolib.aquila</groupId>
+			<artifactId>aquila-probe</artifactId>
+			<version>${aquila.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ru.prolib.aquila</groupId>
+			<artifactId>aquila-qforts</artifactId>
+			<version>${aquila.version}</version>
+		</dependency>
+		<dependency>
 		    <groupId>ru.prolib.aquila</groupId>
 		    <artifactId>aquila-web-utils</artifactId>
 		    <version>${aquila.version}</version>

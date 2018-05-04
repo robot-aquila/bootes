@@ -21,8 +21,7 @@ public class TerminalConfigTest {
 		service = new TerminalConfig(
 				new Account("FOO-TEST-001"),
 				CDecimalBD.ofRUB2("150000"),
-				new File("foo/symbol-data"),
-				new File("foo/l1-data")
+				new File("foo/data")
 			);
 	}
 	
@@ -30,8 +29,7 @@ public class TerminalConfigTest {
 	public void testCtor() {
 		assertEquals(new Account("FOO-TEST-001"), service.getQForstTestAccount());
 		assertEquals(CDecimalBD.ofRUB2("150000"), service.getQForstTestBalance());
-		assertEquals(new File("foo/symbol-data"), service.getQFortsSymbolDirectory());
-		assertEquals(new File("foo/l1-data"), service.getQFortsL1Directory());
+		assertEquals(new File("foo/data"), service.getQFortsDataDirectory());
 	}
 	
 	@Test
@@ -45,13 +43,12 @@ public class TerminalConfigTest {
 	public void testEquals() {
 		Variant<Account> vAcc = new Variant<>(new Account("FOO-TEST-001"), new Account("BAR-12"));
 		Variant<CDecimal> vBal = new Variant<>(vAcc, CDecimalBD.ofRUB2("150000"), CDecimalBD.ofRUB2("300000"));
-		Variant<File> vSDir = new Variant<>(vBal, new File("foo/symbol-data"), new File("foo/data.txt"));
-		Variant<File> vLDir = new Variant<>(vSDir, new File("foo/l1-data"), new File("foo/vata.txt"));
-		Variant<?> iterator = vLDir;
+		Variant<File> vDDir = new Variant<>(vBal, new File("foo/data"), new File("foo/data.txt"));
+		Variant<?> iterator = vDDir;
 		int foundCnt = 0;
 		TerminalConfig x, found = null;
 		do {
-			x = new TerminalConfig(vAcc.get(), vBal.get(), vSDir.get(), vLDir.get());
+			x = new TerminalConfig(vAcc.get(), vBal.get(), vDDir.get());
 			if ( service.equals(x) ) {
 				foundCnt ++;
 				found = x;
@@ -60,8 +57,7 @@ public class TerminalConfigTest {
 		assertEquals(1, foundCnt);
 		assertEquals(new Account("FOO-TEST-001"), found.getQForstTestAccount());
 		assertEquals(CDecimalBD.ofRUB2("150000"), found.getQForstTestBalance());
-		assertEquals(new File("foo/symbol-data"), found.getQFortsSymbolDirectory());
-		assertEquals(new File("foo/l1-data"), found.getQFortsL1Directory());
+		assertEquals(new File("foo/data"), found.getQFortsDataDirectory());
 	}
 	
 	@Test
@@ -69,8 +65,7 @@ public class TerminalConfigTest {
 		int expected = new HashCodeBuilder(83427, 200505)
 			.append(new Account("FOO-TEST-001"))
 			.append(CDecimalBD.ofRUB2("150000"))
-			.append(new File("foo/symbol-data"))
-			.append(new File("foo/l1-data"))
+			.append(new File("foo/data"))
 			.toHashCode();
 		
 		assertEquals(expected, service.hashCode());
@@ -78,8 +73,7 @@ public class TerminalConfigTest {
 	
 	@Test
 	public void testToString() {
-		String expected = "TerminalConfig[qfTestAccount=FOO-TEST-001,qfTestBalance=150000.00 RUB,"
-				+ "qfSymbolDir=foo/symbol-data,qfL1Dir=foo/l1-data]";
+		String expected = "TerminalConfig[qfTestAccount=FOO-TEST-001,qfTestBalance=150000.00 RUB,qfDataDir=foo/data]";
 		
 		assertEquals(expected, service.toString());
 	}

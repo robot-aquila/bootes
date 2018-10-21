@@ -62,7 +62,8 @@ public class OHLCHistoryConfigTest {
 
 	@Test
 	public void testToString() {
-		String expected = "OHLCHistoryConfig[dataDir=foo/bar,cacheDir=gaz/baz]";
+		String fs = File.separator;
+		String expected = "OHLCHistoryConfig[dataDir=foo" + fs + "bar,cacheDir=gaz" + fs + "baz]";
 		
 		assertEquals(expected, service.toString());
 	}

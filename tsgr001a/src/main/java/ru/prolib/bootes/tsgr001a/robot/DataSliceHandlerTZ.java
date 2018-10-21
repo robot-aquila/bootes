@@ -22,7 +22,7 @@ public class DataSliceHandlerTZ implements DataSliceHandler {
 	public static final ZTFrame CONF_TFRAME = ZTFrame.M5MSK;
 	public static final int CONF_SCALE = 6;
 	public static final int CONF_ATR_PERIOD = 10;
-	public static final int CONF_EMA_PERIOD = 252; // 252 is number of M5 bars of one and half of trading day
+	public static final int CONF_EMA_PERIOD = 252; // 252 is number of M5 bars of 1.5 trading day
 	public static final int CONF_LOAD_HISTORY_DEPTH = CONF_EMA_PERIOD * 2;
 	
 	public static final String SID_OHLC = "OHLC";

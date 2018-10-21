@@ -5,6 +5,8 @@ import static org.easymock.EasyMock.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.PrintWriter;
 
 import org.apache.commons.cli.HelpFormatter;
@@ -131,10 +133,21 @@ public class AppConfigServiceTest {
 
 	@Test
 	public void testFactory_CreateOptionProviderIni_ThrowsIfIOException() throws Exception {
-		eex.expect(ConfigException.class);
-		eex.expectMessage("Error loading config file: /a/b/c/d/hello (No such file or directory)");
+		File f = new File("a/b/c/d/hello").getAbsoluteFile();
+		String msg = "";
+		try ( FileReader fr = new FileReader(f) ) {
 		
-		factory.createOptionProviderIni(new File("/a/b/c/d/hello"), "aquila-test");
+		} catch ( FileNotFoundException e ) {
+			msg = e.getMessage();
+		}
+		
+		eex.expect(ConfigException.class);
+		eex.expectMessage(new StringBuilder()
+				.append("Error loading config file: ")
+				.append(msg)
+				.toString());
+		
+		factory.createOptionProviderIni(f, "aquila-test");
 	}
 	
 	@Test
@@ -155,7 +168,7 @@ public class AppConfigServiceTest {
 		assertNotNull(writer);
 		writer.println("hello, world!");
 		writer.close();
-		assertEquals("hello, world!\n", new String(stream.toByteArray()));
+		assertEquals("hello, world!" + System.lineSeparator(), new String(stream.toByteArray()));
 	}
 	
 	@Test

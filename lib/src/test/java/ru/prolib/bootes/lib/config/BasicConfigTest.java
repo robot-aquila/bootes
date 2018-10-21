@@ -69,7 +69,8 @@ public class BasicConfigTest {
 
 	@Test
 	public void testToString() {
-		String expected = "BasicConfig[showHelp=false,headless=true,dataDir=foo/bar,configFile=my-conf.ini]";
+		String fs = File.separator;
+		String expected = "BasicConfig[showHelp=false,headless=true,dataDir=foo" + fs + "bar,configFile=my-conf.ini]";
 		
 		assertEquals(expected, service.toString());
 	}

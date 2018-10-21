@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class XTest {
@@ -13,6 +14,7 @@ public class XTest {
 	public void setUp() throws Exception {
 	}
 
+	@Ignore
 	@Test
 	public void testX() {
 		Options options = new Options();

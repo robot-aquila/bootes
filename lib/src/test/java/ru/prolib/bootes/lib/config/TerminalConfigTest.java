@@ -73,7 +73,8 @@ public class TerminalConfigTest {
 	
 	@Test
 	public void testToString() {
-		String expected = "TerminalConfig[qfTestAccount=FOO-TEST-001,qfTestBalance=150000.00 RUB,qfDataDir=foo/data]";
+		String fs = File.separator;
+		String expected = "TerminalConfig[qfTestAccount=FOO-TEST-001,qfTestBalance=150000.00 RUB,qfDataDir=foo" + fs + "data]";
 		
 		assertEquals(expected, service.toString());
 	}

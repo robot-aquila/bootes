@@ -51,6 +51,7 @@ public class AppConfigBuilderTest {
 		SchedulerConfig schedulerConfigMock = control.createMock(SchedulerConfig.class);
 		OHLCHistoryConfig ohlcHistoryConfigMock = control.createMock(OHLCHistoryConfig.class);
 		TerminalConfig terminalConfigMock = control.createMock(TerminalConfig.class);
+		expect(bcMock.isShowHelp()).andStubReturn(false);
 		expect(basicConfigBuilderMock.build()).andReturn(bcMock);
 		expect(schedulerConfigBuilderMock.build(bcMock)).andReturn(schedulerConfigMock);
 		expect(ohlcHistoryConfigBuilderMock.build(bcMock)).andReturn(ohlcHistoryConfigMock);
@@ -61,6 +62,20 @@ public class AppConfigBuilderTest {
 		
 		control.verify();
 		AppConfig expected = new AppConfig(bcMock, schedulerConfigMock, ohlcHistoryConfigMock, terminalConfigMock);
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void testBuild_SkipSubsystemsIfShowhelp() throws Exception {
+		BasicConfig bcMock = control.createMock(BasicConfig.class);
+		expect(bcMock.isShowHelp()).andStubReturn(true);
+		expect(basicConfigBuilderMock.build()).andReturn(bcMock);
+		control.replay();
+		
+		AppConfig actual = service.build();
+		
+		control.verify();
+		AppConfig expected = new AppConfig(bcMock, null, null, null);
 		assertEquals(expected, actual);
 	}
 

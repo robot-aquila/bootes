@@ -38,10 +38,30 @@ public class AppConfigLoaderTest {
 				new TerminalConfigBuilder());
 		basicConfigLoaderMock.load(bcBuilderMock, opMock);
 		BasicConfig bcMock = control.createMock(BasicConfig.class);
+		expect(bcMock.isShowHelp()).andStubReturn(false);
 		expect(bcBuilderMock.build()).andReturn(bcMock);
 		schedulerConfigLoaderMock.load(builder.getSchedulerConfigBuilder(), opMock, bcMock);
 		ohlcHistoryConfigLoaderMock.load(builder.getOHLCHistoryConfigBuilder(), opMock, bcMock);
 		terminalConfigLoaderMock.load(builder.getTerminalConfigBuilder(), opMock, bcMock);
+		control.replay();
+		
+		service.load(builder, opMock);
+		
+		control.verify();
+	}
+	
+	@Test
+	public void testLoad_SkipLoadSubsystemsConfigIfShowHelp() throws Exception {
+		OptionProvider opMock = control.createMock(OptionProvider.class);
+		BasicConfigBuilder bcBuilderMock = control.createMock(BasicConfigBuilder.class);
+		AppConfigBuilder builder = new AppConfigBuilder(bcBuilderMock,
+				new SchedulerConfigBuilder(),
+				new OHLCHistoryConfigBuilder(),
+				new TerminalConfigBuilder());
+		basicConfigLoaderMock.load(bcBuilderMock, opMock);
+		BasicConfig bcMock = control.createMock(BasicConfig.class);
+		expect(bcMock.isShowHelp()).andStubReturn(true);
+		expect(bcBuilderMock.build()).andReturn(bcMock);
 		control.replay();
 		
 		service.load(builder, opMock);

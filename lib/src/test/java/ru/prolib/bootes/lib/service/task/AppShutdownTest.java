@@ -7,7 +7,7 @@ import org.easymock.IMocksControl;
 import org.junit.Before;
 import org.junit.Test;
 
-import ru.prolib.bootes.lib.service.AppRuntimeService;
+import ru.prolib.bootes.lib.app.AppRuntimeService;
 
 public class AppShutdownTest {
 	private IMocksControl control;
@@ -24,7 +24,7 @@ public class AppShutdownTest {
 	
 	@Test
 	public void testRun() {
-		rtsMock1.triggerShutdown();
+		rtsMock1.shutdown();
 		control.replay();
 		
 		service.run();

@@ -1,4 +1,4 @@
-package ru.prolib.bootes.lib.service;
+package ru.prolib.bootes.lib.app;
 
 import java.io.File;
 import java.io.IOException;

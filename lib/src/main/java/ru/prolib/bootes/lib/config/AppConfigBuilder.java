@@ -42,10 +42,12 @@ public class AppConfigBuilder {
 	
 	public AppConfig build() throws ConfigException {
 		BasicConfig bc = basicConfigBuilder.build();
+		boolean skipSubsystems = bc.isShowHelp();
 		return new AppConfig(bc,
-			schedulerConfigBuilder.build(bc),
-			ohlcHistoryConfigBuilder.build(bc),
-			terminalConfigBuilder.build(bc));
+			skipSubsystems ? null : schedulerConfigBuilder.build(bc),
+			skipSubsystems ? null : ohlcHistoryConfigBuilder.build(bc),
+			skipSubsystems ? null : terminalConfigBuilder.build(bc)
+		);
 	}
 
 }

@@ -1,4 +1,4 @@
-package ru.prolib.bootes.lib.service;
+package ru.prolib.bootes.lib.app;
 
 import static org.junit.Assert.*;
 import static org.easymock.EasyMock.*;
@@ -20,6 +20,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import ru.prolib.bootes.lib.app.AppConfigService;
 import ru.prolib.bootes.lib.config.AppConfig;
 import ru.prolib.bootes.lib.config.AppConfigBuilder;
 import ru.prolib.bootes.lib.config.AppConfigLoader;

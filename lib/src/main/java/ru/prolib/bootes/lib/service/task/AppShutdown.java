@@ -2,7 +2,7 @@ package ru.prolib.bootes.lib.service.task;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
-import ru.prolib.bootes.lib.service.AppRuntimeService;
+import ru.prolib.bootes.lib.app.AppRuntimeService;
 
 public class AppShutdown implements Runnable {
 	protected final AppRuntimeService rts;
@@ -13,7 +13,7 @@ public class AppShutdown implements Runnable {
 
 	@Override
 	public void run() {
-		rts.triggerShutdown();
+		rts.shutdown();
 	}
 	
 	@Override

@@ -208,7 +208,10 @@ public class ARSTaskHandlerTest {
 					synchronized ( service ) {
 						assertEquals(ARSTaskState.PENDING, service.getCurrentState());
 						started.countDown();
-						assertEquals(ARSTaskState.EXECUTING, service.waitForStateChange());
+						ARSTaskState s = service.waitForStateChange();
+						if ( s == ARSTaskState.EXECUTING ) {
+							s = service.waitForStateChange();
+						}
 						assertEquals(ARSTaskState.EXECUTED, service.waitForStateChange());
 						finished.countDown();
 					}
@@ -238,7 +241,10 @@ public class ARSTaskHandlerTest {
 					synchronized ( service ) {
 						assertEquals(ARSTaskState.PENDING, service.getCurrentState());
 						started.countDown();
-						assertEquals(ARSTaskState.EXECUTING, service.waitForStateChange());
+						ARSTaskState s = service.waitForStateChange();
+						if ( s == ARSTaskState.EXECUTING ) {
+							s = service.waitForStateChange();
+						}
 						assertEquals(ARSTaskState.FAILED, service.waitForStateChange());
 						finished.countDown();
 					}

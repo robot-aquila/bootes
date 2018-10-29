@@ -1,15 +1,22 @@
 package ru.prolib.bootes.lib.config;
 
+import java.io.File;
+
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
 public class OHLCHistoryConfigLoader {
+	private static final String DEFAULT_CACHE_DIRNAME = "aquila-ohlcv-cache";
 	
 	public void load(OHLCHistoryConfigBuilder builder, OptionProvider optionProvider, BasicConfig basicConfig)
 			throws ConfigException
 	{
 		builder.withDataDirectory(optionProvider.getFileNotNull("ohlc-data-dir", basicConfig.getDataDirectory()))
-			.withCacheDirectory(optionProvider.getFileNotNull("ohlc-cache-dir"));
+			.withCacheDirectory(optionProvider.getFileNotNull("ohlc-cache-dir", getDefaultCacheDirectory()));
+	}
+	
+	private File getDefaultCacheDirectory() {
+		return new File(System.getProperty("java.io.tmpdir") + File.separator + DEFAULT_CACHE_DIRNAME);
 	}
 	
 	public void configureOptions(Options options) {

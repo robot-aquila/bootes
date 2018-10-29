@@ -14,6 +14,7 @@ import ru.prolib.aquila.core.EventQueue;
 import ru.prolib.aquila.core.BusinessEntities.Scheduler;
 import ru.prolib.aquila.core.BusinessEntities.Terminal;
 import ru.prolib.aquila.core.utils.PriceScaleDB;
+import ru.prolib.bootes.lib.service.UIService;
 
 public class AppServiceLocatorTest {
 	
@@ -113,6 +114,23 @@ public class AppServiceLocatorTest {
 		
 		assertSame(termMock, actual);
 		assertSame(termMock, service.getTerminal());
+	}
+	
+	@Test (expected=NullPointerException.class)
+	public void testGetUIService_ThrowsIfNotDefined() throws Exception {
+		service.getUIService();
+	}
+	
+	@Test
+	public void testGetUIService() {
+		UIService uisMock = control.createMock(UIService.class);
+		service.setUIService(uisMock);
+		
+		UIService actual = service.getUIService();
+		
+		assertNotNull(actual);
+		assertSame(uisMock, actual);
+		assertSame(actual, service.getUIService());
 	}
 
 }

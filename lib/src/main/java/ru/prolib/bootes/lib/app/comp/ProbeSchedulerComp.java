@@ -1,11 +1,18 @@
 package ru.prolib.bootes.lib.app.comp;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import ru.prolib.aquila.probe.SchedulerBuilder;
 import ru.prolib.aquila.probe.SchedulerImpl;
+import ru.prolib.aquila.probe.scheduler.ui.SchedulerControlToolbar;
+import ru.prolib.aquila.probe.scheduler.ui.SchedulerTaskFilter;
+import ru.prolib.aquila.probe.scheduler.ui.SymbolUpdateTaskFilter;
 import ru.prolib.aquila.probe.scheduler.utils.EventQueueSynchronizer;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.config.AppConfig;
 import ru.prolib.bootes.lib.config.SchedulerConfig;
+import ru.prolib.bootes.lib.service.UIService;
 import ru.prolib.bootes.lib.service.ars.ARSHandler;
 import ru.prolib.bootes.lib.service.ars.ARSHandlerBuilder;
 import ru.prolib.bootes.lib.service.task.AppShutdown;
@@ -50,6 +57,12 @@ public class ProbeSchedulerComp extends CommonComp {
 			} else {
 				scheduler.schedule(new ProbeStop(scheduler), c.getProbeStopTime());
 			}
+		}
+		if ( ! appConfig.getBasicConfig().isHeadless() ) {
+			UIService uis = serviceLocator.getUIService();
+			List<SchedulerTaskFilter> filters = new ArrayList<>();
+			filters.add(new SymbolUpdateTaskFilter(uis.getMessages()));
+			uis.getTopPanel().add(new SchedulerControlToolbar(uis.getMessages(), scheduler, uis.getZoneID(), filters));
 		}
 		handler = hb.build();
 	}

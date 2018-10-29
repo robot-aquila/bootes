@@ -4,6 +4,7 @@ import ru.prolib.aquila.core.EventQueue;
 import ru.prolib.aquila.core.BusinessEntities.Scheduler;
 import ru.prolib.aquila.core.BusinessEntities.Terminal;
 import ru.prolib.aquila.core.utils.PriceScaleDB;
+import ru.prolib.bootes.lib.service.UIService;
 
 public class AppServiceLocator {
 	private final AppRuntimeService ars;
@@ -11,6 +12,7 @@ public class AppServiceLocator {
 	private EventQueue eventQueue;
 	private Scheduler scheduler;
 	private Terminal terminal;
+	private UIService uis;
 	
 	public AppServiceLocator(AppRuntimeService ars) {
 		this.ars = ars;
@@ -62,6 +64,17 @@ public class AppServiceLocator {
 			throw new NullPointerException();
 		}
 		return terminal;
+	}
+	
+	public synchronized void setUIService(UIService service) {
+		this.uis = service;
+	}
+	
+	public synchronized UIService getUIService() {
+		if ( uis == null ) {
+			throw new NullPointerException();
+		}
+		return uis;
 	}
 
 }

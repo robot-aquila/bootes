@@ -51,8 +51,9 @@ public class OHLCHistoryConfigLoaderTest {
 	
 	@Test
 	public void testLoad_OnMocks() throws Exception {
+		File defaultCacheDir = new File(System.getProperty("java.io.tmpdir") + File.separator + "aquila-ohlcv-cache");
 		expect(opMock.getFileNotNull("ohlc-data-dir", new File("foo/bar"))).andReturn(new File("/path/zulu24"));
-		expect(opMock.getFileNotNull("ohlc-cache-dir")).andReturn(new File("/path/charlie"));
+		expect(opMock.getFileNotNull("ohlc-cache-dir", defaultCacheDir)).andReturn(new File("/path/charlie"));
 		control.replay();
 		
 		service.load(builder, opMock, basicConfig);

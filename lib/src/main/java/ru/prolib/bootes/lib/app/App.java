@@ -10,6 +10,7 @@ import ru.prolib.bootes.lib.app.comp.EventQueueComp;
 import ru.prolib.bootes.lib.app.comp.PriceScaleDBComp;
 import ru.prolib.bootes.lib.app.comp.ProbeSchedulerComp;
 import ru.prolib.bootes.lib.app.comp.QFortsTerminalComp;
+import ru.prolib.bootes.lib.app.comp.TerminalUIComp;
 import ru.prolib.bootes.lib.config.AppConfig;
 import ru.prolib.bootes.lib.config.ConfigException;
 import ru.prolib.bootes.lib.service.ars.AppRuntimeServiceImpl;
@@ -110,6 +111,7 @@ public abstract class App {
 		ars.addService(new UIComp(appConfig, serviceLocator));
 		ars.addService(new ProbeSchedulerComp(appConfig, serviceLocator));
 		ars.addService(new QFortsTerminalComp(appConfig, serviceLocator));
+		ars.addService(new TerminalUIComp(appConfig, serviceLocator));
 	}
 	
 	abstract protected void registerApplications(AppRuntimeService ars);

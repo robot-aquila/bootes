@@ -107,8 +107,8 @@ public abstract class App {
 	
 	protected void registerServices(AppRuntimeService ars) {
 		ars.addService(new PriceScaleDBComp(appConfig, serviceLocator));
-		ars.addService(new EventQueueComp(appConfig, serviceLocator));
 		ars.addService(new UIComp(appConfig, serviceLocator));
+		ars.addService(new EventQueueComp(appConfig, serviceLocator));
 		ars.addService(new ProbeSchedulerComp(appConfig, serviceLocator));
 		ars.addService(new QFortsTerminalComp(appConfig, serviceLocator));
 		ars.addService(new TerminalUIComp(appConfig, serviceLocator));

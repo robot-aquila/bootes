@@ -1,9 +1,11 @@
 package ru.prolib.bootes.lib.service;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.time.ZoneId;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
@@ -29,6 +31,8 @@ public class UIService {
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         mainPanel.setLayout(new BorderLayout());
         frame.getContentPane().add(mainPanel);
+        
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.X_AXIS));
 
         mainPanel.add(topPanel, BorderLayout.PAGE_START);
         mainPanel.add(tabPanel, BorderLayout.CENTER);

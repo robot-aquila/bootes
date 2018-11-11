@@ -74,18 +74,24 @@ public class OHLCHistoryConfigLoaderTest {
 		service.configureOptions(options);
 		
 		assertEquals(2, options.getOptions().size());
+		
+		Option actual = options.getOption("ohlc-data-dir");
 		assertEquals(Option.builder()
 				.longOpt("ohlc-data-dir")
 				.hasArg()
 				.argName("path")
 				.desc("Root directory of L1 data in FINAM export format.")
-				.build(), options.getOption("ohlc-data-dir"));
+				.build(), actual);
+		assertTrue(actual.hasArg());
+		
+		actual = options.getOption("ohlc-cache-dir");
 		assertEquals(Option.builder()
 				.longOpt("ohlc-cache-dir")
 				.hasArg()
 				.argName("path")
 				.desc("Root directory of cached OHLC data.")
-				.build(), options.getOption("ohlc-cache-dir"));
+				.build(), actual);
+		assertTrue(actual.hasArg());
 	}
 
 }

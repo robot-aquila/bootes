@@ -79,24 +79,33 @@ public class TerminalConfigLoaderTest {
 		service.configureOptions(options);
 		
 		assertEquals(3, options.getOptions().size());
+		
+		Option actual = options.getOption("qforts-data-dir");
 		assertEquals(Option.builder()
 				.longOpt("qforts-data-dir")
 				.hasArg()
 				.argName("path")
 				.desc("Root directory of combined storage of L1 and symbol data.")
-				.build(), options.getOption("qforts-data-dir"));
+				.build(), actual);
+		assertTrue(actual.hasArg());
+		
+		actual = options.getOption("qforts-test-account");
 		assertEquals(Option.builder()
 				.longOpt("qforts-test-account")
 				.hasArg()
 				.argName("code")
 				.desc("Code of test account.")
-				.build(), options.getOption("qforts-test-account"));
+				.build(), actual);
+		assertTrue(actual.hasArg());
+		
+		actual = options.getOption("qforts-test-balance");
 		assertEquals(Option.builder()
 				.longOpt("qforts-test-balance")
 				.hasArg()
 				.argName("amount")
 				.desc("Initial balance of test account in RUB.")
-				.build(), options.getOption("qforts-test-balance"));
+				.build(), actual);
+		assertTrue(actual.hasArg());
 	}
 
 }

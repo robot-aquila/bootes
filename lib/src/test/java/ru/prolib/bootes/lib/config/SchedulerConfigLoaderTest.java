@@ -86,26 +86,38 @@ public class SchedulerConfigLoaderTest {
 		service.configureOptions(options);
 
 		assertEquals(4, options.getOptions().size());
+		
+		Option actual = options.getOption("probe-auto-start");
 		assertEquals(Option.builder()
 				.longOpt("probe-auto-start")
 				.desc("If specified then PROBE scheduler will be started immediately after program initialization.")
-				.build(), options.getOption("probe-auto-start"));
+				.build(), actual);
+		assertFalse(actual.hasArg());
+		
+		actual = options.getOption("probe-auto-shutdown");
 		assertEquals(Option.builder()
 				.longOpt("probe-auto-shutdown")
 				.desc("Shutdown program automatically when PROBE scheduler reach the stop time. "
 					+ "This option requires --probe-stop-time option specified.")
-				.build(), options.getOption("probe-auto-shutdown"));
+				.build(), actual);
+		assertFalse(actual.hasArg());
+		
+		actual = options.getOption("probe-initial-time");
 		assertEquals(Option.builder()
 				.longOpt("probe-initial-time")
 				.hasArg()
 				.argName("time")
 				.desc("Specify start time of PROBE scheduler. If omitted then default PROBE time will be used.")
-				.build(), options.getOption("probe-initial-time"));
+				.build(), actual);
+		assertTrue(actual.hasArg());
+		
+		actual = options.getOption("probe-stop-time");
 		assertEquals(Option.builder()
 				.longOpt("probe-stop-time")
 				.hasArg()
 				.desc("Specify time to stop simulation by stopping PROBE scheduler.")
-				.build(), options.getOption("probe-stop-time"));
+				.build(), actual);
+		assertTrue(actual.hasArg());
 	}
 
 }

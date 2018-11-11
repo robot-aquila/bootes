@@ -2,6 +2,7 @@ package ru.prolib.bootes.tsgr001a;
 
 import ru.prolib.bootes.lib.app.App;
 import ru.prolib.bootes.lib.app.AppRuntimeService;
+import ru.prolib.bootes.tsgr001a.robot.TSGR001ARobotComp;
 
 public class TSGR001A extends App {
 
@@ -11,8 +12,7 @@ public class TSGR001A extends App {
 
 	@Override
 	protected void registerApplications(AppRuntimeService ars) {
-		// TODO Auto-generated method stub
-		System.out.println("Register APPs");
+		ars.addApplication(new TSGR001ARobotComp(serviceLocator));
 	}
 
 }

@@ -79,24 +79,38 @@ public class BasicConfigLoaderTest {
 		service.configureOptions(options);
 		
 		assertEquals(4, options.getOptions().size());
+		
+		Option actual = options.getOption("help");
 		assertEquals(Option.builder()
 			.longOpt("help")
 			.desc("Show help.")
-			.build(), options.getOption("help"));
+			.build(), actual);
+		assertFalse(actual.hasArg());
+		
+		actual = options.getOption("headless");
 		assertEquals(Option.builder()
 			.longOpt("headless")
 			.desc("Enable headless mode.")
-			.build(), options.getOption("headless"));
+			.build(), actual);
+		assertFalse(actual.hasArg());
+		
+		actual = options.getOption("data-dir");
 		assertEquals(Option.builder()
 			.longOpt("data-dir")
+			.hasArg()
 			.desc("Data directory by default. This may be used as an alternative for some other options.")
-			.build(), options.getOption("data-dir"));
+			.build(), actual);
+		assertTrue(actual.hasArg());
+		
+		actual = options.getOption("config-file");
 		assertEquals(Option.builder()
 			.longOpt("config-file")
+			.hasArg() 
 			.desc("Path to configuration file. All settings from this file will be loaded prior to applying "
 				+ "other command line options. Options passed via command line have higher priority and will "
 				+ "override options of configuration file.")
-			.build(), options.getOption("config-file"));
+			.build(), actual);
+		assertTrue(actual.hasArg());
 	}
 
 }

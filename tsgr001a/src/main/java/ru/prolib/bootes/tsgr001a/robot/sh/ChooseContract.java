@@ -20,6 +20,7 @@ import ru.prolib.aquila.core.sm.SMTriggerOnTimer;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.tsgr001a.robot.ContractParams;
+import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
 /**
  * Choosing the contract. 
@@ -38,7 +39,7 @@ public class ChooseContract extends CommonHandler implements SMInputAction, SMEx
 	private final ChooseContractStateCheck stateCheck;
 
 	public ChooseContract(AppServiceLocator serviceLocator,
-			State state,
+			RobotState state,
 			ChooseContractStateCheck stateCheck)
 	{
 		super(serviceLocator, state);
@@ -50,7 +51,7 @@ public class ChooseContract extends CommonHandler implements SMInputAction, SMEx
 	}
 	
 	public ChooseContract(AppServiceLocator serviceLocator,
-			State state)
+			RobotState state)
 	{
 		this(serviceLocator,
 			 state,
@@ -112,6 +113,7 @@ public class ChooseContract extends CommonHandler implements SMInputAction, SMEx
 			} catch ( SecurityException e ) {
 				throw new IllegalStateException("Unexpected exception", e);
 			}
+			state.getStateListener().contractSelected();
 		}
 		return getExit(exitID);
 	}

@@ -12,13 +12,14 @@ import ru.prolib.aquila.core.sm.SMTrigger;
 import ru.prolib.aquila.core.sm.SMTriggerOnEvent;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
+import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
 public abstract class CommonHandler extends SMStateHandler implements SMEnterAction {
 	protected final SMInput inInterrupt;
 	protected final AppServiceLocator serviceLocator;
-	protected final State state;
+	protected final RobotState state;
 
-	public CommonHandler(AppServiceLocator serviceLocator, State state) {
+	public CommonHandler(AppServiceLocator serviceLocator, RobotState state) {
 		this.serviceLocator = serviceLocator;
 		this.state = state;
 		setEnterAction(this);

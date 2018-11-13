@@ -30,7 +30,8 @@ public class Constants {
 	 * Select contract state ID.
 	 */
 	public static final String S_CHOOSE_CONTRACT = "CCONTR";
-	
+	public static final String S_INIT_SESSION_DATA = "INIT_SESSION_DATA";
 	public static final String S_WAIT = "WAIT";
+	public static final String S_CLEAN_SESSION_DATA = "CLEAN_SESSION_DATA";
 
 }

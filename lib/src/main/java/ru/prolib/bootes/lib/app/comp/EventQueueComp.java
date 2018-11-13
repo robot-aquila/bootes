@@ -46,12 +46,11 @@ public class EventQueueComp extends CommonComp {
 	public void shutdown() throws Throwable {
 		EventQueueStats stats = queue.getStats();
 		if ( stats != null ) {
-			long btlt = stats.getBuildingTaskListTime(),
-					dspt = stats.getDispatchingTime(),
-					dlvrt = stats.getDeliveryTime();
-			logger.debug("Building task list time: {} ns", btlt);
-			logger.debug("       Dispatching time: {} ns", dspt);
-			logger.debug("        Delivering time: {} ns", dlvrt);
+			logger.debug("            Events sent: {}", stats.getTotalEventsSent());
+			logger.debug("      Events dispatched: {}", stats.getTotalEventsDispatched());
+			logger.debug("Building task list time: {} ns", stats.getBuildingTaskListTime());
+			logger.debug("       Dispatching time: {} ns", stats.getDispatchingTime());
+			logger.debug("        Delivering time: {} ns", stats.getDeliveryTime());
 			
 		}
 	}

@@ -13,12 +13,13 @@ import ru.prolib.aquila.core.BusinessEntities.Symbol;
 import ru.prolib.aquila.core.BusinessEntities.Terminal;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.tsgr001a.robot.ContractParams;
+import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
 public class ChooseContractStateCheck {
 	private final AppServiceLocator serviceLocator;
-	private final State state;
+	private final RobotState state;
 	
-	public ChooseContractStateCheck(AppServiceLocator serviceLocator, State state) {
+	public ChooseContractStateCheck(AppServiceLocator serviceLocator, RobotState state) {
 		this.serviceLocator = serviceLocator;
 		this.state = state;
 	}

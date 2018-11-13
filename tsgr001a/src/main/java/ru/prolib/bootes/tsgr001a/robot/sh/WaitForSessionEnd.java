@@ -12,6 +12,7 @@ import ru.prolib.aquila.core.sm.SMInputAction;
 import ru.prolib.aquila.core.sm.SMTriggerOnTimer;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
+import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
 public class WaitForSessionEnd extends CommonHandler implements SMInputAction {
 	private static final Logger logger;
@@ -22,7 +23,7 @@ public class WaitForSessionEnd extends CommonHandler implements SMInputAction {
 	
 	private final SMInput in;
 
-	public WaitForSessionEnd(AppServiceLocator serviceLocator, State state) {
+	public WaitForSessionEnd(AppServiceLocator serviceLocator, RobotState state) {
 		super(serviceLocator, state);
 		registerExit(E_NEW_SESSION);
 		in = registerInput(this);

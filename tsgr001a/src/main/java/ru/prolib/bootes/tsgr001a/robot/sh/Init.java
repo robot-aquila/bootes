@@ -6,10 +6,11 @@ import ru.prolib.aquila.core.sm.SMExit;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.tsgr001a.robot.ContractResolverRegistry;
+import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
 public class Init extends CommonHandler {
 
-	public Init(AppServiceLocator serviceLocator, State state) {
+	public Init(AppServiceLocator serviceLocator, RobotState state) {
 		super(serviceLocator, state);
 		registerExit(E_OK);
 	}

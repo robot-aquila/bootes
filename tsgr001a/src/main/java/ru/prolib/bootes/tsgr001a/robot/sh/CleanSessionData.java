@@ -2,11 +2,11 @@ package ru.prolib.bootes.tsgr001a.robot.sh;
 
 import static ru.prolib.bootes.tsgr001a.robot.sh.Constants.E_OK;
 
+import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
 import ru.prolib.aquila.core.sm.SMExit;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
-import ru.prolib.bootes.tsgr001a.robot.SuperSeriesHandler;
 
 public class CleanSessionData extends CommonHandler {
 
@@ -18,7 +18,7 @@ public class CleanSessionData extends CommonHandler {
 	@Override
 	public SMExit enter(SMTriggerRegistry triggers) {
 		super.enter(triggers);
-		SuperSeriesHandler
+		STSeriesHandler
 			t0 = state.getSeriesHandlerT0(),
 			t1 = state.getSeriesHandlerT1(),
 			t2 = state.getSeriesHandlerT2();

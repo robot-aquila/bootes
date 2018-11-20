@@ -6,12 +6,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ru.prolib.aquila.core.BusinessEntities.Symbol;
+import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
+import ru.prolib.aquila.core.data.tseries.SecurityChartDataHandler;
 import ru.prolib.aquila.core.sm.SMExit;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
-import ru.prolib.bootes.tsgr001a.robot.SuperSeriesHandler;
-import ru.prolib.bootes.tsgr001a.robot.SuperSeriesHandlerT0;
+import ru.prolib.bootes.tsgr001a.robot.SetupT0;
+import ru.prolib.bootes.tsgr001a.robot.SetupT1;
+import ru.prolib.bootes.tsgr001a.robot.SetupT2;
 
 public class InitSessionData extends CommonHandler {
 	private static final Logger logger;
@@ -29,16 +32,20 @@ public class InitSessionData extends CommonHandler {
 	public SMExit enter(SMTriggerRegistry triggers) {
 		super.enter(triggers);
 		Symbol symbol = state.getContractParams().getSymbol();
-		SuperSeriesHandler
-			t0 = new SuperSeriesHandlerT0(serviceLocator, symbol),
-			t1 = null,
-			t2 = null;
+		STSeriesHandler
+			t0 = new SecurityChartDataHandler(new SetupT0(serviceLocator, symbol)),
+			t1 = new SecurityChartDataHandler(new SetupT1(serviceLocator, symbol)),
+			t2 = new SecurityChartDataHandler(new SetupT2(serviceLocator, symbol));
 		try {
 			t0.initialize();
 			t0.startDataHandling();
-			// TODO: start T1, T2
+			t1.initialize();
+			t1.startDataHandling();
+			t2.initialize();
+			t2.startDataHandling();
 		} catch ( Throwable t ) {
-			// TODO: stop T2, T1
+			t2.stopDataHandling();
+			t1.stopDataHandling();
 			t0.stopDataHandling();
 			logger.error("Data initialization error: ", t);
 			return getExit(E_ERROR);

@@ -12,7 +12,7 @@ public class TSGR001A extends App {
 
 	@Override
 	protected void registerApplications(AppRuntimeService ars) {
-		ars.addApplication(new TSGR001ARobotComp(serviceLocator));
+		ars.addApplication(new TSGR001ARobotComp(appConfig, serviceLocator));
 	}
 
 }

@@ -5,29 +5,36 @@ import javax.swing.SwingUtilities;
 import ru.prolib.aquila.core.sm.SMStateMachine;
 import ru.prolib.bootes.lib.app.AppComponent;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
+import ru.prolib.bootes.lib.config.AppConfig;
 import ru.prolib.bootes.tsgr001a.robot.sh.CommonHandler;
 
 public class TSGR001ARobotComp implements AppComponent {
+	private final AppConfig appConfig;
 	private final AppServiceLocator serviceLocator;
 	private Robot robot;
 	private RobotUIService uis;
 	
-	public TSGR001ARobotComp(AppServiceLocator serviceLocator) {
+	public TSGR001ARobotComp(AppConfig appConfig, AppServiceLocator serviceLocator) {
+		this.appConfig = appConfig;
 		this.serviceLocator = serviceLocator;
 	}
 
 	@Override
 	public void init() throws Throwable {
-		uis = new RobotUIService(serviceLocator);
-		// TODO: headless mode
-		robot = new TSGR001ARobotBuilder(serviceLocator).build(uis);
-		SwingUtilities.invokeAndWait(new Runnable() {
-			@Override
-			public void run() {
-				uis.initialize(robot.getState());
-			}
-		});
-		
+		RobotStateListener stateListener = new RobotStateListenerStub();
+		boolean headless = appConfig.getBasicConfig().isHeadless();
+		if ( ! headless ) {
+			stateListener = uis = new RobotUIService(serviceLocator);
+		}
+		robot = new TSGR001ARobotBuilder(serviceLocator).build(stateListener);
+		if ( ! headless ) {
+			SwingUtilities.invokeAndWait(new Runnable() {
+				@Override
+				public void run() {
+					uis.initialize(robot.getState());
+				}
+			});
+		}
 	}
 
 	@Override

@@ -10,36 +10,36 @@ import ru.prolib.aquila.utils.experimental.chart.axis.CategoryAxisViewport;
 import ru.prolib.aquila.utils.experimental.chart.axis.ValueAxisDriver;
 import ru.prolib.aquila.utils.experimental.chart.swing.axis.SWValueAxisRulerRenderer;
 import ru.prolib.bootes.lib.ui.SecurityChartPanel;
-import ru.prolib.bootes.tsgr001a.robot.SetupT0;
+import ru.prolib.bootes.tsgr001a.robot.SetupT1;
 
-public class ChartT0 extends SecurityChartPanel {
+public class ChartT1 extends SecurityChartPanel {
 	private BarChart atrChart;
 	private BarChartLayer emaLayer, atrLayer;
 	private SWValueAxisRulerRenderer atrValueRulerRenderer;
 
 	@Override
 	protected String getOhlcSeriesID() {
-		return SetupT0.SID_OHLC;
+		return SetupT1.SID_OHLC;
 	}
 
 	@Override
 	protected String getVolumeSeriesID() {
-		return SetupT0.SID_VOLUME;
+		return SetupT1.SID_VOLUME;
 	}
 	
 	@Override
 	protected void createLayers() {
 		super.createLayers();
 		if ( priceChart != null ) {
-			emaLayer = priceChart.addSmoothLine(source.getSeries(SetupT0.SID_EMA))
+			emaLayer = priceChart.addSmoothLine(source.getSeries(SetupT1.SID_EMA))
 				.setColor(Color.BLUE);
 		}
 		if ( atrChart != null ) {
-			atrLayer = atrChart.addHistogram(source.getSeries(SetupT0.SID_ATR))
+			atrLayer = atrChart.addHistogram(source.getSeries(SetupT1.SID_ATR))
 				.setColor(Color.BLUE);
 		}
 	}
-	
+
 	@Override
 	protected void dropLayers() {
 		if ( emaLayer != null ) {
@@ -52,7 +52,7 @@ public class ChartT0 extends SecurityChartPanel {
 		}
 		super.dropLayers();
 	}
-	
+
 	protected void createAtrChart() {
 		atrChart = chartPanel.addChart("ATR")
 				.setHeight(200);
@@ -63,7 +63,7 @@ public class ChartT0 extends SecurityChartPanel {
 		hsm.getUpperRulerSetup("VALUE", "LABEL").setVisible(true);
 		hsm.getLowerRulerSetup("VALUE", "LABEL").setVisible(true);
 	}
-	
+
 	@Override
 	protected void createCharts() {
 		createPriceChart();
@@ -80,7 +80,7 @@ public class ChartT0 extends SecurityChartPanel {
 	@Override
 	protected void updateViewport(CategoryAxisViewport viewport) {
 		super.updateViewport(viewport);
-		viewport.setPreferredNumberOfBars(252); // 1.5 days=14+7=21h=252*M5
+		viewport.setPreferredNumberOfBars(140); // 10 days=10*14=140 hours
 	}
-	
+
 }

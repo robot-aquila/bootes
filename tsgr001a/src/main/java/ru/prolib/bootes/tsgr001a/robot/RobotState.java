@@ -1,6 +1,7 @@
 package ru.prolib.bootes.tsgr001a.robot;
 
 import ru.prolib.aquila.core.BusinessEntities.Security;
+import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
 
 /**
  * Robot state.
@@ -13,7 +14,7 @@ public class RobotState {
 	private ContractResolver contractResolver;
 	private ContractParams contractParams;
 	private Security security;
-	private SuperSeriesHandler sht0, sht1, sht2;
+	private STSeriesHandler sht0, sht1, sht2;
 	
 	public RobotState(RobotStateListener stateListener) {
 		this.stateListener = stateListener;
@@ -55,27 +56,27 @@ public class RobotState {
 		return security;
 	}
 	
-	public synchronized void setSeriesHandlerT0(SuperSeriesHandler handler) {
+	public synchronized void setSeriesHandlerT0(STSeriesHandler handler) {
 		this.sht0 = handler;
 	}
 	
-	public synchronized void setSeriesHandlerT1(SuperSeriesHandler handler) {
+	public synchronized void setSeriesHandlerT1(STSeriesHandler handler) {
 		this.sht1 = handler;
 	}
 	
-	public synchronized void setSeriesHandlerT2(SuperSeriesHandler handler) {
+	public synchronized void setSeriesHandlerT2(STSeriesHandler handler) {
 		this.sht2 = handler;
 	}
 	
-	public synchronized SuperSeriesHandler getSeriesHandlerT0() {
+	public synchronized STSeriesHandler getSeriesHandlerT0() {
 		return sht0;
 	}
 	
-	public synchronized SuperSeriesHandler getSeriesHandlerT1() {
+	public synchronized STSeriesHandler getSeriesHandlerT1() {
 		return sht1;
 	}
 	
-	public synchronized SuperSeriesHandler getSeriesHandlerT2() {
+	public synchronized STSeriesHandler getSeriesHandlerT2() {
 		return sht2;
 	}
 	

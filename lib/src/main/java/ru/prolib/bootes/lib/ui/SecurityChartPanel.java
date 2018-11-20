@@ -6,7 +6,7 @@ import javax.swing.JPanel;
 
 import ru.prolib.aquila.core.BusinessEntities.CDecimalBD;
 import ru.prolib.aquila.core.BusinessEntities.Security;
-import ru.prolib.aquila.core.data.tseries.SuperTSeries;
+import ru.prolib.aquila.core.data.tseries.STSeries;
 import ru.prolib.aquila.utils.experimental.chart.BarChart;
 import ru.prolib.aquila.utils.experimental.chart.BarChartLayer;
 import ru.prolib.aquila.utils.experimental.chart.BarChartOrientation;
@@ -26,7 +26,7 @@ abstract public class SecurityChartPanel {
 	protected SWValueAxisRulerRenderer priceValueRulerRenderer, volValueRulerRenderer;
 	protected BarChart priceChart, volChart;
 	protected BarChartLayer priceLayer, volLayer;
-	protected SuperTSeries source;
+	protected STSeries source;
 
 	protected void updateViewport(CategoryAxisViewport viewport) {
 		viewport.setPreferredNumberOfBars(100);
@@ -41,12 +41,16 @@ abstract public class SecurityChartPanel {
 		updateViewport(chartPanel.getCategoryAxisViewport()); 
 	}
 	
-	abstract protected String getPriceSeriesID();
+	abstract protected String getOhlcSeriesID();
 	abstract protected String getVolumeSeriesID();
 	
 	protected void createLayers() {
-		priceLayer = priceChart.addLayer(new SWCandlestickLayer(source.getSeries(getPriceSeriesID())));
-		volLayer = volChart.addHistogram(source.getSeries(getVolumeSeriesID()));
+		if ( priceChart != null ) {
+			priceLayer = priceChart.addLayer(new SWCandlestickLayer(source.getSeries(getOhlcSeriesID())));
+		}
+		if ( volChart != null ) {
+			volLayer = volChart.addHistogram(source.getSeries(getVolumeSeriesID()));
+		}
 	}
 	
 	protected void dropLayers() {
@@ -106,14 +110,18 @@ abstract public class SecurityChartPanel {
 		hsm.getUpperRulerSetup("VALUE", "LABEL").setVisible(true);
 	}
 	
+	protected void createCharts() {
+		createPriceChart();
+		createVolumeChart();
+	}
+	
 	public JPanel create() {
 		chartPanel = new BarChartPanelImpl(BarChartOrientation.LEFT_TO_RIGHT);
 		
 		CategoryAxisDriver cad = chartPanel.getCategoryAxisDriver();
 		cad.registerRenderer(timeRulerRenderer = new SWTimeAxisRulerRenderer("TIME"));
 		
-		createPriceChart();
-		createVolumeChart();
+		createCharts();
 		updateViewport();
 		
 		JPanel chartRoot = new JPanel(new GridLayout(1, 1));
@@ -121,18 +129,32 @@ abstract public class SecurityChartPanel {
 		return chartRoot;
 	}
 	
-	public void update(SuperTSeries source, Security security) {
-		dropLayers();
+	protected void updateSource(STSeries source) {
 		this.source = source;
 		chartPanel.setCategories(source);
 		timeRulerRenderer.setCategories(source);
-		priceValueRulerRenderer.setTickSize(security.getTickSize());
+	}
+	
+	protected void updateSecurity(Security security) {
+		if ( priceValueRulerRenderer != null ) {
+			priceValueRulerRenderer.setTickSize(security.getTickSize());
+		}
+	}
+	
+	public void update(STSeries source, Security security) {
+		dropLayers();
+		updateSource(source);
+		updateSecurity(security);
 		createLayers();
 		updateViewport();
 	}
 	
 	public void clear() {
 		dropLayers();
+	}
+	
+	public void paint() {
+		chartPanel.paint();
 	}
 
 }

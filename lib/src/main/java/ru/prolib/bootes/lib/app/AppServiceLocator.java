@@ -3,7 +3,10 @@ package ru.prolib.bootes.lib.app;
 import ru.prolib.aquila.core.EventQueue;
 import ru.prolib.aquila.core.BusinessEntities.Scheduler;
 import ru.prolib.aquila.core.BusinessEntities.Terminal;
+import ru.prolib.aquila.core.data.Candle;
+import ru.prolib.aquila.core.data.TFSymbol;
 import ru.prolib.aquila.core.utils.PriceScaleDB;
+import ru.prolib.aquila.data.storage.MDStorage;
 import ru.prolib.bootes.lib.service.UIService;
 
 public class AppServiceLocator {
@@ -13,6 +16,7 @@ public class AppServiceLocator {
 	private Scheduler scheduler;
 	private Terminal terminal;
 	private UIService uis;
+	private MDStorage<TFSymbol, Candle> ohlcHistoryStorage;
 	
 	public AppServiceLocator(AppRuntimeService ars) {
 		this.ars = ars;
@@ -75,6 +79,17 @@ public class AppServiceLocator {
 			throw new NullPointerException();
 		}
 		return uis;
+	}
+	
+	public synchronized void setOHLCHistoryStorage(MDStorage<TFSymbol, Candle> storage) {
+		this.ohlcHistoryStorage = storage;
+	}
+	
+	public synchronized MDStorage<TFSymbol, Candle> getOHLCHistoryStorage() {
+		if ( ohlcHistoryStorage == null ) {
+			throw new NullPointerException();
+		}
+		return ohlcHistoryStorage;
 	}
 
 }

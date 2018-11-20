@@ -1,8 +1,7 @@
 package ru.prolib.bootes.lib.app;
 
-import static org.easymock.EasyMock.createStrictControl;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertSame;
+import static org.easymock.EasyMock.*;
+import static org.junit.Assert.*;
 
 import java.time.Instant;
 
@@ -13,7 +12,10 @@ import org.junit.Test;
 import ru.prolib.aquila.core.EventQueue;
 import ru.prolib.aquila.core.BusinessEntities.Scheduler;
 import ru.prolib.aquila.core.BusinessEntities.Terminal;
+import ru.prolib.aquila.core.data.Candle;
+import ru.prolib.aquila.core.data.TFSymbol;
 import ru.prolib.aquila.core.utils.PriceScaleDB;
+import ru.prolib.aquila.data.storage.MDStorage;
 import ru.prolib.bootes.lib.service.UIService;
 
 public class AppServiceLocatorTest {
@@ -131,6 +133,24 @@ public class AppServiceLocatorTest {
 		assertNotNull(actual);
 		assertSame(uisMock, actual);
 		assertSame(actual, service.getUIService());
+	}
+	
+	@Test (expected=NullPointerException.class)
+	public void testGetOHLCHistoryStorage() throws Exception {
+		service.getOHLCHistoryStorage();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testGetOHLCHistoryStorage_ThrowsIfNotDefined() {
+		MDStorage<TFSymbol, Candle> storageMock = control.createMock(MDStorage.class);
+		service.setOHLCHistoryStorage(storageMock);
+		
+		MDStorage<TFSymbol, Candle> actual = service.getOHLCHistoryStorage();
+		
+		assertNotNull(actual);
+		assertSame(storageMock, actual);
+		assertSame(actual, service.getOHLCHistoryStorage());
 	}
 
 }

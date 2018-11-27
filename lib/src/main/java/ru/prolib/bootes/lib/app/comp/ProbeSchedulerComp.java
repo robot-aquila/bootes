@@ -36,7 +36,7 @@ public class ProbeSchedulerComp extends CommonComp {
 		SchedulerConfig c = appConfig.getSchedulerConfig();
 		SchedulerBuilder builder = new SchedulerBuilder()
 			.setName(serviceID)
-			.setExecutionSpeed(1);
+			.setExecutionSpeed(0);
 		if ( c.getProbeInitialTime() != null ) {
 			builder.setInitialTime(c.getProbeInitialTime());
 		}

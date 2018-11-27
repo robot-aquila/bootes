@@ -80,7 +80,8 @@ public class ChartT0 extends SecurityChartPanel {
 	@Override
 	protected void updateViewport(CategoryAxisViewport viewport) {
 		super.updateViewport(viewport);
-		viewport.setPreferredNumberOfBars(252); // 1.5 days=14+7=21h=252*M5
+		//viewport.setPreferredNumberOfBars(252); // 1.5 days=14+7=21h=252*M5
+		viewport.setPreferredNumberOfBars(140);
 	}
 	
 }

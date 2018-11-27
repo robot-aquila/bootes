@@ -27,6 +27,7 @@ public class TSGR001ARobotComp implements AppComponent {
 			stateListener = uis = new RobotUIService(serviceLocator);
 		}
 		robot = new TSGR001ARobotBuilder(serviceLocator).build(stateListener);
+		robot.getAutomat().start();
 		if ( ! headless ) {
 			SwingUtilities.invokeAndWait(new Runnable() {
 				@Override
@@ -39,7 +40,8 @@ public class TSGR001ARobotComp implements AppComponent {
 
 	@Override
 	public void startup() throws Throwable {
-		robot.getAutomat().start();
+		// Do not start automat here.
+		// All triggers should be registered prior to terminal start.
 	}
 
 	@Override

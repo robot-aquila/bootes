@@ -25,7 +25,7 @@ public class WaitForSessionEnd extends CommonHandler implements SMInputAction {
 
 	public WaitForSessionEnd(AppServiceLocator serviceLocator, RobotState state) {
 		super(serviceLocator, state);
-		registerExit(E_NEW_SESSION);
+		registerExit(E_STOP_TRADING);
 		in = registerInput(this);
 	}
 
@@ -45,7 +45,7 @@ public class WaitForSessionEnd extends CommonHandler implements SMInputAction {
 		logger.debug("Exit state for symbol {} at time {}",
 				state.getContractParams().getSymbol(),
 				serviceLocator.getTerminal().getCurrentTime());
-		return getExit(E_NEW_SESSION);
+		return getExit(E_STOP_TRADING);
 	}
 
 }

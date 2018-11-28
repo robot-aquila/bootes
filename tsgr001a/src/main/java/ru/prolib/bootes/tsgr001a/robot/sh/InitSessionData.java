@@ -22,9 +22,15 @@ public class InitSessionData extends CommonHandler {
 	static {
 		logger = LoggerFactory.getLogger(InitSessionData.class);
 	}
+	
+	private final CommonActions ca;
 
-	public InitSessionData(AppServiceLocator serviceLocator, RobotState state) {
+	public InitSessionData(AppServiceLocator serviceLocator,
+			RobotState state,
+			CommonActions ca)
+	{
 		super(serviceLocator, state);
+		this.ca = ca;
 		registerExit(E_OK);
 	}
 
@@ -32,6 +38,7 @@ public class InitSessionData extends CommonHandler {
 	public SMExit enter(SMTriggerRegistry triggers) {
 		super.enter(triggers);
 		Symbol symbol = state.getContractParams().getSymbol();
+		ca.cleanupCurrentDataHandlers(state);
 		STSeriesHandler
 			t0 = new SecurityChartDataHandler(new SetupT0(serviceLocator, symbol)),
 			t1 = new SecurityChartDataHandler(new SetupT1(serviceLocator, symbol)),
@@ -57,5 +64,5 @@ public class InitSessionData extends CommonHandler {
 		state.getStateListener().sessionDataAvailable();
 		return getExit(E_OK);
 	}
-
+	
 }

@@ -16,13 +16,14 @@ import ru.prolib.aquila.utils.experimental.chart.axis.CategoryAxisViewport;
 import ru.prolib.aquila.utils.experimental.chart.axis.ValueAxisDriver;
 import ru.prolib.aquila.utils.experimental.chart.swing.BarChartPanelImpl;
 import ru.prolib.aquila.utils.experimental.chart.swing.axis.SWTimeAxisRulerRenderer;
+import ru.prolib.aquila.utils.experimental.chart.swing.axis.SWTimeAxisRulerRendererV2;
 import ru.prolib.aquila.utils.experimental.chart.swing.axis.SWTimeAxisRulerSetup;
 import ru.prolib.aquila.utils.experimental.chart.swing.axis.SWValueAxisRulerRenderer;
 import ru.prolib.aquila.utils.experimental.chart.swing.layer.SWCandlestickLayer;
 
 abstract public class SecurityChartPanel {
 	protected BarChartPanelImpl chartPanel;
-	protected SWTimeAxisRulerRenderer timeRulerRenderer;
+	protected SWTimeAxisRulerRendererV2 timeRulerRenderer;
 	protected SWValueAxisRulerRenderer priceValueRulerRenderer, volValueRulerRenderer;
 	protected BarChart priceChart, volChart;
 	protected BarChartLayer priceLayer, volLayer;
@@ -119,7 +120,7 @@ abstract public class SecurityChartPanel {
 		chartPanel = new BarChartPanelImpl(BarChartOrientation.LEFT_TO_RIGHT);
 		
 		CategoryAxisDriver cad = chartPanel.getCategoryAxisDriver();
-		cad.registerRenderer(timeRulerRenderer = new SWTimeAxisRulerRenderer("TIME"));
+		cad.registerRenderer(timeRulerRenderer = new SWTimeAxisRulerRendererV2("TIME"));
 		
 		createCharts();
 		updateViewport();

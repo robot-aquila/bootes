@@ -9,7 +9,7 @@ import ru.prolib.bootes.tsgr001a.robot.ContractResolverRegistry;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
 public class Init extends CommonHandler {
-
+	
 	public Init(AppServiceLocator serviceLocator, RobotState state) {
 		super(serviceLocator, state);
 		registerExit(E_OK);
@@ -18,9 +18,10 @@ public class Init extends CommonHandler {
 	@Override
 	public SMExit enter(SMTriggerRegistry triggers) {
 		super.enter(triggers);
-		final String cn = "RTS";
+		final String cn = "RTS", an = "TEST-ACCOUNT";
 		state.setContractName(cn);
 		state.setContractResolver(new ContractResolverRegistry().getResolver(cn));
+		state.setAccountCode(an);
 		return getExit(E_OK);
 	}
 

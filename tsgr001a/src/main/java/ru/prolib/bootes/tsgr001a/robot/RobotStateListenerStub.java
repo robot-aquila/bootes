@@ -6,6 +6,11 @@ public class RobotStateListenerStub implements RobotStateListener {
 	public void robotStarted() {
 
 	}
+	
+	@Override
+	public void accountSelected() {
+		
+	}
 
 	@Override
 	public void contractSelected() {

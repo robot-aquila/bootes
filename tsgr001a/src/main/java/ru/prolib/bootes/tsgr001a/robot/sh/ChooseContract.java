@@ -77,7 +77,7 @@ public class ChooseContract extends CommonHandler implements SMInputAction, SMEx
 			triggers.add(new SMTriggerOnTimer(terminal, csPeriod.getStart(), in));
 		}
 		
-		ContractParams pcParams = state.getContractParams();
+		ContractParams pcParams = state.isContractParamsDefined() ? state.getContractParams() : null;
 		Symbol ccSymbol = ccParams.getSymbol(),
 			   pcSymbol = pcParams == null ? null : pcParams.getSymbol();
 		logger.debug("Contract selected: {} at time {}", ccSymbol, ctime);
@@ -109,7 +109,7 @@ public class ChooseContract extends CommonHandler implements SMInputAction, SMEx
 		if ( exitID != null && E_OK.equals(exitID) ) {
 			try {
 				state.setSecurity(serviceLocator.getTerminal()
-					.getSecurity(state.getContractParams().getSymbol()));
+						.getSecurity(state.getContractParams().getSymbol()));
 			} catch ( SecurityException e ) {
 				throw new IllegalStateException("Unexpected exception", e);
 			}

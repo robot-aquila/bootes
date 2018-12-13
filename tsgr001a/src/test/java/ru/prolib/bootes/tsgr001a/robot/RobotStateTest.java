@@ -11,6 +11,7 @@ import org.junit.Test;
 import ru.prolib.aquila.core.BusinessEntities.Portfolio;
 import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
+import ru.prolib.bootes.tsgr001a.rm.RMContractStrategy;
 
 public class RobotStateTest {
 	private IMocksControl control;
@@ -33,6 +34,7 @@ public class RobotStateTest {
 	public void testSettersAndGetters() {
 		ContractResolver crMock = control.createMock(ContractResolver.class);
 		ContractParams cpMock = control.createMock(ContractParams.class);
+		RMContractStrategy csMock = control.createMock(RMContractStrategy.class);
 		Portfolio portfolioMock = control.createMock(Portfolio.class);
 		Security securityMock = control.createMock(Security.class);
 		STSeriesHandler sht0Mock = control.createMock(STSeriesHandler.class);
@@ -43,6 +45,7 @@ public class RobotStateTest {
 		service.setAccountCode("ZX-48");
 		service.setContractResolver(crMock);
 		service.setContractParams(cpMock);
+		service.setContractStrategy(csMock);
 		service.setPortfolio(portfolioMock);
 		service.setSecurity(securityMock);
 		service.setSeriesHandlerT0(sht0Mock);
@@ -53,6 +56,7 @@ public class RobotStateTest {
 		assertEquals("ZX-48", service.getAccountCode());
 		assertSame(crMock, service.getContractResolver());
 		assertSame(cpMock, service.getContractParams());
+		assertSame(csMock, service.getContractStrategy());
 		assertSame(portfolioMock, service.getPortfolio());
 		assertSame(securityMock, service.getSecurity());
 		assertSame(sht0Mock, service.getSeriesHandlerT0());
@@ -81,6 +85,11 @@ public class RobotStateTest {
 	}
 	
 	@Test (expected=NullPointerException.class)
+	public void testGetContractStrategy_ThrowsIfNotDefined() {
+		service.getContractStrategy();
+	}
+	
+	@Test (expected=NullPointerException.class)
 	public void testGetPortfolio_ThrowsIfNotDefined() {
 		service.getPortfolio();
 	}
@@ -91,7 +100,7 @@ public class RobotStateTest {
 	}
 	
 	@Test (expected=NullPointerException.class)
-	public void testGetSeriesHandlerH0_ThrowsIfNotDefined() {
+	public void testGetSeriesHandlerT0_ThrowsIfNotDefined() {
 		service.getSeriesHandlerT0();
 	}
 	
@@ -103,6 +112,46 @@ public class RobotStateTest {
 	@Test (expected=NullPointerException.class)
 	public void testGetSeriesHandlerT2_ThrowsIfNotDefined() {
 		service.getSeriesHandlerT0();
+	}
+	
+	@Test
+	public void testIsContractParamsDefined() {
+		ContractParams cpMock = control.createMock(ContractParams.class);
+		assertFalse(service.isContractParamsDefined());
+		service.setContractParams(cpMock);
+		assertTrue(service.isContractParamsDefined());
+		service.setContractParams(null);
+		assertFalse(service.isContractParamsDefined());
+	}
+	
+	@Test
+	public void testIsSeriesHandlerT0Defined() {
+		STSeriesHandler shMock = control.createMock(STSeriesHandler.class);
+		assertFalse(service.isSeriesHandlerT0Defined());
+		service.setSeriesHandlerT0(shMock);
+		assertTrue(service.isSeriesHandlerT0Defined());
+		service.setSeriesHandlerT0(null);
+		assertFalse(service.isSeriesHandlerT0Defined());
+	}
+	
+	@Test
+	public void testIsSeriesHandlerT1Defined() {
+		STSeriesHandler shMock = control.createMock(STSeriesHandler.class);
+		assertFalse(service.isSeriesHandlerT1Defined());
+		service.setSeriesHandlerT1(shMock);
+		assertTrue(service.isSeriesHandlerT1Defined());
+		service.setSeriesHandlerT1(null);
+		assertFalse(service.isSeriesHandlerT1Defined());
+	}
+	
+	@Test
+	public void testIsSeriesHandlerT2Defined() {
+		STSeriesHandler shMock = control.createMock(STSeriesHandler.class);
+		assertFalse(service.isSeriesHandlerT2Defined());
+		service.setSeriesHandlerT2(shMock);
+		assertTrue(service.isSeriesHandlerT2Defined());
+		service.setSeriesHandlerT2(null);
+		assertFalse(service.isSeriesHandlerT2Defined());
 	}
 
 }

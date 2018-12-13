@@ -13,7 +13,6 @@ import ru.prolib.bootes.tsgr001a.robot.ui.ChartT0;
 import ru.prolib.bootes.tsgr001a.robot.ui.ChartT1;
 import ru.prolib.bootes.tsgr001a.robot.ui.ChartT2;
 
-
 public class RobotUIService implements RobotStateListener {
 	private final AppServiceLocator serviceLocator;
 	private RobotState state;
@@ -40,6 +39,11 @@ public class RobotUIService implements RobotStateListener {
 	@Override
 	public void robotStarted() {
 		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void accountSelected() {
 		
 	}
 
@@ -85,19 +89,8 @@ public class RobotUIService implements RobotStateListener {
 
 	@Override
 	public void sessionDataCleanup() {
-		if ( ! SwingUtilities.isEventDispatchThread() ) {
-			SwingUtilities.invokeLater(new Runnable() {
-				@Override
-				public void run() {
-					sessionDataCleanup();
-				}
-			});
-		} else {
-			t2.clear();
-			t1.clear();
-			t0.clear();
-			// Do not repaint to keep chart data on screen
-		}
+		// Do not clear to avoid blinking
+		// Do not repaint to keep chart data on screen
 	}
 
 	@Override

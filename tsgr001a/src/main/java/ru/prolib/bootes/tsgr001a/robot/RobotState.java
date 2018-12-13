@@ -3,6 +3,7 @@ package ru.prolib.bootes.tsgr001a.robot;
 import ru.prolib.aquila.core.BusinessEntities.Portfolio;
 import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
+import ru.prolib.bootes.tsgr001a.rm.RMContractStrategy;
 
 /**
  * Robot state.
@@ -14,6 +15,7 @@ public class RobotState {
 	private String contractName, accountCode;
 	private ContractResolver contractResolver;
 	private ContractParams contractParams;
+	private RMContractStrategy contractStrategy;
 	private Portfolio portfolio;
 	private Security security;
 	private STSeriesHandler sht0, sht1, sht2;
@@ -40,6 +42,10 @@ public class RobotState {
 	
 	public synchronized void setContractParams(ContractParams contractParams) {
 		this.contractParams = contractParams;
+	}
+	
+	public synchronized void setContractStrategy(RMContractStrategy contractStrategy) {
+		this.contractStrategy = contractStrategy;
 	}
 	
 	public synchronized void setPortfolio(Portfolio portfolio) {
@@ -90,6 +96,17 @@ public class RobotState {
 		return contractParams;
 	}
 	
+	public synchronized RMContractStrategy getContractStrategy() {
+		if ( contractStrategy == null ) {
+			throw new NullPointerException();
+		}
+		return contractStrategy;
+	}
+	
+	public synchronized boolean isContractParamsDefined() {
+		return contractParams != null;
+	}
+	
 	public synchronized Portfolio getPortfolio() {
 		if ( portfolio == null ) {
 			throw new NullPointerException();
@@ -111,6 +128,10 @@ public class RobotState {
 		return sht0;
 	}
 	
+	public synchronized boolean isSeriesHandlerT0Defined() {
+		return sht0 != null;
+	}
+	
 	public synchronized STSeriesHandler getSeriesHandlerT1() {
 		if ( sht1 == null ) {
 			throw new NullPointerException();
@@ -118,11 +139,19 @@ public class RobotState {
 		return sht1;
 	}
 	
+	public synchronized boolean isSeriesHandlerT1Defined() {
+		return sht1 != null;
+	}
+	
 	public synchronized STSeriesHandler getSeriesHandlerT2() {
 		if ( sht2 == null ) {
 			throw new NullPointerException();
 		}
 		return sht2;
+	}
+	
+	public synchronized boolean isSeriesHandlerT2Defined() {
+		return sht2 != null;
 	}
 	
 }

@@ -38,6 +38,11 @@ public class Constants {
 	public static final String S_INIT = "INIT";
 	
 	/**
+	 * Wait for account.
+	 */
+	public static final String S_WAIT_ACCOUNT = "WAIT_ACCOUNT";
+	
+	/**
 	 * Select contract state ID.
 	 */
 	public static final String S_CHOOSE_CONTRACT = "CCONTR";

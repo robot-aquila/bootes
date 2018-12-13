@@ -8,6 +8,7 @@ import ru.prolib.bootes.tsgr001a.robot.sh.ChooseContract;
 import ru.prolib.bootes.tsgr001a.robot.sh.CommonActions;
 import ru.prolib.bootes.tsgr001a.robot.sh.Init;
 import ru.prolib.bootes.tsgr001a.robot.sh.InitSessionData;
+import ru.prolib.bootes.tsgr001a.robot.sh.WaitForAccount;
 import ru.prolib.bootes.tsgr001a.robot.sh.WaitForSessionEnd;
 
 public class TSGR001ARobotBuilder {
@@ -22,15 +23,20 @@ public class TSGR001ARobotBuilder {
 		RobotState state = new RobotState(stateListener);
 		SMStateMachine automat = new SMBuilder()
 				.addState(new Init(serviceLocator, state), S_INIT)
+				.addState(new WaitForAccount(serviceLocator, state), S_WAIT_ACCOUNT)
 				.addState(new ChooseContract(serviceLocator, state), S_CHOOSE_CONTRACT)
 				.addState(new InitSessionData(serviceLocator, state, ca), S_INIT_SESSION_DATA)
 				.addState(new WaitForSessionEnd(serviceLocator, state), S_WAIT_SESSION_END)
 				
 				.setInitialState(S_INIT)
 				
-				.addTrans(S_INIT, E_OK, S_CHOOSE_CONTRACT)
+				.addTrans(S_INIT, E_OK, S_WAIT_ACCOUNT)
 				.addFinal(S_INIT, E_ERROR)
 				.addFinal(S_INIT, E_INTERRUPT)
+				
+				.addTrans(S_WAIT_ACCOUNT, E_OK, S_CHOOSE_CONTRACT)
+				.addFinal(S_WAIT_ACCOUNT, E_ERROR)
+				.addFinal(S_WAIT_ACCOUNT, E_INTERRUPT)
 				
 				.addTrans(S_CHOOSE_CONTRACT, E_NEW_SESSION, S_CHOOSE_CONTRACT)
 				.addTrans(S_CHOOSE_CONTRACT, E_OK,			S_INIT_SESSION_DATA)

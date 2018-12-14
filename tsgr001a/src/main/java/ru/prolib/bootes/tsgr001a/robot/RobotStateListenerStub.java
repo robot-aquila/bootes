@@ -21,6 +21,11 @@ public class RobotStateListenerStub implements RobotStateListener {
 	public void sessionDataAvailable() {
 
 	}
+	
+	@Override
+	public void limitsUpdated() {
+		
+	}
 
 	@Override
 	public void sessionDataCleanup() {

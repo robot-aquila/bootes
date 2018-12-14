@@ -11,6 +11,7 @@ import ru.prolib.aquila.core.data.tseries.SecurityChartDataHandler;
 import ru.prolib.aquila.core.sm.SMExit;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
+import ru.prolib.bootes.tsgr001a.rm.RMContractStrategy;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 import ru.prolib.bootes.tsgr001a.robot.SetupT0;
 import ru.prolib.bootes.tsgr001a.robot.SetupT1;
@@ -61,6 +62,14 @@ public class InitSessionData extends CommonHandler {
 		state.setSeriesHandlerT0(t0);
 		state.setSeriesHandlerT1(t1);
 		state.setSeriesHandlerT2(t2);
+		
+		RMContractStrategy cs = state.getContractStrategy();
+		cs.setAvgDailyPriceMove(t2.getSeries().getSeries(SetupT2.SID_ATR));
+		cs.setAvgLocalPriceMove(t0.getSeries().getSeries(SetupT0.SID_ATR));
+		cs.setPortfolio(state.getPortfolio());
+		cs.setSecurity(state.getSecurity());
+		state.setPositionParams(cs.getPositionParams());
+		
 		state.getStateListener().sessionDataAvailable();
 		return getExit(E_OK);
 	}

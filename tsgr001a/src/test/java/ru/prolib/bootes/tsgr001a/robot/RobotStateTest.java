@@ -12,6 +12,7 @@ import ru.prolib.aquila.core.BusinessEntities.Portfolio;
 import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
 import ru.prolib.bootes.tsgr001a.rm.RMContractStrategy;
+import ru.prolib.bootes.tsgr001a.rm.RMContractStrategyPositionParams;
 
 public class RobotStateTest {
 	private IMocksControl control;
@@ -40,6 +41,7 @@ public class RobotStateTest {
 		STSeriesHandler sht0Mock = control.createMock(STSeriesHandler.class);
 		STSeriesHandler sht1Mock = control.createMock(STSeriesHandler.class);
 		STSeriesHandler sht2Mock = control.createMock(STSeriesHandler.class);
+		RMContractStrategyPositionParams ppMock = control.createMock(RMContractStrategyPositionParams.class);
 		
 		service.setContractName("RTS");
 		service.setAccountCode("ZX-48");
@@ -51,6 +53,7 @@ public class RobotStateTest {
 		service.setSeriesHandlerT0(sht0Mock);
 		service.setSeriesHandlerT1(sht1Mock);
 		service.setSeriesHandlerT2(sht2Mock);
+		service.setPositionParams(ppMock);
 		
 		assertEquals("RTS", service.getContractName());
 		assertEquals("ZX-48", service.getAccountCode());
@@ -62,6 +65,7 @@ public class RobotStateTest {
 		assertSame(sht0Mock, service.getSeriesHandlerT0());
 		assertSame(sht1Mock, service.getSeriesHandlerT1());
 		assertSame(sht2Mock, service.getSeriesHandlerT2());
+		assertSame(ppMock, service.getPositionParams());
 	}
 	
 	@Test (expected=NullPointerException.class)
@@ -114,6 +118,11 @@ public class RobotStateTest {
 		service.getSeriesHandlerT0();
 	}
 	
+	@Test (expected=NullPointerException.class)
+	public void testGetPositionParams_ThrowsIfNotDefined() {
+		service.getPositionParams();
+	}
+	
 	@Test
 	public void testIsContractParamsDefined() {
 		ContractParams cpMock = control.createMock(ContractParams.class);
@@ -152,6 +161,16 @@ public class RobotStateTest {
 		assertTrue(service.isSeriesHandlerT2Defined());
 		service.setSeriesHandlerT2(null);
 		assertFalse(service.isSeriesHandlerT2Defined());
+	}
+	
+	@Test
+	public void testIsPositionParamsDefined() {
+		RMContractStrategyPositionParams ppMock = control.createMock(RMContractStrategyPositionParams.class);
+		assertFalse(service.isPositionParamsDefined());
+		service.setPositionParams(ppMock);
+		assertTrue(service.isPositionParamsDefined());
+		service.setPositionParams(null);
+		assertFalse(service.isPositionParamsDefined());
 	}
 
 }

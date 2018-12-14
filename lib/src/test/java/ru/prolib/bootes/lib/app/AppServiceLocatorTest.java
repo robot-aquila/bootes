@@ -14,6 +14,7 @@ import ru.prolib.aquila.core.BusinessEntities.Scheduler;
 import ru.prolib.aquila.core.BusinessEntities.Terminal;
 import ru.prolib.aquila.core.data.Candle;
 import ru.prolib.aquila.core.data.TFSymbol;
+import ru.prolib.aquila.core.text.IMessages;
 import ru.prolib.aquila.core.utils.PriceScaleDB;
 import ru.prolib.aquila.data.storage.MDStorage;
 import ru.prolib.bootes.lib.service.UIService;
@@ -151,6 +152,23 @@ public class AppServiceLocatorTest {
 		assertNotNull(actual);
 		assertSame(storageMock, actual);
 		assertSame(actual, service.getOHLCHistoryStorage());
+	}
+	
+	@Test
+	public void testGetMessages() {
+		IMessages messagesMock = control.createMock(IMessages.class);
+		service.setMessages(messagesMock);
+		
+		IMessages actual = service.getMessages();
+		
+		assertNotNull(actual);
+		assertSame(messagesMock, actual);
+		assertSame(actual, service.getMessages());
+	}
+	
+	@Test (expected=NullPointerException.class)
+	public void testGetMessages_ThrowsIfNotDefined() {
+		service.getMessages();
 	}
 
 }

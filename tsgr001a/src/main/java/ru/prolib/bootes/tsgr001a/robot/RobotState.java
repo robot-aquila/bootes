@@ -4,6 +4,7 @@ import ru.prolib.aquila.core.BusinessEntities.Portfolio;
 import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
 import ru.prolib.bootes.tsgr001a.rm.RMContractStrategy;
+import ru.prolib.bootes.tsgr001a.rm.RMContractStrategyPositionParams;
 
 /**
  * Robot state.
@@ -16,6 +17,7 @@ public class RobotState {
 	private ContractResolver contractResolver;
 	private ContractParams contractParams;
 	private RMContractStrategy contractStrategy;
+	private RMContractStrategyPositionParams positionParams;
 	private Portfolio portfolio;
 	private Security security;
 	private STSeriesHandler sht0, sht1, sht2;
@@ -66,6 +68,10 @@ public class RobotState {
 	
 	public synchronized void setSeriesHandlerT2(STSeriesHandler handler) {
 		this.sht2 = handler;
+	}
+	
+	public synchronized void setPositionParams(RMContractStrategyPositionParams params) {
+		this.positionParams = params;
 	}
 	
 	public synchronized String getContractName() {
@@ -152,6 +158,17 @@ public class RobotState {
 	
 	public synchronized boolean isSeriesHandlerT2Defined() {
 		return sht2 != null;
+	}
+	
+	public synchronized RMContractStrategyPositionParams getPositionParams() {
+		if ( positionParams == null ) {
+			throw new NullPointerException();
+		}
+		return positionParams;
+	}
+	
+	public synchronized boolean isPositionParamsDefined() {
+		return positionParams != null;
 	}
 	
 }

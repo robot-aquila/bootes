@@ -66,6 +66,7 @@ public class RMContractStrategy {
 	}
 	
 	public RMContractStrategyPositionParams getPositionParams() {
+		// TODO: от баланса или эквити?
 		try {
 			CDecimal d_price_step_size = security.getTickSize();
 			CDecimal d_price_step_cost = security.getTickValue().toAbstract();

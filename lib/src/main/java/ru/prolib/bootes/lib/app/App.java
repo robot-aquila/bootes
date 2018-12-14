@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 
 import ru.prolib.bootes.lib.app.comp.UIComp;
 import ru.prolib.bootes.lib.app.comp.EventQueueComp;
+import ru.prolib.bootes.lib.app.comp.MessagesComp;
 import ru.prolib.bootes.lib.app.comp.OHLCHistoryStorageComp;
 import ru.prolib.bootes.lib.app.comp.PriceScaleDBComp;
 import ru.prolib.bootes.lib.app.comp.ProbeSchedulerComp;
@@ -107,6 +108,7 @@ public abstract class App {
 	}
 	
 	protected void registerServices(AppRuntimeService ars) {
+		ars.addService(new MessagesComp(appConfig, serviceLocator));
 		ars.addService(new PriceScaleDBComp(appConfig, serviceLocator));
 		ars.addService(new UIComp(appConfig, serviceLocator));
 		ars.addService(new EventQueueComp(appConfig, serviceLocator));

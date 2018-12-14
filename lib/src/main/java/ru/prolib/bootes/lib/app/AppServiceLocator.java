@@ -5,6 +5,7 @@ import ru.prolib.aquila.core.BusinessEntities.Scheduler;
 import ru.prolib.aquila.core.BusinessEntities.Terminal;
 import ru.prolib.aquila.core.data.Candle;
 import ru.prolib.aquila.core.data.TFSymbol;
+import ru.prolib.aquila.core.text.IMessages;
 import ru.prolib.aquila.core.utils.PriceScaleDB;
 import ru.prolib.aquila.data.storage.MDStorage;
 import ru.prolib.bootes.lib.service.UIService;
@@ -17,6 +18,7 @@ public class AppServiceLocator {
 	private Terminal terminal;
 	private UIService uis;
 	private MDStorage<TFSymbol, Candle> ohlcHistoryStorage;
+	private IMessages messages;
 	
 	public AppServiceLocator(AppRuntimeService ars) {
 		this.ars = ars;
@@ -90,6 +92,17 @@ public class AppServiceLocator {
 			throw new NullPointerException();
 		}
 		return ohlcHistoryStorage;
+	}
+	
+	public synchronized IMessages getMessages() {
+		if ( messages == null ) {
+			throw new NullPointerException();
+		}
+		return messages;
+	}
+	
+	public synchronized void setMessages(IMessages messages) {
+		this.messages = messages;
 	}
 
 }

@@ -5,7 +5,7 @@ public interface RobotStateListener {
 	void accountSelected();
 	void contractSelected();
 	void sessionDataAvailable();
-	void limitsUpdated();
+	void positionParamsUpdated();
 	void sessionDataCleanup();
 	void robotStopped();
 }

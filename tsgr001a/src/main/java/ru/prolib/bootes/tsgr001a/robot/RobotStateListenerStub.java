@@ -23,7 +23,7 @@ public class RobotStateListenerStub implements RobotStateListener {
 	}
 	
 	@Override
-	public void limitsUpdated() {
+	public void positionParamsUpdated() {
 		
 	}
 

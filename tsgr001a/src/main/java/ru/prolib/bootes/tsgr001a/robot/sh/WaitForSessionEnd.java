@@ -9,8 +9,6 @@ import org.threeten.extra.Interval;
 import ru.prolib.aquila.core.sm.SMExit;
 import ru.prolib.aquila.core.sm.SMInput;
 import ru.prolib.aquila.core.sm.SMInputAction;
-import ru.prolib.aquila.core.sm.SMTriggerOnEvent;
-import ru.prolib.aquila.core.sm.SMTriggerOnTimer;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
@@ -22,28 +20,29 @@ public class WaitForSessionEnd extends CommonHandler implements SMInputAction {
 		logger = LoggerFactory.getLogger(WaitForSessionEnd.class);
 	}
 	
-	private final SMInput in, in2;
+	private final CommonActions ca;
+	private final SMInput in;
 
-	public WaitForSessionEnd(AppServiceLocator serviceLocator, RobotState state) {
+	public WaitForSessionEnd(AppServiceLocator serviceLocator,
+			RobotState state,
+			CommonActions ca) {
 		super(serviceLocator, state);
+		this.ca = ca;
 		registerExit(E_STOP_TRADING);
 		in = registerInput(this);
-		in2 = registerInput(new SMInputAction() {
-			@Override
-			public SMExit input(Object data) {
-				state.setPositionParams(state.getContractStrategy().getPositionParams());
-				state.getStateListener().limitsUpdated();
-				return null;
-			}
-		});
+	}
+	
+	private void updatePositionParams() {
+		ca.updatePositionParams(state);
 	}
 
 	@Override
 	public SMExit enter(SMTriggerRegistry triggers) {
 		super.enter(triggers);
 		Interval csp = state.getContractParams().getTradingPeriod();
-		triggers.add(new SMTriggerOnTimer(serviceLocator.getTerminal(), csp.getEnd(), in));
-		triggers.add(new SMTriggerOnEvent(state.getSeriesHandlerT0().getSeries().onLengthUpdate(), in2));
+		triggers.add(newExitOnTimer(serviceLocator.getTerminal(), csp.getEnd(), E_STOP_TRADING));
+		triggers.add(newTriggerOnEvent(state.getSeriesHandlerT0().getSeries().onLengthUpdate(), in));
+		updatePositionParams();
 		logger.debug("Enter state for symbol {} at time {}",
 				state.getContractParams().getSymbol(),
 				serviceLocator.getTerminal().getCurrentTime());
@@ -52,11 +51,8 @@ public class WaitForSessionEnd extends CommonHandler implements SMInputAction {
 
 	@Override
 	public SMExit input(Object data) {
-		logger.debug("Exit state for symbol {} at time {}",
-				state.getContractParams().getSymbol(),
-				serviceLocator.getTerminal().getCurrentTime());
-		state.getStateListener().sessionDataCleanup();
-		return getExit(E_STOP_TRADING);
+		updatePositionParams();
+		return null;
 	}
 
 }

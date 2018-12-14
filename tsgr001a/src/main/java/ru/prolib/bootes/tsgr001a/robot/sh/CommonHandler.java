@@ -2,7 +2,10 @@ package ru.prolib.bootes.tsgr001a.robot.sh;
 
 import static ru.prolib.bootes.tsgr001a.robot.sh.Constants.*;
 
+import java.time.Instant;
+
 import ru.prolib.aquila.core.EventType;
+import ru.prolib.aquila.core.BusinessEntities.Scheduler;
 import ru.prolib.aquila.core.sm.SMEnterAction;
 import ru.prolib.aquila.core.sm.SMExit;
 import ru.prolib.aquila.core.sm.SMInput;
@@ -10,6 +13,7 @@ import ru.prolib.aquila.core.sm.SMInputStub;
 import ru.prolib.aquila.core.sm.SMStateHandler;
 import ru.prolib.aquila.core.sm.SMTrigger;
 import ru.prolib.aquila.core.sm.SMTriggerOnEvent;
+import ru.prolib.aquila.core.sm.SMTriggerOnTimer;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
@@ -42,8 +46,16 @@ public abstract class CommonHandler extends SMStateHandler implements SMEnterAct
 		return null;
 	}
 	
+	protected SMTrigger newTriggerOnEvent(EventType type, SMInput input) {
+		return new SMTriggerOnEvent(type, input);
+	}
+	
 	protected SMTrigger newExitOnEvent(EventType type, String exitID) {
-		return new SMTriggerOnEvent(type, registerInput(new SMInputStub(getExit(exitID))));
+		return newTriggerOnEvent(type, registerInput(new SMInputStub(getExit(exitID))));
+	}
+	
+	protected SMTrigger newExitOnTimer(Scheduler scheduler, Instant time, String exitID) {
+		return new SMTriggerOnTimer(scheduler, time, registerInput(new SMInputStub(getExit(exitID))));
 	}
 
 }

@@ -144,6 +144,16 @@ public class RMContractStrategyTest {
 	}
 	
 	@Test
+	public void testPriceToMoney_ZeroTickSize() {
+		setupRTS_2();
+		security.consume(new DeltaUpdateBuilder()
+				.withToken(SecurityField.TICK_SIZE, of("0.00000"))
+				.buildUpdate());
+		
+		assertEquals(ofRUB2("0.00"), service.priceToMoney(of("150290")));
+	}
+	
+	@Test
 	public void testMoneyToPrice() {
 		setupRTS_2();
 		assertEquals(of("76145770"), service.moneyToPrice(ofRUB5("100785632.62345")));
@@ -163,6 +173,16 @@ public class RMContractStrategyTest {
 		
 		setupSi();
 		assertEquals(of("90085313"), service.moneyToPrice(ofRUB5("90085312.5002")));
+	}
+	
+	@Test
+	public void testMoneyToPrice_ZeroTickValue() {
+		setupRTS_2();
+		security.consume(new DeltaUpdateBuilder()
+				.withToken(SecurityField.TICK_VALUE, ofRUB5("0"))
+				.buildUpdate());
+		
+		assertEquals(of("0"), service.moneyToPrice(ofRUB2("77856912.12")));
 	}
 	
 	@Test
@@ -289,6 +309,177 @@ public class RMContractStrategyTest {
 				ofRUB2("12537.36")
 			);
 		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void testGetPositionParams_SpecialCase_ZeroBalance() {
+		service.setStrategyParams(commonParamsWithSlippage(5));
+		setupRTS_2();
+		d10ATR.set(TIME, of("3300.01726"));
+		portfolio.consume(new DeltaUpdateBuilder()
+				.withToken(PortfolioField.BALANCE, ofRUB2("0.00"))
+				.buildUpdate());
+		
+		RMContractStrategyPositionParams actual = service.getPositionParams();
+		
+		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
+				0,
+				of("0"),
+				of("0"),
+				ofRUB2("0.00"),
+				ofRUB2("0.00")
+			);
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void testGetPositionParams_SpecialCase_ZeroTradeGoalCapPer() {
+		service.setStrategyParams(new RMContractStrategyParams(
+				CDecimalBD.of("0.000"),
+				CDecimalBD.of("0.012"),
+				CDecimalBD.of("0.60"),
+				CDecimalBD.of("1.05"),
+				5
+			));
+		setupRTS_2();
+		d10ATR.set(TIME, of("3300.01726"));
+		
+		RMContractStrategyPositionParams actual = service.getPositionParams();
+		
+		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
+				0,
+				of("0"),
+				of("0"),
+				ofRUB2("0.00"),
+				ofRUB2("0.00")
+			);
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void testGetPositionParams_SpecialCase_ZeroLossGoalCapPer() {
+		service.setStrategyParams(new RMContractStrategyParams(
+				CDecimalBD.of("0.075"),
+				CDecimalBD.of("0.000"),
+				CDecimalBD.of("0.60"),
+				CDecimalBD.of("1.05"),
+				5
+			));
+		setupRTS_2();
+		d10ATR.set(TIME, of("3300.01726"));
+		
+		RMContractStrategyPositionParams actual = service.getPositionParams();
+		
+		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
+				0,
+				of("0"),
+				of("0"),
+				ofRUB2("0.00"),
+				ofRUB2("0.00")
+			);
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void testGetPositionParams_SpecialCase_ZeroPriceTickSize() {
+		// Normally this never should happen because tick size shall not be zero
+		service.setStrategyParams(commonParamsWithSlippage(5));
+		setupRTS_2();
+		d10ATR.set(TIME, of("3300.01726"));
+		security.consume(new DeltaUpdateBuilder()
+				.withToken(SecurityField.TICK_SIZE, of("0"))
+				.buildUpdate());
+		
+		RMContractStrategyPositionParams actual = service.getPositionParams();
+		
+		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
+				0,
+				of("0"),
+				of("0"),
+				ofRUB2("0.00"),
+				ofRUB2("0.00")
+			);
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void testGetPositionParams_SpecialCase_ZeroPriceTickValue() {
+		// Normally this never should happen because tick value shall not be zero
+		service.setStrategyParams(commonParamsWithSlippage(5));
+		setupRTS_2();
+		d10ATR.set(TIME, of("3300.01726"));
+		security.consume(new DeltaUpdateBuilder()
+				.withToken(SecurityField.TICK_VALUE, of("0.00000"))
+				.buildUpdate());
+		
+		RMContractStrategyPositionParams actual = service.getPositionParams();
+		
+		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
+				0,
+				of("0"),
+				of("0"),
+				of("0.00"),
+				of("0.00")
+			);
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void testGetPositionParams_SpecialCase_ExpDailyPriceMovePer() {
+		service.setStrategyParams(new RMContractStrategyParams(
+				CDecimalBD.of("0.075"),
+				CDecimalBD.of("0.012"),
+				CDecimalBD.of("0.00"),
+				CDecimalBD.of("1.05"),
+				5
+			));
+		setupRTS_2();
+		d10ATR.set(TIME, of("3300.01726"));
+		
+		RMContractStrategyPositionParams actual = service.getPositionParams();
+		
+		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
+				0,
+				of("0"),
+				of("0"),
+				ofRUB2("0.00"),
+				ofRUB2("0.00")
+			);
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void testGetPositionParams_SpecialCase_ExpLocalPriceMovePer() {
+		service.setStrategyParams(new RMContractStrategyParams(
+				CDecimalBD.of("0.075"),
+				CDecimalBD.of("0.012"),
+				CDecimalBD.of("0.60"),
+				CDecimalBD.of("0.00"),
+				5
+			));
+		setupRTS_2();
+		d10ATR.set(TIME, of("3300.01726"));
+		
+		RMContractStrategyPositionParams actual = service.getPositionParams();
+		
+		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
+				0,
+				of("0"),
+				of("0"),
+				ofRUB2("0.00"),
+				ofRUB2("0.00")
+			);
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void testGetPositionParams_SpecialCase_ZeroTakeProfitPts() {
+		testGetPositionParams_SpecialCase_ExpDailyPriceMovePer();
+	}
+	
+	@Test
+	public void testGetPositionParams_SpecialCase_ZeroNumContracts() {
+		testGetPositionParams_SpecialCase_ExpLocalPriceMovePer();
 	}
 
 }

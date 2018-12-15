@@ -1,18 +1,19 @@
 package ru.prolib.bootes.tsgr001a.rm;
 
 import static org.junit.Assert.*;
+import static org.easymock.EasyMock.*;
 import static ru.prolib.aquila.core.BusinessEntities.CDecimalBD.*;
 
 import java.time.Instant;
 
 import ru.prolib.aquila.core.BusinessEntities.DeltaUpdateBuilder;
 
+import org.easymock.IMocksControl;
 import org.junit.Before;
 import org.junit.Test;
 
 import ru.prolib.aquila.core.BusinessEntities.Account;
 import ru.prolib.aquila.core.BusinessEntities.BasicTerminalBuilder;
-import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 import ru.prolib.aquila.core.BusinessEntities.CDecimalBD;
 import ru.prolib.aquila.core.BusinessEntities.EditablePortfolio;
 import ru.prolib.aquila.core.BusinessEntities.EditableSecurity;
@@ -21,22 +22,22 @@ import ru.prolib.aquila.core.BusinessEntities.PortfolioField;
 import ru.prolib.aquila.core.BusinessEntities.SecurityField;
 import ru.prolib.aquila.core.BusinessEntities.Symbol;
 import ru.prolib.aquila.core.data.DataProviderStub;
-import ru.prolib.aquila.core.data.TSeriesImpl;
-import ru.prolib.aquila.core.data.ZTFrame;
 
 public class RMContractStrategyTest {
-	private static Instant TIME = Instant.EPOCH;
-	private static Account account = new Account("JBT-1251");
-	private static Symbol symbol = new Symbol("FAKE");
 	
 	static Instant T(String timeString) {
 		return Instant.parse(timeString);
 	}
+
+	private static Instant TIME = T("2018-12-14T05:30:39Z");
+	private static Account account = new Account("JBT-1251");
+	private static Symbol symbol = new Symbol("FAKE");
 	
+	private IMocksControl control;
 	private EditableTerminal terminal;
 	private EditableSecurity security;
 	private EditablePortfolio portfolio;
-	private TSeriesImpl<CDecimal> d10ATR, m5ATR;
+	private RMPriceStats psMock;
 	private RMContractStrategyParams params;
 	private RMContractStrategy service;
 	
@@ -94,6 +95,8 @@ public class RMContractStrategyTest {
 
 	@Before
 	public void setUp() throws Exception {
+		control = createStrictControl();
+		psMock = control.createMock(RMPriceStats.class);
 		terminal = new BasicTerminalBuilder()
 				.withDataProvider(new DataProviderStub())
 				.buildTerminal();
@@ -102,14 +105,11 @@ public class RMContractStrategyTest {
 		portfolio.consume(new DeltaUpdateBuilder()
 				.withToken(PortfolioField.BALANCE, ofRUB2("1044780.17"))
 				.buildUpdate());
-		d10ATR = new TSeriesImpl<>(ZTFrame.D1MSK);
-		m5ATR = new TSeriesImpl<>(ZTFrame.M5MSK);
 		service = new RMContractStrategy();
 		service.setStrategyParams(commonParamsWithSlippage(3));
 		service.setPortfolio(portfolio);
 		service.setSecurity(security);
-		service.setAvgDailyPriceMove(d10ATR);
-		service.setAvgLocalPriceMove(m5ATR);
+		service.setPriceStats(psMock);
 	}
 	
 	@Test
@@ -117,8 +117,7 @@ public class RMContractStrategyTest {
 		assertSame(params, service.getStrategyParams());
 		assertSame(portfolio, service.getPortfolio());
 		assertSame(security, service.getSecurity());
-		assertSame(d10ATR, service.getAvgDailyPriceMove());
-		assertSame(m5ATR, service.getAvgLocalPriceMove());
+		assertSame(psMock, service.getPriceStats());
 	}
 	
 	@Test
@@ -189,16 +188,20 @@ public class RMContractStrategyTest {
 	public void testGetPositionParams_RTS_1() {
 		service.setStrategyParams(commonParamsWithSlippage(3));
 		setupRTS_1();
-		d10ATR.set(TIME, of("3659.02861"));
+		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("3659.02861"));
+		expect(psMock.getLocalPriceMove(TIME)).andReturn(of("115.47992"));
+		control.replay();
 		
-		RMContractStrategyPositionParams actual = service.getPositionParams();
+		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
 				52,
 				of("2200"),
 				of("320"),
 				ofRUB2("78358.51"),
-				ofRUB2("12537.36")
+				ofRUB2("12537.36"),
+				of("3659.02861"),
+				of("115.47992")
 			);
 		assertEquals(expected, actual);
 	}
@@ -207,16 +210,20 @@ public class RMContractStrategyTest {
 	public void testGetPositionParams_RTS_2() {
 		service.setStrategyParams(commonParamsWithSlippage(3));
 		setupRTS_2();
-		d10ATR.set(TIME, of("3300.01726"));
+		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("3300.01726"));
+		expect(psMock.getLocalPriceMove(TIME)).andReturn(of("130.50992"));
+		control.replay();
 		
-		RMContractStrategyPositionParams actual = service.getPositionParams();
+		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
 				30,
 				of("1980"),
 				of("290"), // 10 * 12537.36 / 30 / 13.23588 - 10 * 3 = 315.74 - 30 = 290
 				ofRUB2("78358.51"),
-				ofRUB2("12537.36")
+				ofRUB2("12537.36"),
+				of("3300.01726"),
+				of("130.50992")
 			);
 		assertEquals(expected, actual);
 	}
@@ -225,16 +232,20 @@ public class RMContractStrategyTest {
 	public void testGetPositionParams_Si_1() {
 		service.setStrategyParams(commonParamsWithSlippage(5));
 		setupSi();
-		d10ATR.set(TIME, of("289.02761"));
+		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("289.02761"));
+		expect(psMock.getLocalPriceMove(TIME)).andReturn(of("52.40061"));
+		control.replay();
 		
-		RMContractStrategyPositionParams actual = service.getPositionParams();
+		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
 				453,
 				of("173"),
 				of("23"),
 				ofRUB2("78358.51"),
-				ofRUB2("12537.36")
+				ofRUB2("12537.36"),
+				of("289.02761"),
+				of("52.40061")
 			);
 		assertEquals(expected, actual);
 	}
@@ -243,16 +254,20 @@ public class RMContractStrategyTest {
 	public void testGetPositionParams_Si_2() {
 		service.setStrategyParams(commonParamsWithSlippage(5));
 		setupSi();
-		d10ATR.set(TIME, of("879.71002"));
+		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("879.71002"));
+		expect(psMock.getLocalPriceMove(TIME)).andReturn(of("76.11972"));
+		control.replay();
 		
-		RMContractStrategyPositionParams actual = service.getPositionParams();
+		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
 				148,
 				of("528"),
 				of("80"), // 1 * 12537.36 / 148 / 1 - 1 * 5 = 80
 				ofRUB2("78358.51"),
-				ofRUB2("12537.36")
+				ofRUB2("12537.36"),
+				of("879.71002"),
+				of("76.11972")
 			);
 		assertEquals(expected, actual);
 	}
@@ -261,16 +276,20 @@ public class RMContractStrategyTest {
 	public void testGetPositionParams_BR_1() {
 		service.setStrategyParams(commonParamsWithSlippage(1));
 		setupBR();
-		d10ATR.set(TIME, of("2.9801562"));
+		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("2.9801562"));
+		expect(psMock.getLocalPriceMove(TIME)).andReturn(of("0.136678"));
+		control.replay();
 		
-		RMContractStrategyPositionParams actual = service.getPositionParams();
+		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
 				66,
 				of("1.79"),
 				of("0.28"), // 0.01 * 12537.36 / 66 / 6.66046 - 1 * 0.01 = 0.28520 - 0.01 = 0.28
 				ofRUB2("78358.51"),
-				ofRUB2("12537.36")
+				ofRUB2("12537.36"),
+				of("2.9801562"),
+				of("0.136678")
 			);
 		assertEquals(expected, actual);
 	}
@@ -279,16 +298,20 @@ public class RMContractStrategyTest {
 	public void testGetPositionParams_Eu_1() {
 		service.setStrategyParams(commonParamsWithSlippage(2));
 		setupEu();
-		d10ATR.set(TIME, of("895.40182"));
+		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("895.40182"));
+		expect(psMock.getLocalPriceMove(TIME)).andReturn(of("49.76512"));
+		control.replay();
 		
-		RMContractStrategyPositionParams actual = service.getPositionParams();
+		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
 				146,
 				of("537"),
 				of("84"), // 1 * 12537.36 / 146 / 1 - 2 * 1 = 86 - 2 = 84
 				ofRUB2("78358.51"),
-				ofRUB2("12537.36")
+				ofRUB2("12537.36"),
+				of("895.40182"),
+				of("49.76512")
 			);
 		assertEquals(expected, actual);
 	}
@@ -297,16 +320,20 @@ public class RMContractStrategyTest {
 	public void testGetPositionParams_GOLD_1() {
 		service.setStrategyParams(commonParamsWithSlippage(3));
 		setupGOLD();
-		d10ATR.set(TIME, of("10.801772"));
+		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("10.801772"));
+		expect(psMock.getLocalPriceMove(TIME)).andReturn(of("3.99012"));
+		control.replay();
 		
-		RMContractStrategyPositionParams actual = service.getPositionParams();
+		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
 				182,
 				of("6.5"),
 				of("0.7"), // 0.1 / 12537.36 / 182 / 6.61794 - 3 * 0.1 = 1.0 - 0.3 = 0.7
 				ofRUB2("78358.51"),
-				ofRUB2("12537.36")
+				ofRUB2("12537.36"),
+				of("10.801772"),
+				of("3.99012")
 			);
 		assertEquals(expected, actual);
 	}
@@ -315,19 +342,23 @@ public class RMContractStrategyTest {
 	public void testGetPositionParams_SpecialCase_ZeroBalance() {
 		service.setStrategyParams(commonParamsWithSlippage(5));
 		setupRTS_2();
-		d10ATR.set(TIME, of("3300.01726"));
+		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("3300.01726"));
+		expect(psMock.getLocalPriceMove(TIME)).andReturn(of("250.86612"));
+		control.replay();
 		portfolio.consume(new DeltaUpdateBuilder()
 				.withToken(PortfolioField.BALANCE, ofRUB2("0.00"))
 				.buildUpdate());
 		
-		RMContractStrategyPositionParams actual = service.getPositionParams();
+		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
 				0,
-				of("0"),
-				of("0"),
+				of(0L),
+				of(0L),
 				ofRUB2("0.00"),
-				ofRUB2("0.00")
+				ofRUB2("0.00"),
+				of(0L),
+				of(0L)
 			);
 		assertEquals(expected, actual);
 	}
@@ -342,16 +373,20 @@ public class RMContractStrategyTest {
 				5
 			));
 		setupRTS_2();
-		d10ATR.set(TIME, of("3300.01726"));
+		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("3300.01726"));
+		expect(psMock.getLocalPriceMove(TIME)).andReturn(of("450.88210"));
+		control.replay();
 		
-		RMContractStrategyPositionParams actual = service.getPositionParams();
+		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
 				0,
-				of("0"),
-				of("0"),
+				of(0L),
+				of(0L),
 				ofRUB2("0.00"),
-				ofRUB2("0.00")
+				ofRUB2("0.00"),
+				of(0L),
+				of(0L)
 			);
 		assertEquals(expected, actual);
 	}
@@ -366,16 +401,20 @@ public class RMContractStrategyTest {
 				5
 			));
 		setupRTS_2();
-		d10ATR.set(TIME, of("3300.01726"));
+		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("3300.01726"));
+		expect(psMock.getLocalPriceMove(TIME)).andReturn(of("450.88210"));
+		control.replay();
 		
-		RMContractStrategyPositionParams actual = service.getPositionParams();
+		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
 				0,
-				of("0"),
-				of("0"),
+				of(0L),
+				of(0L),
 				ofRUB2("0.00"),
-				ofRUB2("0.00")
+				ofRUB2("0.00"),
+				of(0L),
+				of(0L)
 			);
 		assertEquals(expected, actual);
 	}
@@ -385,19 +424,23 @@ public class RMContractStrategyTest {
 		// Normally this never should happen because tick size shall not be zero
 		service.setStrategyParams(commonParamsWithSlippage(5));
 		setupRTS_2();
-		d10ATR.set(TIME, of("3300.01726"));
+		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("3300.01726"));
+		expect(psMock.getLocalPriceMove(TIME)).andReturn(of("450.88210"));
+		control.replay();
 		security.consume(new DeltaUpdateBuilder()
-				.withToken(SecurityField.TICK_SIZE, of("0"))
+				.withToken(SecurityField.TICK_SIZE, of(0L))
 				.buildUpdate());
 		
-		RMContractStrategyPositionParams actual = service.getPositionParams();
+		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
 				0,
-				of("0"),
-				of("0"),
+				of(0L),
+				of(0L),
 				ofRUB2("0.00"),
-				ofRUB2("0.00")
+				ofRUB2("0.00"),
+				of(0L),
+				of(0L)
 			);
 		assertEquals(expected, actual);
 	}
@@ -407,19 +450,23 @@ public class RMContractStrategyTest {
 		// Normally this never should happen because tick value shall not be zero
 		service.setStrategyParams(commonParamsWithSlippage(5));
 		setupRTS_2();
-		d10ATR.set(TIME, of("3300.01726"));
+		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("3300.01726"));
+		expect(psMock.getLocalPriceMove(TIME)).andReturn(of("450.88210"));
+		control.replay();
 		security.consume(new DeltaUpdateBuilder()
-				.withToken(SecurityField.TICK_VALUE, of("0.00000"))
+				.withToken(SecurityField.TICK_VALUE, ofRUB5("0.00000"))
 				.buildUpdate());
 		
-		RMContractStrategyPositionParams actual = service.getPositionParams();
+		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
 				0,
-				of("0"),
-				of("0"),
-				of("0.00"),
-				of("0.00")
+				of(0L),
+				of(0L),
+				ofRUB2("0.00"),
+				ofRUB2("0.00"),
+				of(0L),
+				of(0L)
 			);
 		assertEquals(expected, actual);
 	}
@@ -434,16 +481,20 @@ public class RMContractStrategyTest {
 				5
 			));
 		setupRTS_2();
-		d10ATR.set(TIME, of("3300.01726"));
+		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("3300.01726"));
+		expect(psMock.getLocalPriceMove(TIME)).andReturn(of("450.88210"));
+		control.replay();
 		
-		RMContractStrategyPositionParams actual = service.getPositionParams();
+		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
 				0,
-				of("0"),
-				of("0"),
+				of(0L),
+				of(0L),
 				ofRUB2("0.00"),
-				ofRUB2("0.00")
+				ofRUB2("0.00"),
+				of(0L),
+				of(0L)
 			);
 		assertEquals(expected, actual);
 	}
@@ -458,16 +509,20 @@ public class RMContractStrategyTest {
 				5
 			));
 		setupRTS_2();
-		d10ATR.set(TIME, of("3300.01726"));
+		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("3300.01726"));
+		expect(psMock.getLocalPriceMove(TIME)).andReturn(of("450.88210"));
+		control.replay();
 		
-		RMContractStrategyPositionParams actual = service.getPositionParams();
+		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
 				0,
-				of("0"),
-				of("0"),
+				of(0L),
+				of(0L),
 				ofRUB2("0.00"),
-				ofRUB2("0.00")
+				ofRUB2("0.00"),
+				of(0L),
+				of(0L)
 			);
 		assertEquals(expected, actual);
 	}

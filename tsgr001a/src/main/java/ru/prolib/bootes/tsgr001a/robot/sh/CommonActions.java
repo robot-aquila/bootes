@@ -8,6 +8,7 @@ import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
 import ru.prolib.aquila.core.data.tseries.SecurityChartDataHandler;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.tsgr001a.rm.RMContractStrategy;
+import ru.prolib.bootes.tsgr001a.rm.RMPriceStatsSB;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 import ru.prolib.bootes.tsgr001a.robot.SetupT0;
 import ru.prolib.bootes.tsgr001a.robot.SetupT1;
@@ -71,13 +72,18 @@ public class CommonActions {
 		return true;
 	}
 	
-	public void updatePositionParams(RobotState state) {
+	public void updatePositionParams(AppServiceLocator serviceLocator, RobotState state) {
 		RMContractStrategy cs = state.getContractStrategy();
-		cs.setAvgDailyPriceMove(state.getSeriesHandlerT2().getSeries().getSeries(SetupT2.SID_ATR));
-		cs.setAvgLocalPriceMove(state.getSeriesHandlerT0().getSeries().getSeries(SetupT0.SID_ATR));
+		RMPriceStatsSB ps = (RMPriceStatsSB) cs.getPriceStats();
+		if ( ps == null ) {
+			ps = new RMPriceStatsSB();
+			cs.setPriceStats(ps);
+		}
+		ps.setDailyMoveSeries(state.getSeriesHandlerT2().getSeries().getSeries(SetupT2.SID_ATR));
+		ps.setLocalMoveSeries(state.getSeriesHandlerT0().getSeries().getSeries(SetupT0.SID_ATR));
 		cs.setPortfolio(state.getPortfolio());
 		cs.setSecurity(state.getSecurity());
-		state.setPositionParams(cs.getPositionParams());
+		state.setPositionParams(cs.getPositionParams(serviceLocator.getTerminal().getCurrentTime()));
 		state.getStateListener().positionParamsUpdated();
 	}
 

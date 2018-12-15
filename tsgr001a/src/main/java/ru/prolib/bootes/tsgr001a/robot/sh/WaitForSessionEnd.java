@@ -33,7 +33,7 @@ public class WaitForSessionEnd extends CommonHandler implements SMInputAction {
 	}
 	
 	private void updatePositionParams() {
-		ca.updatePositionParams(state);
+		ca.updatePositionParams(serviceLocator, state);
 	}
 
 	@Override

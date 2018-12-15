@@ -99,32 +99,7 @@ public class StrategyConfigPanel extends JPanel {
 		jlAccount.setText(state.getAccountCode());
 		jlContractName.setText(state.getContractName());
 		
-		String dummy = NA();
-		if ( state.isSeriesHandlerT2Defined() ) {
-			TSeries<CDecimal> atr = state.getSeriesHandlerT2().getSeries().getSeries(SetupT2.SID_ATR);
-			if ( atr.getLength() > 0 ) {
-				try {
-					dummy = points(atr.get());
-				} catch ( ValueException e ) {
-					throw new RuntimeException("Unexpected exception: ", e);
-				}
-			}			
-		}
-		jlAvgDailyPriceMove.setText(dummy);
 		jlExpDailyPriceMove.setText(percents(csp.getExpDailyPriceMovePer()));
-		
-		dummy = NA();
-		if ( state.isSeriesHandlerT0Defined() ) {
-			TSeries<CDecimal> atr = state.getSeriesHandlerT0().getSeries().getSeries(SetupT0.SID_ATR);
-			if ( atr.getLength() > 0 ) {
-				try {
-					dummy = points(atr.get());
-				} catch ( ValueException e ) {
-					throw new RuntimeException("Unexpected exception: ", e);
-				}
-			}	
-		}
-		jlAvgLocalPriceMove.setText(dummy);
 		jlExpLocalPriceMove.setText(percents(csp.getExpLocalPriceMovePer()));
 		
 		if ( state.isContractParamsDefined() ) {
@@ -152,6 +127,10 @@ public class StrategyConfigPanel extends JPanel {
 			jlNumberOfContracts.setText(Integer.toString(cspp.getNumberOfContracts()));
 			jlTakeProfit.setText(points(cspp.getTakeProfitPts()));
 			jlStopLoss.setText(points(cspp.getStopLossPts()));
+			
+			jlAvgDailyPriceMove.setText(points(cspp.getAvgDailyPriceMove()));
+			jlAvgLocalPriceMove.setText(points(cspp.getAvgLocalPriceMove()));
+
 		} else {
 			jlTradeGoalCap.setText(percents(csp.getTradeGoalCapPer()));
 			jlTradeLossCap.setText(percents(csp.getTradeLossCapPer()));
@@ -159,6 +138,9 @@ public class StrategyConfigPanel extends JPanel {
 			jlNumberOfContracts.setText(NA());
 			jlTakeProfit.setText(NA());
 			jlStopLoss.setText(NA());
+			
+			jlAvgDailyPriceMove.setText(NA());
+			jlAvgLocalPriceMove.setText(NA());
 		}
 		
 		

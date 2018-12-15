@@ -9,19 +9,24 @@ import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 
 public class RMContractStrategyPositionParams {
 	private final int numContracts;
-	private final CDecimal takeProfit, stopLoss, tradeGoalCap, tradeLossCap;
+	private final CDecimal takeProfit, stopLoss, tradeGoalCap, tradeLossCap,
+		avgDailyPriceMove, avgLocalPriceMove;
 	
 	public RMContractStrategyPositionParams(int numContracts,
 			CDecimal takeProfit,
 			CDecimal stopLoss,
 			CDecimal tradeGoalCap,
-			CDecimal tradeLossCap)
+			CDecimal tradeLossCap,
+			CDecimal avgDailyPriceMove,
+			CDecimal avgLocalPriceMove)
 	{
 		this.numContracts = numContracts;
 		this.takeProfit = takeProfit;
 		this.stopLoss = stopLoss;
 		this.tradeGoalCap = tradeGoalCap;
 		this.tradeLossCap = tradeLossCap;
+		this.avgDailyPriceMove = avgDailyPriceMove;
+		this.avgLocalPriceMove = avgLocalPriceMove;
 	}
 	
 	/**
@@ -59,6 +64,14 @@ public class RMContractStrategyPositionParams {
 		return tradeLossCap;
 	}
 	
+	public CDecimal getAvgDailyPriceMove() {
+		return avgDailyPriceMove;
+	}
+	
+	public CDecimal getAvgLocalPriceMove() {
+		return avgLocalPriceMove;
+	}
+	
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
@@ -72,6 +85,8 @@ public class RMContractStrategyPositionParams {
 				.append(stopLoss)
 				.append(tradeGoalCap)
 				.append(tradeLossCap)
+				.append(avgDailyPriceMove)
+				.append(avgLocalPriceMove)
 				.build();
 	}
 	
@@ -90,6 +105,8 @@ public class RMContractStrategyPositionParams {
 				.append(o.stopLoss, stopLoss)
 				.append(o.tradeGoalCap, tradeGoalCap)
 				.append(o.tradeLossCap, tradeLossCap)
+				.append(o.avgDailyPriceMove, avgDailyPriceMove)
+				.append(o.avgLocalPriceMove, avgLocalPriceMove)
 				.build();
 	}
 

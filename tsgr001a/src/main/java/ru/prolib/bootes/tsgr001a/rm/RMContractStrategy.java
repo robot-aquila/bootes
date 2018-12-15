@@ -1,11 +1,11 @@
 package ru.prolib.bootes.tsgr001a.rm;
 
+import java.time.Instant;
+
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 import ru.prolib.aquila.core.BusinessEntities.CDecimalBD;
 import ru.prolib.aquila.core.BusinessEntities.Portfolio;
 import ru.prolib.aquila.core.BusinessEntities.Security;
-import ru.prolib.aquila.core.data.Series;
-import ru.prolib.aquila.core.data.ValueException;
 
 /**
  * Strategy risk management of separate contract.
@@ -14,7 +14,7 @@ public class RMContractStrategy {
 	private RMContractStrategyParams params;
 	private Portfolio portfolio;
 	private Security security;
-	private Series<CDecimal> avgDailyPriceMove, avgLocalPriceMove;
+	private RMPriceStats priceStats;
 
 	public void setStrategyParams(RMContractStrategyParams params) {
 		this.params = params;
@@ -28,12 +28,8 @@ public class RMContractStrategy {
 		this.security = security;
 	}
 	
-	public void setAvgDailyPriceMove(Series<CDecimal> series) {
-		this.avgDailyPriceMove = series;
-	}
-	
-	public void setAvgLocalPriceMove(Series<CDecimal> series) {
-		this.avgLocalPriceMove = series;
+	public void setPriceStats(RMPriceStats stats) {
+		this.priceStats = stats;
 	}
 
 	public RMContractStrategyParams getStrategyParams() {
@@ -48,12 +44,8 @@ public class RMContractStrategy {
 		return security;
 	}
 	
-	public Series<CDecimal> getAvgDailyPriceMove() {
-		return avgDailyPriceMove;
-	}
-	
-	public Series<CDecimal> getAvgLocalPriceMove() {
-		return avgLocalPriceMove;
+	public RMPriceStats getPriceStats() {
+		return priceStats;
 	}
 	
 	public CDecimal priceToMoney(CDecimal price) {
@@ -84,63 +76,71 @@ public class RMContractStrategy {
 				stepsToPrice(0),
 				stepsToPrice(0),
 				priceToMoney(CDecimalBD.of(0L)),
-				priceToMoney(CDecimalBD.of(0L))
+				priceToMoney(CDecimalBD.of(0L)),
+				stepsToPrice(0),
+				stepsToPrice(0)
 			);
 	}
 	
-	public RMContractStrategyPositionParams getPositionParams() {
+	/**
+	 * Get position parameters for time.
+	 * <p>
+	 * @param time - time to determine parameters for 
+	 * @return position parameters
+	 */
+	public RMContractStrategyPositionParams getPositionParams(Instant time) {
 		// TODO: от баланса или эквити?
-		try {
-			CDecimal d_trade_loss_cap_per = params.getTradeLossCapPer();
-			CDecimal d_trade_goal_cap_per = params.getTradeGoalCapPer();
-			CDecimal d_price_step_size = security.getTickSize();
-			CDecimal d_price_step_cost = security.getTickValue().toAbstract();
-			CDecimal d_exp_local_price_move_per = params.getExpLocalPriceMovePer();
-			if ( d_trade_goal_cap_per.compareTo(CDecimalBD.ZERO) == 0
-			  || d_trade_loss_cap_per.compareTo(CDecimalBD.ZERO) == 0
-			  || d_price_step_size.compareTo(CDecimalBD.ZERO) == 0
-			  || d_price_step_cost.compareTo(CDecimalBD.ZERO) == 0
-			  || d_exp_local_price_move_per.compareTo(CDecimalBD.ZERO) == 0 )
-			{
-				return emptyPositionParams();
-			}
-			
-			CDecimal d_balance = portfolio.getBalance();
-			if ( d_balance.toAbstract().compareTo(CDecimalBD.ZERO) == 0 ) {
-				return emptyPositionParams();
-			}
-			CDecimal d_trade_goal_cap = d_balance.multiply(d_trade_goal_cap_per).withScale(2);
-			CDecimal d_trade_loss_cap = d_balance.multiply(d_trade_loss_cap_per).withScale(2);
-			CDecimal d_take_profit_pts = avgDailyPriceMove.get()
-					.multiply(params.getExpDailyPriceMovePer())
-					.divideExact(d_price_step_size, 0)
-					.multiply(d_price_step_size);
-			if ( d_take_profit_pts.compareTo(CDecimalBD.ZERO) == 0 ) {
-				return emptyPositionParams();
-			}
-			CDecimal d_num_contracts = d_price_step_size.multiply(d_trade_goal_cap.toAbstract())
-					.divide(d_price_step_cost)
-					.divide(d_take_profit_pts)
-					.withScale(0);
-			if ( d_num_contracts.compareTo(CDecimalBD.ZERO) == 0 ) {
-				return emptyPositionParams();
-			}
-			CDecimal d_stop_loss_pts = d_price_step_size.multiply(d_trade_loss_cap.toAbstract())
-					.divide(d_num_contracts)
-					.divide(d_price_step_cost)
-					.subtract(d_price_step_size.multiply((long) params.getSlippageStp()))
-					.divideExact(d_price_step_size, 0)
-					.multiply(d_price_step_size);
-			return new RMContractStrategyPositionParams(
-					d_num_contracts.toBigDecimal().intValue(),
-					d_take_profit_pts,
-					d_stop_loss_pts,
-					d_trade_goal_cap,
-					d_trade_loss_cap
-				);
-		} catch ( ValueException e ) {
-			throw new IllegalStateException(e);
+		CDecimal d_trade_loss_cap_per = params.getTradeLossCapPer();
+		CDecimal d_trade_goal_cap_per = params.getTradeGoalCapPer();
+		CDecimal d_price_step_size = security.getTickSize();
+		CDecimal d_price_step_cost = security.getTickValue().toAbstract();
+		CDecimal d_exp_local_price_move_per = params.getExpLocalPriceMovePer();
+		CDecimal d_avg_daily_price_move = priceStats.getDailyPriceMove(time);
+		CDecimal d_avg_local_price_move = priceStats.getLocalPriceMove(time);
+		if ( d_trade_goal_cap_per.compareTo(CDecimalBD.ZERO) == 0
+		  || d_trade_loss_cap_per.compareTo(CDecimalBD.ZERO) == 0
+		  || d_price_step_size.compareTo(CDecimalBD.ZERO) == 0
+		  || d_price_step_cost.compareTo(CDecimalBD.ZERO) == 0
+		  || d_exp_local_price_move_per.compareTo(CDecimalBD.ZERO) == 0 )
+		{
+			return emptyPositionParams();
 		}
+		
+		CDecimal d_balance = portfolio.getBalance();
+		if ( d_balance.toAbstract().compareTo(CDecimalBD.ZERO) == 0 ) {
+			return emptyPositionParams();
+		}
+		CDecimal d_trade_goal_cap = d_balance.multiply(d_trade_goal_cap_per).withScale(2);
+		CDecimal d_trade_loss_cap = d_balance.multiply(d_trade_loss_cap_per).withScale(2);
+		CDecimal d_take_profit_pts = d_avg_daily_price_move
+				.multiply(params.getExpDailyPriceMovePer())
+				.divideExact(d_price_step_size, 0)
+				.multiply(d_price_step_size);
+		if ( d_take_profit_pts.compareTo(CDecimalBD.ZERO) == 0 ) {
+			return emptyPositionParams();
+		}
+		CDecimal d_num_contracts = d_price_step_size.multiply(d_trade_goal_cap.toAbstract())
+				.divide(d_price_step_cost)
+				.divide(d_take_profit_pts)
+				.withScale(0);
+		if ( d_num_contracts.compareTo(CDecimalBD.ZERO) == 0 ) {
+			return emptyPositionParams();
+		}
+		CDecimal d_stop_loss_pts = d_price_step_size.multiply(d_trade_loss_cap.toAbstract())
+				.divide(d_num_contracts)
+				.divide(d_price_step_cost)
+				.subtract(d_price_step_size.multiply((long) params.getSlippageStp()))
+				.divideExact(d_price_step_size, 0)
+				.multiply(d_price_step_size);
+		return new RMContractStrategyPositionParams(
+				d_num_contracts.toBigDecimal().intValue(),
+				d_take_profit_pts,
+				d_stop_loss_pts,
+				d_trade_goal_cap,
+				d_trade_loss_cap,
+				d_avg_daily_price_move,
+				d_avg_local_price_move
+			);
 	}
 
 }

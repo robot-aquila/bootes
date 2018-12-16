@@ -53,6 +53,7 @@ public class SetupT0 extends SetupTX {
 		//QATRTSeries atr = new QATRTSeries(SID_ATR, ohlc, CONF_ATR_PERIOD);
 		QEMATSeriesFast ema = new QEMATSeriesFast(SID_EMA, close, CONF_EMA_PERIOD, CONF_SCALE);
 		
+		cache.addCache(atr);
 		cache.addCache(ema);
 	
 		source.registerRawSeries(atr);

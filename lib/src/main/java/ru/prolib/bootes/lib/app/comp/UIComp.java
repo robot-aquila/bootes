@@ -46,7 +46,7 @@ public class UIComp extends CommonComp {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {
-				// TODO: pack?
+				uis.getFrame().pack();
 				uis.getFrame().setVisible(true);
 			}
 		});

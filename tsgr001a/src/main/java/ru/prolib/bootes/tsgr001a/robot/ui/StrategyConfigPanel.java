@@ -1,17 +1,14 @@
 package ru.prolib.bootes.tsgr001a.robot.ui;
 
-import java.awt.GridLayout;
+import java.time.ZoneId;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
+import net.miginfocom.swing.MigLayout;
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
-import ru.prolib.aquila.core.data.TSeries;
-import ru.prolib.aquila.core.data.ValueException;
-import ru.prolib.aquila.core.data.tseries.STSeries;
-import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
 import ru.prolib.aquila.core.text.IMessages;
 import ru.prolib.aquila.core.text.MsgID;
 import ru.prolib.bootes.tsgr001a.rm.RMContractStrategy;
@@ -19,14 +16,13 @@ import ru.prolib.bootes.tsgr001a.rm.RMContractStrategyParams;
 import ru.prolib.bootes.tsgr001a.rm.RMContractStrategyPositionParams;
 import ru.prolib.bootes.tsgr001a.robot.ContractParams;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
-import ru.prolib.bootes.tsgr001a.robot.SetupT0;
-import ru.prolib.bootes.tsgr001a.robot.SetupT2;
 
 public class StrategyConfigPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 	
 	private final IMessages messages;
 	private final RobotState state;
+	private final ZoneId zoneID;
 	private JLabel jlAccount = new JLabel();
 	private JLabel jlContractName = new JLabel();
 	private JLabel jlTradeGoalCap = new JLabel();
@@ -42,11 +38,14 @@ public class StrategyConfigPanel extends JPanel {
 	private JLabel jlTakeProfit = new JLabel();
 	private JLabel jlStopLoss = new JLabel();
 
-	public StrategyConfigPanel(IMessages messages, RobotState state) {
+	public StrategyConfigPanel(IMessages messages,
+			RobotState state,
+			ZoneId zoneID)
+	{
+		super(new MigLayout());
 		this.messages = messages;
 		this.state = state;
-		GridLayout layout = new GridLayout(0, 2, 5, 5);
-		setLayout(layout);
+		this.zoneID = zoneID;
 		addFormRow(StrategyConfigMsg.ACCOUNT, jlAccount);
 		addFormRow(StrategyConfigMsg.CONTRACT_NAME, jlContractName);
 		addFormRow(StrategyConfigMsg.CONTRACT_SYMBOL, jlContractSymbol);
@@ -66,10 +65,9 @@ public class StrategyConfigPanel extends JPanel {
 	
 	private void addFormRow(MsgID labelMsgID, JComponent component) {
 		JLabel label = new JLabel(messages.get(labelMsgID));
-		label.setHorizontalAlignment(SwingConstants.RIGHT);
-		add(label);
-		add(component);
 		label.setLabelFor(component);
+		add(label, "align right");
+		add(component, "wrap");
 	}
 	
 	private String NA() {
@@ -105,7 +103,12 @@ public class StrategyConfigPanel extends JPanel {
 		if ( state.isContractParamsDefined() ) {
 			ContractParams cp = state.getContractParams();
 			jlContractSymbol.setText(cp.getSymbol().toString());
-			jlTradingPeriod.setText(cp.getTradingPeriod().toString());
+			jlTradingPeriod.setText(cp.getTradingPeriod()
+					.getStart()
+					.atZone(zoneID)
+					.toLocalDate()
+					.toString()
+				);
 		} else {
 			jlContractSymbol.setText(NA());
 			jlTradingPeriod.setText(NA());
@@ -142,11 +145,6 @@ public class StrategyConfigPanel extends JPanel {
 			jlAvgDailyPriceMove.setText(NA());
 			jlAvgLocalPriceMove.setText(NA());
 		}
-		
-		
-		
-		// exp/avg daily move
-		// exp/avg local move
 	}
 
 }

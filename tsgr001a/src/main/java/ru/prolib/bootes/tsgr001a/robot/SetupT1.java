@@ -12,12 +12,10 @@ import ru.prolib.bootes.lib.app.AppServiceLocator;
 
 public class SetupT1 extends SetupTX {
 	public static final ZTFrame CONF_TFRAME = ZTFrame.H1MSK;
-	public static final int CONF_ATR_PERIOD = 10;
 	public static final int CONF_EMA_PERIOD = 70;
 	public static final int CONF_LOAD_HISTORY_DEPTH = CONF_EMA_PERIOD * 2;
 	
 	public static final String SID_SHARED = "T1";
-	public static final String SID_ATR = "ATR";
 	public static final String SID_EMA = "EMA";
 	
 	public SetupT1(AppServiceLocator serviceLocator, Symbol symbol) {
@@ -45,13 +43,10 @@ public class SetupT1 extends SetupTX {
 			TSeries<Candle> ohlc)
 	{
 		super.createDerivedSeries(source, cache, ohlc);
-		QATRTSeriesFast atr = new QATRTSeriesFast(SID_ATR, ohlc, CONF_ATR_PERIOD, CONF_SCALE);
 		QEMATSeriesFast ema = new QEMATSeriesFast(SID_EMA, close, CONF_EMA_PERIOD, CONF_SCALE);
 		
-		cache.addCache(atr);
 		cache.addCache(ema);
 	
-		source.registerRawSeries(atr);
 		source.registerRawSeries(ema);
 	}
 

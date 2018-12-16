@@ -4,7 +4,6 @@ import ru.prolib.aquila.core.BusinessEntities.Symbol;
 import ru.prolib.aquila.core.data.Candle;
 import ru.prolib.aquila.core.data.TSeries;
 import ru.prolib.aquila.core.data.ZTFrame;
-import ru.prolib.aquila.core.data.tseries.QATRTSeries;
 import ru.prolib.aquila.core.data.tseries.QATRTSeriesFast;
 import ru.prolib.aquila.core.data.tseries.QEMATSeriesFast;
 import ru.prolib.aquila.core.data.tseries.STSeries;
@@ -47,7 +46,6 @@ public class SetupT2 extends SetupTX {
 	{
 		super.createDerivedSeries(source, cache, ohlc);
 		QATRTSeriesFast atr = new QATRTSeriesFast(SID_ATR, ohlc, CONF_ATR_PERIOD, CONF_SCALE);
-		//QATRTSeries atr = new QATRTSeries(SID_ATR, ohlc, CONF_ATR_PERIOD);
 		QEMATSeriesFast ema = new QEMATSeriesFast(SID_EMA, close, CONF_EMA_PERIOD, CONF_SCALE);
 		
 		cache.addCache(atr);

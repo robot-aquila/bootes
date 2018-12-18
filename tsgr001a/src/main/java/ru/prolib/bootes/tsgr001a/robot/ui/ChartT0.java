@@ -9,12 +9,13 @@ import ru.prolib.aquila.utils.experimental.chart.ChartSpaceManager;
 import ru.prolib.aquila.utils.experimental.chart.axis.CategoryAxisViewport;
 import ru.prolib.aquila.utils.experimental.chart.axis.ValueAxisDriver;
 import ru.prolib.aquila.utils.experimental.chart.swing.axis.SWValueAxisRulerRenderer;
+import ru.prolib.aquila.utils.experimental.chart.swing.layer.SWBarHighlighter;
 import ru.prolib.bootes.lib.ui.SecurityChartPanel;
 import ru.prolib.bootes.tsgr001a.robot.SetupT0;
 
 public class ChartT0 extends SecurityChartPanel {
 	private BarChart atrChart;
-	private BarChartLayer emaLayer, atrLayer;
+	private BarChartLayer lyrEma, lyrAtr, lyrAtrCursorCat;
 	private SWValueAxisRulerRenderer atrValueRulerRenderer;
 
 	@Override
@@ -31,24 +32,27 @@ public class ChartT0 extends SecurityChartPanel {
 	protected void createLayers() {
 		super.createLayers();
 		if ( priceChart != null ) {
-			emaLayer = priceChart.addSmoothLine(source.getSeries(SetupT0.SID_EMA))
-				.setColor(Color.BLUE);
+			lyrEma = priceChart.addSmoothLine(source.getSeries(SetupT0.SID_EMA)).setColor(Color.BLUE);
 		}
 		if ( atrChart != null ) {
-			atrLayer = atrChart.addHistogram(source.getSeries(SetupT0.SID_ATR))
-				.setColor(Color.BLUE);
+			lyrAtrCursorCat = atrChart.addLayer(new SWBarHighlighter(chartPanel.getCategoryTracker()));
+			lyrAtr = atrChart.addHistogram(source.getSeries(SetupT0.SID_ATR)).setColor(Color.BLUE);
 		}
 	}
 	
 	@Override
 	protected void dropLayers() {
-		if ( emaLayer != null ) {
-			priceChart.dropLayer(emaLayer.getId());
-			emaLayer = null;
+		if ( lyrEma != null ) {
+			priceChart.dropLayer(lyrEma.getId());
+			lyrEma = null;
 		}
-		if ( atrLayer != null ) {
-			atrChart.dropLayer(atrLayer.getId());
-			atrLayer = null;
+		if ( lyrAtr != null ) {
+			atrChart.dropLayer(lyrAtr.getId());
+			lyrAtr = null;
+		}
+		if ( lyrAtrCursorCat != null ) {
+			atrChart.dropLayer(lyrAtrCursorCat.getId());
+			lyrAtrCursorCat = null;
 		}
 		super.dropLayers();
 	}

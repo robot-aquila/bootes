@@ -15,10 +15,10 @@ import ru.prolib.aquila.utils.experimental.chart.axis.CategoryAxisDriver;
 import ru.prolib.aquila.utils.experimental.chart.axis.CategoryAxisViewport;
 import ru.prolib.aquila.utils.experimental.chart.axis.ValueAxisDriver;
 import ru.prolib.aquila.utils.experimental.chart.swing.BarChartPanelImpl;
-import ru.prolib.aquila.utils.experimental.chart.swing.axis.SWTimeAxisRulerRenderer;
 import ru.prolib.aquila.utils.experimental.chart.swing.axis.SWTimeAxisRulerRendererV2;
 import ru.prolib.aquila.utils.experimental.chart.swing.axis.SWTimeAxisRulerSetup;
 import ru.prolib.aquila.utils.experimental.chart.swing.axis.SWValueAxisRulerRenderer;
+import ru.prolib.aquila.utils.experimental.chart.swing.layer.SWBarHighlighter;
 import ru.prolib.aquila.utils.experimental.chart.swing.layer.SWCandlestickLayer;
 
 abstract public class SecurityChartPanel {
@@ -26,7 +26,7 @@ abstract public class SecurityChartPanel {
 	protected SWTimeAxisRulerRendererV2 timeRulerRenderer;
 	protected SWValueAxisRulerRenderer priceValueRulerRenderer, volValueRulerRenderer;
 	protected BarChart priceChart, volChart;
-	protected BarChartLayer priceLayer, volLayer;
+	protected BarChartLayer lyrPrice, lyrVol, lyrPriceCursorCat, lyrVolCursorCat;
 	protected STSeries source;
 
 	protected void updateViewport(CategoryAxisViewport viewport) {
@@ -47,24 +47,34 @@ abstract public class SecurityChartPanel {
 	
 	protected void createLayers() {
 		if ( priceChart != null ) {
-			priceLayer = priceChart.addLayer(new SWCandlestickLayer(source.getSeries(getOhlcSeriesID())));
+			lyrPriceCursorCat = priceChart.addLayer(new SWBarHighlighter(chartPanel.getCategoryTracker()));
+			lyrPrice = priceChart.addLayer(new SWCandlestickLayer(source.getSeries(getOhlcSeriesID())));
 		}
 		if ( volChart != null ) {
-			volLayer = volChart.addHistogram(source.getSeries(getVolumeSeriesID()));
+			lyrVolCursorCat = volChart.addLayer(new SWBarHighlighter(chartPanel.getCategoryTracker()));
+			lyrVol = volChart.addHistogram(source.getSeries(getVolumeSeriesID()));
 		}
 	}
 	
 	protected void dropLayers() {
 		if ( priceChart != null ) {
-			if ( priceLayer != null ) {
-				priceChart.dropLayer(priceLayer.getId());
-				priceLayer = null;
+			if ( lyrPrice != null ) {
+				priceChart.dropLayer(lyrPrice.getId());
+				lyrPrice = null;
+			}
+			if ( lyrPriceCursorCat != null ) {
+				priceChart.dropLayer(lyrPriceCursorCat.getId());
+				lyrPriceCursorCat = null;
 			}
 		}
 		if ( volChart != null ) {
-			if ( volLayer != null ) {
-				volChart.dropLayer(volLayer.getId());
-				volLayer = null;
+			if ( lyrVol != null ) {
+				volChart.dropLayer(lyrVol.getId());
+				lyrVol = null;
+			}
+			if ( lyrVolCursorCat != null ) {
+				volChart.dropLayer(lyrVolCursorCat.getId());
+				lyrVolCursorCat = null;
 			}
 		}
 	}

@@ -29,6 +29,7 @@ abstract public class SecurityChartPanel {
 	protected BarChart priceChart, volChart;
 	protected BarChartLayer lyrPrice, lyrVol, lyrPriceCursorCat, lyrVolCursorCat;
 	protected STSeries source;
+	protected Security security;
 
 	protected void updateViewport(CategoryAxisViewport viewport) {
 		viewport.setPreferredNumberOfBars(100);
@@ -158,6 +159,7 @@ abstract public class SecurityChartPanel {
 	}
 	
 	protected void updateSecurity(Security security) {
+		this.security = security;
 		if ( priceValueRulerRenderer != null ) {
 			priceValueRulerRenderer.setTickSize(security.getTickSize());
 		}

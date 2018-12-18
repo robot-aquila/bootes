@@ -1,15 +1,22 @@
 package ru.prolib.bootes.tsgr001a.robot.ui;
 
 import java.awt.Color;
+import java.time.ZoneId;
 
 import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.utils.experimental.chart.BarChartLayer;
 import ru.prolib.aquila.utils.experimental.chart.axis.CategoryAxisViewport;
+import ru.prolib.aquila.utils.experimental.chart.swing.layer.SWSimpleTextOverlay;
 import ru.prolib.bootes.lib.ui.SecurityChartPanel;
 import ru.prolib.bootes.tsgr001a.robot.SetupT1;
 
 public class ChartT1 extends SecurityChartPanel {
-	private BarChartLayer emaLayer;
+	private final ZoneId zoneID;
+	private BarChartLayer lyrEma,lyrPriceTitle;
+	
+	public ChartT1(ZoneId zoneID) {
+		this.zoneID = zoneID;
+	}
 
 	@Override
 	protected String getOhlcSeriesID() {
@@ -25,15 +32,27 @@ public class ChartT1 extends SecurityChartPanel {
 	protected void createLayers() {
 		super.createLayers();
 		if ( priceChart != null ) {
-			emaLayer = priceChart.addSmoothLine(source.getSeries(SetupT1.SID_EMA)).setColor(new Color(64, 64, 127));
+			lyrEma = priceChart.addSmoothLine(source.getSeries(SetupT1.SID_EMA)).setColor(new Color(64, 64, 127));
+			lyrPriceTitle = priceChart.addLayer(new SWSimpleTextOverlay(new PriceChartTitleOverlayWithEMA(
+					security.getDisplayName(),
+					zoneID,
+					source.getSeries(SetupT1.SID_OHLC),
+					source.getSeries(SetupT1.SID_EMA),
+					chartPanel.getCategoryTracker()
+				)
+			));
 		}
 	}
 
 	@Override
 	protected void dropLayers() {
-		if ( emaLayer != null ) {
-			priceChart.dropLayer(emaLayer.getId());
-			emaLayer = null;
+		if ( lyrEma != null ) {
+			priceChart.dropLayer(lyrEma.getId());
+			lyrEma = null;
+		}
+		if ( lyrPriceTitle != null ) {
+			priceChart.dropLayer(lyrPriceTitle.getId());
+			lyrPriceTitle = null;
 		}
 		super.dropLayers();
 	}

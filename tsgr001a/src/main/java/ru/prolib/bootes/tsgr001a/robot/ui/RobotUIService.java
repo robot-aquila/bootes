@@ -2,6 +2,7 @@ package ru.prolib.bootes.tsgr001a.robot.ui;
 
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.time.ZoneId;
 
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
@@ -60,11 +61,12 @@ public class RobotUIService implements RobotStateListener {
 	public void initialize(RobotState state) {
 		this.state = state;
 		UIService uis = serviceLocator.getUIService();
+		ZoneId zoneID = uis.getZoneID();
 		
-		t0 = new ChartT0();
-		t1 = new ChartT1();
-		t2 = new ChartT2();
-		cfg = new StrategyConfigPanel(serviceLocator.getMessages(), state, uis.getZoneID());
+		t0 = new ChartT0(zoneID);
+		t1 = new ChartT1(zoneID);
+		t2 = new ChartT2(zoneID);
+		cfg = new StrategyConfigPanel(serviceLocator.getMessages(), state, zoneID);
 		
 		double top_weight = 0.8d, bot_charts_weight = 0.8d, cfg_weight = 0.2d;
 		

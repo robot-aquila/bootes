@@ -1,5 +1,6 @@
 package ru.prolib.bootes.lib.ui;
 
+import java.awt.Color;
 import java.awt.GridLayout;
 
 import javax.swing.JPanel;
@@ -48,7 +49,11 @@ abstract public class SecurityChartPanel {
 	protected void createLayers() {
 		if ( priceChart != null ) {
 			lyrPriceCursorCat = priceChart.addLayer(new SWBarHighlighter(chartPanel.getCategoryTracker()));
-			lyrPrice = priceChart.addLayer(new SWCandlestickLayer(source.getSeries(getOhlcSeriesID())));
+			lyrPrice = priceChart.addLayer(new SWCandlestickLayer(source.getSeries(getOhlcSeriesID())))
+					.setColor(SWCandlestickLayer.BEARISH_BODY_COLOR, new Color(127, 64, 64))
+					.setColor(SWCandlestickLayer.BEARISH_SHADOW_COLOR, new Color(127, 64, 64))
+					.setColor(SWCandlestickLayer.BULLISH_BODY_COLOR, new Color(64, 127, 64))
+					.setColor(SWCandlestickLayer.BULLISH_SHADOW_COLOR, new Color(64, 127, 64));
 		}
 		if ( volChart != null ) {
 			lyrVolCursorCat = volChart.addLayer(new SWBarHighlighter(chartPanel.getCategoryTracker()));
@@ -85,11 +90,15 @@ abstract public class SecurityChartPanel {
 		ChartSpaceManager vsm = priceChart.getVerticalSpaceManager();
 		vsm.getGridLinesSetup("CATEGORY", "TIME").setVisible(true);
 		((SWTimeAxisRulerSetup) vsm.getLowerRulerSetup("CATEGORY", "TIME"))
-			.setVisible(true)
+			.setDisplayPriority(20)
 			.setShowInnerLine(true)
-			.setShowOuterLine(false);
+			.setShowOuterLine(false)
+			.setVisible(true);
 		((SWTimeAxisRulerSetup) vsm.getUpperRulerSetup("CATEGORY", "TIME"))
-			.setVisible(false);
+			.setDisplayPriority(10)
+			.setShowInnerLine(true)
+			.setShowOuterLine(false)
+			.setVisible(true);
 		ValueAxisDriver vad = priceChart.getValueAxisDriver();
 		priceValueRulerRenderer = (SWValueAxisRulerRenderer) vad.getRenderer("LABEL");
 		ChartSpaceManager hsm = priceChart.getHorizontalSpaceManager();
@@ -102,21 +111,23 @@ abstract public class SecurityChartPanel {
 		volChart = chartPanel.addChart("VOLUME")
 				.setHeight(200);
 		ChartSpaceManager vsm = volChart.getVerticalSpaceManager();
+		vsm.getGridLinesSetup("CATEGORY", "TIME").setVisible(true);
 		((SWTimeAxisRulerSetup) vsm.getLowerRulerSetup("CATEGORY", "TIME"))
-			.setVisible(true)
-			.setDisplayPriority(20) // hide this first
-			.setShowInnerLine(true)
-			.setShowOuterLine(true);
+			//.setDisplayPriority(20) // hide this first
+			//.setShowInnerLine(true)
+			//.setShowOuterLine(true)
+			.setVisible(false);
 		((SWTimeAxisRulerSetup) vsm.getUpperRulerSetup("CATEGORY", "TIME"))
-			.setVisible(true)
 			.setDisplayPriority(10)
 			.setShowInnerLine(true)
-			.setShowOuterLine(false);
+			.setShowOuterLine(false)
+			.setVisible(true);
 		// TODO: add date ruler to bottom
 		ValueAxisDriver vad = volChart.getValueAxisDriver();
 		volValueRulerRenderer = (SWValueAxisRulerRenderer) vad.getRenderer("LABEL");
 		volValueRulerRenderer.setTickSize(CDecimalBD.of(1L)); // always 1
 		ChartSpaceManager hsm = volChart.getHorizontalSpaceManager();
+		hsm.getGridLinesSetup("VALUE", "LABEL").setVisible(true);
 		hsm.getLowerRulerSetup("VALUE", "LABEL").setVisible(true);
 		hsm.getUpperRulerSetup("VALUE", "LABEL").setVisible(true);
 	}

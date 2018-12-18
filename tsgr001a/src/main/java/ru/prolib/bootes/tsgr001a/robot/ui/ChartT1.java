@@ -25,8 +25,7 @@ public class ChartT1 extends SecurityChartPanel {
 	protected void createLayers() {
 		super.createLayers();
 		if ( priceChart != null ) {
-			emaLayer = priceChart.addSmoothLine(source.getSeries(SetupT1.SID_EMA))
-				.setColor(Color.BLUE);
+			emaLayer = priceChart.addSmoothLine(source.getSeries(SetupT1.SID_EMA)).setColor(new Color(64, 64, 127));
 		}
 	}
 

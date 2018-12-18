@@ -8,6 +8,7 @@ import ru.prolib.aquila.utils.experimental.chart.BarChartLayer;
 import ru.prolib.aquila.utils.experimental.chart.ChartSpaceManager;
 import ru.prolib.aquila.utils.experimental.chart.axis.CategoryAxisViewport;
 import ru.prolib.aquila.utils.experimental.chart.axis.ValueAxisDriver;
+import ru.prolib.aquila.utils.experimental.chart.swing.axis.SWTimeAxisRulerSetup;
 import ru.prolib.aquila.utils.experimental.chart.swing.axis.SWValueAxisRulerRenderer;
 import ru.prolib.aquila.utils.experimental.chart.swing.layer.SWBarHighlighter;
 import ru.prolib.bootes.lib.ui.SecurityChartPanel;
@@ -32,11 +33,11 @@ public class ChartT2 extends SecurityChartPanel {
 	protected void createLayers() {
 		super.createLayers();
 		if ( priceChart != null ) {
-			lyrEma = priceChart.addSmoothLine(source.getSeries(SetupT2.SID_EMA)).setColor(Color.BLUE);
+			lyrEma = priceChart.addSmoothLine(source.getSeries(SetupT2.SID_EMA)).setColor(new Color(64, 64, 127));
 		}
 		if ( atrChart != null ) {
 			lyrAtrCursorCat = atrChart.addLayer(new SWBarHighlighter(chartPanel.getCategoryTracker()));
-			lyrAtr = atrChart.addHistogram(source.getSeries(SetupT2.SID_ATR)).setColor(Color.BLUE);
+			lyrAtr = atrChart.addHistogram(source.getSeries(SetupT2.SID_ATR)).setColor(new Color(127, 64, 127));
 		}
 	}
 
@@ -62,6 +63,15 @@ public class ChartT2 extends SecurityChartPanel {
 				.setHeight(200);
 		ValueAxisDriver vad = atrChart.getValueAxisDriver();
 		atrValueRulerRenderer = (SWValueAxisRulerRenderer) vad.getRenderer("LABEL");
+		ChartSpaceManager vsm = atrChart.getVerticalSpaceManager();
+		vsm.getGridLinesSetup("CATEGORY", "TIME").setVisible(true);
+		((SWTimeAxisRulerSetup) vsm.getLowerRulerSetup("CATEGORY", "TIME"))
+			.setVisible(false);
+		((SWTimeAxisRulerSetup) vsm.getUpperRulerSetup("CATEGORY", "TIME"))
+			.setDisplayPriority(10)
+			.setShowInnerLine(true)
+			.setShowOuterLine(false)
+			.setVisible(true);
 		ChartSpaceManager hsm = atrChart.getHorizontalSpaceManager();
 		hsm.getGridLinesSetup("VALUE", "LABEL").setVisible(true);
 		hsm.getUpperRulerSetup("VALUE", "LABEL").setVisible(true);

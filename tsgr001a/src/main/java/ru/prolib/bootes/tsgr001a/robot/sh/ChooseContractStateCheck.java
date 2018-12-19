@@ -26,15 +26,15 @@ public class ChooseContractStateCheck {
 
 	public String checkState() {
 		Terminal terminal = serviceLocator.getTerminal();
-		Instant ctime = terminal.getCurrentTime();
-		ContractParams ccp = state.getContractParams();
-		Interval csp = ccp.getTradingPeriod();
+		Instant currTime = terminal.getCurrentTime();
+		ContractParams params = state.getContractParams();
+		Interval dtp = params.getDataTrackingPeriod();
 		// This check should be first
-		if ( ctime.compareTo(csp.getEnd()) >= 0 ) {
+		if ( currTime.compareTo(dtp.getEnd()) >= 0 ) {
 			return E_NEW_SESSION;
 		}
 		
-		Symbol symbol = ccp.getSymbol();
+		Symbol symbol = params.getSymbol();
 		if ( ! terminal.isSecurityExists(symbol) ) {
 			return null;
 		}
@@ -48,7 +48,7 @@ public class ChooseContractStateCheck {
 			throw new IllegalStateException("Unexpected exception", e);
 		}
 		
-		if ( csp.contains(ctime) ) {
+		if ( dtp.contains(currTime) ) {
 			return E_OK;
 		}
 		return null;

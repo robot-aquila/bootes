@@ -11,11 +11,15 @@ import ru.prolib.aquila.core.BusinessEntities.Symbol;
 
 public class ContractParams {
 	private final Symbol symbol;
-	private final Interval tradingPeriod;
+	private final Interval dataTrackingPeriod, tradeAllowedPeriod;
 	
-	public ContractParams(Symbol symbol, Interval tradingPeriod) {
+	public ContractParams(Symbol symbol,
+		Interval dataTrackingPeriod,
+		Interval tradeAllowedPeriod)
+	{
 		this.symbol = symbol;
-		this.tradingPeriod = tradingPeriod;
+		this.dataTrackingPeriod = dataTrackingPeriod;
+		this.tradeAllowedPeriod = tradeAllowedPeriod;
 	}
 	
 	/**
@@ -26,22 +30,33 @@ public class ContractParams {
 	public Symbol getSymbol() {
 		return symbol;
 	}
-	
+
+	/**
+	 * Get data tracking period.
+	 * <p>
+	 * @return period in which contract data should be initialized and properly
+	 * tracked.
+	 */
+	public Interval getDataTrackingPeriod() {
+		return dataTrackingPeriod;
+	}
+
 	/**
 	 * Get closest trading period.
 	 * <p>
 	 * @return period in which contract can be traded potentially.
 	 * Outside that period contract considered as unavailable for trading.
 	 */
-	public Interval getTradingPeriod() {
-		return tradingPeriod;
+	public Interval getTradeAllowedPeriod() {
+		return tradeAllowedPeriod;
 	}
 	
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder(1097221, 505)
 				.append(symbol)
-				.append(tradingPeriod)
+				.append(dataTrackingPeriod)
+				.append(tradeAllowedPeriod)
 				.build();
 	}
 	
@@ -56,7 +71,8 @@ public class ContractParams {
 		ContractParams o = (ContractParams) other;
 		return new EqualsBuilder()
 				.append(o.symbol, symbol)
-				.append(o.tradingPeriod, tradingPeriod)
+				.append(o.dataTrackingPeriod, dataTrackingPeriod)
+				.append(o.tradeAllowedPeriod, tradeAllowedPeriod)
 				.build();
 	}
 	

@@ -25,8 +25,8 @@ import ru.prolib.bootes.tsgr001a.robot.RobotState;
 /**
  * Choosing the contract. 
  * <p>
- * The state handler to choose current contract. Require terminal and contract
- * resolver to be set.
+ * The state handler to choose current contract and wait for security and data
+ * tracking period. Require terminal and contract resolver to be set.
  */
 public class ChooseContract extends CommonHandler implements SMInputAction, SMExitAction {
 	private static final Logger logger;
@@ -62,34 +62,35 @@ public class ChooseContract extends CommonHandler implements SMInputAction, SMEx
 	public SMExit enter(SMTriggerRegistry triggers) {
 		super.enter(triggers);
 		Terminal terminal = serviceLocator.getTerminal();
-		Instant ctime = terminal.getCurrentTime();
-		ContractParams ccParams = state.getContractResolver().determineContract(ctime);
-		Interval csPeriod = ccParams.getTradingPeriod();
-		if ( ctime.compareTo(csPeriod.getEnd()) >= 0 ) {
+		Instant currTime = terminal.getCurrentTime();
+		ContractParams currParams = state.getContractResolver().determineContract(currTime);
+		Interval dtp = currParams.getDataTrackingPeriod();
+		if ( currTime.compareTo(dtp.getEnd()) >= 0 ) {
 			// This is an error! Period of the closest session must be
 			// determined correctly and its end should be in future.
 			throw new RuntimeException("Trading calendar error");
 		}
 
 		triggers.add(new SMTriggerOnEvent(terminal.onSecurityAvailable(), in));
-		triggers.add(new SMTriggerOnTimer(terminal, csPeriod.getEnd(), in));
-		if ( ctime.compareTo(csPeriod.getStart()) < 0 ) {
-			triggers.add(new SMTriggerOnTimer(terminal, csPeriod.getStart(), in));
+		triggers.add(new SMTriggerOnTimer(terminal, dtp.getEnd(), in));
+		if ( ! dtp.contains(currTime) ) {
+			triggers.add(new SMTriggerOnTimer(terminal, dtp.getStart(), in));
 		}
 		
-		ContractParams pcParams = state.isContractParamsDefined() ? state.getContractParams() : null;
-		Symbol ccSymbol = ccParams.getSymbol(),
-			   pcSymbol = pcParams == null ? null : pcParams.getSymbol();
-		logger.debug("Contract selected: {} at time {}", ccSymbol, ctime);
-		if ( ! ccSymbol.equals(pcSymbol) ) {
-			if ( pcSymbol != null ) {
-				terminal.unsubscribe(pcSymbol);
-				logger.debug("Unsubscribed: {}", pcSymbol);
+		ContractParams prevParams = state.isContractParamsDefined()
+				? state.getContractParams() : null;
+		Symbol currSymbol = currParams.getSymbol();
+		Symbol prevSymbol = prevParams == null ? null : prevParams.getSymbol();
+		logger.debug("Contract selected: {} at time {}", currSymbol, currTime);
+		if ( ! currSymbol.equals(prevSymbol) ) {
+			if ( prevSymbol != null ) {
+				terminal.unsubscribe(prevSymbol);
+				logger.debug("Unsubscribed: {}", prevSymbol);
 			}
-			terminal.subscribe(ccSymbol);
-			logger.debug("Subscribed: {}", ccSymbol);
+			terminal.subscribe(currSymbol);
+			logger.debug("Subscribed: {}", currSymbol);
 		}
-		state.setContractParams(ccParams);
+		state.setContractParams(currParams);
 		
 		return checkState();
 	}

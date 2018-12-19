@@ -77,59 +77,95 @@ public class ContractResolverM3RTSTest {
 		Symbol sym = null;
 		
 		sym = new Symbol("RTS-3.05");
-		expected = new ContractParams(sym, INT(ZDT("2005-01-01T10:00:00"), ZDT("2005-01-01T18:30:00")));
+		expected = new ContractParams(sym,
+				INT(ZDT("2005-01-01T09:55:00"), ZDT("2005-01-01T23:55:00")),
+				INT(ZDT("2005-01-01T10:00:00"), ZDT("2005-01-01T18:30:00"))
+			);
 		assertEquals(expected, service.determineContract(ZDT("1991-01-01T00:00:00")));
 		assertEquals(expected, service.determineContract(ZDT("2003-12-31T23:59:59")));
 		assertEquals(expected, service.determineContract(ZDT("2005-01-01T00:00:00")));
 
-		expected = new ContractParams(sym, INT(ZDT("2005-03-01T10:00:00"), ZDT("2005-03-01T18:30:00")));
+		expected = new ContractParams(sym,
+				INT(ZDT("2005-03-01T09:55:00"), ZDT("2005-03-01T23:55:00")),
+				INT(ZDT("2005-03-01T10:00:00"), ZDT("2005-03-01T18:30:00"))
+			);
 		assertEquals(expected, service.determineContract(ZDT("2005-03-01T00:00:00")));
 		assertEquals(expected, service.determineContract(ZDT("2005-03-01T08:30:15")));
 		assertEquals(expected, service.determineContract(ZDT("2005-03-01T12:55:05")));
 		
-		expected = new ContractParams(sym, INT(ZDT("2005-03-02T10:00:00"), ZDT("2005-03-02T18:30:00")));
+		expected = new ContractParams(sym,
+				INT(ZDT("2005-03-02T09:55:00"), ZDT("2005-03-02T23:55:00")),
+				INT(ZDT("2005-03-02T10:00:00"), ZDT("2005-03-02T18:30:00"))
+			);
 		assertEquals(expected, service.determineContract(ZDT("2005-03-01T20:59:00")));
 		assertEquals(expected, service.determineContract(ZDT("2005-03-01T23:59:59")));
 		assertEquals(expected, service.determineContract(ZDT("2005-03-02T01:00:00")));
 		assertEquals(expected, service.determineContract(ZDT("2005-03-02T09:30:00")));
 		assertEquals(expected, service.determineContract(ZDT("2005-03-02T10:15:00")));
 		
-		expected = new ContractParams(sym, INT(ZDT("2005-03-14T10:00:00"), ZDT("2005-03-14T18:30:00")));
+		expected = new ContractParams(sym,
+				INT(ZDT("2005-03-14T09:55:00"), ZDT("2005-03-14T23:55:00")),
+				INT(ZDT("2005-03-14T10:00:00"), ZDT("2005-03-14T18:30:00"))
+			);
 		assertEquals(expected, service.determineContract(ZDT("2005-03-14T00:00:00")));
 		assertEquals(expected, service.determineContract(ZDT("2005-03-14T09:59:59")));
 		assertEquals(expected, service.determineContract(ZDT("2005-03-14T10:00:00")));
 		assertEquals(expected, service.determineContract(ZDT("2005-03-14T18:29:59")));
 		
 		sym = new Symbol("RTS-6.05");
-		expected = new ContractParams(sym, INT(ZDT("2005-03-15T10:00:00"), ZDT("2005-03-15T18:30:00")));
+		expected = new ContractParams(sym,
+				INT(ZDT("2005-03-15T09:55:00"), ZDT("2005-03-15T23:55:00")),
+				INT(ZDT("2005-03-15T10:00:00"), ZDT("2005-03-15T18:30:00"))
+			);
 		assertEquals(expected, service.determineContract(ZDT("2005-03-14T18:30:00")));
 		assertEquals(expected, service.determineContract(ZDT("2005-03-15T00:00:00")));
 		
-		expected = new ContractParams(sym, INT(ZDT("2005-04-01T10:00:00"), ZDT("2005-04-01T18:30:00")));
+		expected = new ContractParams(sym,
+				INT(ZDT("2005-04-01T09:55:00"), ZDT("2005-04-01T23:55:00")),
+				INT(ZDT("2005-04-01T10:00:00"), ZDT("2005-04-01T18:30:00"))
+			);
 		assertEquals(expected, service.determineContract(ZDT("2005-04-01T00:00:00")));
 		
-		expected = new ContractParams(sym, INT(ZDT("2005-05-31T10:00:00"), ZDT("2005-05-31T18:30:00")));
+		expected = new ContractParams(sym,
+				INT(ZDT("2005-05-31T09:55:00"), ZDT("2005-05-31T23:55:00")),
+				INT(ZDT("2005-05-31T10:00:00"), ZDT("2005-05-31T18:30:00"))
+			);
 		assertEquals(expected, service.determineContract(ZDT("2005-05-30T20:45:00")));
 		
-		expected = new ContractParams(sym, INT(ZDT("2005-06-01T10:00:00"), ZDT("2005-06-01T18:30:00")));
+		expected = new ContractParams(sym,
+				INT(ZDT("2005-06-01T09:55:00"), ZDT("2005-06-01T23:55:00")),
+				INT(ZDT("2005-06-01T10:00:00"), ZDT("2005-06-01T18:30:00"))
+			);
 		assertEquals(expected, service.determineContract(ZDT("2005-05-31T18:30:00")));
 		assertEquals(expected, service.determineContract(ZDT("2005-06-01T00:00:00")));
 		
 		sym = new Symbol("RTS-9.05");
-		expected = new ContractParams(sym, INT(ZDT("2005-06-15T10:00:00"), ZDT("2005-06-15T18:30:00")));
+		expected = new ContractParams(sym,
+				INT(ZDT("2005-06-15T09:55:00"), ZDT("2005-06-15T23:55:00")),
+				INT(ZDT("2005-06-15T10:00:00"), ZDT("2005-06-15T18:30:00"))
+			);
 		assertEquals(expected, service.determineContract(ZDT("2005-06-14T18:30:00")));
 		assertEquals(expected, service.determineContract(ZDT("2005-06-14T23:59:59")));
 		assertEquals(expected, service.determineContract(ZDT("2005-06-15T00:00:00")));
 		
 		sym = new Symbol("RTS-12.05");
-		expected = new ContractParams(sym, INT(ZDT("2005-09-15T10:00:00"), ZDT("2005-09-15T18:30:00")));
+		expected = new ContractParams(sym,
+				INT(ZDT("2005-09-15T09:55:00"), ZDT("2005-09-15T23:55:00")),
+				INT(ZDT("2005-09-15T10:00:00"), ZDT("2005-09-15T18:30:00"))
+			);
 		assertEquals(expected, service.determineContract(ZDT("2005-09-14T23:59:59")));
 		assertEquals(expected, service.determineContract(ZDT("2005-09-15T00:00:00")));
 		
-		expected = new ContractParams(sym, INT(ZDT("2005-12-01T10:00:00"), ZDT("2005-12-01T18:30:00")));
+		expected = new ContractParams(sym,
+				INT(ZDT("2005-12-01T09:55:00"), ZDT("2005-12-01T23:55:00")),
+				INT(ZDT("2005-12-01T10:00:00"), ZDT("2005-12-01T18:30:00"))
+			);
 		assertEquals(expected, service.determineContract(ZDT("2005-12-01T00:00:00")));
 		
-		expected = new ContractParams(sym, INT(ZDT("2005-12-14T10:00:00"), ZDT("2005-12-14T18:30:00")));
+		expected = new ContractParams(sym,
+				INT(ZDT("2005-12-14T09:55:00"), ZDT("2005-12-14T23:55:00")),
+				INT(ZDT("2005-12-14T10:00:00"), ZDT("2005-12-14T18:30:00"))
+			);
 		assertEquals(expected, service.determineContract(ZDT("2005-12-14T00:00:00")));
 		assertEquals(expected, service.determineContract(ZDT("2005-12-14T08:00:00")));
 		assertEquals(expected, service.determineContract(ZDT("2005-12-14T09:59:59")));
@@ -138,25 +174,40 @@ public class ContractResolverM3RTSTest {
 		assertEquals(expected, service.determineContract(ZDT("2005-12-14T18:29:59.999")));
 		
 		sym = new Symbol("RTS-3.06");
-		expected = new ContractParams(sym, INT(ZDT("2005-12-15T10:00:00"), ZDT("2005-12-15T18:30:00")));
+		expected = new ContractParams(sym,
+				INT(ZDT("2005-12-15T09:55:00"), ZDT("2005-12-15T23:55:00")),
+				INT(ZDT("2005-12-15T10:00:00"), ZDT("2005-12-15T18:30:00"))
+			);
 		assertEquals(expected, service.determineContract(ZDT("2005-12-14T23:59:59.999")));
 		assertEquals(expected, service.determineContract(ZDT("2005-12-14T23:59:59")));
 		assertEquals(expected, service.determineContract(ZDT("2005-12-15T00:00:00")));
 		
-		expected = new ContractParams(sym, INT(ZDT("2006-01-01T10:00:00"), ZDT("2006-01-01T18:30:00")));
+		expected = new ContractParams(sym,
+				INT(ZDT("2006-01-01T09:55:00"), ZDT("2006-01-01T23:55:00")),
+				INT(ZDT("2006-01-01T10:00:00"), ZDT("2006-01-01T18:30:00"))
+			);
 		assertEquals(expected, service.determineContract(ZDT("2005-12-31T23:59:59")));
 		assertEquals(expected, service.determineContract(ZDT("2006-01-01T00:00:00")));
 		
 		sym = new Symbol("RTS-12.18");
-		expected = new ContractParams(sym, INT(ZDT("2018-10-31T10:00:00"), ZDT("2018-10-31T18:30:00")));
+		expected = new ContractParams(sym,
+				INT(ZDT("2018-10-31T09:55:00"), ZDT("2018-10-31T23:55:00")),
+				INT(ZDT("2018-10-31T10:00:00"), ZDT("2018-10-31T18:30:00"))
+			);
 		assertEquals(expected, service.determineContract(ZDT("2018-10-30T23:59:59")));
 		
 		sym = new Symbol("RTS-3.19");
-		expected = new ContractParams(sym, INT(ZDT("2018-12-15T10:00:00"), ZDT("2018-12-15T18:30:00")));
+		expected = new ContractParams(sym,
+				INT(ZDT("2018-12-15T09:55:00"), ZDT("2018-12-15T23:55:00")),
+				INT(ZDT("2018-12-15T10:00:00"), ZDT("2018-12-15T18:30:00"))
+			);
 		assertEquals(expected, service.determineContract(ZDT("2018-12-14T23:59:59")));
 		assertEquals(expected, service.determineContract(ZDT("2018-12-15T00:00:00")));
 		
-		expected = new ContractParams(sym, INT(ZDT("2019-01-01T10:00:00"), ZDT("2019-01-01T18:30:00")));
+		expected = new ContractParams(sym,
+				INT(ZDT("2019-01-01T09:55:00"), ZDT("2019-01-01T23:55:00")),
+				INT(ZDT("2019-01-01T10:00:00"), ZDT("2019-01-01T18:30:00"))
+			);
 		assertEquals(expected, service.determineContract(ZDT("2018-12-31T23:59:59")));
 		assertEquals(expected, service.determineContract(ZDT("2019-01-01T00:00:00")));
 	}

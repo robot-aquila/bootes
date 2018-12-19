@@ -77,11 +77,19 @@ public class ContractResolverM3RTS implements ContractResolver {
 		String s = String.format("%s-%d.%02d", symbolName,
 				end.getMonth().getValue(),
 				end.getYear() % 100);
-		Interval period = Interval.of(
+		Interval dataTrackingPeriod = Interval.of(
+				ld.atTime( 9, 55).atZone(zoneID).toInstant(),
+				ld.atTime(23, 55).atZone(zoneID).toInstant()
+			);
+		Interval tradeAllowedPeriod = Interval.of(
 				ld.atTime(10, 0).atZone(zoneID).toInstant(),
 				ld.atTime(18, 30).atZone(zoneID).toInstant()
 			);
-		return new ContractParams(new Symbol(s), period);
+		return new ContractParams(
+				new Symbol(s),
+				dataTrackingPeriod,
+				tradeAllowedPeriod
+			);
 	}
 	
 	@Override

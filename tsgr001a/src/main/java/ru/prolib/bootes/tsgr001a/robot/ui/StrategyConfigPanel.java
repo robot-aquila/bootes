@@ -103,7 +103,7 @@ public class StrategyConfigPanel extends JPanel {
 		if ( state.isContractParamsDefined() ) {
 			ContractParams cp = state.getContractParams();
 			jlContractSymbol.setText(cp.getSymbol().toString());
-			jlTradingPeriod.setText(cp.getTradingPeriod()
+			jlTradingPeriod.setText(cp.getTradeAllowedPeriod()
 					.getStart()
 					.atZone(zoneID)
 					.toLocalDate()

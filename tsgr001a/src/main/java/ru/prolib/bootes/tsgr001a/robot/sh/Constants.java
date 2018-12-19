@@ -25,9 +25,9 @@ public class Constants {
 	public static final String E_NEW_SESSION = "NS";
 	
 	/**
-	 * Exit ID to indicate that trading must be stopped.
+	 * Exit ID to indicate that data tracking must be stopped.
 	 */
-	public static final String E_STOP_TRADING = "STOP_TRADING";
+	public static final String E_STOP_DATA_TRACKING = "STOP_DATA_TRACKING";
 
 	
 	// State identifiers

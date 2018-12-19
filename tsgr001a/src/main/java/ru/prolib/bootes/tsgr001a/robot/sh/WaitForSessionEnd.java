@@ -28,7 +28,7 @@ public class WaitForSessionEnd extends CommonHandler implements SMInputAction {
 			CommonActions ca) {
 		super(serviceLocator, state);
 		this.ca = ca;
-		registerExit(E_STOP_TRADING);
+		registerExit(E_STOP_DATA_TRACKING);
 		in = registerInput(this);
 	}
 	
@@ -39,8 +39,8 @@ public class WaitForSessionEnd extends CommonHandler implements SMInputAction {
 	@Override
 	public SMExit enter(SMTriggerRegistry triggers) {
 		super.enter(triggers);
-		Interval csp = state.getContractParams().getTradingPeriod();
-		triggers.add(newExitOnTimer(serviceLocator.getTerminal(), csp.getEnd(), E_STOP_TRADING));
+		Interval dtp = state.getContractParams().getDataTrackingPeriod();
+		triggers.add(newExitOnTimer(serviceLocator.getTerminal(), dtp.getEnd(), E_STOP_DATA_TRACKING));
 		triggers.add(newTriggerOnEvent(state.getSeriesHandlerT0().getSeries().onLengthUpdate(), in));
 		updatePositionParams();
 		logger.debug("Enter state for symbol {} at time {}",

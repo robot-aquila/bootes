@@ -90,5 +90,15 @@ public abstract class SetupTX implements SecurityChartDataHandler.HandlerSetup {
 			}
 		}
 	}
+	
+	@Override
+	public void onStart() {
+		
+	}
+	
+	@Override
+	public void onStop() {
+		
+	}
 
 }

@@ -20,7 +20,8 @@ import ru.prolib.bootes.tsgr001a.robot.SetupT0;
 public class ChartT0 extends SecurityChartPanel {
 	private final ZoneId zoneID;
 	private BarChart atrChart;
-	private BarChartLayer lyrEma, lyrAtr, lyrAtrCursorCat, lyrPriceTitle, lyrAtrTitle;
+	private BarChartLayer lyrEma, lyrAtr, lyrAtrCursorCat, lyrPriceTitle,
+		lyrAtrTitle, lyrPvc;
 	private SWValueAxisRulerRenderer atrValueRulerRenderer;
 	
 	public ChartT0(ZoneId zoneID) {
@@ -50,6 +51,7 @@ public class ChartT0 extends SecurityChartPanel {
 					chartPanel.getCategoryTracker()
 				)
 			));
+			lyrPvc = priceChart.addPolyLine(source.getSeries(SetupT0.SID_PVC_WAVG)).setColor(Color.ORANGE);
 		}
 		if ( atrChart != null ) {
 			lyrAtrCursorCat = atrChart.addLayer(new SWBarHighlighter(chartPanel.getCategoryTracker()));
@@ -73,6 +75,10 @@ public class ChartT0 extends SecurityChartPanel {
 		if ( lyrPriceTitle != null ) {
 			priceChart.dropLayer(lyrPriceTitle.getId());
 			lyrPriceTitle = null;
+		}
+		if ( lyrPvc != null ) {
+			priceChart.dropLayer(lyrPvc.getId());
+			lyrPvc = null;
 		}
 		if ( lyrAtr != null ) {
 			atrChart.dropLayer(lyrAtr.getId());

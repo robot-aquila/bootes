@@ -68,6 +68,7 @@ public class CommonActions {
 		state.setSeriesHandlerT0(t0);
 		state.setSeriesHandlerT1(t1);
 		state.setSeriesHandlerT2(t2);
+		state.getMarketScanner().watch(t0.getSeries());
 		state.getStateListener().sessionDataAvailable();
 		return true;
 	}

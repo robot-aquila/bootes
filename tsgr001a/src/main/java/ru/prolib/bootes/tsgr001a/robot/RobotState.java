@@ -3,6 +3,7 @@ package ru.prolib.bootes.tsgr001a.robot;
 import ru.prolib.aquila.core.BusinessEntities.Portfolio;
 import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
+import ru.prolib.bootes.tsgr001a.data.watch.MarketScanner;
 import ru.prolib.bootes.tsgr001a.rm.RMContractStrategy;
 import ru.prolib.bootes.tsgr001a.rm.RMContractStrategyPositionParams;
 
@@ -21,6 +22,7 @@ public class RobotState {
 	private Portfolio portfolio;
 	private Security security;
 	private STSeriesHandler sht0, sht1, sht2;
+	private MarketScanner marketScanner;
 	
 	public RobotState(RobotStateListener stateListener) {
 		this.stateListener = stateListener;
@@ -169,6 +171,17 @@ public class RobotState {
 	
 	public synchronized boolean isPositionParamsDefined() {
 		return positionParams != null;
+	}
+	
+	public synchronized void setMarketScanner(MarketScanner marketScanner) {
+		this.marketScanner = marketScanner;
+	}
+	
+	public MarketScanner getMarketScanner() {
+		if ( marketScanner == null ) {
+			throw new NullPointerException();
+		}
+		return marketScanner;
 	}
 	
 }

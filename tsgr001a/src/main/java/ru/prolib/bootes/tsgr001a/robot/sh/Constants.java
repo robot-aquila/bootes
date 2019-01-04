@@ -28,6 +28,16 @@ public class Constants {
 	 * Exit ID to indicate that data tracking must be stopped.
 	 */
 	public static final String E_STOP_DATA_TRACKING = "STOP_DATA_TRACKING";
+	
+	/**
+	 * Exit ID to indicate that trading period is ended.
+	 */
+	public static final String E_STOP_TRADING = "STOP_TRADING";
+	
+	public static final String E_BUY = "BUY";
+	public static final String E_SELL = "SELL";
+	public static final String E_TAKE_PROFIT = "TAKE_PROFIT";
+	public static final String E_STOP_LOSS = "STOP_LOSS";
 
 	
 	// State identifiers
@@ -48,6 +58,8 @@ public class Constants {
 	public static final String S_CHOOSE_CONTRACT = "CCONTR";
 	public static final String S_INIT_SESSION_DATA = "INIT_SESSION_DATA";
 	public static final String S_WAIT_SESSION_END = "WAIT_SESSION_END";
+	public static final String S_WAIT_MARKET_SIGNAL = "WAIT_MARKET_SIGNAL";
+	public static final String S_WAIT_MARKET_SIGNAL_RESULT = "WAIT_MARKET_SIGNAL_RESULT";
 	public static final String S_CLEAN_SESSION_DATA = "CLEAN_SESSION_DATA";
 
 }

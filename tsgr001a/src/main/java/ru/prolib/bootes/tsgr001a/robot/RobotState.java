@@ -3,7 +3,7 @@ package ru.prolib.bootes.tsgr001a.robot;
 import ru.prolib.aquila.core.BusinessEntities.Portfolio;
 import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
-import ru.prolib.bootes.tsgr001a.data.watch.MarketScanner;
+import ru.prolib.bootes.tsgr001a.mscan.sensors.TradeSignal;
 import ru.prolib.bootes.tsgr001a.rm.RMContractStrategy;
 import ru.prolib.bootes.tsgr001a.rm.RMContractStrategyPositionParams;
 
@@ -22,7 +22,7 @@ public class RobotState {
 	private Portfolio portfolio;
 	private Security security;
 	private STSeriesHandler sht0, sht1, sht2;
-	private MarketScanner marketScanner;
+	private TradeSignal activeSignal;
 	
 	public RobotState(RobotStateListener stateListener) {
 		this.stateListener = stateListener;
@@ -74,6 +74,10 @@ public class RobotState {
 	
 	public synchronized void setPositionParams(RMContractStrategyPositionParams params) {
 		this.positionParams = params;
+	}
+	
+	public synchronized void setActiveSignal(TradeSignal signal) {
+		this.activeSignal = signal;
 	}
 	
 	public synchronized String getContractName() {
@@ -173,15 +177,11 @@ public class RobotState {
 		return positionParams != null;
 	}
 	
-	public synchronized void setMarketScanner(MarketScanner marketScanner) {
-		this.marketScanner = marketScanner;
-	}
-	
-	public MarketScanner getMarketScanner() {
-		if ( marketScanner == null ) {
+	public synchronized TradeSignal getActiveSignal() {
+		if ( activeSignal == null ) {
 			throw new NullPointerException();
 		}
-		return marketScanner;
+		return activeSignal;
 	}
 	
 }

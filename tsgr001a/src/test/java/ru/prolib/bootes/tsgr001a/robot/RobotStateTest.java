@@ -11,7 +11,7 @@ import org.junit.Test;
 import ru.prolib.aquila.core.BusinessEntities.Portfolio;
 import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
-import ru.prolib.bootes.tsgr001a.data.watch.MarketScanner;
+import ru.prolib.bootes.tsgr001a.mscan.sensors.TradeSignal;
 import ru.prolib.bootes.tsgr001a.rm.RMContractStrategy;
 import ru.prolib.bootes.tsgr001a.rm.RMContractStrategyPositionParams;
 
@@ -43,7 +43,7 @@ public class RobotStateTest {
 		STSeriesHandler sht1Mock = control.createMock(STSeriesHandler.class);
 		STSeriesHandler sht2Mock = control.createMock(STSeriesHandler.class);
 		RMContractStrategyPositionParams ppMock = control.createMock(RMContractStrategyPositionParams.class);
-		MarketScanner msMock = control.createMock(MarketScanner.class); 
+		TradeSignal msMock = control.createMock(TradeSignal.class);
 		
 		service.setContractName("RTS");
 		service.setAccountCode("ZX-48");
@@ -56,7 +56,7 @@ public class RobotStateTest {
 		service.setSeriesHandlerT1(sht1Mock);
 		service.setSeriesHandlerT2(sht2Mock);
 		service.setPositionParams(ppMock);
-		service.setMarketScanner(msMock);
+		service.setActiveSignal(msMock);
 		
 		assertEquals("RTS", service.getContractName());
 		assertEquals("ZX-48", service.getAccountCode());
@@ -69,7 +69,7 @@ public class RobotStateTest {
 		assertSame(sht1Mock, service.getSeriesHandlerT1());
 		assertSame(sht2Mock, service.getSeriesHandlerT2());
 		assertSame(ppMock, service.getPositionParams());
-		assertSame(msMock, service.getMarketScanner());
+		assertSame(msMock, service.getActiveSignal());
 	}
 	
 	@Test (expected=NullPointerException.class)
@@ -128,8 +128,8 @@ public class RobotStateTest {
 	}
 	
 	@Test (expected=NullPointerException.class)
-	public void testGetMarketScanner_ThrowsIfNotDefined() {
-		service.getMarketScanner();
+	public void testGetActiveSignal_ThrowsIfNotDefined() {
+		service.getActiveSignal();
 	}
 	
 	@Test

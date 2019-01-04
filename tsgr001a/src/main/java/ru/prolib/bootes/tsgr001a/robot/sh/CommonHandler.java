@@ -54,8 +54,12 @@ public abstract class CommonHandler extends SMStateHandler implements SMEnterAct
 		return newTriggerOnEvent(type, registerInput(new SMInputStub(getExit(exitID))));
 	}
 	
+	protected SMTrigger newExitOnTimer(Scheduler scheduler, Instant time, SMInput input) {
+		return new SMTriggerOnTimer(scheduler, time, input);
+	}
+	
 	protected SMTrigger newExitOnTimer(Scheduler scheduler, Instant time, String exitID) {
-		return new SMTriggerOnTimer(scheduler, time, registerInput(new SMInputStub(getExit(exitID))));
+		return newExitOnTimer(scheduler, time, registerInput(new SMInputStub(getExit(exitID))));
 	}
 
 }

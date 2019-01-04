@@ -6,7 +6,6 @@ import static ru.prolib.aquila.core.BusinessEntities.CDecimalBD.*;
 import ru.prolib.aquila.core.sm.SMExit;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
-import ru.prolib.bootes.tsgr001a.data.watch.MarketScanner;
 import ru.prolib.bootes.tsgr001a.rm.RMContractStrategy;
 import ru.prolib.bootes.tsgr001a.rm.RMContractStrategyParams;
 import ru.prolib.bootes.tsgr001a.robot.ContractResolverRegistry;
@@ -36,8 +35,6 @@ public class Init extends CommonHandler {
 				3
 			));
 		state.setContractStrategy(cs);
-		
-		state.setMarketScanner(new MarketScanner());
 		
 		state.getStateListener().robotStarted();
 		return getExit(E_OK);

@@ -9,9 +9,14 @@ import ru.prolib.bootes.tsgr001a.robot.sh.CleanSessionData;
 import ru.prolib.bootes.tsgr001a.robot.sh.CommonActions;
 import ru.prolib.bootes.tsgr001a.robot.sh.Init;
 import ru.prolib.bootes.tsgr001a.robot.sh.InitSessionData;
+import ru.prolib.bootes.tsgr001a.robot.sh.SimOpenLongCtrl;
+import ru.prolib.bootes.tsgr001a.robot.sh.SimOpenPosition;
+import ru.prolib.bootes.tsgr001a.robot.sh.SimOpenShortCtrl;
+import ru.prolib.bootes.tsgr001a.robot.sh.SimTrackLongCtrl;
+import ru.prolib.bootes.tsgr001a.robot.sh.SimTrackPosition;
+import ru.prolib.bootes.tsgr001a.robot.sh.SimTrackShortCtrl;
 import ru.prolib.bootes.tsgr001a.robot.sh.WaitForAccount;
 import ru.prolib.bootes.tsgr001a.robot.sh.WaitForMarketSignal;
-import ru.prolib.bootes.tsgr001a.robot.sh.WaitForMarketSignalResult;
 import ru.prolib.bootes.tsgr001a.robot.sh.WaitForSessionEnd;
 
 public class TSGR001ARobotBuilder {
@@ -30,7 +35,10 @@ public class TSGR001ARobotBuilder {
 				.addState(new ChooseContract(serviceLocator, state), S_CHOOSE_CONTRACT)
 				.addState(new InitSessionData(serviceLocator, state, ca), S_INIT_SESSION_DATA)
 				.addState(new WaitForMarketSignal(serviceLocator, state, ca), S_WAIT_MARKET_SIGNAL)
-				.addState(new WaitForMarketSignalResult(serviceLocator, state), S_WAIT_MARKET_SIGNAL_RESULT)
+				.addState(new SimOpenPosition(serviceLocator, state, new SimOpenLongCtrl()), S_OPEN_LONG)
+				.addState(new SimTrackPosition(serviceLocator, state, new SimTrackLongCtrl()), S_TRACK_LONG)
+				.addState(new SimOpenPosition(serviceLocator, state, new SimOpenShortCtrl()), S_OPEN_SHORT)
+				.addState(new SimTrackPosition(serviceLocator, state, new SimTrackShortCtrl()), S_TRACK_SHORT)
 				.addState(new WaitForSessionEnd(serviceLocator, state, ca), S_WAIT_SESSION_END)
 				.addState(new CleanSessionData(serviceLocator, state, ca), S_CLEAN_SESSION_DATA)
 				
@@ -54,16 +62,28 @@ public class TSGR001ARobotBuilder {
 				.addFinal(S_INIT_SESSION_DATA, E_INTERRUPT)
 				
 				.addTrans(S_WAIT_MARKET_SIGNAL, E_STOP_TRADING,	S_WAIT_SESSION_END)
-				.addTrans(S_WAIT_MARKET_SIGNAL, E_BUY,			S_WAIT_MARKET_SIGNAL_RESULT)
-				.addTrans(S_WAIT_MARKET_SIGNAL, E_SELL,			S_WAIT_MARKET_SIGNAL_RESULT)
+				.addTrans(S_WAIT_MARKET_SIGNAL, E_BUY,			S_OPEN_LONG)
+				.addTrans(S_WAIT_MARKET_SIGNAL, E_SELL,			S_OPEN_SHORT)
 				.addFinal(S_WAIT_MARKET_SIGNAL, E_ERROR)
 				.addFinal(S_WAIT_MARKET_SIGNAL, E_INTERRUPT)
 				
-				.addTrans(S_WAIT_MARKET_SIGNAL_RESULT, E_STOP_TRADING,	S_WAIT_SESSION_END)
-				.addTrans(S_WAIT_MARKET_SIGNAL_RESULT, E_TAKE_PROFIT,	S_WAIT_MARKET_SIGNAL)
-				.addTrans(S_WAIT_MARKET_SIGNAL_RESULT, E_STOP_LOSS,		S_WAIT_MARKET_SIGNAL)
-				.addFinal(S_WAIT_MARKET_SIGNAL_RESULT, E_ERROR)
-				.addFinal(S_WAIT_MARKET_SIGNAL_RESULT, E_INTERRUPT)
+				.addTrans(S_OPEN_LONG, E_OK,		S_TRACK_LONG)
+				.addFinal(S_OPEN_LONG, E_ERROR)
+				.addFinal(S_OPEN_LONG, E_INTERRUPT)
+				
+				.addTrans(S_TRACK_LONG, E_STOP_TRADING, S_WAIT_SESSION_END)
+				.addTrans(S_TRACK_LONG, E_NEXT_TRADING, S_WAIT_MARKET_SIGNAL)
+				.addFinal(S_TRACK_LONG, E_ERROR)
+				.addFinal(S_TRACK_LONG, E_INTERRUPT)
+				
+				.addTrans(S_OPEN_SHORT, E_OK,		S_TRACK_SHORT)
+				.addFinal(S_OPEN_SHORT, E_ERROR)
+				.addFinal(S_OPEN_SHORT, E_INTERRUPT)
+
+				.addTrans(S_TRACK_SHORT, E_STOP_TRADING, S_WAIT_SESSION_END)
+				.addTrans(S_TRACK_SHORT, E_NEXT_TRADING, S_WAIT_MARKET_SIGNAL)
+				.addFinal(S_TRACK_SHORT, E_ERROR)
+				.addFinal(S_TRACK_SHORT, E_INTERRUPT)
 				
 				.addTrans(S_WAIT_SESSION_END, E_STOP_DATA_TRACKING, S_CLEAN_SESSION_DATA)
 				.addFinal(S_WAIT_SESSION_END, E_ERROR)

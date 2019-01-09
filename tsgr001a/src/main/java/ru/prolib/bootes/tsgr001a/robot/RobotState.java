@@ -3,7 +3,7 @@ package ru.prolib.bootes.tsgr001a.robot;
 import ru.prolib.aquila.core.BusinessEntities.Portfolio;
 import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
-import ru.prolib.bootes.tsgr001a.mscan.sensors.TradeSignal;
+import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
 import ru.prolib.bootes.tsgr001a.rm.RMContractStrategy;
 import ru.prolib.bootes.tsgr001a.rm.RMContractStrategyPositionParams;
 
@@ -22,7 +22,7 @@ public class RobotState {
 	private Portfolio portfolio;
 	private Security security;
 	private STSeriesHandler sht0, sht1, sht2;
-	private TradeSignal activeSignal;
+	private Speculation speculation;
 	
 	public RobotState(RobotStateListener stateListener) {
 		this.stateListener = stateListener;
@@ -76,8 +76,8 @@ public class RobotState {
 		this.positionParams = params;
 	}
 	
-	public synchronized void setActiveSignal(TradeSignal signal) {
-		this.activeSignal = signal;
+	public synchronized void setActiveSpeculation(Speculation speculation) {
+		this.speculation = speculation;
 	}
 	
 	public synchronized String getContractName() {
@@ -177,11 +177,11 @@ public class RobotState {
 		return positionParams != null;
 	}
 	
-	public synchronized TradeSignal getActiveSignal() {
-		if ( activeSignal == null ) {
+	public synchronized Speculation getActiveSpeculation() {
+		if ( speculation == null ) {
 			throw new NullPointerException();
 		}
-		return activeSignal;
+		return speculation;
 	}
 	
 }

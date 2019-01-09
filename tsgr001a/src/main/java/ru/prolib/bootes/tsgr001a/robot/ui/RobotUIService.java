@@ -162,5 +162,15 @@ public class RobotUIService implements RobotStateListener {
 	public void robotStopped() {
 
 	}
+	
+	@Override
+	public void speculationOpened() {
+		
+	}
+
+	@Override
+	public void speculationClosed() {
+		
+	}
 
 }

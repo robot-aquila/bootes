@@ -9,15 +9,9 @@ import ru.prolib.bootes.tsgr001a.robot.sh.CommonActions;
 import ru.prolib.bootes.tsgr001a.robot.sh.Init;
 import ru.prolib.bootes.tsgr001a.robot.sh.InitSessionData;
 import ru.prolib.bootes.tsgr001a.robot.sh.ShowStats;
-import ru.prolib.bootes.tsgr001a.robot.sh.SimCloseLongCtrl;
 import ru.prolib.bootes.tsgr001a.robot.sh.SimClosePosition;
-import ru.prolib.bootes.tsgr001a.robot.sh.SimCloseShortCtrl;
-import ru.prolib.bootes.tsgr001a.robot.sh.SimOpenLongCtrl;
 import ru.prolib.bootes.tsgr001a.robot.sh.SimOpenPosition;
-import ru.prolib.bootes.tsgr001a.robot.sh.SimOpenShortCtrl;
-import ru.prolib.bootes.tsgr001a.robot.sh.SimTrackLongCtrl;
 import ru.prolib.bootes.tsgr001a.robot.sh.SimTrackPosition;
-import ru.prolib.bootes.tsgr001a.robot.sh.SimTrackShortCtrl;
 import ru.prolib.bootes.tsgr001a.robot.sh.WaitForAccount;
 import ru.prolib.bootes.tsgr001a.robot.sh.WaitForMarketSignal;
 import ru.prolib.bootes.tsgr001a.robot.sh.WaitForSessionEnd;
@@ -54,12 +48,12 @@ public class TSGR001ARobotBuilder {
 				.addState(new ChooseContract(serviceLocator, state), S_CHOOSE_CONTRACT)
 				.addState(new InitSessionData(serviceLocator, state, ca), S_INIT_SESSION_DATA)
 				.addState(new WaitForMarketSignal(serviceLocator, state, ca), S_WAIT_MARKET_SIGNAL)
-				.addState(new SimOpenPosition(serviceLocator, state, new SimOpenLongCtrl()), S_OPEN_LONG)
-				.addState(new SimOpenPosition(serviceLocator, state, new SimOpenShortCtrl()), S_OPEN_SHORT)
-				.addState(new SimTrackPosition(serviceLocator, state, new SimTrackLongCtrl()), S_TRACK_LONG)
-				.addState(new SimTrackPosition(serviceLocator, state, new SimTrackShortCtrl()), S_TRACK_SHORT)
-				.addState(new SimClosePosition(serviceLocator, state, new SimCloseLongCtrl()), S_CLOSE_LONG)
-				.addState(new SimClosePosition(serviceLocator, state, new SimCloseShortCtrl()), S_CLOSE_SHORT)
+				.addState(new SimOpenPosition(serviceLocator, state), S_OPEN_LONG)
+				.addState(new SimOpenPosition(serviceLocator, state), S_OPEN_SHORT)
+				.addState(new SimTrackPosition(serviceLocator, state), S_TRACK_LONG)
+				.addState(new SimTrackPosition(serviceLocator, state), S_TRACK_SHORT)
+				.addState(new SimClosePosition(serviceLocator, state), S_CLOSE_LONG)
+				.addState(new SimClosePosition(serviceLocator, state), S_CLOSE_SHORT)
 				.addState(new WaitForSessionEnd(serviceLocator, state, ca), S_WAIT_SESSION_END)
 				.addState(new CleanSessionData(serviceLocator, state, ca), S_CLEAN_SESSION_DATA)
 				.addState(new ShowStats(serviceLocator, state), S_SHOW_STATS)

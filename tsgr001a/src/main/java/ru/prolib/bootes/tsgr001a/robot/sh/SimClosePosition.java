@@ -2,6 +2,9 @@ package ru.prolib.bootes.tsgr001a.robot.sh;
 
 import java.time.Instant;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 import ru.prolib.aquila.core.BusinessEntities.CDecimalBD;
 import ru.prolib.aquila.core.BusinessEntities.Security;
@@ -15,21 +18,32 @@ import ru.prolib.bootes.tsgr001a.robot.RobotState;
 import ru.prolib.bootes.tsgr001a.robot.RobotStateListener;
 
 public class SimClosePosition extends CommonHandler {
+	private static final Logger logger;
+	
+	static {
+		logger = LoggerFactory.getLogger(SimClosePosition.class);
+	}
+	
 	public static final String E_CLOSED = "CLOSED";
 	
-	public interface Ctrl {
-		CDecimal getSpeculationPL(Speculation spec);
-	}
-
-	private final Ctrl ctrl;
-	
 	public SimClosePosition(AppServiceLocator serviceLocator,
-			RobotState state,
-			Ctrl ctrl)
+			RobotState state)
 	{
 		super(serviceLocator, state);
-		this.ctrl = ctrl;
 		registerExit(E_CLOSED);
+	}
+	
+	private CDecimal getSpeculationPL(Speculation spec) {
+		switch ( spec.getTradeSignal().getType() ) {
+		case BUY:
+			return spec.getExitPoint().getValue()
+				.subtract(spec.getEntryPoint().getValue());
+		case SELL:
+			return spec.getEntryPoint().getValue()
+				.subtract(spec.getExitPoint().getValue());
+		default:
+			throw new IllegalStateException();
+		}
 	}
 
 	@Override
@@ -55,9 +69,12 @@ public class SimClosePosition extends CommonHandler {
 				);
 			spec.setExitPoint(entry);
 			int flags = spec.getFlags() | Speculation.SF_STATUS_CLOSED;
-			CDecimal result = ctrl.getSpeculationPL(spec);
+			CDecimal result = getSpeculationPL(spec);
 			if ( result.compareTo(CDecimalBD.ZERO) > 0 ) {
 				flags |= Speculation.SF_RESULT_PROFIT;
+				logger.debug("{} Profit: {}", curr_time, result);
+			} else {
+				logger.debug("{}   Loss: {}", curr_time, result);
 			}
 			spec.setFlags(flags);
 		}

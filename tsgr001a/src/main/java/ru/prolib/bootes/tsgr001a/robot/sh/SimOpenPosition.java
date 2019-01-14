@@ -15,18 +15,10 @@ import ru.prolib.bootes.tsgr001a.robot.RobotStateListener;
 public class SimOpenPosition extends CommonHandler {
 	public static final String E_OPENED = "OPENED";
 	
-	public interface Ctrl {
-		void setExitParams(Speculation spec);
-	}
-	
-	private final Ctrl ctrl;
-
 	public SimOpenPosition(AppServiceLocator serviceLocator,
-			RobotState state,
-			Ctrl ctrl)
+			RobotState state)
 	{
 		super(serviceLocator, state);
-		this.ctrl = ctrl;
 		registerExit(E_OPENED);
 	}
 
@@ -52,7 +44,6 @@ public class SimOpenPosition extends CommonHandler {
 				);
 			spec.setFlags(Speculation.SF_NEW);
 			spec.setEntryPoint(entry);
-			ctrl.setExitParams(spec);
 		}
 		listener.speculationOpened();
 		return getExit(E_OPENED);

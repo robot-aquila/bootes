@@ -1,12 +1,8 @@
 package ru.prolib.bootes.tsgr001a.mscan.sensors;
 
-import java.time.Instant;
-
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
-import ru.prolib.aquila.core.BusinessEntities.CDecimal;
-import ru.prolib.aquila.core.BusinessEntities.TStampedVal;
 import ru.prolib.aquila.core.BusinessEntities.Tick;
 
 public class Speculation {
@@ -35,9 +31,7 @@ public class Speculation {
 	
 	private final TradeSignal signal;
 	private Tick entry;
-	private CDecimal tp, sl, be;
 	private Tick exit;
-	private TStampedVal<CDecimal> high, low;
 	private int flags = SF_NEW;
 	
 	public Speculation(TradeSignal signal) {
@@ -48,28 +42,8 @@ public class Speculation {
 		this.entry = data;
 	}
 	
-	public void setTakeProfitAt(CDecimal value) {
-		this.tp = value;
-	}
-	
-	public void setStopLossAt(CDecimal value) {
-		this.sl = value;
-	}
-	
-	public void setBreakEvenAt(CDecimal value) {
-		this.be = value;
-	}
-	
 	public void setExitPoint(Tick data) {
 		this.exit = data;
-	}
-	
-	public void setHighestPrice(Instant time, CDecimal value) {
-		this.high = new TStampedVal<>(time, value);
-	}
-	
-	public void setLowestPrice(Instant time, CDecimal value) {
-		this.low = new TStampedVal<>(time, value);
 	}
 	
 	public void setFlags(int flags) {
@@ -84,28 +58,8 @@ public class Speculation {
 		return entry;
 	}
 	
-	public CDecimal getTakeProfitAt() {
-		return tp;
-	}
-	
-	public CDecimal getStopLossAt() {
-		return sl;
-	}
-	
-	public CDecimal getBreakEvenAt() {
-		return be;
-	}
-	
 	public Tick getExitPoint() {
 		return exit;
-	}
-	
-	public TStampedVal<CDecimal> getHighestPrice() {
-		return high;
-	}
-	
-	public TStampedVal<CDecimal> getLowestPrice() {
-		return low;
 	}
 	
 	public int getFlags() {

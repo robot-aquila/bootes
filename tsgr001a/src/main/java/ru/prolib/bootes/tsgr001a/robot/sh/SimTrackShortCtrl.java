@@ -6,12 +6,6 @@ import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
 public class SimTrackShortCtrl implements SimTrackPosition.Ctrl {
 
 	@Override
-	public CDecimal getSpeculationResult(Speculation spec) {
-		return spec.getEntryPoint().getValue()
-				.subtract(spec.getExitPoint().getValue());
-	}
-
-	@Override
 	public boolean isTakeProfit(CDecimal lastPrice, Speculation spec) {
 		return lastPrice.compareTo(spec.getTakeProfitAt()) <= 0;
 	}

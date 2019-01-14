@@ -1,7 +1,5 @@
 package ru.prolib.bootes.tsgr001a.robot.sh;
 
-import static ru.prolib.bootes.tsgr001a.robot.sh.Constants.*;
-
 import ru.prolib.aquila.core.BusinessEntities.Account;
 import ru.prolib.aquila.core.BusinessEntities.Portfolio;
 import ru.prolib.aquila.core.BusinessEntities.Terminal;
@@ -14,6 +12,8 @@ import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
 public class WaitForAccount extends CommonHandler implements SMInputAction {
+	public static final String E_OK = "OK";
+	
 	private final SMInput in;
 	
 	public WaitForAccount(AppServiceLocator serviceLocator, RobotState state) {

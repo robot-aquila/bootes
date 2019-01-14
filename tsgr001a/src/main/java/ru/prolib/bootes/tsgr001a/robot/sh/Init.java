@@ -1,6 +1,5 @@
 package ru.prolib.bootes.tsgr001a.robot.sh;
 
-import static ru.prolib.bootes.tsgr001a.robot.sh.Constants.*;
 import static ru.prolib.aquila.core.BusinessEntities.CDecimalBD.*;
 
 import ru.prolib.aquila.core.sm.SMExit;
@@ -12,6 +11,7 @@ import ru.prolib.bootes.tsgr001a.robot.ContractResolverRegistry;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
 public class Init extends CommonHandler {
+	public static final String E_OK = "OK";
 	
 	public Init(AppServiceLocator serviceLocator, RobotState state) {
 		super(serviceLocator, state);

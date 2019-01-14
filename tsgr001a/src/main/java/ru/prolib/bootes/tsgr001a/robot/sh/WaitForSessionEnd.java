@@ -1,7 +1,5 @@
 package ru.prolib.bootes.tsgr001a.robot.sh;
 
-import static ru.prolib.bootes.tsgr001a.robot.sh.Constants.*;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.threeten.extra.Interval;
@@ -14,6 +12,8 @@ import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
 public class WaitForSessionEnd extends CommonHandler implements SMInputAction {
+	public static final String E_STOP_DATA_TRACKING = "STOP_DATA_TRACKING";
+	
 	private static final Logger logger;
 	
 	static {

@@ -1,7 +1,5 @@
 package ru.prolib.bootes.tsgr001a.robot.sh;
 
-import static ru.prolib.bootes.tsgr001a.robot.sh.Constants.E_OK;
-
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.core.BusinessEntities.Tick;
@@ -15,6 +13,7 @@ import ru.prolib.bootes.tsgr001a.robot.RobotState;
 import ru.prolib.bootes.tsgr001a.robot.RobotStateListener;
 
 public class SimOpenPosition extends CommonHandler {
+	public static final String E_OPENED = "OPENED";
 	
 	public interface Ctrl {
 		void setExitParams(Speculation spec);
@@ -28,7 +27,7 @@ public class SimOpenPosition extends CommonHandler {
 	{
 		super(serviceLocator, state);
 		this.ctrl = ctrl;
-		registerExit(E_OK);
+		registerExit(E_OPENED);
 	}
 
 	@Override
@@ -56,7 +55,7 @@ public class SimOpenPosition extends CommonHandler {
 			ctrl.setExitParams(spec);
 		}
 		listener.speculationOpened();
-		return getExit(E_OK);
+		return getExit(E_OPENED);
 	}
 
 }

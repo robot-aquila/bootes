@@ -1,7 +1,5 @@
 package ru.prolib.bootes.tsgr001a.robot.sh;
 
-import static ru.prolib.bootes.tsgr001a.robot.sh.Constants.*;
-
 import java.time.Instant;
 
 import ru.prolib.aquila.core.EventType;
@@ -19,6 +17,9 @@ import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
 public abstract class CommonHandler extends SMStateHandler implements SMEnterAction {
+	public static final String E_ERROR = "ERROR";
+	public static final String E_INTERRUPT = "INTERRUPT";
+	
 	protected final SMInput inInterrupt;
 	protected final AppServiceLocator serviceLocator;
 	protected final RobotState state;

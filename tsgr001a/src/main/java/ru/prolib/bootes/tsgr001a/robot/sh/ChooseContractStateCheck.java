@@ -1,7 +1,6 @@
 package ru.prolib.bootes.tsgr001a.robot.sh;
 
-import static ru.prolib.bootes.tsgr001a.robot.sh.Constants.E_NEW_SESSION;
-import static ru.prolib.bootes.tsgr001a.robot.sh.Constants.E_OK;
+import static ru.prolib.bootes.tsgr001a.robot.sh.ChooseContract.*;
 
 import java.time.Instant;
 

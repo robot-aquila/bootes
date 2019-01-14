@@ -1,7 +1,5 @@
 package ru.prolib.bootes.tsgr001a.robot.sh;
 
-import static ru.prolib.bootes.tsgr001a.robot.sh.Constants.*;
-
 import java.time.Instant;
 
 import org.slf4j.Logger;
@@ -29,6 +27,9 @@ import ru.prolib.bootes.tsgr001a.robot.RobotState;
  * tracking period. Require terminal and contract resolver to be set.
  */
 public class ChooseContract extends CommonHandler implements SMInputAction, SMExitAction {
+	public static final String E_OK = "OK";
+	public static final String E_NEW_SESSION = "NEW_SESSION";
+	
 	private static final Logger logger;
 	
 	static {

@@ -1,7 +1,5 @@
 package ru.prolib.bootes.tsgr001a.robot.sh;
 
-import static ru.prolib.bootes.tsgr001a.robot.sh.Constants.*;
-
 import java.time.Instant;
 
 import org.slf4j.Logger;
@@ -25,6 +23,10 @@ import ru.prolib.bootes.tsgr001a.robot.RobotState;
 import ru.prolib.bootes.tsgr001a.robot.SetupT0;
 
 public class WaitForMarketSignal extends CommonHandler implements SMInputAction {
+	public static final String E_STOP_TRADING = "STOP_TRADING";
+	public static final String E_BUY = "BUY";
+	public static final String E_SELL = "SELL";
+	
 	private static final Logger logger;
 	
 	static {

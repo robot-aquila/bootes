@@ -69,7 +69,7 @@ public class SimTrackPosition extends CommonHandler implements SMInputAction, SM
 				breakEven = price.add(sig.getStopLossPts().multiply(2L));
 				logger.debug("{} Long stop-loss @{}", curr_time, stopLoss);
 				logger.debug("{} Long take-profit @{}", curr_time, takeProfit);
-				logger.debug("{} Long break-event @{}", curr_time, breakEven);
+				logger.debug("{} Long break-even @{}", curr_time, breakEven);
 				break;
 			case SELL:
 				stopLoss = price.add(sig.getStopLossPts());

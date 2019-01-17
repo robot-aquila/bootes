@@ -22,12 +22,14 @@ public class TSGR001ARobotComp implements AppComponent {
 
 	@Override
 	public void init() throws Throwable {
-		RobotStateListener stateListener = new RobotStateListenerStub();
+		RobotStateListenerComp stateListener = new RobotStateListenerComp();
 		boolean headless = appConfig.getBasicConfig().isHeadless();
 		if ( ! headless ) {
-			stateListener = uis = new RobotUIService(serviceLocator);
+			uis = new RobotUIService(serviceLocator);
+			stateListener.addListener(uis);
 		}
 		robot = new TSGR001ARobotBuilder(serviceLocator).build(stateListener);
+		stateListener.addListener(new RobotStateListenerStats(robot.getState()));
 		robot.getAutomat().start();
 		if ( ! headless ) {
 			SwingUtilities.invokeAndWait(new Runnable() {

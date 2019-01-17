@@ -57,7 +57,7 @@ public class SimClosePosition extends CommonHandler {
 			security = state.getSecurity();
 			listener = state.getStateListener();
 		}
-		CDecimal last_price = security.getLastTrade().getPrice();
+		CDecimal last_price = security.getLastTrade().getPrice(), result;
 		Instant curr_time = serviceLocator.getTerminal().getCurrentTime();
 		synchronized ( spec ) {
 			CDecimal qty = spec.getEntryPoint().getSize();
@@ -68,8 +68,8 @@ public class SimClosePosition extends CommonHandler {
 					security.priceToValueWR(last_price, qty)
 				);
 			spec.setExitPoint(entry);
+			spec.setResult(result = getSpeculationPL(spec));
 			int flags = spec.getFlags() | Speculation.SF_STATUS_CLOSED;
-			CDecimal result = getSpeculationPL(spec);
 			if ( result.compareTo(CDecimalBD.ZERO) > 0 ) {
 				flags |= Speculation.SF_RESULT_PROFIT;
 				logger.debug("{} Profit: {}", curr_time, result);

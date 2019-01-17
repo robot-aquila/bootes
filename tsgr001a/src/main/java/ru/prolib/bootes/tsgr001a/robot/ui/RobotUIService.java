@@ -147,7 +147,7 @@ public class RobotUIService implements RobotStateListener {
 	}
 	
 	@Override
-	public void positionParamsUpdated() {
+	public void riskManagementUpdate() {
 		updateConfigPanel();
 	}
 

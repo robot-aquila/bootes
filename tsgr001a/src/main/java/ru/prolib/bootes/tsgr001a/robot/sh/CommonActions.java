@@ -84,7 +84,7 @@ public class CommonActions {
 		cs.setPortfolio(state.getPortfolio());
 		cs.setSecurity(state.getSecurity());
 		state.setPositionParams(cs.getPositionParams(serviceLocator.getTerminal().getCurrentTime()));
-		state.getStateListener().positionParamsUpdated();
+		state.getStateListener().riskManagementUpdate();
 	}
 
 }

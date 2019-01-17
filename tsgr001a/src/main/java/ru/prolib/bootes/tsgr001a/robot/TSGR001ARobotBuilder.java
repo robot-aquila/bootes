@@ -8,7 +8,7 @@ import ru.prolib.bootes.tsgr001a.robot.sh.CleanSessionData;
 import ru.prolib.bootes.tsgr001a.robot.sh.CommonActions;
 import ru.prolib.bootes.tsgr001a.robot.sh.Init;
 import ru.prolib.bootes.tsgr001a.robot.sh.InitSessionData;
-import ru.prolib.bootes.tsgr001a.robot.sh.ShowStats;
+import ru.prolib.bootes.tsgr001a.robot.sh.Cleanup;
 import ru.prolib.bootes.tsgr001a.robot.sh.SimClosePosition;
 import ru.prolib.bootes.tsgr001a.robot.sh.SimOpenPosition;
 import ru.prolib.bootes.tsgr001a.robot.sh.SimTrackPosition;
@@ -31,7 +31,7 @@ public class TSGR001ARobotBuilder {
 	public static final String S_CLOSE_LONG = "CLOSE_LONG";
 	public static final String S_CLOSE_SHORT = "CLOSE_SHORT";
 	public static final String S_CLEAN_SESSION_DATA = "CLEAN_SESSION_DATA";
-	public static final String S_SHOW_STATS = "SHOW_STATS";
+	public static final String S_CLEANUP = "CLEANUP";
 	
 	private final AppServiceLocator serviceLocator;
 
@@ -56,7 +56,7 @@ public class TSGR001ARobotBuilder {
 				.addState(new SimClosePosition(serviceLocator, state), S_CLOSE_SHORT)
 				.addState(new WaitForSessionEnd(serviceLocator, state, ca), S_WAIT_SESSION_END)
 				.addState(new CleanSessionData(serviceLocator, state, ca), S_CLEAN_SESSION_DATA)
-				.addState(new ShowStats(serviceLocator, state), S_SHOW_STATS)
+				.addState(new Cleanup(serviceLocator, state), S_CLEANUP)
 				
 				.setInitialState(S_INIT)
 				
@@ -70,54 +70,54 @@ public class TSGR001ARobotBuilder {
 				
 				.addTrans(S_CHOOSE_CONTRACT, ChooseContract.E_NEW_SESSION,	S_CHOOSE_CONTRACT)
 				.addTrans(S_CHOOSE_CONTRACT, ChooseContract.E_OK,			S_INIT_SESSION_DATA)
-				.addTrans(S_CHOOSE_CONTRACT, ChooseContract.E_ERROR,		S_SHOW_STATS)
-				.addTrans(S_CHOOSE_CONTRACT, ChooseContract.E_INTERRUPT,	S_SHOW_STATS)
+				.addTrans(S_CHOOSE_CONTRACT, ChooseContract.E_ERROR,		S_CLEANUP)
+				.addTrans(S_CHOOSE_CONTRACT, ChooseContract.E_INTERRUPT,	S_CLEANUP)
 				
 				.addTrans(S_INIT_SESSION_DATA, InitSessionData.E_OK,		S_WAIT_MARKET_SIGNAL)
-				.addTrans(S_INIT_SESSION_DATA, InitSessionData.E_ERROR,		S_SHOW_STATS)
-				.addTrans(S_INIT_SESSION_DATA, InitSessionData.E_INTERRUPT,	S_SHOW_STATS)
+				.addTrans(S_INIT_SESSION_DATA, InitSessionData.E_ERROR,		S_CLEANUP)
+				.addTrans(S_INIT_SESSION_DATA, InitSessionData.E_INTERRUPT,	S_CLEANUP)
 				
 				.addTrans(S_WAIT_MARKET_SIGNAL, WaitForMarketSignal.E_STOP_TRADING,	S_WAIT_SESSION_END)
 				.addTrans(S_WAIT_MARKET_SIGNAL, WaitForMarketSignal.E_BUY,			S_OPEN_LONG)
 				.addTrans(S_WAIT_MARKET_SIGNAL, WaitForMarketSignal.E_SELL,			S_OPEN_SHORT)
-				.addTrans(S_WAIT_MARKET_SIGNAL, WaitForMarketSignal.E_ERROR,		S_SHOW_STATS)
-				.addTrans(S_WAIT_MARKET_SIGNAL, WaitForMarketSignal.E_INTERRUPT,	S_SHOW_STATS)
+				.addTrans(S_WAIT_MARKET_SIGNAL, WaitForMarketSignal.E_ERROR,		S_CLEANUP)
+				.addTrans(S_WAIT_MARKET_SIGNAL, WaitForMarketSignal.E_INTERRUPT,	S_CLEANUP)
 				
 				.addTrans(S_OPEN_LONG, SimOpenPosition.E_OPENED,	S_TRACK_LONG)
-				.addTrans(S_OPEN_LONG, SimOpenPosition.E_ERROR,		S_SHOW_STATS)
-				.addTrans(S_OPEN_LONG, SimOpenPosition.E_INTERRUPT,	S_SHOW_STATS)
+				.addTrans(S_OPEN_LONG, SimOpenPosition.E_ERROR,		S_CLEANUP)
+				.addTrans(S_OPEN_LONG, SimOpenPosition.E_INTERRUPT,	S_CLEANUP)
 				
 				.addTrans(S_OPEN_SHORT, SimOpenPosition.E_OPENED,		S_TRACK_SHORT)
-				.addTrans(S_OPEN_SHORT, SimOpenPosition.E_ERROR,		S_SHOW_STATS)
-				.addTrans(S_OPEN_SHORT, SimOpenPosition.E_INTERRUPT,	S_SHOW_STATS)
+				.addTrans(S_OPEN_SHORT, SimOpenPosition.E_ERROR,		S_CLEANUP)
+				.addTrans(S_OPEN_SHORT, SimOpenPosition.E_INTERRUPT,	S_CLEANUP)
 				
 				.addTrans(S_TRACK_LONG, SimTrackPosition.E_CLOSE_POSITION,	S_CLOSE_LONG)
-				.addTrans(S_TRACK_LONG, SimTrackPosition.E_ERROR,			S_SHOW_STATS)
-				.addTrans(S_TRACK_LONG, SimTrackPosition.E_INTERRUPT,		S_SHOW_STATS)
+				.addTrans(S_TRACK_LONG, SimTrackPosition.E_ERROR,			S_CLEANUP)
+				.addTrans(S_TRACK_LONG, SimTrackPosition.E_INTERRUPT,		S_CLEANUP)
 
 				.addTrans(S_TRACK_SHORT, SimTrackPosition.E_CLOSE_POSITION, S_CLOSE_SHORT)
-				.addTrans(S_TRACK_SHORT, SimTrackPosition.E_ERROR,			S_SHOW_STATS)
-				.addTrans(S_TRACK_SHORT, SimTrackPosition.E_INTERRUPT,		S_SHOW_STATS)
+				.addTrans(S_TRACK_SHORT, SimTrackPosition.E_ERROR,			S_CLEANUP)
+				.addTrans(S_TRACK_SHORT, SimTrackPosition.E_INTERRUPT,		S_CLEANUP)
 				
 				.addTrans(S_CLOSE_LONG, SimClosePosition.E_CLOSED,		S_WAIT_MARKET_SIGNAL)
-				.addTrans(S_CLOSE_LONG, SimClosePosition.E_ERROR,		S_SHOW_STATS)
-				.addTrans(S_CLOSE_LONG, SimClosePosition.E_INTERRUPT,	S_SHOW_STATS)
+				.addTrans(S_CLOSE_LONG, SimClosePosition.E_ERROR,		S_CLEANUP)
+				.addTrans(S_CLOSE_LONG, SimClosePosition.E_INTERRUPT,	S_CLEANUP)
 				
 				.addTrans(S_CLOSE_SHORT, SimClosePosition.E_CLOSED,		S_WAIT_MARKET_SIGNAL)
-				.addTrans(S_CLOSE_SHORT, SimClosePosition.E_ERROR,		S_SHOW_STATS)
-				.addTrans(S_CLOSE_SHORT, SimClosePosition.E_INTERRUPT,	S_SHOW_STATS)
+				.addTrans(S_CLOSE_SHORT, SimClosePosition.E_ERROR,		S_CLEANUP)
+				.addTrans(S_CLOSE_SHORT, SimClosePosition.E_INTERRUPT,	S_CLEANUP)
 				
 				.addTrans(S_WAIT_SESSION_END, WaitForSessionEnd.E_STOP_DATA_TRACKING,	S_CLEAN_SESSION_DATA)
-				.addTrans(S_WAIT_SESSION_END, WaitForSessionEnd.E_ERROR,				S_SHOW_STATS)
-				.addTrans(S_WAIT_SESSION_END, WaitForSessionEnd.E_INTERRUPT,			S_SHOW_STATS)
+				.addTrans(S_WAIT_SESSION_END, WaitForSessionEnd.E_ERROR,				S_CLEANUP)
+				.addTrans(S_WAIT_SESSION_END, WaitForSessionEnd.E_INTERRUPT,			S_CLEANUP)
 				
 				.addTrans(S_CLEAN_SESSION_DATA, CleanSessionData.E_OK,			S_CHOOSE_CONTRACT)
-				.addTrans(S_CLEAN_SESSION_DATA, CleanSessionData.E_ERROR,		S_SHOW_STATS)
-				.addTrans(S_CLEAN_SESSION_DATA, CleanSessionData.E_INTERRUPT,	S_SHOW_STATS)
+				.addTrans(S_CLEAN_SESSION_DATA, CleanSessionData.E_ERROR,		S_CLEANUP)
+				.addTrans(S_CLEAN_SESSION_DATA, CleanSessionData.E_INTERRUPT,	S_CLEANUP)
 				
-				.addFinal(S_SHOW_STATS, ShowStats.E_OK)
-				.addFinal(S_SHOW_STATS, ShowStats.E_ERROR)
-				.addFinal(S_SHOW_STATS, ShowStats.E_INTERRUPT)
+				.addFinal(S_CLEANUP, Cleanup.E_OK)
+				.addFinal(S_CLEANUP, Cleanup.E_ERROR)
+				.addFinal(S_CLEANUP, Cleanup.E_INTERRUPT)
 				
 				.build();
 		automat.setDebug(true);

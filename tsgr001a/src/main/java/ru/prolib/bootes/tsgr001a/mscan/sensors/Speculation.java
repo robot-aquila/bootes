@@ -3,6 +3,7 @@ package ru.prolib.bootes.tsgr001a.mscan.sensors;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
+import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 import ru.prolib.aquila.core.BusinessEntities.Tick;
 
 public class Speculation {
@@ -33,6 +34,7 @@ public class Speculation {
 	private Tick entry;
 	private Tick exit;
 	private int flags = SF_NEW;
+	private CDecimal result;
 	
 	public Speculation(TradeSignal signal) {
 		this.signal = signal;
@@ -49,9 +51,17 @@ public class Speculation {
 	public void setFlags(int flags) {
 		this.flags = flags;
 	}
-	
+
+	public void setResult(CDecimal result) {
+		this.result = result;
+	}
+
 	public TradeSignal getTradeSignal() {
 		return signal;
+	}
+	
+	public SignalType getSignalType() {
+		return signal.getType();
 	}
 	
 	public Tick getEntryPoint() {
@@ -64,6 +74,10 @@ public class Speculation {
 	
 	public int getFlags() {
 		return flags;
+	}
+	
+	public CDecimal getResult() {
+		return result;
 	}
 	
 	@Override

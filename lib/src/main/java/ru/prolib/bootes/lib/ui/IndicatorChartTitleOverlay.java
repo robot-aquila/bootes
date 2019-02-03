@@ -4,7 +4,6 @@ import java.time.Instant;
 import java.time.ZoneId;
 
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
-import ru.prolib.aquila.core.data.Candle;
 import ru.prolib.aquila.core.data.TSeries;
 import ru.prolib.aquila.core.data.ValueException;
 import ru.prolib.aquila.utils.experimental.chart.SelectedCategoryTracker;

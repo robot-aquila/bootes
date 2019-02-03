@@ -63,7 +63,7 @@ public class RobotUIService implements RobotStateListener {
 		UIService uis = serviceLocator.getUIService();
 		ZoneId zoneID = uis.getZoneID();
 		
-		t0 = new ChartT0(zoneID);
+		t0 = new ChartT0(zoneID, state.getReportStorage());
 		t1 = new ChartT1(zoneID);
 		t2 = new ChartT2(zoneID);
 		cfg = new StrategyConfigPanel(serviceLocator.getMessages(), state, zoneID);

@@ -6,6 +6,9 @@ import org.slf4j.LoggerFactory;
 import ru.prolib.bootes.lib.report.ITradingStatistics;
 import ru.prolib.bootes.lib.report.TradeResult;
 import ru.prolib.bootes.lib.report.TradingStatisticsTracker;
+import ru.prolib.bootes.lib.report.msr2.Block;
+import ru.prolib.bootes.lib.report.msr2.IReport;
+import ru.prolib.bootes.lib.report.msr2.Report;
 import ru.prolib.bootes.tsgr001a.mscan.sensors.SignalType;
 import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
 
@@ -18,10 +21,17 @@ public class RobotStateListenerStats implements RobotStateListener {
 	
 	private final RobotState state;
 	private final TradingStatisticsTracker tracker;
+	private IReport currSpecReport;
 	
 	public RobotStateListenerStats(RobotState state) {
 		this.state = state;
 		this.tracker = new TradingStatisticsTracker();
+	}
+	
+	private Speculation getSpeculation() {
+		synchronized ( state ) {
+			return state.getActiveSpeculation();
+		}
 	}
 
 	@Override
@@ -51,15 +61,20 @@ public class RobotStateListenerStats implements RobotStateListener {
 
 	@Override
 	public void speculationOpened() {
-
+		Speculation spec = getSpeculation();
+		currSpecReport = new Report(new Block(
+				"OPEN",
+				spec.getEntryPoint().getPrice(),
+				spec.getEntryPoint().getTime()
+			));
+		synchronized ( state ) {
+			state.getReportStorage().addReport(currSpecReport);
+		}
 	}
 
 	@Override
 	public void speculationClosed() {
-		Speculation spec = null;
-		synchronized ( state ) {
-			spec = state.getActiveSpeculation();
-		}
+		Speculation spec = getSpeculation();
 		TradeResult tr = null;
 		synchronized ( spec ) {
 			tr = new TradeResult(
@@ -73,6 +88,12 @@ public class RobotStateListenerStats implements RobotStateListener {
 		synchronized ( tracker ) {
 			tracker.add(tr);
 		}
+		currSpecReport.setBlock(new Block(
+				"CLOSE",
+				spec.getExitPoint().getPrice(),
+				spec.getExitPoint().getTime()
+			));
+		currSpecReport = null;
 	}
 
 	@Override

@@ -10,17 +10,20 @@ import ru.prolib.aquila.utils.experimental.chart.axis.CategoryAxisDisplayMapper;
 import ru.prolib.aquila.utils.experimental.chart.axis.ValueAxisDisplayMapper;
 import ru.prolib.bootes.lib.report.msr2.IReport;
 import ru.prolib.bootes.lib.report.msr2.ReportUtils;
+import ru.prolib.bootes.lib.ui.swing.GPrim;
 import ru.prolib.bootes.lib.report.msr2.ITimeIndexMapper;
 
 public class ReportRendererElem implements ReportRenderer {
 	private final ReportUtils ru;
+	private final GPrim gprim;
 	
-	public ReportRendererElem(ReportUtils ru) {
+	public ReportRendererElem(ReportUtils ru, GPrim gprim) {
 		this.ru = ru;
+		this.gprim = gprim;
 	}
 	
 	public ReportRendererElem() {
-		this(ReportUtils.getInstance());
+		this(ReportUtils.getInstance(), GPrim.getInstance());
 	}
 
 	@Override
@@ -54,8 +57,7 @@ public class ReportRendererElem implements ReportRenderer {
 		
 		int x = cam.toDisplay(i_avg).getMidpoint();
 		int y = vam.toDisplay(p_avg);
-		graphics.setColor(Color.BLACK);
-		graphics.fillOval(x, y, 5, 5);
+		gprim.drawCircle(graphics, x, y, 6, Color.ORANGE, Color.BLACK);
 	}
 
 }

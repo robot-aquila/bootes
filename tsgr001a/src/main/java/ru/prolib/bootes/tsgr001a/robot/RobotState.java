@@ -3,6 +3,8 @@ package ru.prolib.bootes.tsgr001a.robot;
 import ru.prolib.aquila.core.BusinessEntities.Portfolio;
 import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
+import ru.prolib.bootes.lib.report.msr2.IReportStorage;
+import ru.prolib.bootes.lib.report.msr2.ReportStorage;
 import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
 import ru.prolib.bootes.tsgr001a.rm.RMContractStrategy;
 import ru.prolib.bootes.tsgr001a.rm.RMContractStrategyPositionParams;
@@ -23,6 +25,7 @@ public class RobotState {
 	private Security security;
 	private STSeriesHandler sht0, sht1, sht2;
 	private Speculation speculation;
+	private final IReportStorage reportStorage = new ReportStorage();
 	
 	public RobotState(RobotStateListener stateListener) {
 		this.stateListener = stateListener;
@@ -182,6 +185,10 @@ public class RobotState {
 			throw new NullPointerException();
 		}
 		return speculation;
+	}
+	
+	public IReportStorage getReportStorage() {
+		return reportStorage;
 	}
 	
 }

@@ -47,4 +47,9 @@ public class RobotStateListenerStub implements RobotStateListener {
 		
 	}
 
+	@Override
+	public void speculationUpdate() {
+		
+	}
+
 }

@@ -139,6 +139,19 @@ public class RobotStateListenerCompTest {
 	}
 	
 	@Test
+	public void testCpeculationUpdate() {
+		listeners.add(listenerMock3);
+		listeners.add(listenerMock2);
+		listenerMock3.speculationUpdate();
+		listenerMock2.speculationUpdate();
+		control.replay();
+		
+		service.speculationUpdate();
+		
+		control.verify();
+	}
+	
+	@Test
 	public void testSpeculationClosed() {
 		listeners.add(listenerMock1);
 		listeners.add(listenerMock2);

@@ -50,7 +50,7 @@ public class MSR2LayerTest {
 		reportMock3 = control.createMock(IReport.class);
 		deviceMock = control.createMock(Graphics2D.class);
 		cadmMock = control.createMock(CategoryAxisDisplayMapper.class);
-		service = new MSR2Layer("foo", storageMock, rendererMock, timMock);
+		service = new MSR2Layer("foo", storageMock, timMock, rendererMock);
 		context = new BCDisplayContextImpl(cadmMock, null, null, null);
 	}
 	
@@ -65,7 +65,7 @@ public class MSR2LayerTest {
 	@Test
 	public void testCtor4_DefaultTIM() {
 		TSeries<?> basis = control.createMock(TSeries.class);
-		service = new MSR2Layer("bar", storageMock, rendererMock, basis);
+		service = new MSR2Layer("bar", storageMock, basis, rendererMock);
 		
 		assertEquals("bar", service.getId());
 		assertSame(storageMock, service.getStorage());
@@ -110,9 +110,9 @@ public class MSR2LayerTest {
 				T("2019-01-28T09:40:00Z"),
 				T("2019-01-28T10:05:00Z")
 			))).andReturn(reports);
-		rendererMock.paintReport(context, deviceMock, reportMock1, timMock);
-		rendererMock.paintReport(context, deviceMock, reportMock2, timMock);
-		rendererMock.paintReport(context, deviceMock, reportMock3, timMock);
+		expect(rendererMock.paintReport(context, deviceMock, reportMock1, timMock)).andReturn(true);
+		expect(rendererMock.paintReport(context, deviceMock, reportMock2, timMock)).andReturn(true);
+		expect(rendererMock.paintReport(context, deviceMock, reportMock3, timMock)).andReturn(true);
 		control.replay();
 		
 		service.paint(context, deviceMock);

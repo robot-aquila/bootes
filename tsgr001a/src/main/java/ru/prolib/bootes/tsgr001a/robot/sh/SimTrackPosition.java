@@ -19,6 +19,7 @@ import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
 import ru.prolib.bootes.tsgr001a.mscan.sensors.TradeSignal;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
+import ru.prolib.bootes.tsgr001a.robot.RobotStateListener;
 
 public class SimTrackPosition extends CommonHandler implements SMInputAction, SMExitAction {
 	private static final Logger logger;
@@ -59,22 +60,24 @@ public class SimTrackPosition extends CommonHandler implements SMInputAction, SM
 		high = null;
 		low = null;
 		
+		RobotStateListener listener;
 		synchronized ( spec ) {
+			listener = state.getStateListener();
 			sig = spec.getTradeSignal();
 			CDecimal price = spec.getEntryPoint().getPrice();
 			switch ( sig.getType() ) {
 			case BUY:
-				stopLoss = price.subtract(sig.getStopLossPts());
-				takeProfit = price.add(sig.getTakeProfitPts());
-				breakEven = price.add(sig.getStopLossPts().multiply(2L));
+				spec.setStopLoss(stopLoss = price.subtract(sig.getStopLossPts()));
+				spec.setTakeProfit(takeProfit = price.add(sig.getTakeProfitPts()));
+				spec.setBreakEven(breakEven = price.add(sig.getStopLossPts().multiply(2L)));
 				logger.debug("{} Long stop-loss @{}", curr_time, stopLoss);
 				logger.debug("{} Long take-profit @{}", curr_time, takeProfit);
 				logger.debug("{} Long break-even @{}", curr_time, breakEven);
 				break;
 			case SELL:
-				stopLoss = price.add(sig.getStopLossPts());
-				takeProfit = price.subtract(sig.getTakeProfitPts());
-				breakEven = price.subtract(sig.getStopLossPts().multiply(2L));
+				spec.setStopLoss(stopLoss = price.add(sig.getStopLossPts()));
+				spec.setTakeProfit(takeProfit = price.subtract(sig.getTakeProfitPts()));
+				spec.setBreakEven(breakEven = price.subtract(sig.getStopLossPts().multiply(2L)));
 				logger.debug("{} Short stop-loss @{}", curr_time, stopLoss);
 				logger.debug("{} Short take-profit @{}", curr_time, takeProfit);
 				logger.debug("{} Short break-even @{}", curr_time, breakEven);
@@ -83,6 +86,7 @@ public class SimTrackPosition extends CommonHandler implements SMInputAction, SM
 				throw new IllegalStateException("Unsupported signal type: " + sig.getType());
 			}
 		}
+		listener.speculationUpdate();
 		return null;
 	}
 

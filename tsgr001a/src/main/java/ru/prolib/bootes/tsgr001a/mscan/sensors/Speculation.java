@@ -34,7 +34,7 @@ public class Speculation {
 	private Tick entry;
 	private Tick exit;
 	private int flags = SF_NEW;
-	private CDecimal result;
+	private CDecimal result, tp, sl, be;
 	
 	public Speculation(TradeSignal signal) {
 		this.signal = signal;
@@ -54,6 +54,18 @@ public class Speculation {
 
 	public void setResult(CDecimal result) {
 		this.result = result;
+	}
+	
+	public void setTakeProfit(CDecimal price) {
+		this.tp = price;
+	}
+	
+	public void setStopLoss(CDecimal price) {
+		this.sl = price;
+	}
+	
+	public void setBreakEven(CDecimal price) {
+		this.be = price;
 	}
 
 	public TradeSignal getTradeSignal() {
@@ -78,6 +90,18 @@ public class Speculation {
 	
 	public CDecimal getResult() {
 		return result;
+	}
+	
+	public CDecimal getTakeProfit() {
+		return tp;
+	}
+	
+	public CDecimal getStopLoss() {
+		return sl;
+	}
+	
+	public CDecimal getBreakEven() {
+		return be;
 	}
 	
 	@Override

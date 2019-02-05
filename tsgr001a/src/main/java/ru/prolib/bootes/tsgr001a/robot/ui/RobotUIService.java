@@ -173,4 +173,9 @@ public class RobotUIService implements RobotStateListener {
 		
 	}
 
+	@Override
+	public void speculationUpdate() {
+		
+	}
+
 }

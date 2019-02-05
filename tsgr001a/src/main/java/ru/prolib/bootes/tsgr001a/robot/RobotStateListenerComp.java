@@ -65,6 +65,13 @@ public class RobotStateListenerComp implements RobotStateListener {
 			listener.speculationOpened();
 		}
 	}
+	
+	@Override
+	public void speculationUpdate() {
+		for ( RobotStateListener listener : listeners ) {
+			listener.speculationUpdate();
+		}
+	}
 
 	@Override
 	public void speculationClosed() {

@@ -46,7 +46,7 @@ public class ChartT0 extends SecurityChartPanel {
 	protected void createLayers() {
 		super.createLayers();
 		if ( priceChart != null ) {
-			lyrEma = priceChart.addSmoothLine(source.getSeries(SetupT0.SID_EMA)).setColor(new Color(64, 64, 127));
+			lyrEma = priceChart.addSmoothLine(source.getSeries(SetupT0.SID_EMA)).setColor(new Color(123, 104, 238));
 			lyrPriceTitle = priceChart.addLayer(new SWSimpleTextOverlay(new PriceChartTitleOverlayWithEMA(
 					security.getDisplayName(),
 					zoneID,

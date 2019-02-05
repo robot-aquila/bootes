@@ -14,8 +14,10 @@ import ru.prolib.bootes.lib.ui.swing.GPrim;
 import ru.prolib.bootes.lib.report.msr2.ITimeIndexMapper;
 
 public class ReportRendererElem implements ReportRenderer {
-	private final ReportUtils ru;
-	private final GPrim gprim;
+	protected final ReportUtils ru;
+	protected final GPrim gprim;
+	protected Color fillColor = new Color(127, 255, 212);
+	protected Color borderColor = new Color(25, 25, 112); 
 	
 	public ReportRendererElem(ReportUtils ru, GPrim gprim) {
 		this.ru = ru;
@@ -27,8 +29,8 @@ public class ReportRendererElem implements ReportRenderer {
 	}
 
 	@Override
-	public void paintReport(BCDisplayContext context,
-			Graphics2D graphics,
+	public boolean paintReport(BCDisplayContext context,
+			Graphics2D device,
 			IReport report,
 			ITimeIndexMapper tim)
 	{
@@ -38,7 +40,8 @@ public class ReportRendererElem implements ReportRenderer {
 			throw new IllegalStateException("Unsupported direction: " + dir);
 		}
 
-		Integer i_avg = ru.getAverageIndex(report, tim);
+		int null_time_index = cam.getLastVisibleCategory();
+		Integer i_avg = ru.getAverageIndex(report, tim, null_time_index);
 		if ( i_avg == null ) {
 			i_avg = cam.getNumberOfVisibleCategories() / 2 + cam.getFirstVisibleCategory();
 		} else {
@@ -57,7 +60,20 @@ public class ReportRendererElem implements ReportRenderer {
 		
 		int x = cam.toDisplay(i_avg).getMidpoint();
 		int y = vam.toDisplay(p_avg);
-		gprim.drawCircle(graphics, x, y, 6, Color.ORANGE, Color.BLACK);
+		beforeDrawIcon(x, y, context, device, report, tim, null_time_index);
+		gprim.drawCircle(device, x, y, 6, fillColor, borderColor);
+		return true;
+	}
+	
+	protected void beforeDrawIcon(int iconX,
+			int iconY,
+			BCDisplayContext context,
+			Graphics2D device,
+			IReport report,
+			ITimeIndexMapper tim,
+			int null_time_index)
+	{
+		
 	}
 
 }

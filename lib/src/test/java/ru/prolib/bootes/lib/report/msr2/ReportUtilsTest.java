@@ -102,7 +102,7 @@ public class ReportUtilsTest {
 	}
 	
 	@Test
-	public void testGetAverageIndex() {
+	public void testGetAverageIndex2() {
 		expect(blockMock1.getTime()).andStubReturn(T("2019-01-30T19:10:00Z"));
 		expect(blockMock2.getTime()).andStubReturn(T("2019-01-30T19:15:00Z"));
 		expect(blockMock3.getTime()).andStubReturn(T("2019-01-30T19:30:00Z"));
@@ -123,7 +123,7 @@ public class ReportUtilsTest {
 	}
 	
 	@Test
-	public void testGetAverageIndex_NoTime() {
+	public void testGetAverageIndex2_NoTime() {
 		expect(blockMock1.getTime()).andStubReturn(null);
 		expect(blockMock2.getTime()).andStubReturn(null);
 		expect(blockMock3.getTime()).andStubReturn(null);
@@ -141,9 +141,10 @@ public class ReportUtilsTest {
 	}
 	
 	@Test
-	public void testGetAverageIndex_Partial() {
+	public void testGetAverageIndex2_Partial() {
 		expect(blockMock1.getTime()).andStubReturn(T("2019-01-30T19:10:00Z"));
 		expect(blockMock2.getTime()).andStubReturn(null);
+		expect(blockMock2.getPrice()).andStubReturn(null);
 		expect(blockMock3.getTime()).andStubReturn(T("2019-01-30T19:40:00Z"));
 		expect(timMock.toIndex(T("2019-01-30T19:10:00Z"))).andReturn(15);
 		expect(timMock.toIndex(T("2019-01-30T19:40:00Z"))).andReturn(21);
@@ -158,6 +159,69 @@ public class ReportUtilsTest {
 		
 		control.verify();
 		assertEquals(Integer.valueOf(18), actual);
+	}
+	
+	@Test
+	public void testGetAverageIndex3() {
+		expect(blockMock1.getTime()).andStubReturn(T("2019-01-30T19:10:00Z"));
+		expect(blockMock2.getTime()).andStubReturn(T("2019-01-30T19:15:00Z"));
+		expect(blockMock3.getTime()).andStubReturn(T("2019-01-30T19:30:00Z"));
+		expect(timMock.toIndex(T("2019-01-30T19:10:00Z"))).andReturn(15);
+		expect(timMock.toIndex(T("2019-01-30T19:15:00Z"))).andReturn(16);
+		expect(timMock.toIndex(T("2019-01-30T19:30:00Z"))).andReturn(19);
+		List<IBlock> blocks = new ArrayList<>();
+		blocks.add(blockMock1);
+		blocks.add(blockMock2);
+		blocks.add(blockMock3);
+		expect(reportMock.getBlocks()).andStubReturn(blocks);
+		control.replay();
+		
+		Integer actual = service.getAverageIndex(reportMock, timMock, 18);
+		
+		control.verify();
+		assertEquals(Integer.valueOf(17), actual);
+	}
+	
+	@Test
+	public void testGetAverageIndex3_NoTime() {
+		expect(blockMock1.getTime()).andStubReturn(null);
+		expect(blockMock1.getPrice()).andStubReturn(null);
+		expect(blockMock2.getTime()).andStubReturn(null);
+		expect(blockMock2.getPrice()).andStubReturn(null);
+		expect(blockMock3.getTime()).andStubReturn(null);
+		expect(blockMock3.getPrice()).andStubReturn(null);
+		List<IBlock> blocks = new ArrayList<>();
+		blocks.add(blockMock1);
+		blocks.add(blockMock2);
+		blocks.add(blockMock3);
+		expect(reportMock.getBlocks()).andStubReturn(blocks);
+		control.replay();
+		
+		Integer actual = service.getAverageIndex(reportMock, timMock, 18);
+		
+		control.verify();
+		assertNull(actual);
+	}
+	
+	@Test
+	public void testGetAverageIndex3_Partial() {
+		expect(blockMock1.getTime()).andStubReturn(null);
+		expect(blockMock1.getPrice()).andStubReturn(of("123.456"));
+		expect(blockMock2.getTime()).andStubReturn(T("2019-01-30T19:15:00Z"));
+		expect(blockMock3.getTime()).andStubReturn(null);
+		expect(blockMock3.getPrice()).andStubReturn(null);
+		expect(timMock.toIndex(T("2019-01-30T19:15:00Z"))).andReturn(21);
+		List<IBlock> blocks = new ArrayList<>();
+		blocks.add(blockMock1);
+		blocks.add(blockMock2);
+		blocks.add(blockMock3);
+		expect(reportMock.getBlocks()).andStubReturn(blocks);
+		control.replay();
+		
+		Integer actual = service.getAverageIndex(reportMock, timMock, 18);
+		
+		control.verify();
+		assertEquals(Integer.valueOf(20), actual);
 	}
 
 }

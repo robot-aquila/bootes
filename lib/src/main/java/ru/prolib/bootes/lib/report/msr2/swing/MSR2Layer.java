@@ -23,8 +23,8 @@ public class MSR2Layer extends SWAbstractLayer {
 
 	public MSR2Layer(String layerID,
 			IReportStorage storage,
-			ReportRenderer renderer,
-			ITimeIndexMapper tim)
+			ITimeIndexMapper tim,
+			ReportRenderer renderer)
 	{
 		super(layerID);
 		this.storage = storage;
@@ -34,17 +34,17 @@ public class MSR2Layer extends SWAbstractLayer {
 	
 	public MSR2Layer(String layerID,
 			IReportStorage storage,
-			ReportRenderer renderer,
-			TSeries<?> basis)
+			TSeries<?> basis,
+			ReportRenderer renderer)
 	{
-		this(layerID, storage, renderer, new TimeIndexMapperTS(basis));
+		this(layerID, storage, new TimeIndexMapperTS(basis), renderer);
 	}
 	
 	public MSR2Layer(String layerID,
 			IReportStorage storage,
 			TSeries<?> basis)
 	{
-		this(layerID, storage, new ReportRendererElem(), basis);
+		this(layerID, storage, basis, new ReportRendererSpdr());
 	}
 	
 	public ITimeIndexMapper getTimeIndexMapper() {

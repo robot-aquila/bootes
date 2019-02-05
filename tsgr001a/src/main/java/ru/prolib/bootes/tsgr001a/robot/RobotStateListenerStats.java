@@ -3,6 +3,7 @@ package ru.prolib.bootes.tsgr001a.robot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ru.prolib.aquila.core.BusinessEntities.Tick;
 import ru.prolib.bootes.lib.report.ITradingStatistics;
 import ru.prolib.bootes.lib.report.TradeResult;
 import ru.prolib.bootes.lib.report.TradingStatisticsTracker;
@@ -13,6 +14,11 @@ import ru.prolib.bootes.tsgr001a.mscan.sensors.SignalType;
 import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
 
 public class RobotStateListenerStats implements RobotStateListener {
+	private static final String ID_OPEN = "OPEN";
+	private static final String ID_CLOSE = "CLOSE";
+	private static final String ID_TAKE_PROFIT = "TAKE_PROFIT";
+	private static final String ID_STOP_LOSS = "STOP_LOSS";
+	private static final String ID_BREAK_EVEN = "BREAK_EVEN";
 	private static final Logger logger;
 	
 	static {
@@ -62,13 +68,22 @@ public class RobotStateListenerStats implements RobotStateListener {
 	@Override
 	public void speculationOpened() {
 		Speculation spec = getSpeculation();
-		currSpecReport = new Report(new Block(
-				"OPEN",
-				spec.getEntryPoint().getPrice(),
-				spec.getEntryPoint().getTime()
-			));
+		synchronized ( spec ) {
+			Tick en_p = spec.getEntryPoint(); 
+			currSpecReport = new Report(new Block(ID_OPEN, en_p.getPrice(), en_p.getTime()));
+		}
 		synchronized ( state ) {
 			state.getReportStorage().addReport(currSpecReport);
+		}
+	}
+	
+	@Override
+	public void speculationUpdate() {
+		Speculation spec = getSpeculation();
+		synchronized ( spec ) {
+			currSpecReport.setBlock(new Block(ID_TAKE_PROFIT, spec.getTakeProfit(), null));
+			currSpecReport.setBlock(new Block(ID_STOP_LOSS, spec.getStopLoss(), null));
+			currSpecReport.setBlock(new Block(ID_BREAK_EVEN, spec.getBreakEven(), null));			
 		}
 	}
 
@@ -84,16 +99,16 @@ public class RobotStateListenerStats implements RobotStateListener {
 					spec.getResult(),
 					spec.getExitPoint().getSize()
 				);
+			Tick ex_p = spec.getExitPoint();
+			currSpecReport.setBlock(new Block(ID_CLOSE, ex_p.getPrice(), ex_p.getTime()));
+			currSpecReport.setBlock(new Block(ID_TAKE_PROFIT, spec.getTakeProfit(), ex_p.getTime()));
+			currSpecReport.setBlock(new Block(ID_STOP_LOSS, spec.getStopLoss(), ex_p.getTime()));
+			currSpecReport.setBlock(new Block(ID_BREAK_EVEN, spec.getBreakEven(), ex_p.getTime()));
+			currSpecReport = null;
 		}
 		synchronized ( tracker ) {
 			tracker.add(tr);
 		}
-		currSpecReport.setBlock(new Block(
-				"CLOSE",
-				spec.getExitPoint().getPrice(),
-				spec.getExitPoint().getTime()
-			));
-		currSpecReport = null;
 	}
 
 	@Override

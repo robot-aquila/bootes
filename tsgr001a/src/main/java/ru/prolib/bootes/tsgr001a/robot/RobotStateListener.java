@@ -7,6 +7,7 @@ public interface RobotStateListener {
 	void sessionDataAvailable();
 	void riskManagementUpdate();
 	void speculationOpened();
+	void speculationUpdate();
 	void speculationClosed();
 	void sessionDataCleanup();
 	void robotStopped();

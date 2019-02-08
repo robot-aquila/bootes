@@ -4,9 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ru.prolib.aquila.core.BusinessEntities.Tick;
-import ru.prolib.bootes.lib.report.ITradingStatistics;
+import ru.prolib.bootes.lib.report.ISummaryReport;
 import ru.prolib.bootes.lib.report.TradeResult;
-import ru.prolib.bootes.lib.report.TradingStatisticsTracker;
+import ru.prolib.bootes.lib.report.SummaryReportTracker;
 import ru.prolib.bootes.lib.report.msr2.Block;
 import ru.prolib.bootes.lib.report.msr2.IReport;
 import ru.prolib.bootes.lib.report.msr2.Report;
@@ -26,12 +26,12 @@ public class RobotStateListenerStats implements RobotStateListener {
 	}
 	
 	private final RobotState state;
-	private final TradingStatisticsTracker tracker;
+	private final SummaryReportTracker tracker;
 	private IReport currSpecReport;
 	
 	public RobotStateListenerStats(RobotState state) {
 		this.state = state;
-		this.tracker = new TradingStatisticsTracker();
+		this.tracker = new SummaryReportTracker();
 	}
 	
 	private Speculation getSpeculation() {
@@ -119,59 +119,59 @@ public class RobotStateListenerStats implements RobotStateListener {
 	@Override
 	public void robotStopped() {
 		logger.debug("Stopping...");
-		ITradingStatistics stats = null;
+		ISummaryReport report = null;
 		synchronized ( tracker ) {
-			stats= tracker.getCurrentStats();
+			report= tracker.getCurrentStats();
 		}
 		String ls = System.lineSeparator();
-		String report = new StringBuilder()
+		String str_report = new StringBuilder()
 			.append("------- Trading statistics -------").append(ls)
-			.append("    Total net profit: ").append(stats.getTotalNetProfit()).append(ls)
-			.append("        Gross profit: ").append(stats.getGrossProfit()).append(ls)
-			.append("          Gross loss: ").append(stats.getGrossLoss()).append(ls)
-			.append("       Profit factor: ").append(stats.getProfitFactor()).append(ls)
-			.append("     Expected payoff: ").append(stats.getExpectedPayoff()).append(ls)
-			.append("   Absolute drawdown: ").append(stats.getAbsoluteDrawdown()).append(ls)
-			.append("    Maximal drawdown: ").append(stats.getMaximalDrawdown()).append(ls)
-			.append("        Total trades: ").append(stats.getTotalTrades()).append(ls)
-			.append("     Short positions: ").append(stats.getShortPositions()).append(ls)
-			.append("       Short winners: ").append(stats.getWinningShortPositions()).append(ls)
-			.append("      Long positions: ").append(stats.getLongPositions()).append(ls)
-			.append("        Long winners: ").append(stats.getWinningLongPositions()).append(ls)
-			.append("       Profit trades: ").append(stats.getProfitTrades()).append(ls)
-			.append("         Lost trades: ").append(stats.getLossTrades()).append(ls)
-			.append("Largest profit trade: ").append(stats.getLargestProfitTrade()).append(ls)
-			.append("  Largest loss trade: ").append(stats.getLargestLossTrade()).append(ls)
-			.append("Average profit trade: ").append(stats.getAverageProfitTrade()).append(ls)
-			.append("  Average loss trade: ").append(stats.getAverageLossTrade()).append(ls)
+			.append("    Total net profit: ").append(report.getTotalNetProfit()).append(ls)
+			.append("        Gross profit: ").append(report.getGrossProfit()).append(ls)
+			.append("          Gross loss: ").append(report.getGrossLoss()).append(ls)
+			.append("       Profit factor: ").append(report.getProfitFactor()).append(ls)
+			.append("     Expected payoff: ").append(report.getExpectedPayoff()).append(ls)
+			.append("   Absolute drawdown: ").append(report.getAbsoluteDrawdown()).append(ls)
+			.append("    Maximal drawdown: ").append(report.getMaximalDrawdown()).append(ls)
+			.append("        Total trades: ").append(report.getTotalTrades()).append(ls)
+			.append("     Short positions: ").append(report.getShortPositions()).append(ls)
+			.append("       Short winners: ").append(report.getWinningShortPositions()).append(ls)
+			.append("      Long positions: ").append(report.getLongPositions()).append(ls)
+			.append("        Long winners: ").append(report.getWinningLongPositions()).append(ls)
+			.append("       Profit trades: ").append(report.getProfitTrades()).append(ls)
+			.append("         Lost trades: ").append(report.getLossTrades()).append(ls)
+			.append("Largest profit trade: ").append(report.getLargestProfitTrade()).append(ls)
+			.append("  Largest loss trade: ").append(report.getLargestLossTrade()).append(ls)
+			.append("Average profit trade: ").append(report.getAverageProfitTrade()).append(ls)
+			.append("  Average loss trade: ").append(report.getAverageLossTrade()).append(ls)
 			.append("  Maximum consecutive wins (count): ")
-				.append(stats.getMaximumConsecutiveWins().getPnL())
+				.append(report.getMaximumConsecutiveWins().getPnL())
 				.append(" (")
-				.append(stats.getMaximumConsecutiveWins().getCount())
+				.append(report.getMaximumConsecutiveWins().getCount())
 				.append(")")
 				.append(ls)
 			.append("Maximum consecutive losses (count): ")
-				.append(stats.getMaximumConsecutiveLosses().getPnL())
+				.append(report.getMaximumConsecutiveLosses().getPnL())
 				.append(" (")
-				.append(stats.getMaximumConsecutiveLosses().getCount())
+				.append(report.getMaximumConsecutiveLosses().getCount())
 				.append(")")
 				.append(ls)
 			.append("Maximal consecutive profit (count): ")
-				.append(stats.getMaximalConsecutiveProfit().getPnL())
+				.append(report.getMaximalConsecutiveProfit().getPnL())
 				.append(" (")
-				.append(stats.getMaximalConsecutiveProfit().getCount())
+				.append(report.getMaximalConsecutiveProfit().getCount())
 				.append(")")
 				.append(ls)
 			.append("  Maximal consecutive loss (count): ")
-				.append(stats.getMaximalConsecutiveLoss().getPnL())
+				.append(report.getMaximalConsecutiveLoss().getPnL())
 				.append(" (")
-				.append(stats.getMaximalConsecutiveLoss().getCount())
+				.append(report.getMaximalConsecutiveLoss().getCount())
 				.append(")")
 				.append(ls)
-			.append("  Average consecutive wins: ").append(stats.getAverageConsecutiveWins()).append(ls)
-			.append("Average consecutive losses: ").append(stats.getAverageConsecutiveLosses()).append(ls)
+			.append("  Average consecutive wins: ").append(report.getAverageConsecutiveWins()).append(ls)
+			.append("Average consecutive losses: ").append(report.getAverageConsecutiveLosses()).append(ls)
 			.toString();
-		logger.debug(report);
+		logger.debug(str_report);
 	}
 
 }

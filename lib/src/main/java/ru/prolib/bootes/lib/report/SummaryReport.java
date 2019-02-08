@@ -2,7 +2,7 @@ package ru.prolib.bootes.lib.report;
 
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 
-public class TradingStatisticsImpl implements ITradingStatistics {
+public class SummaryReport implements ISummaryReport {
 	private final CDecimal
 		grossProfit, grossLoss,
 		absoluteDrawdown, maximalDrawdown,
@@ -15,7 +15,7 @@ public class TradingStatisticsImpl implements ITradingStatistics {
 		maximumConsecutiveWins, maximumConsecutiveLosses,
 		maximalConsecutiveProfit, maximalConsecutiveLoss;
 	
-	public TradingStatisticsImpl(
+	public SummaryReport(
 			CDecimal grossProfit,
 			CDecimal grossLoss,
 			CDecimal absoluteDrawdown,

@@ -6,13 +6,13 @@ import static ru.prolib.aquila.core.BusinessEntities.CDecimalBD.*;
 import org.junit.Before;
 import org.junit.Test;
 
-public class TradingStatisticsImplTest {
+public class SummaryReportTest {
 	private static ConsecutiveTrades zero_ct = new ConsecutiveTrades(ZERO_RUB5, 0);
-	private TradingStatisticsImpl service;
+	private SummaryReport service;
 
 	@Before
 	public void setUp() throws Exception {
-		service = new TradingStatisticsImpl(
+		service = new SummaryReport(
 				ofRUB5("1734.24"),		// gross profit
 				ofRUB5("-1352.93"),		// gross loss
 				ofRUB5("143.06"),		// absolute drawdown
@@ -62,7 +62,7 @@ public class TradingStatisticsImplTest {
 	
 	@Test
 	public void testGetProfitFactor_IfZeroGrossLoss() {
-		service = new TradingStatisticsImpl(
+		service = new SummaryReport(
 				ofRUB5("1734.24"),		// gross profit
 				ZERO_RUB5,				// gross loss
 				ZERO_RUB5,
@@ -86,7 +86,7 @@ public class TradingStatisticsImplTest {
 	
 	@Test
 	public void testGetExpectedPayoff_IfZeroTotalTrades() {
-		service = new TradingStatisticsImpl(
+		service = new SummaryReport(
 				ofRUB5("1734.24"),		// gross profit
 				ZERO_RUB5,				// gross loss
 				ZERO_RUB5,
@@ -110,7 +110,7 @@ public class TradingStatisticsImplTest {
 	
 	@Test
 	public void testGetAverageProfitTrade_IfNoProfitTrades() {
-		service = new TradingStatisticsImpl(
+		service = new SummaryReport(
 				ofRUB5("1734.24"),		// gross profit
 				ofRUB5("-1352.93"),		// gross loss
 				ZERO_RUB5,
@@ -134,7 +134,7 @@ public class TradingStatisticsImplTest {
 	
 	@Test
 	public void testGetAverageLossTrade_IfNoLossTrades() {
-		service = new TradingStatisticsImpl(
+		service = new SummaryReport(
 				ofRUB5("1734.24"),		// gross profit
 				ofRUB5("-1352.93"),		// gross loss
 				ZERO_RUB5,

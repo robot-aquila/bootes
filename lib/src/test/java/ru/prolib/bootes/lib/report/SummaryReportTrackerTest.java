@@ -8,22 +8,22 @@ import java.time.Instant;
 import org.junit.Before;
 import org.junit.Test;
 
-public class TradingStatisticsTrackerTest {
+public class SummaryReportTrackerTest {
 	
 	static Instant T(String timeString) {
 		return Instant.parse(timeString);
 	}
 	
-	private TradingStatisticsTracker service;
+	private SummaryReportTracker service;
 
 	@Before
 	public void setUp() throws Exception {
-		service = new TradingStatisticsTracker();
+		service = new SummaryReportTracker();
 	}
 	
 	@Test
 	public void testDefaults() {
-		ITradingStatistics stats = service.getCurrentStats();
+		ISummaryReport stats = service.getCurrentStats();
 		
 		assertNotNull(stats);
 		assertEquals(ZERO_RUB5, stats.getTotalNetProfit());
@@ -110,7 +110,7 @@ public class TradingStatisticsTrackerTest {
 				ofRUB5("85.43"),
 				of(8L)
 			));
-		ITradingStatistics stats = service.getCurrentStats();
+		ISummaryReport stats = service.getCurrentStats();
 		
 		assertNotNull(stats);
 		assertEquals(ofRUB5("316.98"), stats.getTotalNetProfit());

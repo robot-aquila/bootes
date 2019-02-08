@@ -5,7 +5,7 @@ import static ru.prolib.aquila.core.BusinessEntities.CDecimalBD.*;
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 import ru.prolib.aquila.core.BusinessEntities.CDecimalBD;
 
-public class TradingStatisticsTracker {
+public class SummaryReportTracker {
 	private CDecimal
 		grossProfit, grossLoss, 
 		absoluteDrawdown, maximalDrawdown,
@@ -39,7 +39,7 @@ public class TradingStatisticsTracker {
 	 */
 	private int countSeriesOfLosses;
 	
-	public TradingStatisticsTracker(CDecimal zeroMoney) {
+	public SummaryReportTracker(CDecimal zeroMoney) {
 		grossProfit = zeroMoney;
 		grossLoss = zeroMoney;
 		absoluteDrawdown = zeroMoney;
@@ -52,7 +52,7 @@ public class TradingStatisticsTracker {
 		maximalConsecutiveLoss = new ConsecutiveTrades(zeroMoney, 0);
 	}
 	
-	public TradingStatisticsTracker() {
+	public SummaryReportTracker() {
 		this(CDecimalBD.ZERO_RUB5);
 	}
 	
@@ -151,8 +151,8 @@ public class TradingStatisticsTracker {
 		refreshSeriesStats();
 	}
 	
-	public ITradingStatistics getCurrentStats() {
-		return new TradingStatisticsImpl(
+	public ISummaryReport getCurrentStats() {
+		return new SummaryReport(
 				grossProfit,
 				grossLoss,
 				absoluteDrawdown,

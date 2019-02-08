@@ -1,14 +1,18 @@
 package ru.prolib.bootes.tsgr001a.robot.ui;
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.time.ZoneId;
 
+import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
 import ru.prolib.aquila.core.data.tseries.STSeries;
+import ru.prolib.aquila.core.text.IMessages;
 import ru.prolib.aquila.core.utils.RunnableStub;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.service.UIService;
@@ -18,9 +22,9 @@ import ru.prolib.bootes.tsgr001a.robot.RobotStateListener;
 
 public class RobotUIService implements RobotStateListener {
 	private final AppServiceLocator serviceLocator;
-	private RobotState state;
 	private Runnable chartsViewUpdateConfig, chartsViewUpdateAll;
 	private ChartsView chartsView;
+	private ReportsView reportsView;
 	
 	public RobotUIService(AppServiceLocator serviceLocator) {
 		this.serviceLocator = serviceLocator;
@@ -29,14 +33,24 @@ public class RobotUIService implements RobotStateListener {
 	}
 	
 	public void initialize(RobotState state) {
-		this.state = state;
 		UIService uis = serviceLocator.getUIService();
+		IMessages messages = serviceLocator.getMessages();
 		
 		chartsView = new ChartsView(serviceLocator, state);
 		chartsViewUpdateConfig = new Runnable() { public void run() { chartsView.updateConfigView(); } };
 		chartsViewUpdateConfig = new Runnable() { public void run() { chartsView.updateView(); } };
 		
-		uis.getTabPanel().addTab("Test", chartsView);
+		reportsView = new ReportsView(serviceLocator, state);
+		
+		JTabbedPane tabs = new JTabbedPane();
+		tabs.addTab(messages.get(RobotCommonMsg.CHARTS), chartsView);
+		tabs.addTab(messages.get(RobotCommonMsg.REPORTS), reportsView);
+		
+		JPanel root = new JPanel();
+		root.setLayout(new BoxLayout(root, BoxLayout.X_AXIS));
+		root.add(tabs, BorderLayout.CENTER);
+		
+		uis.getTabPanel().addTab(messages.get(RobotCommonMsg.TEST_STRATEGY), root);
 	}
 
 	@Override

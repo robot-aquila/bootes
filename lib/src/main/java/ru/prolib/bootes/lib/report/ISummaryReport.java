@@ -2,7 +2,7 @@ package ru.prolib.bootes.lib.report;
 
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 
-public interface ITradingStatistics {
+public interface ISummaryReport {
 	CDecimal getTotalNetProfit();
 	CDecimal getGrossProfit();
 	CDecimal getGrossLoss();

@@ -1,14 +1,14 @@
-package ru.prolib.bootes.lib.report.ui.swing;
+package ru.prolib.bootes.lib.report.ui;
 
 import ru.prolib.aquila.core.text.Messages;
 import ru.prolib.aquila.core.text.MsgID;
 
-public class TradingStatisticsMsg {
-	static final String SECTION_ID = "TradingStatistics";
+public class SummaryReportMsg {
+	static final String SECTION_ID = "SummaryReport";
 	
 	static {
-		Messages.registerLoader(SECTION_ID, TradingStatisticsMsg.class.getClassLoader());
-		Messages.setDefaultMsgIDs(SECTION_ID, TradingStatisticsMsg.class);
+		Messages.registerLoader(SECTION_ID, SummaryReportMsg.class.getClassLoader());
+		Messages.setDefaultMsgIDs(SECTION_ID, SummaryReportMsg.class);
 	}
 	
 	public static MsgID

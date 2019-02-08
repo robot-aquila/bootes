@@ -5,7 +5,6 @@ import java.time.ZoneId;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 import net.miginfocom.swing.MigLayout;
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
@@ -82,9 +81,9 @@ public class StrategyConfigPanel extends JPanel {
 		return messages.format(StrategyConfigMsg.VAL_PERCENTS_MONEY, percents.multiply(100L), money);
 	}
 	
-	private String percentsAndPoints(CDecimal percents, CDecimal points) {
-		return messages.format(StrategyConfigMsg.VAL_PERCENTS_POINTS, percents.multiply(100L), points);
-	}
+	//private String percentsAndPoints(CDecimal percents, CDecimal points) {
+	//	return messages.format(StrategyConfigMsg.VAL_PERCENTS_POINTS, percents.multiply(100L), points);
+	//}
 	
 	private String points(CDecimal points) {
 		return messages.format(StrategyConfigMsg.VAL_POINTS, points);

@@ -13,21 +13,21 @@ import ru.prolib.aquila.utils.experimental.chart.swing.axis.SWTimeAxisRulerSetup
 import ru.prolib.aquila.utils.experimental.chart.swing.axis.SWValueAxisRulerRenderer;
 import ru.prolib.aquila.utils.experimental.chart.swing.layer.SWBarHighlighter;
 import ru.prolib.aquila.utils.experimental.chart.swing.layer.SWSimpleTextOverlay;
-import ru.prolib.bootes.lib.report.msr2.IReportStorage;
-import ru.prolib.bootes.lib.report.msr2.swing.MSR2Layer;
+import ru.prolib.bootes.lib.report.blockrep.IBlockReportStorage;
+import ru.prolib.bootes.lib.report.blockrep.ui.BlockReportLayer;
 import ru.prolib.bootes.lib.ui.IndicatorChartTitleOverlay;
 import ru.prolib.bootes.lib.ui.SecurityChartPanel;
 import ru.prolib.bootes.tsgr001a.robot.SetupT0;
 
 public class ChartT0 extends SecurityChartPanel {
 	private final ZoneId zoneID;
-	private final IReportStorage reportStorage;
+	private final IBlockReportStorage reportStorage;
 	private BarChart atrChart;
 	private BarChartLayer lyrEma, lyrAtr, lyrAtrCursorCat, lyrPriceTitle,
-		lyrAtrTitle, lyrPvc, lyrMsr2;
+		lyrAtrTitle, lyrPvc, lyrBlockrep;
 	private SWValueAxisRulerRenderer atrValueRulerRenderer;
 	
-	public ChartT0(ZoneId zoneID, IReportStorage reportStorage) {
+	public ChartT0(ZoneId zoneID, IBlockReportStorage reportStorage) {
 		this.zoneID = zoneID;
 		this.reportStorage = reportStorage;
 	}
@@ -56,7 +56,7 @@ public class ChartT0 extends SecurityChartPanel {
 				)
 			));
 			lyrPvc = priceChart.addPolyLine(source.getSeries(SetupT0.SID_PVC_WAVG)).setColor(Color.ORANGE);
-			lyrMsr2 = priceChart.addLayer(new MSR2Layer("MS_REPORT", reportStorage, source));
+			lyrBlockrep = priceChart.addLayer(new BlockReportLayer("MS_REPORT", reportStorage, source));
 		}
 		if ( atrChart != null ) {
 			lyrAtrCursorCat = atrChart.addLayer(new SWBarHighlighter(chartPanel.getCategoryTracker()));
@@ -85,9 +85,9 @@ public class ChartT0 extends SecurityChartPanel {
 			priceChart.dropLayer(lyrPvc.getId());
 			lyrPvc = null;
 		}
-		if ( lyrMsr2 != null ) {
-			priceChart.dropLayer(lyrMsr2.getId());
-			lyrMsr2 = null;
+		if ( lyrBlockrep != null ) {
+			priceChart.dropLayer(lyrBlockrep.getId());
+			lyrBlockrep = null;
 		}
 		if ( lyrAtr != null ) {
 			atrChart.dropLayer(lyrAtr.getId());

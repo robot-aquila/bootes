@@ -6,7 +6,7 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
 import ru.prolib.bootes.lib.app.AppServiceLocator;
-import ru.prolib.bootes.lib.report.ui.SummaryReportView;
+import ru.prolib.bootes.lib.report.summarep.ui.SummaryReportView;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
 public class ReportsView extends JPanel {

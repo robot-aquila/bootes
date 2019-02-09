@@ -4,12 +4,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ru.prolib.aquila.core.BusinessEntities.Tick;
-import ru.prolib.bootes.lib.report.ISummaryReport;
-import ru.prolib.bootes.lib.report.TradeResult;
-import ru.prolib.bootes.lib.report.SummaryReportTracker;
-import ru.prolib.bootes.lib.report.msr2.Block;
-import ru.prolib.bootes.lib.report.msr2.IReport;
-import ru.prolib.bootes.lib.report.msr2.Report;
+import ru.prolib.bootes.lib.report.blockrep.Block;
+import ru.prolib.bootes.lib.report.blockrep.IBlockReport;
+import ru.prolib.bootes.lib.report.blockrep.BlockReport;
+import ru.prolib.bootes.lib.report.summarep.ISummaryReport;
+import ru.prolib.bootes.lib.report.summarep.SREntry;
+import ru.prolib.bootes.lib.report.summarep.SummaryReportTracker;
 import ru.prolib.bootes.tsgr001a.mscan.sensors.SignalType;
 import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
 
@@ -27,7 +27,7 @@ public class RobotStateListenerStats implements RobotStateListener {
 	
 	private final RobotState state;
 	private final SummaryReportTracker tracker;
-	private IReport currSpecReport;
+	private IBlockReport currSpecReport;
 	
 	public RobotStateListenerStats(RobotState state) {
 		this.state = state;
@@ -70,7 +70,7 @@ public class RobotStateListenerStats implements RobotStateListener {
 		Speculation spec = getSpeculation();
 		synchronized ( spec ) {
 			Tick en_p = spec.getEntryPoint(); 
-			currSpecReport = new Report(new Block(ID_OPEN, en_p.getPrice(), en_p.getTime()));
+			currSpecReport = new BlockReport(new Block(ID_OPEN, en_p.getPrice(), en_p.getTime()));
 		}
 		synchronized ( state ) {
 			state.getReportStorage().addReport(currSpecReport);
@@ -90,9 +90,9 @@ public class RobotStateListenerStats implements RobotStateListener {
 	@Override
 	public void speculationClosed() {
 		Speculation spec = getSpeculation();
-		TradeResult tr = null;
+		SREntry tr = null;
 		synchronized ( spec ) {
-			tr = new TradeResult(
+			tr = new SREntry(
 					spec.getTradeSignal().getTime(),
 					spec.getExitPoint().getTime(),
 					spec.getSignalType() == SignalType.BUY,

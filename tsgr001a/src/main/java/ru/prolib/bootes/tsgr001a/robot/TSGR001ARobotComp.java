@@ -1,44 +1,40 @@
 package ru.prolib.bootes.tsgr001a.robot;
 
-import javax.swing.SwingUtilities;
-
 import ru.prolib.aquila.core.sm.SMStateMachine;
 import ru.prolib.bootes.lib.app.AppComponent;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.config.AppConfig;
+import ru.prolib.bootes.tsgr001a.robot.report.BlockReportHandler;
+import ru.prolib.bootes.tsgr001a.robot.report.SummaryReportDumpAtShutdown;
+import ru.prolib.bootes.tsgr001a.robot.report.SummaryReportHandler;
 import ru.prolib.bootes.tsgr001a.robot.sh.CommonHandler;
 import ru.prolib.bootes.tsgr001a.robot.ui.RobotUIService;
 
 public class TSGR001ARobotComp implements AppComponent {
 	private final AppConfig appConfig;
 	private final AppServiceLocator serviceLocator;
+	private final RoboServiceLocator roboServices;
 	private Robot robot;
-	private RobotUIService uis;
 	
 	public TSGR001ARobotComp(AppConfig appConfig, AppServiceLocator serviceLocator) {
 		this.appConfig = appConfig;
 		this.serviceLocator = serviceLocator;
+		this.roboServices = new RoboServiceLocator();
 	}
 
 	@Override
 	public void init() throws Throwable {
 		RobotStateListenerComp stateListener = new RobotStateListenerComp();
+		robot = new TSGR001ARobotBuilder(serviceLocator).build(stateListener);
+		RobotState state = robot.getState();
+		stateListener.addListener(new SummaryReportHandler(state, roboServices.getSummaryReportTracker()));
+		stateListener.addListener(new SummaryReportDumpAtShutdown(roboServices.getSummaryReportTracker()));
 		boolean headless = appConfig.getBasicConfig().isHeadless();
 		if ( ! headless ) {
-			uis = new RobotUIService(serviceLocator);
-			stateListener.addListener(uis);
+			stateListener.addListener(new BlockReportHandler(state, roboServices.getBlockReportStorage()));
+			stateListener.addListener(new RobotUIService(serviceLocator, roboServices, state));
 		}
-		robot = new TSGR001ARobotBuilder(serviceLocator).build(stateListener);
-		stateListener.addListener(new RobotStateListenerStats(robot.getState()));
 		robot.getAutomat().start();
-		if ( ! headless ) {
-			SwingUtilities.invokeAndWait(new Runnable() {
-				@Override
-				public void run() {
-					uis.initialize(robot.getState());
-				}
-			});
-		}
 	}
 
 	@Override

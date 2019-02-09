@@ -70,7 +70,6 @@ public class RobotStateTest {
 		assertSame(sht2Mock, service.getSeriesHandlerT2());
 		assertSame(ppMock, service.getPositionParams());
 		assertSame(specMock, service.getActiveSpeculation());
-		assertNotNull(service.getReportStorage());
 	}
 	
 	@Test (expected=NullPointerException.class)

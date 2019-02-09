@@ -11,6 +11,7 @@ import ru.prolib.aquila.core.data.tseries.STSeries;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.service.UIService;
 import ru.prolib.bootes.lib.ui.SecurityChartPanel;
+import ru.prolib.bootes.tsgr001a.robot.RoboServiceLocator;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
 public class ChartsView extends JPanel {
@@ -21,13 +22,13 @@ public class ChartsView extends JPanel {
 	private final SecurityChartPanel t0,t1,t2;
 	private final StrategyConfigPanel cfg;
 
-	public ChartsView(AppServiceLocator serviceLocator, RobotState state) {
+	public ChartsView(AppServiceLocator serviceLocator, RoboServiceLocator roboServices, RobotState state) {
 		super(new GridLayout(1, 1));
 		this.state = state;
 		UIService uis = serviceLocator.getUIService();
 		ZoneId zoneID = uis.getZoneID();
 		
-		t0 = new ChartT0(zoneID, state.getReportStorage());
+		t0 = new ChartT0(zoneID, roboServices.getBlockReportStorage());
 		t1 = new ChartT1(zoneID);
 		t2 = new ChartT2(zoneID);
 		cfg = new StrategyConfigPanel(serviceLocator.getMessages(), state, zoneID);

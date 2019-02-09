@@ -1,42 +1,41 @@
 package ru.prolib.bootes.tsgr001a.robot.ui;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import java.time.ZoneId;
 
 import javax.swing.BoxLayout;
 import javax.swing.JPanel;
-import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
-import ru.prolib.aquila.core.data.tseries.STSeries;
 import ru.prolib.aquila.core.text.IMessages;
 import ru.prolib.aquila.core.utils.RunnableStub;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.service.UIService;
-import ru.prolib.bootes.lib.ui.SecurityChartPanel;
+import ru.prolib.bootes.tsgr001a.robot.RoboServiceLocator;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 import ru.prolib.bootes.tsgr001a.robot.RobotStateListener;
 
 public class RobotUIService implements RobotStateListener {
 	private final AppServiceLocator serviceLocator;
+	private final RoboServiceLocator roboServices;
+	private final RobotState state;
 	private Runnable chartsViewUpdateConfig, chartsViewUpdateAll;
 	private ChartsView chartsView;
 	private ReportsView reportsView;
 	
-	public RobotUIService(AppServiceLocator serviceLocator) {
+	public RobotUIService(AppServiceLocator serviceLocator, RoboServiceLocator roboServices, RobotState state) {
 		this.serviceLocator = serviceLocator;
+		this.roboServices = roboServices;
+		this.state = state;
 		this.chartsViewUpdateConfig = RunnableStub.getInstance();
 		this.chartsViewUpdateAll = RunnableStub.getInstance();
 	}
 	
-	public void initialize(RobotState state) {
+	private void initialize() {
 		UIService uis = serviceLocator.getUIService();
 		IMessages messages = serviceLocator.getMessages();
 		
-		chartsView = new ChartsView(serviceLocator, state);
+		chartsView = new ChartsView(serviceLocator, roboServices, state);
 		chartsViewUpdateConfig = new Runnable() { public void run() { chartsView.updateConfigView(); } };
 		chartsViewUpdateConfig = new Runnable() { public void run() { chartsView.updateView(); } };
 		
@@ -55,7 +54,7 @@ public class RobotUIService implements RobotStateListener {
 
 	@Override
 	public void robotStarted() {
-		
+		SwingUtilities.invokeLater(new Runnable() { public void run() { initialize(); } });
 	}
 	
 	@Override

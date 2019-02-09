@@ -5,7 +5,7 @@ import static ru.prolib.aquila.core.BusinessEntities.CDecimalBD.*;
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 import ru.prolib.aquila.core.BusinessEntities.CDecimalBD;
 
-public class SummaryReportTracker {
+public class SummaryReportTracker implements ISummaryReportTracker {
 	private CDecimal
 		grossProfit, grossLoss, 
 		absoluteDrawdown, maximalDrawdown,

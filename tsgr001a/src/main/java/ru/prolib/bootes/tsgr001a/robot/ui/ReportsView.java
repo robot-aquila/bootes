@@ -7,18 +7,19 @@ import javax.swing.JSplitPane;
 
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.report.summarep.ui.SummaryReportView;
+import ru.prolib.bootes.tsgr001a.robot.RoboServiceLocator;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
 public class ReportsView extends JPanel {
 	private static final long serialVersionUID = 1L;
-	private final RobotState state;
+	private final RoboServiceLocator roboServices;
 	private SummaryReportView statsPanel;
 	private JPanel reportPanel;
 	private JSplitPane splitPane;
 	
-	public ReportsView(AppServiceLocator serviceLocator, RobotState state) {
+	public ReportsView(AppServiceLocator serviceLocator, RoboServiceLocator roboServices, RobotState state) {
 		super(new GridLayout(1, 1));
-		this.state = state;
+		this.roboServices = roboServices;
 		statsPanel = new SummaryReportView(serviceLocator.getMessages());
 		reportPanel = new JPanel();
 		
@@ -30,6 +31,10 @@ public class ReportsView extends JPanel {
 		splitPane.setResizeWeight(0.2d);
 		
 		add(splitPane);
+	}
+	
+	public void updateView() {
+		statsPanel.update(roboServices.getSummaryReportTracker().getCurrentStats());
 	}
 
 }

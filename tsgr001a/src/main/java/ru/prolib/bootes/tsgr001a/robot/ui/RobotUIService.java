@@ -19,7 +19,7 @@ public class RobotUIService implements RobotStateListener {
 	private final AppServiceLocator serviceLocator;
 	private final RoboServiceLocator roboServices;
 	private final RobotState state;
-	private Runnable chartsViewUpdateConfig, chartsViewUpdateAll;
+	private Runnable chartsViewUpdateConfig, chartsViewUpdateAll, reportsViewUpdateAll;
 	private ChartsView chartsView;
 	private ReportsView reportsView;
 	
@@ -29,6 +29,7 @@ public class RobotUIService implements RobotStateListener {
 		this.state = state;
 		this.chartsViewUpdateConfig = RunnableStub.getInstance();
 		this.chartsViewUpdateAll = RunnableStub.getInstance();
+		this.reportsViewUpdateAll = RunnableStub.getInstance();
 	}
 	
 	private void initialize() {
@@ -37,9 +38,11 @@ public class RobotUIService implements RobotStateListener {
 		
 		chartsView = new ChartsView(serviceLocator, roboServices, state);
 		chartsViewUpdateConfig = new Runnable() { public void run() { chartsView.updateConfigView(); } };
-		chartsViewUpdateConfig = new Runnable() { public void run() { chartsView.updateView(); } };
+		chartsViewUpdateAll = new Runnable() { public void run() { chartsView.updateView(); } };
 		
-		reportsView = new ReportsView(serviceLocator, state);
+		reportsView = new ReportsView(serviceLocator, roboServices, state);
+		reportsViewUpdateAll = new Runnable() { public void run() { reportsView.updateView(); } };
+		reportsView.updateView();
 		
 		JTabbedPane tabs = new JTabbedPane();
 		tabs.addTab(messages.get(RobotCommonMsg.CHARTS), chartsView);
@@ -91,17 +94,17 @@ public class RobotUIService implements RobotStateListener {
 	
 	@Override
 	public void speculationOpened() {
-		
+		SwingUtilities.invokeLater(reportsViewUpdateAll);
 	}
 
 	@Override
 	public void speculationClosed() {
-		
+		SwingUtilities.invokeLater(reportsViewUpdateAll);
 	}
 
 	@Override
 	public void speculationUpdate() {
-		
+		SwingUtilities.invokeLater(reportsViewUpdateAll);
 	}
 
 }

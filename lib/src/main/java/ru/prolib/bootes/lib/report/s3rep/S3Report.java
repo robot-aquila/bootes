@@ -20,7 +20,7 @@ public class S3Report implements IS3Report {
 
 	@Override
 	public synchronized S3RRecord create(S3RRecordCreate request) {
-		long index = records.size();
+		int index = records.size();
 		S3RRecord n = new S3RRecord(
 				index,
 				request.getType(),

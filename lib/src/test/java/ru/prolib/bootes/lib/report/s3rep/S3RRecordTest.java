@@ -23,7 +23,7 @@ public class S3RRecordTest {
 	@Before
 	public void setUp() throws Exception {
 		service = new S3RRecord(
-				846L,
+				846,
 				S3RType.LONG,
 				T("2019-02-11T11:55:00Z"),
 				of("120.96"),
@@ -39,7 +39,7 @@ public class S3RRecordTest {
 	
 	@Test
 	public void testCtor11() {
-		assertEquals(846L, service.getID());
+		assertEquals(846, service.getID());
 		assertEquals(S3RType.LONG, service.getType());
 		assertEquals(T("2019-02-11T11:55:00Z"), service.getEntryTime());
 		assertEquals(of("120.96"), service.getEntryPrice());
@@ -55,7 +55,7 @@ public class S3RRecordTest {
 	@Test
 	public void testCtor8() {
 		service = new S3RRecord(
-				112L,
+				112,
 				S3RType.SHORT,
 				T("2019-02-11T12:05:00Z"),
 				of("4029.96"),
@@ -64,7 +64,7 @@ public class S3RRecordTest {
 				of("4055.00"),
 				of("4003.10")
 			);
-		assertEquals(112L, service.getID());
+		assertEquals(112, service.getID());
 		assertEquals(S3RType.SHORT, service.getType());
 		assertEquals(T("2019-02-11T12:05:00Z"), service.getEntryTime());
 		assertEquals(of("4029.96"), service.getEntryPrice());
@@ -101,7 +101,7 @@ public class S3RRecordTest {
 	@Test
 	public void testHashCode() {
 		int expected = new HashCodeBuilder(112591, 403)
-				.append(846L)
+				.append(846)
 				.append(S3RType.LONG)
 				.append(T("2019-02-11T11:55:00Z"))
 				.append(of("120.96"))
@@ -126,7 +126,7 @@ public class S3RRecordTest {
 
 	@Test
 	public void testEquals() {
-		Variant<Long> vID = new Variant<>(846L, 215L);
+		Variant<Integer> vID = new Variant<>(846, 215);
 		Variant<S3RType> vType = new Variant<>(vID, S3RType.LONG, S3RType.SHORT);
 		Variant<Instant>
 			vEnTM = new Variant<>(vType, T("2019-02-11T11:55:00Z"), T("2020-01-01T00:00:00Z")),
@@ -162,7 +162,7 @@ public class S3RRecordTest {
 			}
 		} while ( iterator.next() );
 		assertEquals(1, foundCnt);
-		assertEquals(846L, found.getID());
+		assertEquals(846, found.getID());
 		assertEquals(S3RType.LONG, found.getType());
 		assertEquals(T("2019-02-11T11:55:00Z"), found.getEntryTime());
 		assertEquals(of("120.96"), found.getEntryPrice());

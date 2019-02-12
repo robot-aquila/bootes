@@ -10,11 +10,11 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 
 public class S3RRecord extends S3RRecordCreate {
-	protected final long id;
+	protected final int id;
 	protected final Instant exitTime;
 	protected final CDecimal exitPrice, pl;
 	
-	public S3RRecord(long id,
+	public S3RRecord(int id,
 			S3RType type,
 			Instant entryTime,
 			CDecimal entryPrice,
@@ -33,7 +33,7 @@ public class S3RRecord extends S3RRecordCreate {
 		this.pl = pl;
 	}
 	
-	public S3RRecord(long id,
+	public S3RRecord(int id,
 			S3RType type,
 			Instant entryTime,
 			CDecimal entryPrice,
@@ -45,7 +45,7 @@ public class S3RRecord extends S3RRecordCreate {
 		this(id, type, entryTime, entryPrice, qty, tp, sl, be, null, null, null);
 	}
 	
-	public long getID() {
+	public int getID() {
 		return id;
 	}
 	

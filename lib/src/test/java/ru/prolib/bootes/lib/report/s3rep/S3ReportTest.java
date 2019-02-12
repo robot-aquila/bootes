@@ -75,7 +75,7 @@ public class S3ReportTest {
 	public void testUpdate_Last() {
 		records.add(control.createMock(S3RRecord.class));
 		records.add(new S3RRecord(
-				2L,
+				2,
 				S3RType.SHORT,
 				T("2019-02-12T12:26:00Z"),
 				of("192.13"),
@@ -85,7 +85,7 @@ public class S3ReportTest {
 				of("190.00")
 			));
 		S3RRecord expected = new S3RRecord(
-				2L,
+				2,
 				S3RType.SHORT,
 				T("2019-02-12T12:26:00Z"),
 				of("192.13"),
@@ -127,7 +127,7 @@ public class S3ReportTest {
 		records.add(control.createMock(S3RRecord.class));
 		records.add(control.createMock(S3RRecord.class));
 		S3RRecord expected = new S3RRecord(
-				2L,
+				2,
 				S3RType.LONG,
 				T("2019-02-12T15:13:00Z"),
 				of("527.12"),

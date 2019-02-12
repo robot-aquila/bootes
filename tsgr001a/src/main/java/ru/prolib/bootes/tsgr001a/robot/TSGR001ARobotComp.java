@@ -5,6 +5,7 @@ import ru.prolib.bootes.lib.app.AppComponent;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.config.AppConfig;
 import ru.prolib.bootes.tsgr001a.robot.report.BlockReportHandler;
+import ru.prolib.bootes.tsgr001a.robot.report.S3ReportHandler;
 import ru.prolib.bootes.tsgr001a.robot.report.SummaryReportDumpAtShutdown;
 import ru.prolib.bootes.tsgr001a.robot.report.SummaryReportHandler;
 import ru.prolib.bootes.tsgr001a.robot.sh.CommonHandler;
@@ -29,6 +30,7 @@ public class TSGR001ARobotComp implements AppComponent {
 		RobotState state = robot.getState();
 		stateListener.addListener(new SummaryReportHandler(state, roboServices.getSummaryReportTracker()));
 		stateListener.addListener(new SummaryReportDumpAtShutdown(roboServices.getSummaryReportTracker()));
+		stateListener.addListener(new S3ReportHandler(state, roboServices.getS3Report()));
 		if ( ! appConfig.getBasicConfig().isHeadless() ) {
 			stateListener.addListener(new BlockReportHandler(state, roboServices.getBlockReportStorage()));
 			stateListener.addListener(new RobotUIService(serviceLocator, roboServices, state));

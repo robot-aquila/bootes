@@ -5,4 +5,6 @@ public interface IS3Report {
 	S3RRecord update(S3RRecordUpdateLast request);
 	S3RRecord getRecord(int recordIndex);
 	int getRecordCount();
+	void addListener(IS3ReportListener listener);
+	void removeListener(IS3ReportListener listener);
 }

@@ -1,17 +1,21 @@
 package ru.prolib.bootes.lib.report.s3rep;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 public class S3Report implements IS3Report {
 	private final List<S3RRecord> records;
+	private final Set<IS3ReportListener> listeners;
 	
-	public S3Report(List<S3RRecord> records) {
+	public S3Report(List<S3RRecord> records, Set<IS3ReportListener> listeners) {
 		this.records = records;
+		this.listeners = listeners;
 	}
 	
 	public S3Report() {
-		this(new ArrayList<>());
+		this(new ArrayList<>(), new LinkedHashSet<>());
 	}
 
 	@Override
@@ -28,6 +32,9 @@ public class S3Report implements IS3Report {
 				request.getBreakEven()
 			);
 		records.add(n);
+		for ( IS3ReportListener listener : listeners ) {
+			listener.recordCreated(n);
+		}
 		return n;
 	}
 
@@ -49,6 +56,9 @@ public class S3Report implements IS3Report {
 				request.getProfitAndLoss()
 			);
 		records.set(index, n);
+		for ( IS3ReportListener listener : listeners ) {
+			listener.recordUpdated(n);
+		}
 		return n;
 	}
 
@@ -60,6 +70,16 @@ public class S3Report implements IS3Report {
 	@Override
 	public synchronized int getRecordCount() {
 		return records.size();
+	}
+
+	@Override
+	public synchronized void addListener(IS3ReportListener listener) {
+		listeners.add(listener);
+	}
+
+	@Override
+	public synchronized void removeListener(IS3ReportListener listener) {
+		listeners.remove(listener);
 	}
 
 }

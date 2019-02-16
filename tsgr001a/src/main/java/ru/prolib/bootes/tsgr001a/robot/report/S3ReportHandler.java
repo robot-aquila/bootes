@@ -1,11 +1,11 @@
 package ru.prolib.bootes.tsgr001a.robot.report;
 
 import ru.prolib.aquila.core.BusinessEntities.Tick;
+import ru.prolib.bootes.lib.data.ts.SignalType;
 import ru.prolib.bootes.lib.report.s3rep.IS3Report;
 import ru.prolib.bootes.lib.report.s3rep.S3RRecordCreate;
 import ru.prolib.bootes.lib.report.s3rep.S3RRecordUpdateLast;
 import ru.prolib.bootes.lib.report.s3rep.S3RType;
-import ru.prolib.bootes.tsgr001a.mscan.sensors.SignalType;
 import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 import ru.prolib.bootes.tsgr001a.robot.RobotStateListener;

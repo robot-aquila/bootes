@@ -1,4 +1,4 @@
-package ru.prolib.bootes.lib.data.filter;
+package ru.prolib.bootes.lib.data.ts.filter;
 
 public interface IFilterState {
 	String getID();

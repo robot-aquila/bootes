@@ -1,10 +1,12 @@
-package ru.prolib.bootes.lib.data.filter;
+package ru.prolib.bootes.lib.data.ts.filter;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import ru.prolib.bootes.lib.data.ts.TradeSignal;
 
 public class FilterSet implements IFilterSet {
 	private Map<String, IFilter> filters;
@@ -34,12 +36,12 @@ public class FilterSet implements IFilterSet {
 	}
 
 	@Override
-	public synchronized IFilterSetState checkState() {
+	public synchronized IFilterSetState approve(TradeSignal signal) {
 		List<IFilterState> states = new ArrayList<>();
 		Iterator<Map.Entry<String, IFilter>> it = filters.entrySet().iterator();
 		while ( it.hasNext() ) {
 			Map.Entry<String, IFilter> pair = it.next();
-			states.add(new FilterState(pair.getKey(), pair.getValue().checkState()));
+			states.add(new FilterState(pair.getKey(), pair.getValue().approve(signal)));
 		}
 		return new FilterSetState(states);
 	}

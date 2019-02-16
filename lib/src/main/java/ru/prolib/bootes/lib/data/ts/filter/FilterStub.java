@@ -1,9 +1,11 @@
-package ru.prolib.bootes.lib.data.filter;
+package ru.prolib.bootes.lib.data.ts.filter;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+
+import ru.prolib.bootes.lib.data.ts.TradeSignal;
 
 public class FilterStub implements IFilter {
 	private final String id;
@@ -20,7 +22,7 @@ public class FilterStub implements IFilter {
 	}
 
 	@Override
-	public boolean checkState() {
+	public boolean approve(TradeSignal signal) {
 		return result;
 	}
 	

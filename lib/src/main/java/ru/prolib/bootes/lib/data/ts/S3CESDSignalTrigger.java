@@ -1,4 +1,4 @@
-package ru.prolib.bootes.tsgr001a.mscan.sensors;
+package ru.prolib.bootes.lib.data.ts;
 
 import java.time.Instant;
 

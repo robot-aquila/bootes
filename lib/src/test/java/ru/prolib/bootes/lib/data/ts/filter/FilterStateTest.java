@@ -1,4 +1,4 @@
-package ru.prolib.bootes.lib.data.filter;
+package ru.prolib.bootes.lib.data.ts.filter;
 
 import static org.junit.Assert.*;
 
@@ -7,6 +7,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ru.prolib.aquila.core.utils.Variant;
+import ru.prolib.bootes.lib.data.ts.filter.FilterState;
 
 public class FilterStateTest {
 	private FilterState service;

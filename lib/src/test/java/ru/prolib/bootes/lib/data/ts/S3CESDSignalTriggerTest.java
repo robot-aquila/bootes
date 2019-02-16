@@ -1,4 +1,4 @@
-package ru.prolib.bootes.tsgr001a.mscan.sensors;
+package ru.prolib.bootes.lib.data.ts;
 
 import static org.junit.Assert.*;
 import static ru.prolib.aquila.core.BusinessEntities.CDecimalBD.*;
@@ -11,6 +11,7 @@ import org.junit.Test;
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 import ru.prolib.aquila.core.data.TSeriesImpl;
 import ru.prolib.aquila.core.data.ZTFrame;
+import ru.prolib.bootes.lib.data.ts.SignalType;
 
 public class S3CESDSignalTriggerTest {
 	

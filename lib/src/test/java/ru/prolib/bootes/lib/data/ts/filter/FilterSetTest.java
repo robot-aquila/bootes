@@ -1,22 +1,41 @@
-package ru.prolib.bootes.lib.data.filter;
+package ru.prolib.bootes.lib.data.ts.filter;
 
 import static org.junit.Assert.*;
+import static org.easymock.EasyMock.*;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.easymock.IMocksControl;
 import org.junit.Before;
 import org.junit.Test;
 
+import ru.prolib.bootes.lib.data.ts.TradeSignal;
+import ru.prolib.bootes.lib.data.ts.filter.FilterSet;
+import ru.prolib.bootes.lib.data.ts.filter.FilterSetState;
+import ru.prolib.bootes.lib.data.ts.filter.FilterState;
+import ru.prolib.bootes.lib.data.ts.filter.FilterStub;
+import ru.prolib.bootes.lib.data.ts.filter.IFilter;
+import ru.prolib.bootes.lib.data.ts.filter.IFilterSetState;
+import ru.prolib.bootes.lib.data.ts.filter.IFilterState;
+
 public class FilterSetTest {
+	private IMocksControl control;
+	private IFilter filterMock1, filterMock2, filterMock3;
+	private TradeSignal signalMock;
 	private Map<String, IFilter> filters;
 	private FilterSet service;
 	private IFilter filterStub1, filterStub2, filterStub3;
 
 	@Before
 	public void setUp() throws Exception {
+		control = createStrictControl();
+		filterMock1 = control.createMock(IFilter.class);
+		filterMock2 = control.createMock(IFilter.class);
+		filterMock3 = control.createMock(IFilter.class);
+		signalMock = control.createMock(TradeSignal.class);
 		filters = new LinkedHashMap<>();
 		service = new FilterSet(filters);
 		filterStub1 = new FilterStub("foo", true);
@@ -60,13 +79,18 @@ public class FilterSetTest {
 	}
 
 	@Test
-	public void testCheckState() {
-		filters.put("foo", filterStub1);
-		filters.put("bar", filterStub2);
-		filters.put("buz", filterStub3);
+	public void testApprove() {
+		filters.put("foo", filterMock1);
+		filters.put("bar", filterMock2);
+		filters.put("buz", filterMock3);
+		expect(filterMock1.approve(signalMock)).andReturn(true);
+		expect(filterMock2.approve(signalMock)).andReturn(false);
+		expect(filterMock3.approve(signalMock)).andReturn(true);
+		control.replay();
 
-		IFilterSetState actual = service.checkState();
+		IFilterSetState actual = service.approve(signalMock);
 		
+		control.verify();
 		List<IFilterState> expected_states = new ArrayList<>();
 		expected_states.add(new FilterState("foo", true));
 		expected_states.add(new FilterState("bar", false));

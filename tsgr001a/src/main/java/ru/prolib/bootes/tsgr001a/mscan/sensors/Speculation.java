@@ -5,6 +5,8 @@ import org.apache.commons.lang.builder.ToStringStyle;
 
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 import ru.prolib.aquila.core.BusinessEntities.Tick;
+import ru.prolib.bootes.lib.data.ts.SignalType;
+import ru.prolib.bootes.lib.data.ts.TradeSignal;
 
 public class Speculation {
 	public static final int SF_NEW				= 0x00;

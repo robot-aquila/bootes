@@ -16,8 +16,8 @@ import ru.prolib.aquila.core.sm.SMInput;
 import ru.prolib.aquila.core.sm.SMInputAction;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
+import ru.prolib.bootes.lib.data.ts.TradeSignal;
 import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
-import ru.prolib.bootes.tsgr001a.mscan.sensors.TradeSignal;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 import ru.prolib.bootes.tsgr001a.robot.RobotStateListener;
 

@@ -1,4 +1,4 @@
-package ru.prolib.bootes.lib.data.filter;
+package ru.prolib.bootes.lib.data.ts.filter;
 
 import static org.junit.Assert.*;
 
@@ -8,6 +8,10 @@ import java.util.List;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.junit.Before;
 import org.junit.Test;
+
+import ru.prolib.bootes.lib.data.ts.filter.FilterSetState;
+import ru.prolib.bootes.lib.data.ts.filter.FilterState;
+import ru.prolib.bootes.lib.data.ts.filter.IFilterState;
 
 public class FilterSetStateTest {
 	private List<IFilterState> states;

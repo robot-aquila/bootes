@@ -8,11 +8,12 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
+import ru.prolib.aquila.core.BusinessEntities.TStamped;
 
 /**
  * Trade signal is a directive to open or change position.
  */
-public class TradeSignal {
+public class TradeSignal implements TStamped {
 	private final SignalType type;
 	private Instant time;
 	private final CDecimal expectedPrice, expectedQty, takeProfitPts,  stopLossPts;
@@ -46,6 +47,7 @@ public class TradeSignal {
 	 * <p>
 	 * @return time
 	 */
+	@Override
 	public Instant getTime() {
 		return time;
 	}

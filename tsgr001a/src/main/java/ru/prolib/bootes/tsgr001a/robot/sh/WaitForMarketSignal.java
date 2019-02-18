@@ -1,5 +1,6 @@
 package ru.prolib.bootes.tsgr001a.robot.sh;
 
+import java.time.Duration;
 import java.time.Instant;
 
 import org.slf4j.Logger;
@@ -17,8 +18,14 @@ import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.data.ts.S3CESDSignalTrigger;
 import ru.prolib.bootes.lib.data.ts.SignalType;
 import ru.prolib.bootes.lib.data.ts.TradeSignal;
+import ru.prolib.bootes.lib.data.ts.filter.FilterSet;
+import ru.prolib.bootes.lib.data.ts.filter.IFilterSet;
+import ru.prolib.bootes.lib.data.ts.filter.IFilterSetState;
+import ru.prolib.bootes.lib.data.ts.filter.impl.CooldownFilter;
+import ru.prolib.bootes.lib.report.s3rep.utils.S3RLastSpeculationEndTime;
 import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
 import ru.prolib.bootes.tsgr001a.rm.RMContractStrategyPositionParams;
+import ru.prolib.bootes.tsgr001a.robot.RoboServiceLocator;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 import ru.prolib.bootes.tsgr001a.robot.SetupT0;
 
@@ -36,8 +43,10 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 	private final CommonActions ca;
 	private final S3CESDSignalTrigger trigger;
 	private final SMInput in;
+	private final IFilterSet filters;
 
 	public WaitForMarketSignal(AppServiceLocator serviceLocator,
+			RoboServiceLocator roboServices,
 			RobotState state,
 			CommonActions ca)
 	{
@@ -48,6 +57,8 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 		registerExit(E_SELL);
 		in = registerInput(this);
 		trigger = new S3CESDSignalTrigger();
+		filters = new FilterSet()
+			.addFilter(new CooldownFilter(new S3RLastSpeculationEndTime(roboServices.getS3Report()), Duration.ofMinutes(30)));
 	}
 	
 	private CDecimal getLastPrice() {
@@ -58,42 +69,50 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 	public SMExit input(Object data) {
 		ca.updatePositionParams(serviceLocator, state);
 		Instant time = serviceLocator.getTerminal().getCurrentTime();
+		TradeSignal signal = null;
 		RMContractStrategyPositionParams cspp = null;
-		Speculation spec = null;
 		switch ( trigger.getSignal(time) ) {
 		case BUY:
 			synchronized ( state ) {
 				cspp = state.getPositionParams();
-				spec = new Speculation(new TradeSignal(
+				signal = new TradeSignal(
 						SignalType.BUY,
 						time,
 						getLastPrice(),
 						CDecimalBD.of((long) cspp.getNumberOfContracts()),
 						cspp.getTakeProfitPts(),
 						cspp.getStopLossPts()
-					));
-				state.setActiveSpeculation(spec);
+					);
 			}
-			logger.debug("Detected: {}", spec.getTradeSignal());
-			return getExit(E_BUY);
+			break;
 		case SELL:
 			synchronized ( state ) {
 				cspp = state.getPositionParams();
-				spec = new Speculation(new TradeSignal(
+				signal = new TradeSignal(
 						SignalType.SELL,
 						time,
 						getLastPrice(),
 						CDecimalBD.of((long) cspp.getNumberOfContracts()),
 						cspp.getTakeProfitPts(),
 						cspp.getStopLossPts()
-					));
-				state.setActiveSpeculation(spec);
+					);
 			}
-			logger.debug("Detected: {}", spec.getTradeSignal());
-			return getExit(E_SELL);
+			break;
 		default:
 			return null;
 		}
+
+		IFilterSetState result = filters.approve(signal);
+		if ( result.hasDeclined() ) {
+			logger.debug("Signal skipped due to filters");
+			return null;
+		}
+		
+		synchronized ( state ) {
+			state.setActiveSpeculation(new Speculation(signal));
+		}
+		logger.debug("Detected signal: {}", signal);
+		return getExit(signal.getType() == SignalType.BUY ? E_BUY : E_SELL);
 	}
 	
 	@Override

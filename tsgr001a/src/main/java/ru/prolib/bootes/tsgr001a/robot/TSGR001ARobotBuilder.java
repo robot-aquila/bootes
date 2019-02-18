@@ -34,9 +34,11 @@ public class TSGR001ARobotBuilder {
 	public static final String S_CLEANUP = "CLEANUP";
 	
 	private final AppServiceLocator serviceLocator;
+	private final RoboServiceLocator roboServices;
 
-	public TSGR001ARobotBuilder(AppServiceLocator serviceLocator) {
+	public TSGR001ARobotBuilder(AppServiceLocator serviceLocator, RoboServiceLocator roboServices) {
 		this.serviceLocator = serviceLocator;
+		this.roboServices = roboServices;
 	}
 
 	public Robot build(RobotStateListener stateListener) {
@@ -47,7 +49,7 @@ public class TSGR001ARobotBuilder {
 				.addState(new WaitForAccount(serviceLocator, state), S_WAIT_ACCOUNT)
 				.addState(new ChooseContract(serviceLocator, state), S_CHOOSE_CONTRACT)
 				.addState(new InitSessionData(serviceLocator, state, ca), S_INIT_SESSION_DATA)
-				.addState(new WaitForMarketSignal(serviceLocator, state, ca), S_WAIT_MARKET_SIGNAL)
+				.addState(new WaitForMarketSignal(serviceLocator, roboServices, state, ca), S_WAIT_MARKET_SIGNAL)
 				.addState(new SimOpenPosition(serviceLocator, state), S_OPEN_LONG)
 				.addState(new SimOpenPosition(serviceLocator, state), S_OPEN_SHORT)
 				.addState(new SimTrackPosition(serviceLocator, state), S_TRACK_LONG)

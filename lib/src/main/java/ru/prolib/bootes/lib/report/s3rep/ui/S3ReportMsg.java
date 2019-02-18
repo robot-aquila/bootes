@@ -15,7 +15,7 @@ public class S3ReportMsg {
 		RECORD_ID,
 		RECORD_TYPE,
 		DATE,
-		ENTRY_TIME,
+		ENTRY_DATE_TIME,
 		ENTRY_PRICE,
 		QTY,
 		TAKE_PROFIT,

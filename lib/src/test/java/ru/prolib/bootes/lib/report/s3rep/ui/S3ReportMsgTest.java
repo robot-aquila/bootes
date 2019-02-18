@@ -1,4 +1,4 @@
-package ru.prolib.bootes.lib.report.s3rep;
+package ru.prolib.bootes.lib.report.s3rep.ui;
 
 import static org.junit.Assert.*;
 
@@ -20,7 +20,7 @@ public class S3ReportMsgTest {
 		assertEquals(new MsgID("S3Report", "RECORD_ID"), S3ReportMsg.RECORD_ID);
 		assertEquals(new MsgID("S3Report", "RECORD_TYPE"), S3ReportMsg.RECORD_TYPE);
 		assertEquals(new MsgID("S3Report", "DATE"), S3ReportMsg.DATE);
-		assertEquals(new MsgID("S3Report", "ENTRY_TIME"), S3ReportMsg.ENTRY_TIME);
+		assertEquals(new MsgID("S3Report", "ENTRY_DATE_TIME"), S3ReportMsg.ENTRY_DATE_TIME);
 		assertEquals(new MsgID("S3Report", "ENTRY_PRICE"), S3ReportMsg.ENTRY_PRICE);
 		assertEquals(new MsgID("S3Report", "QTY"), S3ReportMsg.QTY);
 		assertEquals(new MsgID("S3Report", "TAKE_PROFIT"), S3ReportMsg.TAKE_PROFIT);

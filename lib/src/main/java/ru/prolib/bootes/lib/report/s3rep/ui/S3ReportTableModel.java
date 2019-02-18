@@ -23,7 +23,7 @@ public class S3ReportTableModel extends AbstractTableModel implements ITableMode
 	public static final int CID_RECORD_ID = 1;
 	public static final int CID_RECORD_TYPE = 2;
 	public static final int CID_DATE = 3;
-	public static final int CID_ENTRY_TIME = 4;
+	public static final int CID_ENTRY_DATE_TIME = 4;
 	public static final int CID_ENTRY_PRICE = 5;
 	public static final int CID_QTY = 6;
 	public static final int CID_TAKE_PROFIT = 7;
@@ -36,13 +36,14 @@ public class S3ReportTableModel extends AbstractTableModel implements ITableMode
 	private final List<Integer> columnIndexToColumnID;
 	private final Map<Integer, MsgID> columnIDToColumnHeader;
 	private final IMessages messages;
-	private final DateTimeFormatter dateFormat, timeFormat;
+	private final DateTimeFormatter dateFormat, timeFormat, dateTimeFormat;
 	private final IS3Report report;
 	private boolean subscribed = false;
 	
 	public S3ReportTableModel(IMessages messages,
 			DateTimeFormatter dateFormat,
 			DateTimeFormatter timeFormat,
+			DateTimeFormatter dateTimeFormat,
 			IS3Report report)
 	{
 		columnIndexToColumnID = getColumnIDList();
@@ -50,6 +51,7 @@ public class S3ReportTableModel extends AbstractTableModel implements ITableMode
 		this.messages = messages;
 		this.dateFormat = dateFormat;
 		this.timeFormat = timeFormat;
+		this.dateTimeFormat = dateTimeFormat;
 		this.report = report;
 	}
 	
@@ -60,6 +62,7 @@ public class S3ReportTableModel extends AbstractTableModel implements ITableMode
 		this(messages,
 			DateTimeFormatter.ofPattern("yyyy-MM-dd").withZone(zoneID),
 			DateTimeFormatter.ofPattern("HH:mm:ss.SSS").withZone(zoneID),
+			DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS").withZone(zoneID),
 			report);
 	}
 	
@@ -75,8 +78,7 @@ public class S3ReportTableModel extends AbstractTableModel implements ITableMode
 		List<Integer> cols = new ArrayList<>();
 		cols.add(CID_RECORD_ID);
 		cols.add(CID_RECORD_TYPE);
-		cols.add(CID_DATE);
-		cols.add(CID_ENTRY_TIME);
+		cols.add(CID_ENTRY_DATE_TIME);
 		cols.add(CID_EXIT_TIME);
 		cols.add(CID_ENTRY_PRICE);
 		cols.add(CID_EXIT_PRICE);
@@ -100,7 +102,7 @@ public class S3ReportTableModel extends AbstractTableModel implements ITableMode
 		head.put(CID_RECORD_ID, S3ReportMsg.RECORD_ID);
 		head.put(CID_RECORD_TYPE, S3ReportMsg.RECORD_TYPE);
 		head.put(CID_DATE, S3ReportMsg.DATE);
-		head.put(CID_ENTRY_TIME, S3ReportMsg.ENTRY_TIME);
+		head.put(CID_ENTRY_DATE_TIME, S3ReportMsg.ENTRY_DATE_TIME);
 		head.put(CID_ENTRY_PRICE, S3ReportMsg.ENTRY_PRICE);
 		head.put(CID_QTY, S3ReportMsg.QTY);
 		head.put(CID_TAKE_PROFIT, S3ReportMsg.TAKE_PROFIT);
@@ -138,8 +140,8 @@ public class S3ReportTableModel extends AbstractTableModel implements ITableMode
 			return rec.getType();
 		case CID_DATE:
 			return dateFormat.format(rec.getEntryTime());
-		case CID_ENTRY_TIME:
-			return timeFormat.format(rec.getEntryTime());
+		case CID_ENTRY_DATE_TIME:
+			return dateTimeFormat.format(rec.getEntryTime());
 		case CID_ENTRY_PRICE:
 			return rec.getEntryPrice();
 		case CID_QTY:

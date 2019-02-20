@@ -21,6 +21,7 @@ import ru.prolib.bootes.lib.data.ts.TradeSignal;
 import ru.prolib.bootes.lib.data.ts.filter.FilterSet;
 import ru.prolib.bootes.lib.data.ts.filter.IFilterSet;
 import ru.prolib.bootes.lib.data.ts.filter.IFilterSetState;
+import ru.prolib.bootes.lib.data.ts.filter.IFilterState;
 import ru.prolib.bootes.lib.data.ts.filter.impl.CooldownFilter;
 import ru.prolib.bootes.lib.report.s3rep.utils.S3RLastSpeculationEndTime;
 import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
@@ -28,6 +29,7 @@ import ru.prolib.bootes.tsgr001a.rm.RMContractStrategyPositionParams;
 import ru.prolib.bootes.tsgr001a.robot.RoboServiceLocator;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 import ru.prolib.bootes.tsgr001a.robot.SetupT0;
+import ru.prolib.bootes.tsgr001a.robot.filter.StopLossGtATR;
 
 public class WaitForMarketSignal extends CommonHandler implements SMInputAction {
 	public static final String E_STOP_TRADING = "STOP_TRADING";
@@ -43,7 +45,7 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 	private final CommonActions ca;
 	private final S3CESDSignalTrigger trigger;
 	private final SMInput in;
-	private final IFilterSet filters;
+	private final IFilterSet<TradeSignal> filters;
 
 	public WaitForMarketSignal(AppServiceLocator serviceLocator,
 			RoboServiceLocator roboServices,
@@ -57,8 +59,9 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 		registerExit(E_SELL);
 		in = registerInput(this);
 		trigger = new S3CESDSignalTrigger();
-		filters = new FilterSet()
-			.addFilter(new CooldownFilter(new S3RLastSpeculationEndTime(roboServices.getS3Report()), Duration.ofMinutes(30)));
+		filters = new FilterSet<TradeSignal>()
+			.addFilter(new CooldownFilter(new S3RLastSpeculationEndTime(roboServices.getS3Report()), Duration.ofMinutes(30)))
+			.addFilter(new StopLossGtATR(state));
 	}
 	
 	private CDecimal getLastPrice() {
@@ -104,8 +107,10 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 
 		IFilterSetState result = filters.approve(signal);
 		if ( result.hasDeclined() ) {
-			logger.debug("Signal skipped due to filters");
+			logger.debug("Signal declined: {}", toString(result));
 			return null;
+		} else {
+			logger.debug("Signal approved: {}", toString(result));
 		}
 		
 		synchronized ( state ) {
@@ -131,6 +136,10 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 			trigger.setSource(state.getSeriesHandlerT0().getSeries().getSeries(SetupT0.SID_PVC_WAVG));
 		}
 		return null;
+	}
+
+	private String toString(IFilterSetState result) {
+		return result.toString();
 	}
 
 }

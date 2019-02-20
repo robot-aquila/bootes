@@ -5,9 +5,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import ru.prolib.bootes.lib.data.ts.TradeSignal;
-
-public class FilterStub implements IFilter {
+public class FilterStub implements IFilter<Void> {
 	private final String id;
 	private final boolean result;
 	
@@ -22,7 +20,7 @@ public class FilterStub implements IFilter {
 	}
 
 	@Override
-	public boolean approve(TradeSignal signal) {
+	public boolean approve(Void arg) {
 		return result;
 	}
 	

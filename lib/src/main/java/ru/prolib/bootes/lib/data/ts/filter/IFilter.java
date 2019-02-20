@@ -1,8 +1,6 @@
 package ru.prolib.bootes.lib.data.ts.filter;
 
-import ru.prolib.bootes.lib.data.ts.TradeSignal;
-
-public interface IFilter {
+public interface IFilter<ArgType> {
 	String getID();
-	boolean approve(TradeSignal signal);
+	boolean approve(ArgType arg);
 }

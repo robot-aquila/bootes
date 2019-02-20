@@ -10,7 +10,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import ru.prolib.aquila.core.BusinessEntities.TStamped;
 import ru.prolib.bootes.lib.data.ts.TradeSignal;
 
-public class CooldownFilter extends AbstractFilter {
+public class CooldownFilter extends AbstractFilter<TradeSignal> {
 	private static final String DEFAULT_ID = "COOLDOWN";
 	private final TStamped getter;
 	private final Duration duration;

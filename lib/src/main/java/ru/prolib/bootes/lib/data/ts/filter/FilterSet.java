@@ -6,12 +6,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import ru.prolib.bootes.lib.data.ts.TradeSignal;
-
-public class FilterSet implements IFilterSet {
-	private Map<String, IFilter> filters;
+public class FilterSet<ArgType> implements IFilterSet<ArgType> {
+	private Map<String, IFilter<ArgType>> filters;
 	
-	public FilterSet(Map<String, IFilter> filters) {
+	public FilterSet(Map<String, IFilter<ArgType>> filters) {
 		this.filters = filters;
 	}
 	
@@ -20,7 +18,7 @@ public class FilterSet implements IFilterSet {
 	}
 
 	@Override
-	public synchronized IFilterSet addFilter(IFilter filter) {
+	public synchronized IFilterSet<ArgType> addFilter(IFilter<ArgType> filter) {
 		String id = filter.getID();
 		if ( filters.containsKey(id) ) {
 			throw new IllegalArgumentException("Filter already exists: " + id);
@@ -30,18 +28,18 @@ public class FilterSet implements IFilterSet {
 	}
 
 	@Override
-	public synchronized IFilterSet removeFilted(String filterID) {
+	public synchronized IFilterSet<ArgType> removeFilted(String filterID) {
 		filters.remove(filterID);
 		return this;
 	}
 
 	@Override
-	public synchronized IFilterSetState approve(TradeSignal signal) {
+	public synchronized IFilterSetState approve(ArgType arg) {
 		List<IFilterState> states = new ArrayList<>();
-		Iterator<Map.Entry<String, IFilter>> it = filters.entrySet().iterator();
+		Iterator<Map.Entry<String, IFilter<ArgType>>> it = filters.entrySet().iterator();
 		while ( it.hasNext() ) {
-			Map.Entry<String, IFilter> pair = it.next();
-			states.add(new FilterState(pair.getKey(), pair.getValue().approve(signal)));
+			Map.Entry<String, IFilter<ArgType>> pair = it.next();
+			states.add(new FilterState(pair.getKey(), pair.getValue().approve(arg)));
 		}
 		return new FilterSetState(states);
 	}

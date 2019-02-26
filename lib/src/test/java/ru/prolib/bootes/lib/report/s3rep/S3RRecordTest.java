@@ -175,4 +175,25 @@ public class S3RRecordTest {
 		assertEquals(ofRUB5("113.452"), found.getProfitAndLoss());
 	}
 
+	@Test
+	public void testGetDurationMinutes() {
+		assertEquals(Long.valueOf(20L), service.getDurationMinutes());
+	}
+	
+	@Test
+	public void testGetDurationMinutes_NotEnded() {
+		service = new S3RRecord(
+				112,
+				S3RType.SHORT,
+				T("2019-02-11T12:05:00Z"),
+				of("4029.96"),
+				of("10"),
+				of("3991.07"),
+				of("4055.00"),
+				of("4003.10")
+			);
+		
+		assertNull(service.getDurationMinutes());
+	}
+
 }

@@ -5,17 +5,34 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import ru.prolib.bootes.lib.data.ts.filter.IFilter;
+
 public class S3Report implements IS3Report {
+	private final IFilter<S3RRecord> filter;
 	private final List<S3RRecord> records;
 	private final Set<IS3ReportListener> listeners;
+	private Boolean lastRecordDeclined = null;
 	
-	public S3Report(List<S3RRecord> records, Set<IS3ReportListener> listeners) {
+	public S3Report(IFilter<S3RRecord> filter, List<S3RRecord> records, Set<IS3ReportListener> listeners) {
+		this.filter = filter;
 		this.records = records;
 		this.listeners = listeners;
 	}
 	
+	public S3Report(List<S3RRecord> records, Set<IS3ReportListener> listeners) {
+		this(null, records, listeners);
+	}
+	
+	public S3Report(IFilter<S3RRecord> filter) {
+		this(filter, new ArrayList<>(), new LinkedHashSet<>());
+	}
+	
 	public S3Report() {
-		this(new ArrayList<>(), new LinkedHashSet<>());
+		this(null);
+	}
+	
+	public IFilter<S3RRecord> getFilter() {
+		return filter;
 	}
 
 	@Override
@@ -31,15 +48,27 @@ public class S3Report implements IS3Report {
 				request.getStopLoss(),
 				request.getBreakEven()
 			);
-		records.add(n);
-		for ( IS3ReportListener listener : listeners ) {
-			listener.recordCreated(n);
+		boolean add_record = filter == null ? true : filter.approve(n);
+		if ( add_record ) {
+			records.add(n);
+			lastRecordDeclined = false;
+			for ( IS3ReportListener listener : listeners ) {
+				listener.recordCreated(n);
+			}
+			return n;
+		} else {
+			lastRecordDeclined = true;
+			return null;
 		}
-		return n;
 	}
 
 	@Override
 	public synchronized S3RRecord update(S3RRecordUpdateLast request) {
+		if ( lastRecordDeclined == null ) {
+			throw new IllegalStateException();
+		} else if ( lastRecordDeclined ) {
+			return null;
+		}
 		int index = records.size() - 1;
 		S3RRecord o = records.get(index);
 		S3RRecord n = new S3RRecord(
@@ -55,11 +84,20 @@ public class S3Report implements IS3Report {
 				request.getExitPrice(),
 				request.getProfitAndLoss()
 			);
-		records.set(index, n);
-		for ( IS3ReportListener listener : listeners ) {
-			listener.recordUpdated(n);
+		boolean add_record = filter == null ? true : filter.approve(n);
+		if ( add_record ) {
+			records.set(index, n);
+			for ( IS3ReportListener listener : listeners ) {
+				listener.recordUpdated(n);
+			}
+			return n;
+		} else {
+			records.remove(index);
+			for ( IS3ReportListener listener : listeners ) {
+				listener.recordDeleted(n);
+			}
+			return null;
 		}
-		return n;
 	}
 
 	@Override

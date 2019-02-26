@@ -21,7 +21,6 @@ import ru.prolib.bootes.lib.data.ts.TradeSignal;
 import ru.prolib.bootes.lib.data.ts.filter.FilterSet;
 import ru.prolib.bootes.lib.data.ts.filter.IFilterSet;
 import ru.prolib.bootes.lib.data.ts.filter.IFilterSetState;
-import ru.prolib.bootes.lib.data.ts.filter.IFilterState;
 import ru.prolib.bootes.lib.data.ts.filter.impl.CooldownFilter;
 import ru.prolib.bootes.lib.report.s3rep.utils.S3RLastSpeculationEndTime;
 import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;

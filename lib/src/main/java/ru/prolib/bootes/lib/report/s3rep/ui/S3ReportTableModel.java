@@ -32,6 +32,7 @@ public class S3ReportTableModel extends AbstractTableModel implements ITableMode
 	public static final int CID_EXIT_TIME = 10;
 	public static final int CID_EXIT_PRICE = 11;
 	public static final int CID_PROFIT_AND_LOSS = 12;
+	public static final int CID_DURATION_MINUTES = 13;
 	
 	private final List<Integer> columnIndexToColumnID;
 	private final Map<Integer, MsgID> columnIDToColumnHeader;
@@ -87,6 +88,7 @@ public class S3ReportTableModel extends AbstractTableModel implements ITableMode
 		cols.add(CID_STOP_LOSS);
 		cols.add(CID_BREAK_EVEN);
 		cols.add(CID_PROFIT_AND_LOSS);
+		cols.add(CID_DURATION_MINUTES);
 		return cols;
 	}
 	
@@ -111,6 +113,7 @@ public class S3ReportTableModel extends AbstractTableModel implements ITableMode
 		head.put(CID_EXIT_TIME, S3ReportMsg.EXIT_TIME);
 		head.put(CID_EXIT_PRICE, S3ReportMsg.EXIT_PRICE);
 		head.put(CID_PROFIT_AND_LOSS, S3ReportMsg.PROFIT_AND_LOSS);
+		head.put(CID_DURATION_MINUTES, S3ReportMsg.DURATION_MINUTES);
 		return head;
 	}
 
@@ -158,6 +161,8 @@ public class S3ReportTableModel extends AbstractTableModel implements ITableMode
 			return rec.getExitPrice();
 		case CID_PROFIT_AND_LOSS:
 			return rec.getProfitAndLoss();
+		case CID_DURATION_MINUTES:
+			return rec.getDurationMinutes();
 		default:
 			return null;
 		}
@@ -216,6 +221,8 @@ public class S3ReportTableModel extends AbstractTableModel implements ITableMode
 		case CID_EXIT_PRICE:
 		case CID_PROFIT_AND_LOSS:
 			return CDecimal.class;
+		case CID_DURATION_MINUTES:
+			return Long.class;
 		default:
 			return super.getColumnClass(col);
 		}
@@ -235,6 +242,15 @@ public class S3ReportTableModel extends AbstractTableModel implements ITableMode
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override public void run() {
 				fireTableRowsUpdated(record.getID(), record.getID());
+			}
+		});
+	}
+	
+	@Override
+	public void recordDeleted(S3RRecord record) {
+		SwingUtilities.invokeLater(new Runnable() {
+			@Override public void run() {
+				fireTableRowsDeleted(record.getID(), record.getID());
 			}
 		});
 	}

@@ -23,6 +23,7 @@ public class S3ReportMsg {
 		BREAK_EVEN,
 		EXIT_TIME,
 		EXIT_PRICE,
-		PROFIT_AND_LOSS;
+		PROFIT_AND_LOSS,
+		DURATION_MINUTES;
 	
 }

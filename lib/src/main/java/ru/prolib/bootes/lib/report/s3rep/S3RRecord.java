@@ -1,6 +1,7 @@
 package ru.prolib.bootes.lib.report.s3rep;
 
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -87,6 +88,13 @@ public class S3RRecord extends S3RRecordCreate {
 	
 	public CDecimal getProfitAndLoss() {
 		return pl;
+	}
+	
+	public Long getDurationMinutes() {
+		if ( exitTime == null ) {
+			return null;
+		}
+		return ChronoUnit.MINUTES.between(entryTime, exitTime);
 	}
 	
 	@Override

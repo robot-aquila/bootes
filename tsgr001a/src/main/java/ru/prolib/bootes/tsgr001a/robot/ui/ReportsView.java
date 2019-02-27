@@ -32,7 +32,7 @@ public class ReportsView extends JPanel {
 		
 		statsPanel = new SummaryReportView(messages);
 		
-		S3ReportTableModel rtm = new S3ReportTableModel(messages, uis.getZoneID(), roboServices.getS3Report());
+		S3ReportTableModel rtm = new S3ReportTableModel(messages, uis.getZoneID(), roboServices.getTradesReport());
 		JTable table = new JTable(rtm);
 		table.setShowGrid(true);
 		table.setRowSorter(new TableRowSorter<>(rtm));

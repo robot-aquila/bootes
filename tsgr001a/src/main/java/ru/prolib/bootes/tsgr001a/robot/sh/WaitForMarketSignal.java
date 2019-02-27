@@ -59,7 +59,7 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 		in = registerInput(this);
 		trigger = new S3CESDSignalTrigger();
 		filters = new FilterSet<TradeSignal>()
-			.addFilter(new CooldownFilter(new S3RLastSpeculationEndTime(roboServices.getS3Report()), Duration.ofMinutes(30)))
+			.addFilter(new CooldownFilter(new S3RLastSpeculationEndTime(roboServices.getTradesReport()), Duration.ofMinutes(30)))
 			.addFilter(new StopLossGtATR(state));
 	}
 	

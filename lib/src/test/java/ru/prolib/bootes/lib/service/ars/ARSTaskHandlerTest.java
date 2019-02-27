@@ -341,7 +341,7 @@ public class ARSTaskHandlerTest {
 		t_s.start();
 		
 		service.run();
-		assertTrue(finished.await(1, TimeUnit.SECONDS));
+		assertTrue(finished.await(2, TimeUnit.SECONDS));
 		control.verify();
 	}
 	

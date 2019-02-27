@@ -1,9 +1,14 @@
 package ru.prolib.bootes.tsgr001a.robot;
 
+import java.time.LocalTime;
+import java.time.ZoneId;
+
+import ru.prolib.aquila.core.utils.LocalTimePeriod;
 import ru.prolib.bootes.lib.report.blockrep.BlockReportStorage;
 import ru.prolib.bootes.lib.report.blockrep.IBlockReportStorage;
 import ru.prolib.bootes.lib.report.s3rep.IS3Report;
 import ru.prolib.bootes.lib.report.s3rep.S3Report;
+import ru.prolib.bootes.lib.report.s3rep.filter.S3RCrossingIntradayPeriod;
 import ru.prolib.bootes.lib.report.s3rep.filter.S3RShortDurationRecords;
 import ru.prolib.bootes.lib.report.summarep.ISummaryReportTracker;
 import ru.prolib.bootes.lib.report.summarep.SummaryReportTracker;
@@ -11,13 +16,18 @@ import ru.prolib.bootes.lib.report.summarep.SummaryReportTracker;
 public class RoboServiceLocator {
 	private final ISummaryReportTracker srt;
 	private final IBlockReportStorage brs;
-	private final IS3Report s3r, s3rShortDuration;
+	private final IS3Report tradesReport, shortDurationTradesReport, midDayClearingTradesReport;
 	
 	public RoboServiceLocator() {
 		srt = new SummaryReportTracker();
 		brs = new BlockReportStorage();
-		s3r = new S3Report();
-		s3rShortDuration = new S3Report(new S3RShortDurationRecords(10L));
+		tradesReport = new S3Report();
+		shortDurationTradesReport = new S3Report(new S3RShortDurationRecords(15L));
+		midDayClearingTradesReport = new S3Report(new S3RCrossingIntradayPeriod(new LocalTimePeriod(
+				LocalTime.of(14, 0),
+				LocalTime.of(14, 5),
+				ZoneId.of("Europe/Moscow")
+			)));
 	}
 	
 	public ISummaryReportTracker getSummaryReportTracker() {
@@ -28,12 +38,16 @@ public class RoboServiceLocator {
 		return brs;
 	}
 	
-	public IS3Report getS3Report() {
-		return s3r;
+	public IS3Report getTradesReport() {
+		return tradesReport;
 	}
 	
-	public IS3Report getS3ReportShortDuration() {
-		return s3rShortDuration;
+	public IS3Report getShortDurationTradesReport() {
+		return shortDurationTradesReport;
+	}
+	
+	public IS3Report getMidDayClearingTradesReport() {
+		return midDayClearingTradesReport;
 	}
 	
 }

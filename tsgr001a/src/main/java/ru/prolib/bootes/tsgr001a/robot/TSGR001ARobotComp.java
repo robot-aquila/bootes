@@ -30,8 +30,9 @@ public class TSGR001ARobotComp implements AppComponent {
 		RobotState state = robot.getState();
 		stateListener.addListener(new SummaryReportHandler(state, roboServices.getSummaryReportTracker()));
 		stateListener.addListener(new SummaryReportDumpAtShutdown(roboServices.getSummaryReportTracker()));
-		stateListener.addListener(new S3ReportHandler(state, roboServices.getS3Report()));
-		stateListener.addListener(new S3ReportHandler(state, roboServices.getS3ReportShortDuration()));
+		stateListener.addListener(new S3ReportHandler(state, roboServices.getTradesReport()));
+		stateListener.addListener(new S3ReportHandler(state, roboServices.getShortDurationTradesReport()));
+		stateListener.addListener(new S3ReportHandler(state, roboServices.getMidDayClearingTradesReport()));
 		if ( ! appConfig.getBasicConfig().isHeadless() ) {
 			stateListener.addListener(new BlockReportHandler(state, roboServices.getBlockReportStorage()));
 			stateListener.addListener(new RobotUIService(serviceLocator, roboServices, state));

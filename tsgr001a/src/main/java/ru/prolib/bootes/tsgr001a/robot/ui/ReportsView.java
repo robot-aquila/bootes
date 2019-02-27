@@ -1,10 +1,13 @@
 package ru.prolib.bootes.tsgr001a.robot.ui;
 
 import java.awt.GridLayout;
+import java.time.ZoneId;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.table.TableRowSorter;
 
@@ -21,7 +24,7 @@ public class ReportsView extends JPanel {
 	private static final long serialVersionUID = 1L;
 	private final RoboServiceLocator roboServices;
 	private SummaryReportView statsPanel;
-	private JPanel reportPanel;
+	private JTabbedPane reportsTabPanel;
 	private JSplitPane splitPane;
 	
 	public ReportsView(AppServiceLocator serviceLocator, RoboServiceLocator roboServices, RobotState state) {
@@ -29,20 +32,42 @@ public class ReportsView extends JPanel {
 		this.roboServices = roboServices;
 		IMessages messages = serviceLocator.getMessages();
 		UIService uis = serviceLocator.getUIService();
+		ZoneId zone_id = uis.getZoneID();
+		JFrame main_frame = uis.getFrame();
 		
 		statsPanel = new SummaryReportView(messages);
+		reportsTabPanel = new JTabbedPane();
 		
-		S3ReportTableModel rtm = new S3ReportTableModel(messages, uis.getZoneID(), roboServices.getTradesReport());
+		S3ReportTableModel rtm = new S3ReportTableModel(messages, zone_id, roboServices.getTradesReport());
 		JTable table = new JTable(rtm);
 		table.setShowGrid(true);
 		table.setRowSorter(new TableRowSorter<>(rtm));
-		reportPanel = new JPanel(new GridLayout(1, 1));
-		reportPanel.add(new JScrollPane(table));
-		new TableModelController(rtm, uis.getFrame());
+		JPanel panel = new JPanel(new GridLayout(1, 1));
+		panel.add(new JScrollPane(table));
+		new TableModelController(rtm, main_frame);
+		reportsTabPanel.addTab(messages.get(RobotCommonMsg.REPORT_ALL_TRADES), panel);
+		
+		rtm = new S3ReportTableModel(messages, zone_id, roboServices.getShortDurationTradesReport());
+		table = new JTable(rtm);
+		table.setShowGrid(true);
+		table.setRowSorter(new TableRowSorter<>(rtm));
+		panel = new JPanel(new GridLayout(1, 1));
+		panel.add(new JScrollPane(table));
+		new TableModelController(rtm, main_frame);
+		reportsTabPanel.addTab(messages.get(RobotCommonMsg.REPORT_SHORT_DURATION_TRADES), panel);
+		
+		rtm = new S3ReportTableModel(messages, zone_id, roboServices.getMidDayClearingTradesReport());
+		table = new JTable(rtm);
+		table.setShowGrid(true);
+		table.setRowSorter(new TableRowSorter<>(rtm));
+		panel = new JPanel(new GridLayout(1, 1));
+		panel.add(new JScrollPane(table));
+		new TableModelController(rtm, main_frame);
+		reportsTabPanel.addTab(messages.get(RobotCommonMsg.REPORT_CROSS_MIDCLEARING_TRADES), panel);
 		
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		splitPane.setLeftComponent(statsPanel);
-		splitPane.setRightComponent(reportPanel);
+		splitPane.setRightComponent(reportsTabPanel);
 		splitPane.setDividerLocation(0.2d);
 		splitPane.setOneTouchExpandable(true);
 		splitPane.setResizeWeight(0.2d);

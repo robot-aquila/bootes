@@ -28,6 +28,7 @@ import ru.prolib.bootes.tsgr001a.rm.RMContractStrategyPositionParams;
 import ru.prolib.bootes.tsgr001a.robot.RoboServiceLocator;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 import ru.prolib.bootes.tsgr001a.robot.SetupT0;
+import ru.prolib.bootes.tsgr001a.robot.filter.MADevLimit;
 import ru.prolib.bootes.tsgr001a.robot.filter.StopLossGtATR;
 
 public class WaitForMarketSignal extends CommonHandler implements SMInputAction {
@@ -60,7 +61,8 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 		trigger = new S3CESDSignalTrigger();
 		filters = new FilterSet<TradeSignal>()
 			.addFilter(new CooldownFilter(new S3RLastSpeculationEndTime(roboServices.getTradesReport()), Duration.ofMinutes(30)))
-			.addFilter(new StopLossGtATR(state));
+			.addFilter(new StopLossGtATR(state))
+			.addFilter(new MADevLimit(state));
 	}
 	
 	private CDecimal getLastPrice() {

@@ -49,10 +49,13 @@ public class TSGR001ARobotComp implements AppComponent {
 	@Override
 	public void shutdown() throws Throwable {
 		SMStateMachine automat = robot.getAutomat();
-		if ( ! automat.finished() ) {
-			CommonHandler sh = (CommonHandler) automat.getCurrentState();
-			automat.input(sh.getInputOfInterruption(), null);
+		synchronized ( automat ) {
+			if ( ! automat.finished() ) {
+				CommonHandler sh = (CommonHandler) automat.getCurrentState();
+				automat.input(sh.getInputOfInterruption(), null);
+			}
 		}
+		// TODO: Here! Wait for automat finished work.
 	}
 
 }

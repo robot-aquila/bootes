@@ -12,7 +12,7 @@ import org.easymock.IMocksControl;
 import org.junit.Before;
 import org.junit.Test;
 
-import ru.prolib.bootes.lib.data.ts.TradeSignal;
+import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 import ru.prolib.bootes.lib.data.ts.filter.FilterSet;
 import ru.prolib.bootes.lib.data.ts.filter.FilterSetState;
 import ru.prolib.bootes.lib.data.ts.filter.FilterState;
@@ -24,7 +24,7 @@ import ru.prolib.bootes.lib.data.ts.filter.IFilterState;
 public class FilterSetTest {
 	private IMocksControl control;
 	private IFilter filterMock1, filterMock2, filterMock3;
-	private TradeSignal signalMock;
+	private S3TradeSignal signalMock;
 	private Map<String, IFilter> filters;
 	private FilterSet service;
 	private IFilter filterStub1, filterStub2, filterStub3;
@@ -35,7 +35,7 @@ public class FilterSetTest {
 		filterMock1 = control.createMock(IFilter.class);
 		filterMock2 = control.createMock(IFilter.class);
 		filterMock3 = control.createMock(IFilter.class);
-		signalMock = control.createMock(TradeSignal.class);
+		signalMock = control.createMock(S3TradeSignal.class);
 		filters = new LinkedHashMap<>();
 		service = new FilterSet(filters);
 		filterStub1 = new FilterStub("foo", true);

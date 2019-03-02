@@ -8,9 +8,9 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import ru.prolib.aquila.core.BusinessEntities.TStamped;
-import ru.prolib.bootes.lib.data.ts.TradeSignal;
+import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 
-public class CooldownFilter extends AbstractFilter<TradeSignal> {
+public class CooldownFilter extends AbstractFilter<S3TradeSignal> {
 	private static final String DEFAULT_ID = "COOLDOWN";
 	private final TStamped getter;
 	private final Duration duration;
@@ -34,7 +34,7 @@ public class CooldownFilter extends AbstractFilter<TradeSignal> {
 	}
 
 	@Override
-	public boolean approve(TradeSignal signal) {
+	public boolean approve(S3TradeSignal signal) {
 		Instant gt = getter.getTime();
 		if ( gt == null ) {
 			return true;

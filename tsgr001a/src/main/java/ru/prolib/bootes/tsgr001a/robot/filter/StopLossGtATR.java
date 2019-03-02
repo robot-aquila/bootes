@@ -6,12 +6,12 @@ import org.slf4j.LoggerFactory;
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 import ru.prolib.aquila.core.data.TSeries;
 import ru.prolib.aquila.core.data.ValueException;
-import ru.prolib.bootes.lib.data.ts.TradeSignal;
+import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 import ru.prolib.bootes.lib.data.ts.filter.impl.AbstractFilter;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 import ru.prolib.bootes.tsgr001a.robot.SetupT0;
 
-public class StopLossGtATR extends AbstractFilter<TradeSignal> {
+public class StopLossGtATR extends AbstractFilter<S3TradeSignal> {
 	private static final Logger logger;
 	
 	static {
@@ -26,7 +26,7 @@ public class StopLossGtATR extends AbstractFilter<TradeSignal> {
 	}
 
 	@Override
-	public boolean approve(TradeSignal signal) {
+	public boolean approve(S3TradeSignal signal) {
 		CDecimal sl = signal.getStopLossPts(), atr = null;
 		synchronized ( state ) {
 			if ( state.isSeriesHandlerT0Defined() ) {

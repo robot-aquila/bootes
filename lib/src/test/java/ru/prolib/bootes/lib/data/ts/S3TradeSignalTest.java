@@ -12,25 +12,26 @@ import org.junit.Test;
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 import ru.prolib.aquila.core.utils.Variant;
 import ru.prolib.bootes.lib.data.ts.SignalType;
-import ru.prolib.bootes.lib.data.ts.TradeSignal;
+import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 
-public class TradeSignalTest {
+public class S3TradeSignalTest {
 	
 	static Instant T(String timeString) {
 		return Instant.parse(timeString);
 	}
 	
-	private TradeSignal service;
+	private S3TradeSignal service;
 
 	@Before
 	public void setUp() throws Exception {
-		service = new TradeSignal(
+		service = new S3TradeSignal(
 				SignalType.SELL,
 				T("2019-01-04T04:33:42Z"),
 				of("50.34"),
 				of("1.0"),
 				of("20.00"),
-				of("10.00")
+				of("10.00"),
+				of("2.00")
 			);
 	}
 	
@@ -42,18 +43,20 @@ public class TradeSignalTest {
 		assertEquals(of("1.0"), service.getExpectedQty());
 		assertEquals(of("20.00"), service.getTakeProfitPts());
 		assertEquals(of("10.00"), service.getStopLossPts());
+		assertEquals(of("2.00"), service.getSlippagePts());
 	}
 	
 	@Test
 	public void testToString() {
 		String expected = new StringBuilder()
-				.append("TradeSignal[")
+				.append("S3TradeSignal[")
 				.append("type=SELL,")
 				.append("time=2019-01-04T04:33:42Z,")
 				.append("expectedPrice=50.34,")
 				.append("expectedQty=1.0,")
 				.append("takeProfitPts=20.00,")
-				.append("stopLossPts=10.00")
+				.append("stopLossPts=10.00,")
+				.append("slippagePts=2.00")
 				.append("]")
 				.toString();
 		
@@ -69,6 +72,7 @@ public class TradeSignalTest {
 				.append(of("1.0"))
 				.append(of("20.00"))
 				.append(of("10.00"))
+				.append(of("2.00"))
 				.build();
 		
 		assertEquals(expected, service.hashCode());
@@ -89,12 +93,13 @@ public class TradeSignalTest {
 			vEPR = new Variant<>(vTime, of("50.34"), of("27.19")),
 			vEQT = new Variant<>(vEPR, of("1.0"), of("2.0")),
 			vTPP = new Variant<>(vEQT, of("20.00"), of("21.43")),
-			vSLP = new Variant<>(vTPP, of("10.00"), of("10.52"));
+			vSLP = new Variant<>(vTPP, of("10.00"), of("10.52")),
+			vSLI = new Variant<>(vSLP, of("2.00"), of("0.50"));
 		Variant<?> iterator = vSLP;
 		int foundCnt = 0;
-		TradeSignal x, found = null;
+		S3TradeSignal x, found = null;
 		do {
-			x = new TradeSignal(vType.get(), vTime.get(), vEPR.get(), vEQT.get(), vTPP.get(), vSLP.get());
+			x = new S3TradeSignal(vType.get(), vTime.get(), vEPR.get(), vEQT.get(), vTPP.get(), vSLP.get(), vSLI.get());
 			if ( service.equals(x) ) {
 				foundCnt ++;
 				found = x;
@@ -107,6 +112,7 @@ public class TradeSignalTest {
 		assertEquals(of("1.0"), found.getExpectedQty());
 		assertEquals(of("20.00"), found.getTakeProfitPts());
 		assertEquals(of("10.00"), found.getStopLossPts());
+		assertEquals(of("2.00"), found.getSlippagePts());
 	}
 
 }

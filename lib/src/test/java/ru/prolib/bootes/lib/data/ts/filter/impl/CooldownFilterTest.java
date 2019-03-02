@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import ru.prolib.aquila.core.BusinessEntities.TStamped;
 import ru.prolib.aquila.core.utils.Variant;
-import ru.prolib.bootes.lib.data.ts.TradeSignal;
+import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 
 public class CooldownFilterTest {
 	
@@ -23,14 +23,14 @@ public class CooldownFilterTest {
 	
 	private IMocksControl control;
 	private TStamped getterMock;
-	private TradeSignal signalMock;
+	private S3TradeSignal signalMock;
 	private CooldownFilter service;
 
 	@Before
 	public void setUp() throws Exception {
 		control = createStrictControl();
 		getterMock = control.createMock(TStamped.class);
-		signalMock = control.createMock(TradeSignal.class);
+		signalMock = control.createMock(S3TradeSignal.class);
 		service = new CooldownFilter("foo", getterMock, Duration.ofHours(3));
 	}
 	

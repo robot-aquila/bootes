@@ -4,12 +4,12 @@ import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 import ru.prolib.aquila.core.BusinessEntities.CDecimalBD;
 import ru.prolib.aquila.core.data.TSeries;
 import ru.prolib.aquila.core.data.ValueException;
-import ru.prolib.bootes.lib.data.ts.TradeSignal;
+import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 import ru.prolib.bootes.lib.data.ts.filter.impl.AbstractFilter;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 import ru.prolib.bootes.tsgr001a.robot.SetupT0;
 
-public class MADevLimit extends AbstractFilter<TradeSignal> {
+public class MADevLimit extends AbstractFilter<S3TradeSignal> {
 	public static final CDecimal DEFAULT_MAX_DEVIATION = CDecimalBD.of("0.30000"); // 30%
 	private final RobotState state;
 	private final CDecimal maxDeviation;
@@ -29,7 +29,7 @@ public class MADevLimit extends AbstractFilter<TradeSignal> {
 	}
 
 	@Override
-	public boolean approve(TradeSignal signal) {
+	public boolean approve(S3TradeSignal signal) {
 		CDecimal daily_range, price, ma;
 		synchronized ( state ) {
 			if ( ! state.isSeriesHandlerT0Defined() ) {

@@ -17,7 +17,7 @@ import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.data.ts.S3CESDSignalTrigger;
 import ru.prolib.bootes.lib.data.ts.SignalType;
-import ru.prolib.bootes.lib.data.ts.TradeSignal;
+import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 import ru.prolib.bootes.lib.data.ts.filter.FilterSet;
 import ru.prolib.bootes.lib.data.ts.filter.IFilterSet;
 import ru.prolib.bootes.lib.data.ts.filter.IFilterSetState;
@@ -45,7 +45,7 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 	private final CommonActions ca;
 	private final S3CESDSignalTrigger trigger;
 	private final SMInput in;
-	private final IFilterSet<TradeSignal> filters;
+	private final IFilterSet<S3TradeSignal> filters;
 
 	public WaitForMarketSignal(AppServiceLocator serviceLocator,
 			RoboServiceLocator roboServices,
@@ -59,7 +59,7 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 		registerExit(E_SELL);
 		in = registerInput(this);
 		trigger = new S3CESDSignalTrigger();
-		filters = new FilterSet<TradeSignal>()
+		filters = new FilterSet<S3TradeSignal>()
 			.addFilter(new CooldownFilter(new S3RLastSpeculationEndTime(roboServices.getTradesReport()), Duration.ofMinutes(30)))
 			.addFilter(new StopLossGtATR(state))
 			.addFilter(new MADevLimit(state));
@@ -73,32 +73,34 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 	public SMExit input(Object data) {
 		ca.updatePositionParams(serviceLocator, state);
 		Instant time = serviceLocator.getTerminal().getCurrentTime();
-		TradeSignal signal = null;
+		S3TradeSignal signal = null;
 		RMContractStrategyPositionParams cspp = null;
 		switch ( trigger.getSignal(time) ) {
 		case BUY:
 			synchronized ( state ) {
 				cspp = state.getPositionParams();
-				signal = new TradeSignal(
+				signal = new S3TradeSignal(
 						SignalType.BUY,
 						time,
 						getLastPrice(),
 						CDecimalBD.of((long) cspp.getNumberOfContracts()),
 						cspp.getTakeProfitPts(),
-						cspp.getStopLossPts()
+						cspp.getStopLossPts(),
+						cspp.getSlippagePts()
 					);
 			}
 			break;
 		case SELL:
 			synchronized ( state ) {
 				cspp = state.getPositionParams();
-				signal = new TradeSignal(
+				signal = new S3TradeSignal(
 						SignalType.SELL,
 						time,
 						getLastPrice(),
 						CDecimalBD.of((long) cspp.getNumberOfContracts()),
 						cspp.getTakeProfitPts(),
-						cspp.getStopLossPts()
+						cspp.getStopLossPts(),
+						cspp.getSlippagePts()
 					);
 			}
 			break;

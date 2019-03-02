@@ -6,7 +6,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 import ru.prolib.aquila.core.BusinessEntities.Tick;
 import ru.prolib.bootes.lib.data.ts.SignalType;
-import ru.prolib.bootes.lib.data.ts.TradeSignal;
+import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 
 public class Speculation {
 	public static final int SF_NEW				= 0x00;
@@ -32,13 +32,13 @@ public class Speculation {
 	 */
 	public static final int SF_TIMEOUT			= 0x08;
 	
-	private final TradeSignal signal;
+	private final S3TradeSignal signal;
 	private Tick entry;
 	private Tick exit;
 	private int flags = SF_NEW;
 	private CDecimal result, tp, sl, be;
 	
-	public Speculation(TradeSignal signal) {
+	public Speculation(S3TradeSignal signal) {
 		this.signal = signal;
 	}
 	
@@ -70,7 +70,7 @@ public class Speculation {
 		this.be = price;
 	}
 
-	public TradeSignal getTradeSignal() {
+	public S3TradeSignal getTradeSignal() {
 		return signal;
 	}
 	

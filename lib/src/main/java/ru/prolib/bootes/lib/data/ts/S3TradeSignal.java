@@ -11,19 +11,21 @@ import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 import ru.prolib.aquila.core.BusinessEntities.TStamped;
 
 /**
- * Trade signal is a directive to open or change position.
+ * Trade signal of short-term speculative strategy (S3).
+ * Signal is a directive to open or change position.
  */
-public class TradeSignal implements TStamped {
+public class S3TradeSignal implements TStamped {
 	private final SignalType type;
 	private Instant time;
-	private final CDecimal expectedPrice, expectedQty, takeProfitPts,  stopLossPts;
+	private final CDecimal expectedPrice, expectedQty, takeProfitPts,  stopLossPts, slippagePts;
 	
-	public TradeSignal(SignalType type,
+	public S3TradeSignal(SignalType type,
 			Instant time,
 			CDecimal expectedPrice,
 			CDecimal expectedQty,
 			CDecimal takeProfitPts,
-			CDecimal stopLossPts)
+			CDecimal stopLossPts,
+			CDecimal slippagePts)
 	{
 		this.type = type;
 		this.time = time;
@@ -31,6 +33,7 @@ public class TradeSignal implements TStamped {
 		this.expectedQty = expectedQty;
 		this.takeProfitPts = takeProfitPts;
 		this.stopLossPts = stopLossPts;
+		this.slippagePts = slippagePts;
 	}
 	
 	/**
@@ -88,6 +91,10 @@ public class TradeSignal implements TStamped {
 		return stopLossPts;
 	}
 	
+	public CDecimal getSlippagePts() {
+		return slippagePts;
+	}
+	
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
@@ -102,6 +109,7 @@ public class TradeSignal implements TStamped {
 				.append(expectedQty)
 				.append(takeProfitPts)
 				.append(stopLossPts)
+				.append(slippagePts)
 				.build();
 	}
 	
@@ -110,10 +118,10 @@ public class TradeSignal implements TStamped {
 		if ( other == this ) {
 			return true;
 		}
-		if ( other == null || other.getClass() != TradeSignal.class ) {
+		if ( other == null || other.getClass() != S3TradeSignal.class ) {
 			return false;
 		}
-		TradeSignal o = (TradeSignal) other;
+		S3TradeSignal o = (S3TradeSignal) other;
 		return new EqualsBuilder()
 				.append(o.type, type)
 				.append(o.time, time)
@@ -121,6 +129,7 @@ public class TradeSignal implements TStamped {
 				.append(o.expectedQty, expectedQty)
 				.append(o.takeProfitPts, takeProfitPts)
 				.append(o.stopLossPts, stopLossPts)
+				.append(o.slippagePts, slippagePts)
 				.build();
 	}
 

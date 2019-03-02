@@ -7,7 +7,7 @@ import ru.prolib.aquila.core.BusinessEntities.TickType;
 import ru.prolib.aquila.core.sm.SMExit;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
-import ru.prolib.bootes.lib.data.ts.TradeSignal;
+import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 import ru.prolib.bootes.tsgr001a.robot.RobotStateListener;
@@ -34,7 +34,7 @@ public class SimOpenPosition extends CommonHandler {
 			listener = state.getStateListener();
 		}
 		synchronized ( spec ) {
-			TradeSignal signal = spec.getTradeSignal();
+			S3TradeSignal signal = spec.getTradeSignal();
 			CDecimal price = signal.getExpectedPrice();
 			Tick entry = Tick.of(TickType.TRADE,
 					signal.getTime(),

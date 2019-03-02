@@ -19,6 +19,7 @@ public class RMContractStrategyPositionParamsTest {
 				52,
 				of(2200L),
 				of(250L),
+				of(30L),
 				ofRUB2("12350.04"),
 				ofRUB2("3002.19"),
 				of("2271.976112"),
@@ -30,6 +31,7 @@ public class RMContractStrategyPositionParamsTest {
 		assertEquals(52, service.getNumberOfContracts());
 		assertEquals(of(2200L), service.getTakeProfitPts());
 		assertEquals(of(250L), service.getStopLossPts());
+		assertEquals(of(30L), service.getSlippagePts());
 		assertEquals(ofRUB2("12350.04"), service.getTradeGoalCap());
 		assertEquals(ofRUB2("3002.19"), service.getTradeLossCap());
 		assertEquals(of("2271.976112"), service.getAvgDailyPriceMove());
@@ -40,7 +42,7 @@ public class RMContractStrategyPositionParamsTest {
 	public void testToString() {
 		String expected = new StringBuilder()
 				.append("RMContractStrategyPositionParams[")
-				.append("numContracts=52,takeProfit=2200,stopLoss=250,")
+				.append("numContracts=52,takeProfit=2200,stopLoss=250,slippage=30,")
 				.append("tradeGoalCap=12350.04 RUB,tradeLossCap=3002.19 RUB,")
 				.append("avgDailyPriceMove=2271.976112,")
 				.append("avgLocalPriceMove=130.927541")
@@ -56,6 +58,7 @@ public class RMContractStrategyPositionParamsTest {
 				.append(52)
 				.append(of(2200L))
 				.append(of(250L))
+				.append(of(30L))
 				.append(ofRUB2("12350.04"))
 				.append(ofRUB2("3002.19"))
 				.append(of("2271.976112"))
@@ -78,7 +81,8 @@ public class RMContractStrategyPositionParamsTest {
 		Variant<CDecimal>
 			vTP = new Variant<>(vCN, of(2200L), of(150L)),
 			vSL = new Variant<>(vTP, of(250L), of(500L)),
-			vTGC = new Variant<>(vSL, ofRUB2("12350.04"), ofRUB2("500000.00")),
+			vSLP = new Variant<>(vSL, of(30L), of(50L)),
+			vTGC = new Variant<>(vSLP, ofRUB2("12350.04"), ofRUB2("500000.00")),
 			vTLC = new Variant<>(vTGC, ofRUB2("3002.19"), ofRUB2("1472.02")),
 			vADPM = new Variant<>(vTLC, of("2271.976112"), of("1029.657812")),
 			vALPM = new Variant<>(vADPM, of("130.927541"), of("105.964101"));
@@ -86,8 +90,8 @@ public class RMContractStrategyPositionParamsTest {
 		int foundCnt = 0;
 		RMContractStrategyPositionParams x, found = null;
 		do {
-			x = new RMContractStrategyPositionParams(vCN.get(), vTP.get(),
-				vSL.get(), vTGC.get(), vTLC.get(), vADPM.get(), vALPM.get());
+			x = new RMContractStrategyPositionParams(vCN.get(), vTP.get(), vSL.get(), vSLP.get(),
+					vTGC.get(), vTLC.get(), vADPM.get(), vALPM.get());
 			if ( service.equals(x) ) {
 				foundCnt ++;
 				found = x;
@@ -97,6 +101,7 @@ public class RMContractStrategyPositionParamsTest {
 		assertEquals(52, found.getNumberOfContracts());
 		assertEquals(of(2200L), found.getTakeProfitPts());
 		assertEquals(of(250L), found.getStopLossPts());
+		assertEquals(of(30L), found.getSlippagePts());
 		assertEquals(ofRUB2("12350.04"), found.getTradeGoalCap());
 		assertEquals(ofRUB2("3002.19"), found.getTradeLossCap());
 		assertEquals(of("2271.976112"), found.getAvgDailyPriceMove());

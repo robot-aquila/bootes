@@ -75,6 +75,7 @@ public class RMContractStrategy {
 				0,
 				stepsToPrice(0),
 				stepsToPrice(0),
+				stepsToPrice(0),
 				priceToMoney(CDecimalBD.of(0L)),
 				priceToMoney(CDecimalBD.of(0L)),
 				stepsToPrice(0),
@@ -132,10 +133,12 @@ public class RMContractStrategy {
 				.subtract(d_price_step_size.multiply((long) params.getSlippageStp()))
 				.divideExact(d_price_step_size, 0)
 				.multiply(d_price_step_size);
+		CDecimal d_slippage_pts = d_price_step_size.multiply((long) params.getSlippageStp());
 		return new RMContractStrategyPositionParams(
 				d_num_contracts.toBigDecimal().intValue(),
 				d_take_profit_pts,
 				d_stop_loss_pts,
+				d_slippage_pts,
 				d_trade_goal_cap,
 				d_trade_loss_cap,
 				d_avg_daily_price_move,

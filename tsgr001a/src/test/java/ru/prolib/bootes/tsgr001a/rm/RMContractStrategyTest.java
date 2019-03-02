@@ -198,6 +198,7 @@ public class RMContractStrategyTest {
 				52,
 				of("2200"),
 				of("320"),
+				of(30L), // slippage points
 				ofRUB2("78358.51"),
 				ofRUB2("12537.36"),
 				of("3659.02861"),
@@ -220,6 +221,7 @@ public class RMContractStrategyTest {
 				30,
 				of("1980"),
 				of("290"), // 10 * 12537.36 / 30 / 13.23588 - 10 * 3 = 315.74 - 30 = 290
+				of(30L),
 				ofRUB2("78358.51"),
 				ofRUB2("12537.36"),
 				of("3300.01726"),
@@ -242,6 +244,7 @@ public class RMContractStrategyTest {
 				453,
 				of("173"),
 				of("23"),
+				of("5"),
 				ofRUB2("78358.51"),
 				ofRUB2("12537.36"),
 				of("289.02761"),
@@ -264,6 +267,7 @@ public class RMContractStrategyTest {
 				148,
 				of("528"),
 				of("80"), // 1 * 12537.36 / 148 / 1 - 1 * 5 = 80
+				of("5"),
 				ofRUB2("78358.51"),
 				ofRUB2("12537.36"),
 				of("879.71002"),
@@ -286,6 +290,7 @@ public class RMContractStrategyTest {
 				66,
 				of("1.79"),
 				of("0.28"), // 0.01 * 12537.36 / 66 / 6.66046 - 1 * 0.01 = 0.28520 - 0.01 = 0.28
+				of("0.01"),
 				ofRUB2("78358.51"),
 				ofRUB2("12537.36"),
 				of("2.9801562"),
@@ -308,6 +313,7 @@ public class RMContractStrategyTest {
 				146,
 				of("537"),
 				of("84"), // 1 * 12537.36 / 146 / 1 - 2 * 1 = 86 - 2 = 84
+				of("2"),
 				ofRUB2("78358.51"),
 				ofRUB2("12537.36"),
 				of("895.40182"),
@@ -330,6 +336,7 @@ public class RMContractStrategyTest {
 				182,
 				of("6.5"),
 				of("0.7"), // 0.1 / 12537.36 / 182 / 6.61794 - 3 * 0.1 = 1.0 - 0.3 = 0.7
+				of("0.3"),
 				ofRUB2("78358.51"),
 				ofRUB2("12537.36"),
 				of("10.801772"),
@@ -353,6 +360,7 @@ public class RMContractStrategyTest {
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
 				0,
+				of(0L),
 				of(0L),
 				of(0L),
 				ofRUB2("0.00"),
@@ -383,6 +391,7 @@ public class RMContractStrategyTest {
 				0,
 				of(0L),
 				of(0L),
+				of(0L),
 				ofRUB2("0.00"),
 				ofRUB2("0.00"),
 				of(0L),
@@ -411,6 +420,7 @@ public class RMContractStrategyTest {
 				0,
 				of(0L),
 				of(0L),
+				of(0L),
 				ofRUB2("0.00"),
 				ofRUB2("0.00"),
 				of(0L),
@@ -437,6 +447,7 @@ public class RMContractStrategyTest {
 				0,
 				of(0L),
 				of(0L),
+				of(0L),
 				ofRUB2("0.00"),
 				ofRUB2("0.00"),
 				of(0L),
@@ -461,6 +472,7 @@ public class RMContractStrategyTest {
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
 				0,
+				of(0L),
 				of(0L),
 				of(0L),
 				ofRUB2("0.00"),
@@ -491,6 +503,7 @@ public class RMContractStrategyTest {
 				0,
 				of(0L),
 				of(0L),
+				of(0L),
 				ofRUB2("0.00"),
 				ofRUB2("0.00"),
 				of(0L),
@@ -517,6 +530,7 @@ public class RMContractStrategyTest {
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
 				0,
+				of(0L),
 				of(0L),
 				of(0L),
 				ofRUB2("0.00"),

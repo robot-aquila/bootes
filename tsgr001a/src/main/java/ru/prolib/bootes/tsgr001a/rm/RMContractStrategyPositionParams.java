@@ -9,12 +9,14 @@ import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 
 public class RMContractStrategyPositionParams {
 	private final int numContracts;
-	private final CDecimal takeProfit, stopLoss, tradeGoalCap, tradeLossCap,
+	private final CDecimal takeProfit, stopLoss, slippage,
+		tradeGoalCap, tradeLossCap,
 		avgDailyPriceMove, avgLocalPriceMove;
 	
 	public RMContractStrategyPositionParams(int numContracts,
 			CDecimal takeProfit,
 			CDecimal stopLoss,
+			CDecimal slippage,
 			CDecimal tradeGoalCap,
 			CDecimal tradeLossCap,
 			CDecimal avgDailyPriceMove,
@@ -23,6 +25,7 @@ public class RMContractStrategyPositionParams {
 		this.numContracts = numContracts;
 		this.takeProfit = takeProfit;
 		this.stopLoss = stopLoss;
+		this.slippage = slippage;
 		this.tradeGoalCap = tradeGoalCap;
 		this.tradeLossCap = tradeLossCap;
 		this.avgDailyPriceMove = avgDailyPriceMove;
@@ -56,6 +59,15 @@ public class RMContractStrategyPositionParams {
 		return stopLoss;
 	}
 	
+	/**
+	 * Get slippage in points.
+	 * <p>
+	 * @return price points
+	 */
+	public CDecimal getSlippagePts() {
+		return slippage;
+	}
+	
 	public CDecimal getTradeGoalCap() {
 		return tradeGoalCap;
 	}
@@ -83,6 +95,7 @@ public class RMContractStrategyPositionParams {
 				.append(numContracts)
 				.append(takeProfit)
 				.append(stopLoss)
+				.append(slippage)
 				.append(tradeGoalCap)
 				.append(tradeLossCap)
 				.append(avgDailyPriceMove)
@@ -103,6 +116,7 @@ public class RMContractStrategyPositionParams {
 				.append(o.numContracts, numContracts)
 				.append(o.takeProfit, takeProfit)
 				.append(o.stopLoss, stopLoss)
+				.append(o.slippage, slippage)
 				.append(o.tradeGoalCap, tradeGoalCap)
 				.append(o.tradeLossCap, tradeLossCap)
 				.append(o.avgDailyPriceMove, avgDailyPriceMove)

@@ -42,8 +42,8 @@ public class StopLossGtATR extends AbstractFilter<S3TradeSignal> {
 			}
 		}
 		if ( sl != null && atr != null ) {
-			Object args[] = { atr, sl, signal.getTime() };
-			logger.debug("ATR={} SL={} T={}", args);
+			//Object args[] = { atr, sl, signal.getTime() };
+			//logger.debug("ATR={} SL={} T={}", args);
 			return sl.compareTo(atr) > 0;
 		}
 		return false;

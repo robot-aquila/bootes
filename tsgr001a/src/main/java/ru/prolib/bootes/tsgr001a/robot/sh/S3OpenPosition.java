@@ -80,6 +80,10 @@ public class S3OpenPosition extends CommonHandler implements SMExitAction {
 
 	public S3OpenPosition(AppServiceLocator serviceLocator, RobotState state) {
 		super(serviceLocator, state);
+		setExitAction(this);
+		registerExit(E_OPEN);
+		registerExit(E_NEED_CLOSE);
+		registerExit(E_SKIPPED);
 		inTimeout = registerInput(new OnTimeout(this));
 		inFinish = registerInput(new OnFinish(this));
 	}
@@ -131,9 +135,7 @@ public class S3OpenPosition extends CommonHandler implements SMExitAction {
 		
 		Scheduler scheduler = serviceLocator.getScheduler();
 		Instant cancell_at = scheduler.getCurrentTime().plusSeconds(TIMEOUT_SECONDS);
-		triggers.add(newTriggerOnEvent(order.onFailed(), inFinish));
-		triggers.add(newTriggerOnEvent(order.onFilled(), inFinish));
-		triggers.add(newTriggerOnEvent(order.onCancelled(), inFinish));
+		triggers.add(newTriggerOnEvent(order.onDone(), inFinish));
 		triggers.add(newExitOnTimer(scheduler, cancell_at, inTimeout));
 		
 		try {
@@ -172,9 +174,14 @@ public class S3OpenPosition extends CommonHandler implements SMExitAction {
 			spec = state.getActiveSpeculation();
 			listener = state.getStateListener();
 		}
-		CDecimal cum_price = CDecimalBD.ZERO;
+		CDecimal cum_price = null;
 		for ( OrderExecution execution : order.getExecutions() ) {
-			cum_price = cum_price.add(execution.getPricePerUnit());
+			CDecimal exec_cum_price = execution.getPricePerUnit().multiply(execution.getVolume());
+			if ( cum_price == null ) {
+				cum_price = exec_cum_price;
+			} else {
+				cum_price = cum_price.add(exec_cum_price);
+			}
 		}
 		Tick entry = Tick.of(TickType.TRADE,
 				order.getTimeDone(),

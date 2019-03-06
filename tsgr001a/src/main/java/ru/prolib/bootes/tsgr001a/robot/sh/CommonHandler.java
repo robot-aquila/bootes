@@ -14,9 +14,13 @@ import ru.prolib.aquila.core.sm.SMTriggerOnEvent;
 import ru.prolib.aquila.core.sm.SMTriggerOnTimer;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
+import ru.prolib.bootes.lib.sm.OnInterruptAction;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
-public abstract class CommonHandler extends SMStateHandler implements SMEnterAction {
+public abstract class CommonHandler extends SMStateHandler implements
+	SMEnterAction,
+	OnInterruptAction.Handler
+{
 	public static final String E_ERROR = "ERROR";
 	public static final String E_INTERRUPT = "INTERRUPT";
 	
@@ -30,7 +34,12 @@ public abstract class CommonHandler extends SMStateHandler implements SMEnterAct
 		setEnterAction(this);
 		registerExit(E_ERROR);
 		registerExit(E_INTERRUPT);
-		inInterrupt = registerInput(new SMInputStub(getExit(E_INTERRUPT)));
+		inInterrupt = registerInput(new OnInterruptAction(this));
+	}
+	
+	@Override
+	public SMExit onInterrupt(Object data) {
+		return getExit(E_INTERRUPT);
 	}
 	
 	/**

@@ -331,6 +331,7 @@ public class ARSTaskHandlerTest {
 						synchronized ( service ) {
 							service.notifyAll();
 						}
+						Thread.sleep(1L);
 					}
 					s_finished.countDown();
 				} catch ( InterruptedException e ) {

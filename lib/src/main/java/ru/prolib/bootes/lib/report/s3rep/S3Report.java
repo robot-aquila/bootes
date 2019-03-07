@@ -12,6 +12,7 @@ public class S3Report implements IS3Report {
 	private final List<S3RRecord> records;
 	private final Set<IS3ReportListener> listeners;
 	private Boolean lastRecordDeclined = null;
+	private long recordsCreated, recordsDeleted;
 	
 	public S3Report(IFilter<S3RRecord> filter, List<S3RRecord> records, Set<IS3ReportListener> listeners) {
 		this.filter = filter;
@@ -51,6 +52,7 @@ public class S3Report implements IS3Report {
 		boolean add_record = filter == null ? true : filter.approve(n);
 		if ( add_record ) {
 			records.add(n);
+			recordsCreated ++;
 			lastRecordDeclined = false;
 			for ( IS3ReportListener listener : listeners ) {
 				listener.recordCreated(n);
@@ -93,6 +95,7 @@ public class S3Report implements IS3Report {
 			return n;
 		} else {
 			records.remove(index);
+			recordsDeleted ++;
 			for ( IS3ReportListener listener : listeners ) {
 				listener.recordDeleted(n);
 			}
@@ -118,6 +121,16 @@ public class S3Report implements IS3Report {
 	@Override
 	public synchronized void removeListener(IS3ReportListener listener) {
 		listeners.remove(listener);
+	}
+	
+	@Override
+	public synchronized long getRecordsCreated() {
+		return recordsCreated;
+	}
+	
+	@Override
+	public synchronized long getRecordsDeleted() {
+		return recordsDeleted;
 	}
 
 }

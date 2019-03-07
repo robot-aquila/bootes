@@ -455,5 +455,70 @@ public class S3ReportTest {
 		expected.add(listenerMock3);
 		assertEquals(expected, listeners);
 	}
+	
+	@Test
+	public void testCounters() throws Exception {
+		S3Report service = new S3Report(new IFilter<S3RRecord>() {
+			
+			@Override
+			public String getID() {
+				return "test";
+			}
+
+			@Override
+			public boolean approve(S3RRecord record) {
+				if ( record.getExitTime() == null ) {
+					// First time - approve only long trades
+					return record.getType() == S3RType.LONG;
+				} else {
+					// On update - approve only event IDs
+					return record.getID() % 2 == 0;
+				}
+			}
+			
+		});
+		S3RRecordCreate create_long = new S3RRecordCreate(
+				S3RType.LONG,
+				T("2019-02-12T15:13:00Z"),
+				of("527.12"),
+				of("100"),
+				of("635.00"),
+				of("520.00"),
+				of("531.19")
+			);
+		S3RRecordCreate create_short = new S3RRecordCreate(
+				S3RType.SHORT,
+				T("2019-02-12T15:13:00Z"),
+				of("527.12"),
+				of("100"),
+				of("635.00"),
+				of("520.00"),
+				of("531.19")
+			);
+		S3RRecordUpdateLast update_last = new S3RRecordUpdateLast(
+				T("2019-02-12T15:45:00Z"),
+				of("530.00"),
+				ofRUB5("288.00")
+			);
+		
+		// #0
+		service.create(create_long); // should be created because LONG
+		service.update(update_last); // should be included because ID=0
+		// #1
+		service.create(create_long); // should be included because LONG
+		service.update(update_last); // should be declined because ID=1
+		// #2
+		service.create(create_short); // should be declined because SHORT
+		service.update(update_last); // should be declined because was not created
+		// #3
+		service.create(create_long); // should be created because LONG
+		service.update(update_last); // should be declined because ID=3
+		// #4
+		service.create(create_long); // should be created because LONG
+		service.update(update_last); // should be included because ID=4
+		
+		assertEquals(4, service.getRecordsCreated());
+		assertEquals(3, service.getRecordsDeleted());
+	}
 
 }

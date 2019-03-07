@@ -46,4 +46,18 @@ public interface IS3Report {
 	 */
 	void removeListener(IS3ReportListener listener);
 	
+	/**
+	 * Get total number of records created.
+	 * <p> 
+	 * @return number of records created including those that were removed later
+	 */
+	long getRecordsCreated();
+	
+	/**
+	 * Get number of deleted records.
+	 * <p>
+	 * @return number of records declined by filter at update phase
+	 */
+	long getRecordsDeleted();
+	
 }

@@ -28,7 +28,11 @@ public class S3ReportMsgTest {
 		assertEquals(new MsgID("S3Report", "BREAK_EVEN"), S3ReportMsg.BREAK_EVEN);
 		assertEquals(new MsgID("S3Report", "EXIT_TIME"), S3ReportMsg.EXIT_TIME);
 		assertEquals(new MsgID("S3Report", "EXIT_PRICE"), S3ReportMsg.EXIT_PRICE);
-		assertEquals(new MsgID("S3Report", "PROFIT_AND_LOSS"), S3ReportMsg.PROFIT_AND_LOSS);		
+		assertEquals(new MsgID("S3Report", "PROFIT_AND_LOSS"), S3ReportMsg.PROFIT_AND_LOSS);
+		assertEquals(new MsgID("S3Report", "RECORDS_CREATED"), S3ReportMsg.RECORDS_CREATED);
+		assertEquals(new MsgID("S3Report", "RECORDS_DELETED"), S3ReportMsg.RECORDS_DELETED);
+		assertEquals(new MsgID("S3Report", "RECORDS_DELETED_CREATED_RATIO"), S3ReportMsg.RECORDS_DELETED_CREATED_RATIO);
+		assertEquals(new MsgID("S3Report", "N_A"), S3ReportMsg.N_A);
 	}
 
 }

@@ -1,5 +1,6 @@
 package ru.prolib.bootes.tsgr001a.robot.ui;
 
+import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.time.ZoneId;
 
@@ -14,6 +15,7 @@ import javax.swing.table.TableRowSorter;
 import ru.prolib.aquila.core.text.IMessages;
 import ru.prolib.aquila.ui.TableModelController;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
+import ru.prolib.bootes.lib.report.s3rep.ui.S3ReportCounterView;
 import ru.prolib.bootes.lib.report.s3rep.ui.S3ReportTableModel;
 import ru.prolib.bootes.lib.report.summarep.ui.SummaryReportView;
 import ru.prolib.bootes.lib.service.UIService;
@@ -51,8 +53,9 @@ public class ReportsView extends JPanel {
 		table = new JTable(rtm);
 		table.setShowGrid(true);
 		table.setRowSorter(new TableRowSorter<>(rtm));
-		panel = new JPanel(new GridLayout(1, 1));
-		panel.add(new JScrollPane(table));
+		panel = new JPanel(new BorderLayout());
+		panel.add(new JScrollPane(table), BorderLayout.CENTER);
+		panel.add(new S3ReportCounterView(messages, roboServices.getShortDurationTradesReport()), BorderLayout.PAGE_END);
 		new TableModelController(rtm, main_frame);
 		reportsTabPanel.addTab(messages.get(RobotCommonMsg.REPORT_SHORT_DURATION_TRADES), panel);
 		
@@ -60,8 +63,9 @@ public class ReportsView extends JPanel {
 		table = new JTable(rtm);
 		table.setShowGrid(true);
 		table.setRowSorter(new TableRowSorter<>(rtm));
-		panel = new JPanel(new GridLayout(1, 1));
-		panel.add(new JScrollPane(table));
+		panel = new JPanel(new BorderLayout());
+		panel.add(new JScrollPane(table), BorderLayout.CENTER);
+		panel.add(new S3ReportCounterView(messages, roboServices.getMidDayClearingTradesReport()), BorderLayout.PAGE_END);
 		new TableModelController(rtm, main_frame);
 		reportsTabPanel.addTab(messages.get(RobotCommonMsg.REPORT_CROSS_MIDCLEARING_TRADES), panel);
 		

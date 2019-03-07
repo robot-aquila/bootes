@@ -2,8 +2,6 @@ package ru.prolib.bootes.tsgr001a.robot.sh;
 
 import java.time.Instant;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,7 +12,6 @@ import ru.prolib.aquila.core.BusinessEntities.OrderAction;
 import ru.prolib.aquila.core.BusinessEntities.OrderException;
 import ru.prolib.aquila.core.BusinessEntities.OrderExecution;
 import ru.prolib.aquila.core.BusinessEntities.Portfolio;
-import ru.prolib.aquila.core.BusinessEntities.Scheduler;
 import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.core.BusinessEntities.Terminal;
 import ru.prolib.aquila.core.BusinessEntities.Tick;
@@ -22,7 +19,6 @@ import ru.prolib.aquila.core.BusinessEntities.TickType;
 import ru.prolib.aquila.core.sm.SMExit;
 import ru.prolib.aquila.core.sm.SMExitAction;
 import ru.prolib.aquila.core.sm.SMInput;
-import ru.prolib.aquila.core.sm.SMInputAction;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.data.ts.S3TradeSignal;

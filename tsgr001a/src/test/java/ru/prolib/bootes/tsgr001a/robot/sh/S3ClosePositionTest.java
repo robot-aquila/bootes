@@ -281,6 +281,7 @@ public class S3ClosePositionTest {
 		assertNull(service.enter(tregMock));
 		
 		control.verify();
+		assertSame(orderMock, service.getOrder());
 	}
 
 	@Test
@@ -311,6 +312,7 @@ public class S3ClosePositionTest {
 		assertNull(service.enter(tregMock));
 		
 		control.verify();
+		assertSame(orderMock, service.getOrder());
 	}
 
 	@Test
@@ -340,6 +342,7 @@ public class S3ClosePositionTest {
 		assertNull(service.enter(tregMock));
 		
 		control.verify();
+		assertSame(orderMock, service.getOrder());
 	}
 	
 	@Test
@@ -370,6 +373,7 @@ public class S3ClosePositionTest {
 		assertNull(service.enter(tregMock));
 		
 		control.verify();
+		assertSame(orderMock, service.getOrder());
 	}
 	
 	@Test
@@ -400,6 +404,7 @@ public class S3ClosePositionTest {
 		assertSame(service.getExit("ERROR"), service.enter(tregMock));
 		
 		control.verify();
+		assertSame(orderMock, service.getOrder());
 	}
 	
 	@Test

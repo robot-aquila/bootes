@@ -8,6 +8,7 @@ public class BasicConfigLoader {
 	public void load(BasicConfigBuilder builder, OptionProvider optionProvider) throws ConfigException {
 		builder.withShowHelp(optionProvider.getBoolean("help", false))
 			.withHeadless(optionProvider.getBoolean("headless", false))
+			.withNoOrders(optionProvider.getBoolean("no-orders", false))
 			.withDataDirectory(optionProvider.getFile("data-dir"))
 			.withConfigFile(optionProvider.getFile("config-file"));
 	}
@@ -20,6 +21,10 @@ public class BasicConfigLoader {
 		options.addOption(Option.builder()
 			.longOpt("headless")
 			.desc("Enable headless mode.")
+			.build());
+		options.addOption(Option.builder()
+			.longOpt("no-orders")
+			.desc("Avoid to use orders where possible. Use simulated results instead.")
 			.build());
 		options.addOption(Option.builder()
 			.longOpt("data-dir")

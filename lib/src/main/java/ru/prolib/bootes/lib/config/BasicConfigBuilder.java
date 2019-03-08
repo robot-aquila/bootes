@@ -12,13 +12,14 @@ public class BasicConfigBuilder {
 		logger = LoggerFactory.getLogger(BasicConfigBuilder.class);
 	}
 	
-	private boolean showHelp, headless;
+	private boolean showHelp, headless, noOrders;
 	private File dataDir, configFile;
 	
 	public BasicConfig build() throws ConfigException {
 		return new BasicConfig(
 				showHelp,
 				headless,
+				noOrders,
 				dataDir,
 				configFile
 			);
@@ -33,6 +34,12 @@ public class BasicConfigBuilder {
 	public BasicConfigBuilder withHeadless(boolean headless) {
 		logger.debug("withHeadless={}", headless);
 		this.headless = headless;
+		return this;
+	}
+	
+	public BasicConfigBuilder withNoOrders(boolean option) {
+		logger.debug("withNoOrders={}", option);
+		this.noOrders = option;
 		return this;
 	}
 	

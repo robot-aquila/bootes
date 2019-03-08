@@ -44,6 +44,20 @@ public class BasicConfigBulderTest {
 	}
 	
 	@Test
+	public void testWithNoOrders() throws Exception {
+		BasicConfig actual = service.build();
+		assertFalse(actual.isNoOrders());
+		
+		assertSame(service, service.withNoOrders(true));
+		actual = service.build();
+		assertTrue(actual.isNoOrders());
+		
+		assertSame(service, service.withNoOrders(false));
+		actual = service.build();
+		assertFalse(actual.isNoOrders());
+	}
+	
+	@Test
 	public void testWithDataDirectory() throws Exception {
 		BasicConfig actual = service.build();
 		assertNull(actual.getDataDirectory());

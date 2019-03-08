@@ -274,8 +274,11 @@ public class ARSTaskHandlerTest {
 					synchronized ( service ) {
 						assertEquals(ARSTaskState.PENDING, service.getCurrentState());
 						started.countDown();
-						assertEquals(ARSTaskState.EXECUTING, service.waitForStateChange());
-						assertEquals(ARSTaskState.TIMEOUT, service.waitForStateChange());
+						ARSTaskState actual = service.waitForStateChange();
+						if ( actual == ARSTaskState.EXECUTING ) {
+							actual = service.waitForStateChange();
+						}
+						assertEquals(ARSTaskState.TIMEOUT, actual);
 						finished.countDown();
 					}
 				} catch ( InterruptedException e ) {
@@ -341,6 +344,7 @@ public class ARSTaskHandlerTest {
 		});
 		t_s.start();
 		
+		started.await(1, TimeUnit.SECONDS);
 		service.run();
 		assertTrue(finished.await(2, TimeUnit.SECONDS));
 		control.verify();

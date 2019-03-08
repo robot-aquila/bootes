@@ -11,12 +11,18 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  * Note: This shouldn't contains any mandatory options.
  */
 public class BasicConfig {
-	private final boolean showHelp, headless;
+	private final boolean showHelp, headless, noOrders;
 	private final File dataDir, configFile;
 	
-	public BasicConfig(boolean help, boolean headless, File dataDir, File configFile) {
+	public BasicConfig(boolean help,
+			boolean headless,
+			boolean noOrders,
+			File dataDir,
+			File configFile)
+	{
 		this.showHelp = help;
 		this.headless = headless;
+		this.noOrders = noOrders;
 		this.dataDir = dataDir;
 		this.configFile = configFile;
 	}
@@ -27,6 +33,10 @@ public class BasicConfig {
 	
 	public boolean isHeadless() {
 		return headless;
+	}
+	
+	public boolean isNoOrders() {
+		return noOrders;
 	}
 	
 	public File getDataDirectory() {
@@ -49,6 +59,7 @@ public class BasicConfig {
 		return new EqualsBuilder()
 			.append(o.showHelp, showHelp)
 			.append(o.headless, headless)
+			.append(o.noOrders, noOrders)
 			.append(o.dataDir, dataDir)
 			.append(o.configFile, configFile)
 			.isEquals();
@@ -59,6 +70,7 @@ public class BasicConfig {
 		return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE)
 			.append("showHelp", showHelp)
 			.append("headless", headless)
+			.append("noOrders", noOrders)
 			.append("dataDir", dataDir)
 			.append("configFile", configFile)
 			.toString();
@@ -69,6 +81,7 @@ public class BasicConfig {
 		return new HashCodeBuilder(7117529, 995)
 			.append(showHelp)
 			.append(headless)
+			.append(noOrders)
 			.append(dataDir)
 			.append(configFile)
 			.toHashCode();

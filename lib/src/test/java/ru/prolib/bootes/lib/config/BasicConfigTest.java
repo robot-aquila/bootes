@@ -15,14 +15,16 @@ public class BasicConfigTest {
 
 	@Before
 	public void setUp() throws Exception {
-		service = new BasicConfig(false, true, new File("foo/bar"), new File("my-conf.ini"));
+		service = new BasicConfig(false, true, true, new File("foo/bar"), new File("my-conf.ini"));
 	}
 	
 	@Test
 	public void testCtor() {
 		assertFalse(service.isShowHelp());
 		assertTrue(service.isHeadless());
+		assertTrue(service.isNoOrders());
 		assertEquals(new File("foo/bar"), service.getDataDirectory());
+		assertEquals(new File("my-conf.ini"), service.getConfigFile());
 	}
 	
 	@Test
@@ -36,13 +38,14 @@ public class BasicConfigTest {
 	public void testEquals() {
 		Variant<Boolean> vIsHelp = new Variant<>(false, true);
 		Variant<Boolean> vIsHdls = new Variant<>(vIsHelp, true, false);
-		Variant<File> vDDir = new Variant<>(vIsHdls, new File("foo/bar"), null, new File("bar/foo"));
+		Variant<Boolean> vIsNoOrd = new Variant<>(vIsHdls, true, false);
+		Variant<File> vDDir = new Variant<>(vIsNoOrd, new File("foo/bar"), null, new File("bar/foo"));
 		Variant<File> vFCfg = new Variant<>(vDDir, new File("my-conf.ini"), new File("old-conf.ini"));
 		Variant<?> iterator = vFCfg;
 		int foundCnt = 0;
 		BasicConfig x, found = null;
 		do {
-			x = new BasicConfig(vIsHelp.get(), vIsHdls.get(), vDDir.get(), vFCfg.get());
+			x = new BasicConfig(vIsHelp.get(), vIsHdls.get(), vIsNoOrd.get(), vDDir.get(), vFCfg.get());
 			if ( service.equals(x) ) {
 				foundCnt ++;
 				found = x;
@@ -51,6 +54,7 @@ public class BasicConfigTest {
 		assertEquals(1, foundCnt);
 		assertFalse(found.isShowHelp());
 		assertTrue(found.isHeadless());
+		assertTrue(found.isNoOrders());
 		assertEquals(new File("foo/bar"), found.getDataDirectory());
 		assertEquals(new File("my-conf.ini"), found.getConfigFile());
 	}
@@ -59,6 +63,7 @@ public class BasicConfigTest {
 	public void testHashCode() {
 		int expected = new HashCodeBuilder(7117529, 995)
 			.append(false)
+			.append(true)
 			.append(true)
 			.append(new File("foo/bar"))
 			.append(new File("my-conf.ini"))
@@ -69,8 +74,15 @@ public class BasicConfigTest {
 
 	@Test
 	public void testToString() {
-		String fs = File.separator;
-		String expected = "BasicConfig[showHelp=false,headless=true,dataDir=foo" + fs + "bar,configFile=my-conf.ini]";
+		String expected = new StringBuilder()
+				.append("BasicConfig[")
+				.append("showHelp=false,")
+				.append("headless=true,")
+				.append("noOrders=true,")
+				.append("dataDir=foo").append(File.separator).append("bar,")
+				.append("configFile=my-conf.ini")
+				.append("]")
+				.toString();
 		
 		assertEquals(expected, service.toString());
 	}

@@ -29,6 +29,7 @@ import ru.prolib.bootes.tsgr001a.robot.RoboServiceLocator;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 import ru.prolib.bootes.tsgr001a.robot.SetupT0;
 import ru.prolib.bootes.tsgr001a.robot.filter.ByTrendT1;
+import ru.prolib.bootes.tsgr001a.robot.filter.FilterFCSD;
 import ru.prolib.bootes.tsgr001a.robot.filter.MADevLimit;
 import ru.prolib.bootes.tsgr001a.robot.filter.SignalTimetable;
 import ru.prolib.bootes.tsgr001a.robot.filter.StopLossGtATR;
@@ -69,7 +70,8 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 			.addFilter(new StopLossGtATR(state))
 			.addFilter(new MADevLimit(state))
 			.addFilter(new ByTrendT1(state)) // filtered too much, not so effective, check it
-			.addFilter(new SignalTimetable(serviceLocator.getUIService().getZoneID()));
+			.addFilter(new SignalTimetable(serviceLocator.getUIService().getZoneID()))
+			.addFilter(new FilterFCSD(state));
 	}
 	
 	private CDecimal getLastPrice() {

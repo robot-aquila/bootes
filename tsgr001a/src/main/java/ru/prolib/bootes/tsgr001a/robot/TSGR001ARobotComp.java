@@ -26,7 +26,8 @@ public class TSGR001ARobotComp implements AppComponent {
 	@Override
 	public void init() throws Throwable {
 		RobotStateListenerComp stateListener = new RobotStateListenerComp();
-		robot = new TSGR001ARobotBuilder(serviceLocator, roboServices).build(stateListener);
+		robot = new TSGR001ARobotBuilder(serviceLocator, roboServices)
+				.build(stateListener, appConfig.getBasicConfig().isNoOrders());
 		RobotState state = robot.getState();
 		stateListener.addListener(new SummaryReportHandler(state, roboServices.getSummaryReportTracker()));
 		stateListener.addListener(new SummaryReportDumpAtShutdown(roboServices.getSummaryReportTracker()));

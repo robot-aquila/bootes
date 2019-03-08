@@ -43,36 +43,73 @@ public class TSGR001ARobotBuilder {
 		this.roboServices = roboServices;
 	}
 
-	public Robot build(RobotStateListener stateListener) {
+	public Robot build(RobotStateListener stateListener, boolean no_orders) {
 		CommonActions ca = new CommonActions();
 		RobotState state = new RobotState(stateListener);
-		SMStateMachine automat = new SMBuilder()
+		SMBuilder builder = new SMBuilder()
 				.addState(new Init(serviceLocator, state), S_INIT)
 				.addState(new WaitForAccount(serviceLocator, state), S_WAIT_ACCOUNT)
 				.addState(new ChooseContract(serviceLocator, state), S_CHOOSE_CONTRACT)
 				.addState(new InitSessionData(serviceLocator, state, ca), S_INIT_SESSION_DATA)
 				.addState(new WaitForMarketSignal(serviceLocator, roboServices, state, ca), S_WAIT_MARKET_SIGNAL)
-				
-				//.addState(new SimOpenPosition(serviceLocator, state), S_OPEN_LONG)
-				//.addState(new SimOpenPosition(serviceLocator, state), S_OPEN_SHORT)
-				.addState(new S3OpenPosition(serviceLocator, state), S_OPEN_LONG)
-				.addState(new S3OpenPosition(serviceLocator, state), S_OPEN_SHORT)
-				
 				.addState(new SimTrackPosition(serviceLocator, state), S_TRACK_LONG)
 				.addState(new SimTrackPosition(serviceLocator, state), S_TRACK_SHORT)
-				
-				//.addState(new SimClosePosition(serviceLocator, state), S_CLOSE_LONG)
-				//.addState(new SimClosePosition(serviceLocator, state), S_CLOSE_SHORT)
-				.addState(new S3ClosePosition(serviceLocator, state), S_CLOSE_LONG)
-				.addState(new S3ClosePosition(serviceLocator, state), S_CLOSE_SHORT)
-				
 				.addState(new WaitForSessionEnd(serviceLocator, state, ca), S_WAIT_SESSION_END)
 				.addState(new CleanSessionData(serviceLocator, state, ca), S_CLEAN_SESSION_DATA)
 				.addState(new Cleanup(serviceLocator, state), S_CLEANUP)
+				.setInitialState(S_INIT);
+		
+		if ( no_orders ) {
+			builder.addState(new SimOpenPosition(serviceLocator, state), S_OPEN_LONG)
+				.addState(new SimOpenPosition(serviceLocator, state), S_OPEN_SHORT)
+				.addState(new SimClosePosition(serviceLocator, state), S_CLOSE_LONG)
+				.addState(new SimClosePosition(serviceLocator, state), S_CLOSE_SHORT)
 				
-				.setInitialState(S_INIT)
+				.addTrans(S_OPEN_LONG, SimOpenPosition.E_OPENED,	S_TRACK_LONG)
+				.addTrans(S_OPEN_LONG, SimOpenPosition.E_ERROR,		S_CLEANUP)
+				.addTrans(S_OPEN_LONG, SimOpenPosition.E_INTERRUPT,	S_CLEANUP)
 				
-				.addTrans(S_INIT, Init.E_OK, S_WAIT_ACCOUNT)
+				.addTrans(S_OPEN_SHORT, SimOpenPosition.E_OPENED,		S_TRACK_SHORT)
+				.addTrans(S_OPEN_SHORT, SimOpenPosition.E_ERROR,		S_CLEANUP)
+				.addTrans(S_OPEN_SHORT, SimOpenPosition.E_INTERRUPT,	S_CLEANUP)
+				
+				.addTrans(S_CLOSE_LONG, SimClosePosition.E_CLOSED,		S_WAIT_MARKET_SIGNAL)
+				.addTrans(S_CLOSE_LONG, SimClosePosition.E_ERROR,		S_CLEANUP)
+				.addTrans(S_CLOSE_LONG, SimClosePosition.E_INTERRUPT,	S_CLEANUP)
+				
+				.addTrans(S_CLOSE_SHORT, SimClosePosition.E_CLOSED,		S_WAIT_MARKET_SIGNAL)
+				.addTrans(S_CLOSE_SHORT, SimClosePosition.E_ERROR,		S_CLEANUP)
+				.addTrans(S_CLOSE_SHORT, SimClosePosition.E_INTERRUPT,	S_CLEANUP);
+			
+		} else {
+			builder.addState(new S3OpenPosition(serviceLocator, state), S_OPEN_LONG)
+				.addState(new S3OpenPosition(serviceLocator, state), S_OPEN_SHORT)
+				.addState(new S3ClosePosition(serviceLocator, state), S_CLOSE_LONG)
+				.addState(new S3ClosePosition(serviceLocator, state), S_CLOSE_SHORT)
+			
+				.addTrans(S_OPEN_LONG, S3OpenPosition.E_OPEN,		S_TRACK_LONG)
+				.addTrans(S_OPEN_LONG, S3OpenPosition.E_SKIPPED,	S_WAIT_MARKET_SIGNAL)
+				.addTrans(S_OPEN_LONG, S3OpenPosition.E_ERROR,		S_CLEANUP)
+				.addTrans(S_OPEN_LONG, S3OpenPosition.E_INTERRUPT,	S_CLEANUP)
+				
+				.addTrans(S_OPEN_SHORT, S3OpenPosition.E_OPEN,		S_TRACK_SHORT)
+				.addTrans(S_OPEN_SHORT, S3OpenPosition.E_SKIPPED,	S_WAIT_MARKET_SIGNAL)
+				.addTrans(S_OPEN_SHORT, S3OpenPosition.E_ERROR,		S_CLEANUP)
+				.addTrans(S_OPEN_SHORT, S3OpenPosition.E_INTERRUPT,	S_CLEANUP)
+				
+				.addTrans(S_CLOSE_LONG, S3ClosePosition.E_CLOSED,		S_WAIT_MARKET_SIGNAL)
+				.addTrans(S_CLOSE_LONG, S3ClosePosition.E_NEED_CLOSE,	S_CLOSE_LONG)
+				.addTrans(S_CLOSE_LONG, S3ClosePosition.E_ERROR,		S_CLEANUP)
+				.addTrans(S_CLOSE_LONG, S3ClosePosition.E_INTERRUPT,	S_CLEANUP)
+
+				.addTrans(S_CLOSE_SHORT, S3ClosePosition.E_CLOSED,		S_WAIT_MARKET_SIGNAL)
+				.addTrans(S_CLOSE_SHORT, S3ClosePosition.E_NEED_CLOSE,	S_CLOSE_SHORT)
+				.addTrans(S_CLOSE_SHORT, S3ClosePosition.E_ERROR,		S_CLEANUP)
+				.addTrans(S_CLOSE_SHORT, S3ClosePosition.E_INTERRUPT,	S_CLEANUP);
+			
+		}
+		
+		builder.addTrans(S_INIT, Init.E_OK, S_WAIT_ACCOUNT)
 				.addFinal(S_INIT, Init.E_ERROR)
 				.addFinal(S_INIT, Init.E_INTERRUPT)
 				
@@ -95,46 +132,6 @@ public class TSGR001ARobotBuilder {
 				.addTrans(S_WAIT_MARKET_SIGNAL, WaitForMarketSignal.E_ERROR,		S_CLEANUP)
 				.addTrans(S_WAIT_MARKET_SIGNAL, WaitForMarketSignal.E_INTERRUPT,	S_CLEANUP)
 				
-				//.addTrans(S_OPEN_LONG, SimOpenPosition.E_OPENED,	S_TRACK_LONG)
-				//.addTrans(S_OPEN_LONG, SimOpenPosition.E_ERROR,		S_CLEANUP)
-				//.addTrans(S_OPEN_LONG, SimOpenPosition.E_INTERRUPT,	S_CLEANUP)
-				.addTrans(S_OPEN_LONG, S3OpenPosition.E_OPEN,		S_TRACK_LONG)
-				.addTrans(S_OPEN_LONG, S3OpenPosition.E_SKIPPED,	S_WAIT_MARKET_SIGNAL)
-				.addTrans(S_OPEN_LONG, S3OpenPosition.E_ERROR,		S_CLEANUP)
-				.addTrans(S_OPEN_LONG, S3OpenPosition.E_INTERRUPT,	S_CLEANUP)
-				
-				//.addTrans(S_OPEN_SHORT, SimOpenPosition.E_OPENED,		S_TRACK_SHORT)
-				//.addTrans(S_OPEN_SHORT, SimOpenPosition.E_ERROR,		S_CLEANUP)
-				//.addTrans(S_OPEN_SHORT, SimOpenPosition.E_INTERRUPT,	S_CLEANUP)
-				.addTrans(S_OPEN_SHORT, S3OpenPosition.E_OPEN,		S_TRACK_SHORT)
-				.addTrans(S_OPEN_SHORT, S3OpenPosition.E_SKIPPED,	S_WAIT_MARKET_SIGNAL)
-				.addTrans(S_OPEN_SHORT, S3OpenPosition.E_ERROR,		S_CLEANUP)
-				.addTrans(S_OPEN_SHORT, S3OpenPosition.E_INTERRUPT,	S_CLEANUP)
-				
-				.addTrans(S_TRACK_LONG, SimTrackPosition.E_CLOSE_POSITION,	S_CLOSE_LONG)
-				.addTrans(S_TRACK_LONG, SimTrackPosition.E_ERROR,			S_CLEANUP)
-				.addTrans(S_TRACK_LONG, SimTrackPosition.E_INTERRUPT,		S_CLEANUP)
-
-				.addTrans(S_TRACK_SHORT, SimTrackPosition.E_CLOSE_POSITION, S_CLOSE_SHORT)
-				.addTrans(S_TRACK_SHORT, SimTrackPosition.E_ERROR,			S_CLEANUP)
-				.addTrans(S_TRACK_SHORT, SimTrackPosition.E_INTERRUPT,		S_CLEANUP)
-				
-				//.addTrans(S_CLOSE_LONG, SimClosePosition.E_CLOSED,		S_WAIT_MARKET_SIGNAL)
-				//.addTrans(S_CLOSE_LONG, SimClosePosition.E_ERROR,		S_CLEANUP)
-				//.addTrans(S_CLOSE_LONG, SimClosePosition.E_INTERRUPT,	S_CLEANUP)
-				.addTrans(S_CLOSE_LONG, S3ClosePosition.E_CLOSED,		S_WAIT_MARKET_SIGNAL)
-				.addTrans(S_CLOSE_LONG, S3ClosePosition.E_NEED_CLOSE,	S_CLOSE_LONG)
-				.addTrans(S_CLOSE_LONG, S3ClosePosition.E_ERROR,		S_CLEANUP)
-				.addTrans(S_CLOSE_LONG, S3ClosePosition.E_INTERRUPT,	S_CLEANUP)
-				
-				//.addTrans(S_CLOSE_SHORT, SimClosePosition.E_CLOSED,		S_WAIT_MARKET_SIGNAL)
-				//.addTrans(S_CLOSE_SHORT, SimClosePosition.E_ERROR,		S_CLEANUP)
-				//.addTrans(S_CLOSE_SHORT, SimClosePosition.E_INTERRUPT,	S_CLEANUP)
-				.addTrans(S_CLOSE_SHORT, S3ClosePosition.E_CLOSED,		S_WAIT_MARKET_SIGNAL)
-				.addTrans(S_CLOSE_SHORT, S3ClosePosition.E_NEED_CLOSE,	S_CLOSE_SHORT)
-				.addTrans(S_CLOSE_SHORT, S3ClosePosition.E_ERROR,		S_CLEANUP)
-				.addTrans(S_CLOSE_SHORT, S3ClosePosition.E_INTERRUPT,	S_CLEANUP)
-				
 				.addTrans(S_WAIT_SESSION_END, WaitForSessionEnd.E_STOP_DATA_TRACKING,	S_CLEAN_SESSION_DATA)
 				.addTrans(S_WAIT_SESSION_END, WaitForSessionEnd.E_ERROR,				S_CLEANUP)
 				.addTrans(S_WAIT_SESSION_END, WaitForSessionEnd.E_INTERRUPT,			S_CLEANUP)
@@ -147,7 +144,15 @@ public class TSGR001ARobotBuilder {
 				.addFinal(S_CLEANUP, Cleanup.E_ERROR)
 				.addFinal(S_CLEANUP, Cleanup.E_INTERRUPT)
 				
-				.build();
+				.addTrans(S_TRACK_LONG, SimTrackPosition.E_CLOSE_POSITION,	S_CLOSE_LONG)
+				.addTrans(S_TRACK_LONG, SimTrackPosition.E_ERROR,			S_CLEANUP)
+				.addTrans(S_TRACK_LONG, SimTrackPosition.E_INTERRUPT,		S_CLEANUP)
+		
+				.addTrans(S_TRACK_SHORT, SimTrackPosition.E_CLOSE_POSITION, S_CLOSE_SHORT)
+				.addTrans(S_TRACK_SHORT, SimTrackPosition.E_ERROR,			S_CLEANUP)
+				.addTrans(S_TRACK_SHORT, SimTrackPosition.E_INTERRUPT,		S_CLEANUP);
+				
+		SMStateMachine automat = builder.build();
 		automat.setDebug(true);
 		automat.setId("TSGR001A"); // TODO: custom ID
 		return new Robot(state, automat);

@@ -14,10 +14,12 @@ import org.junit.Test;
 
 import ru.prolib.aquila.core.BusinessEntities.Account;
 import ru.prolib.aquila.core.BusinessEntities.BasicTerminalBuilder;
+import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 import ru.prolib.aquila.core.BusinessEntities.CDecimalBD;
 import ru.prolib.aquila.core.BusinessEntities.EditablePortfolio;
 import ru.prolib.aquila.core.BusinessEntities.EditableSecurity;
 import ru.prolib.aquila.core.BusinessEntities.EditableTerminal;
+import ru.prolib.aquila.core.BusinessEntities.L1UpdateBuilder;
 import ru.prolib.aquila.core.BusinessEntities.PortfolioField;
 import ru.prolib.aquila.core.BusinessEntities.SecurityField;
 import ru.prolib.aquila.core.BusinessEntities.Symbol;
@@ -45,6 +47,7 @@ public class RMContractStrategyTest {
 		security.consume(new DeltaUpdateBuilder()
 				.withToken(SecurityField.TICK_SIZE, of(10L))
 				.withToken(SecurityField.TICK_VALUE, ofRUB5("6.8645"))
+				.withToken(SecurityField.INITIAL_MARGIN, ofRUB2("11627.63"))
 				.buildUpdate());
 	}
 
@@ -52,6 +55,7 @@ public class RMContractStrategyTest {
 		security.consume(new DeltaUpdateBuilder()
 				.withToken(SecurityField.TICK_SIZE, of(10L))
 				.withToken(SecurityField.TICK_VALUE, ofRUB5("13.23588"))
+				.withToken(SecurityField.INITIAL_MARGIN, ofRUB5("17710.50000"))
 				.buildUpdate());
 	}
 
@@ -59,6 +63,7 @@ public class RMContractStrategyTest {
 		security.consume(new DeltaUpdateBuilder()
 				.withToken(SecurityField.TICK_SIZE, of("0.01"))
 				.withToken(SecurityField.TICK_VALUE, ofRUB5("6.66046"))
+				.withToken(SecurityField.INITIAL_MARGIN, ofRUB2("3425.15"))
 				.buildUpdate());
 	}
 	
@@ -66,6 +71,7 @@ public class RMContractStrategyTest {
 		security.consume(new DeltaUpdateBuilder()
 				.withToken(SecurityField.TICK_SIZE, of(1L))
 				.withToken(SecurityField.TICK_VALUE, ofRUB5("1.00000"))
+				.withToken(SecurityField.INITIAL_MARGIN, ofRUB2("1533.89"))
 				.buildUpdate());
 	}
 	
@@ -73,6 +79,7 @@ public class RMContractStrategyTest {
 		security.consume(new DeltaUpdateBuilder()
 				.withToken(SecurityField.TICK_SIZE, of("0.1"))
 				.withToken(SecurityField.TICK_VALUE, ofRUB5("6.61794"))
+				.withToken(SecurityField.INITIAL_MARGIN, ofRUB2("2925.61"))
 				.buildUpdate());
 	}
 	
@@ -80,17 +87,23 @@ public class RMContractStrategyTest {
 		security.consume(new DeltaUpdateBuilder()
 				.withToken(SecurityField.TICK_SIZE, of(1L))
 				.withToken(SecurityField.TICK_VALUE, ofRUB5("1.00000"))
+				.withToken(SecurityField.INITIAL_MARGIN, ofRUB2("1554.00"))
 				.buildUpdate());
 	}
 	
-	private RMContractStrategyParams commonParamsWithSlippage(int slippageStp) {
+	private RMContractStrategyParams commonParamsWithSlippage(int slippageStp, CDecimal strategy_cap_share) {
 		return params = new RMContractStrategyParams(
 				CDecimalBD.of("0.075"),
 				CDecimalBD.of("0.012"),
 				CDecimalBD.of("0.60"),
 				CDecimalBD.of("1.05"),
-				slippageStp
+				slippageStp,
+				strategy_cap_share
 			);
+	}
+	
+	private RMContractStrategyParams commonParamsWithSlippage(int slippage_stp) {
+		return commonParamsWithSlippage(slippage_stp, of("1"));
 	}
 
 	@Before
@@ -195,9 +208,9 @@ public class RMContractStrategyTest {
 		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
-				52,
+				51,
 				of("2200"),
-				of("320"),
+				of("330"),
 				of(30L), // slippage points
 				ofRUB2("78358.51"),
 				ofRUB2("12537.36"),
@@ -218,9 +231,9 @@ public class RMContractStrategyTest {
 		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
-				30,
+				29,
 				of("1980"),
-				of("290"), // 10 * 12537.36 / 30 / 13.23588 - 10 * 3 = 315.74 - 30 = 290
+				of("300"), // 10 * 12537.36 / 29 / 13.23588 - 10 * 3 = 300
 				of(30L),
 				ofRUB2("78358.51"),
 				ofRUB2("12537.36"),
@@ -241,7 +254,7 @@ public class RMContractStrategyTest {
 		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
-				453,
+				452,
 				of("173"),
 				of("23"),
 				of("5"),
@@ -287,7 +300,7 @@ public class RMContractStrategyTest {
 		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
-				66,
+				65,
 				of("1.79"),
 				of("0.28"), // 0.01 * 12537.36 / 66 / 6.66046 - 1 * 0.01 = 0.28520 - 0.01 = 0.28
 				of("0.01"),
@@ -310,7 +323,7 @@ public class RMContractStrategyTest {
 		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
-				146,
+				145,
 				of("537"),
 				of("84"), // 1 * 12537.36 / 146 / 1 - 2 * 1 = 86 - 2 = 84
 				of("2"),
@@ -378,7 +391,8 @@ public class RMContractStrategyTest {
 				CDecimalBD.of("0.012"),
 				CDecimalBD.of("0.60"),
 				CDecimalBD.of("1.05"),
-				5
+				5,
+				of(1L)
 			));
 		setupRTS_2();
 		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("3300.01726"));
@@ -407,7 +421,8 @@ public class RMContractStrategyTest {
 				CDecimalBD.of("0.000"),
 				CDecimalBD.of("0.60"),
 				CDecimalBD.of("1.05"),
-				5
+				5,
+				of(1L)
 			));
 		setupRTS_2();
 		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("3300.01726"));
@@ -490,7 +505,8 @@ public class RMContractStrategyTest {
 				CDecimalBD.of("0.012"),
 				CDecimalBD.of("0.00"),
 				CDecimalBD.of("1.05"),
-				5
+				5,
+				of(1L)
 			));
 		setupRTS_2();
 		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("3300.01726"));
@@ -519,7 +535,8 @@ public class RMContractStrategyTest {
 				CDecimalBD.of("0.012"),
 				CDecimalBD.of("0.60"),
 				CDecimalBD.of("0.00"),
-				5
+				5,
+				of(1L)
 			));
 		setupRTS_2();
 		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("3300.01726"));
@@ -549,6 +566,62 @@ public class RMContractStrategyTest {
 	@Test
 	public void testGetPositionParams_SpecialCase_ZeroNumContracts() {
 		testGetPositionParams_SpecialCase_ExpLocalPriceMovePer();
+	}
+	
+	@Test
+	public void testGetPositionParams_StrategyCapitalShare() {
+		service.setStrategyParams(commonParamsWithSlippage(3, of("0.4")));
+		setupRTS_2();
+		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("3300.01726"));
+		expect(psMock.getLocalPriceMove(TIME)).andReturn(of("130.50992"));
+		control.replay();
+		
+		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
+
+		// strategy cap = 1044780.17 * 0.4 = 417912.06800
+		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
+				11, 				// contracts: 10 * 31343.41 / 13.23588 / 1980 = 11.95992 = 11 
+				of("1980"),			// TP: daily price move * 0.6 
+				of("310"), 			// SL: 10 * 5014.94 / 11 / 13.23588 - 10 * 3 = 310
+				of(30L),			// slippage points
+				ofRUB2("31343.41"), // goal cap: 417912.06800 * 0.075 = 31343.40510 
+				ofRUB2( "5014.95"), // loss cap: 417912.06800 * 0.012 =  5014.94482 = 5014.95
+									//     because loss cap percentage has scale of 3 ^^^^^^^
+				of("3300.01726"),	// daily price move
+				of("130.50992")		// local price move
+			);
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void testGetPositionParams_MaxContractsLimit() {
+		service.setStrategyParams(commonParamsWithSlippage(3, of("0.4")));
+		setupRTS_2();
+		security.consume(new L1UpdateBuilder(symbol)
+				.withTrade()
+				.withTime("2019-03-09T07:51:00Z")
+				.withPrice("117920")
+				.withSize(1L)
+				.buildL1Update()); // TODO: ???
+		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("800.72651"));
+		expect(psMock.getLocalPriceMove(TIME)).andReturn(of("130.50992"));
+		control.replay();
+
+		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
+		
+		// strategy cap = 1044780.17 * 0.4 = 417912.06800
+		// max contracts 417912.06800 / 17710.50000 = 23
+		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
+				23, 				// contracts: 10 * 31343.41 / 13.23588 / 480.43591 = 49 so use max = 23
+				of("480"),			// TP: 800.72651 * 0.6 = 480.43591 
+				of("130"), 			// SL: 10 * 5014.94 / 23 / 13.23588 - 10 * 3 = 130
+				of(30L),			// slippage points
+				ofRUB2("31343.41"), // goal cap: 417912.06800 * 0.075 = 31343.40510 
+				ofRUB2( "5014.95"), // loss cap: 417912.06800 * 0.012 =  5014.94482 = 5014.95
+				of("800.72651"),	// daily price move
+				of("130.50992")		// local price move
+			);
+		assertEquals(expected, actual);
 	}
 
 }

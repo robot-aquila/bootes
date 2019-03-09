@@ -20,7 +20,8 @@ public class RMContractStrategyParamsTest {
 				of("0.012"),
 				of("0.6"),
 				of("1.1"),
-				5
+				5,
+				of("0.45")
 			);
 	}
 	
@@ -31,6 +32,7 @@ public class RMContractStrategyParamsTest {
 		assertEquals(of("0.6"), service.getExpDailyPriceMovePer());
 		assertEquals(of("1.1"), service.getExpLocalPriceMovePer());
 		assertEquals(5, service.getSlippageStp());
+		assertEquals(of("0.45"), service.getStrategyCapSharePer());
 	}
 	
 	@Test
@@ -38,6 +40,7 @@ public class RMContractStrategyParamsTest {
 		String expected = new StringBuilder().append("RMContractStrategyParams[")
 				.append("tradeGoalCapPer=0.075,tradeLossCapPer=0.012,")
 				.append("expDailyPriceMovePer=0.6,expLocalPriceMovePer=1.1,")
+				.append("strategyCapSharePer=0.45,")
 				.append("slippageStp=5]")
 				.toString();
 		
@@ -52,6 +55,7 @@ public class RMContractStrategyParamsTest {
 				.append(of("0.6"))
 				.append(of("1.1"))
 				.append(5)
+				.append(of("0.45"))
 				.build();
 		
 		assertEquals(expected, service.hashCode());
@@ -70,13 +74,21 @@ public class RMContractStrategyParamsTest {
 			vTGCP = new Variant<>(of("0.075"), of("0.020")),
 			vTLCP = new Variant<>(vTGCP, of("0.012"), of("0.050")),
 			vEDPM = new Variant<>(vTLCP, of("0.6"), of("0.75")),
-			vELPM = new Variant<>(vEDPM, of("1.1"), of("0.9"));
-		Variant<Integer> vSLP = new Variant<>(vELPM, 5, 3);
+			vELPM = new Variant<>(vEDPM, of("1.1"), of("0.9")),
+			vSCSP = new Variant<>(vELPM, of("0.45"), of("0.6"));
+		Variant<Integer> vSLP = new Variant<>(vSCSP, 5, 3);
 		Variant<?> iterator = vSLP;
 		int foundCnt = 0;
 		RMContractStrategyParams x, found = null;
 		do {
-			x = new RMContractStrategyParams(vTGCP.get(), vTLCP.get(), vEDPM.get(), vELPM.get(), vSLP.get());
+			x = new RMContractStrategyParams(
+					vTGCP.get(),
+					vTLCP.get(),
+					vEDPM.get(),
+					vELPM.get(),
+					vSLP.get(),
+					vSCSP.get()
+				);
 			if ( service.equals(x) ) {
 				foundCnt ++;
 				found = x;
@@ -88,6 +100,7 @@ public class RMContractStrategyParamsTest {
 		assertEquals(of("0.6"), found.getExpDailyPriceMovePer());
 		assertEquals(of("1.1"), found.getExpLocalPriceMovePer());
 		assertEquals(5, found.getSlippageStp());
+		assertEquals(of("0.45"), found.getStrategyCapSharePer());
 	}
 
 }

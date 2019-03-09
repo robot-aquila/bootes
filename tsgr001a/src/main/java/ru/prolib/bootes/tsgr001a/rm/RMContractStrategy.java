@@ -1,5 +1,8 @@
 package ru.prolib.bootes.tsgr001a.rm;
 
+import static ru.prolib.aquila.core.BusinessEntities.CDecimalBD.*;
+
+import java.math.RoundingMode;
 import java.time.Instant;
 
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
@@ -50,7 +53,7 @@ public class RMContractStrategy {
 	
 	public CDecimal priceToMoney(CDecimal price) {
 		CDecimal d_step_size = security.getTickSize();
-		if ( d_step_size.compareTo(CDecimalBD.ZERO) == 0 ) {
+		if ( d_step_size.compareTo(ZERO) == 0 ) {
 			return CDecimalBD.ofRUB2("0");
 		}
 		CDecimal d_steps = price.divideExact(d_step_size, 0);
@@ -59,8 +62,8 @@ public class RMContractStrategy {
 	
 	public CDecimal moneyToPrice(CDecimal money) {
 		CDecimal d_step_cost = security.getTickValue().toAbstract();
-		if ( d_step_cost.compareTo(CDecimalBD.ZERO) == 0 ) {
-			return CDecimalBD.ZERO;
+		if ( d_step_cost.compareTo(ZERO) == 0 ) {
+			return ZERO;
 		}
 		CDecimal d_steps = money.divideExact(d_step_cost, 0).toAbstract();
 		return security.getTickSize().multiply(d_steps);
@@ -76,8 +79,8 @@ public class RMContractStrategy {
 				stepsToPrice(0),
 				stepsToPrice(0),
 				stepsToPrice(0),
-				priceToMoney(CDecimalBD.of(0L)),
-				priceToMoney(CDecimalBD.of(0L)),
+				priceToMoney(of(0L)),
+				priceToMoney(of(0L)),
 				stepsToPrice(0),
 				stepsToPrice(0)
 			);
@@ -98,35 +101,40 @@ public class RMContractStrategy {
 		CDecimal d_exp_local_price_move_per = params.getExpLocalPriceMovePer();
 		CDecimal d_avg_daily_price_move = priceStats.getDailyPriceMove(time);
 		CDecimal d_avg_local_price_move = priceStats.getLocalPriceMove(time);
-		if ( d_trade_goal_cap_per.compareTo(CDecimalBD.ZERO) == 0
-		  || d_trade_loss_cap_per.compareTo(CDecimalBD.ZERO) == 0
-		  || d_price_step_size.compareTo(CDecimalBD.ZERO) == 0
-		  || d_price_step_cost.compareTo(CDecimalBD.ZERO) == 0
-		  || d_exp_local_price_move_per.compareTo(CDecimalBD.ZERO) == 0 )
+		CDecimal d_strategy_cap_share_per = params.getStrategyCapSharePer(); // TODO: check null
+		CDecimal d_init_margin = security.getInitialMargin(); // TODO: check null
+		if ( d_trade_goal_cap_per.compareTo(ZERO) == 0
+		  || d_trade_loss_cap_per.compareTo(ZERO) == 0
+		  || d_price_step_size.compareTo(ZERO) == 0
+		  || d_price_step_cost.compareTo(ZERO) == 0
+		  || d_exp_local_price_move_per.compareTo(ZERO) == 0 )
 		{
 			return emptyPositionParams();
 		}
 		
-		CDecimal d_balance = portfolio.getBalance();
-		if ( d_balance.toAbstract().compareTo(CDecimalBD.ZERO) == 0 ) {
+		CDecimal d_basis_value = portfolio.getBalance().multiply(d_strategy_cap_share_per);
+		if ( d_basis_value.toAbstract().compareTo(ZERO) == 0 ) {
 			return emptyPositionParams();
 		}
-		CDecimal d_trade_goal_cap = d_balance.multiply(d_trade_goal_cap_per).withScale(2);
-		CDecimal d_trade_loss_cap = d_balance.multiply(d_trade_loss_cap_per).withScale(2);
+		CDecimal d_trade_goal_cap = d_basis_value.multiply(d_trade_goal_cap_per).withScale(2);
+		CDecimal d_trade_loss_cap = d_basis_value.multiply(d_trade_loss_cap_per).withScale(2);
 		CDecimal d_take_profit_pts = d_avg_daily_price_move
 				.multiply(params.getExpDailyPriceMovePer())
 				.divideExact(d_price_step_size, 0)
 				.multiply(d_price_step_size);
-		if ( d_take_profit_pts.compareTo(CDecimalBD.ZERO) == 0 ) {
+		if ( d_take_profit_pts.compareTo(ZERO) == 0 ) {
 			return emptyPositionParams();
 		}
 		CDecimal d_num_contracts = d_price_step_size.multiply(d_trade_goal_cap.toAbstract())
 				.divide(d_price_step_cost)
 				.divide(d_take_profit_pts)
-				.withScale(0);
-		if ( d_num_contracts.compareTo(CDecimalBD.ZERO) == 0 ) {
+				.withScale(0, RoundingMode.DOWN);
+		CDecimal d_num_contracts_max = d_basis_value.divide(d_init_margin).withScale(0, RoundingMode.DOWN);
+		d_num_contracts = d_num_contracts.min(d_num_contracts_max);
+		if ( d_num_contracts.compareTo(ZERO) == 0 ) {
 			return emptyPositionParams();
 		}
+		
 		CDecimal d_stop_loss_pts = d_price_step_size.multiply(d_trade_loss_cap.toAbstract())
 				.divide(d_num_contracts)
 				.divide(d_price_step_cost)

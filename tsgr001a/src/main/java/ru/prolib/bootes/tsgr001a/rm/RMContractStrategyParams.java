@@ -8,20 +8,23 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 
 public class RMContractStrategyParams {
-	private final CDecimal tradeGoalCapPer, tradeLossCapPer, expDailyPriceMovePer, expLocalPriceMovePer;
+	private final CDecimal tradeGoalCapPer, tradeLossCapPer, expDailyPriceMovePer,
+		expLocalPriceMovePer, strategyCapSharePer;
 	private final int slippageStp;
 	
 	public RMContractStrategyParams(CDecimal tradeGoalCapPer,
 			CDecimal tradeLossCapPer,
 			CDecimal expDailyPriceMovePer,
 			CDecimal expLocalPriceMovePer,
-			int slippageStp)
+			int slippageStp,
+			CDecimal strategy_cap_share_per)
 	{
 		this.tradeGoalCapPer = tradeGoalCapPer;
 		this.tradeLossCapPer = tradeLossCapPer;
 		this.expDailyPriceMovePer = expDailyPriceMovePer;
 		this.expLocalPriceMovePer = expLocalPriceMovePer;
 		this.slippageStp = slippageStp;
+		this.strategyCapSharePer = strategy_cap_share_per;
 	}
 
 	/**
@@ -69,6 +72,16 @@ public class RMContractStrategyParams {
 		return slippageStp;
 	}
 	
+	/**
+	 * Get strategy capital share in percentages relative to total capital.
+	 * For example if total capital is 1M and strategy share is 30% then strategy capital is 300K.
+	 * <p>
+	 * @return strategy capital share percentage 0-1 
+	 */
+	public CDecimal getStrategyCapSharePer() {
+		return strategyCapSharePer;
+	}
+	
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
@@ -82,6 +95,7 @@ public class RMContractStrategyParams {
 				.append(expDailyPriceMovePer)
 				.append(expLocalPriceMovePer)
 				.append(slippageStp)
+				.append(strategyCapSharePer)
 				.build();
 	}
 	
@@ -100,6 +114,7 @@ public class RMContractStrategyParams {
 				.append(o.expDailyPriceMovePer, expDailyPriceMovePer)
 				.append(o.expLocalPriceMovePer, expLocalPriceMovePer)
 				.append(o.slippageStp, slippageStp)
+				.append(o.strategyCapSharePer, strategyCapSharePer)
 				.build();
 	}
 	

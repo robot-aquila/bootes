@@ -32,7 +32,8 @@ public class Init extends CommonHandler {
 				of("0.012"),
 				of("0.600"),
 				of("1.050"),
-				3
+				3,
+				of(1L)
 			));
 		state.setContractStrategy(cs);
 		

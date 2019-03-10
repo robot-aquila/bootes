@@ -116,7 +116,7 @@ public class RMContractStrategyTest {
 		security = terminal.getEditableSecurity(symbol);
 		portfolio = terminal.getEditablePortfolio(account);
 		portfolio.consume(new DeltaUpdateBuilder()
-				.withToken(PortfolioField.BALANCE, ofRUB2("1044780.17"))
+				.withToken(PortfolioField.FREE_MARGIN, ofRUB2("1044780.17"))
 				.buildUpdate());
 		service = new RMContractStrategy();
 		service.setStrategyParams(commonParamsWithSlippage(3));
@@ -359,14 +359,14 @@ public class RMContractStrategyTest {
 	}
 	
 	@Test
-	public void testGetPositionParams_SpecialCase_ZeroBalance() {
+	public void testGetPositionParams_SpecialCase_ZeroFreeMargin() {
 		service.setStrategyParams(commonParamsWithSlippage(5));
 		setupRTS_2();
 		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("3300.01726"));
 		expect(psMock.getLocalPriceMove(TIME)).andReturn(of("250.86612"));
 		control.replay();
 		portfolio.consume(new DeltaUpdateBuilder()
-				.withToken(PortfolioField.BALANCE, ofRUB2("0.00"))
+				.withToken(PortfolioField.FREE_MARGIN, ofRUB2("0.00"))
 				.buildUpdate());
 		
 		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);

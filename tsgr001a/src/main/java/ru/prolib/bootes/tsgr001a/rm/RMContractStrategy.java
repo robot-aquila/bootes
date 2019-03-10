@@ -112,7 +112,7 @@ public class RMContractStrategy {
 			return emptyPositionParams();
 		}
 		
-		CDecimal d_basis_value = portfolio.getBalance().multiply(d_strategy_cap_share_per);
+		CDecimal d_basis_value = portfolio.getFreeMargin().multiply(d_strategy_cap_share_per);
 		if ( d_basis_value.toAbstract().compareTo(ZERO) == 0 ) {
 			return emptyPositionParams();
 		}

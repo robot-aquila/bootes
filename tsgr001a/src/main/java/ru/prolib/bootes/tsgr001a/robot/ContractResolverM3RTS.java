@@ -81,15 +81,7 @@ public class ContractResolverM3RTS implements ContractResolver {
 				ld.atTime( 9, 55).atZone(zoneID).toInstant(),
 				ld.atTime(23, 55).atZone(zoneID).toInstant()
 			);
-		Interval tradeAllowedPeriod = Interval.of(
-				ld.atTime(10, 0).atZone(zoneID).toInstant(),
-				ld.atTime(18, 30).atZone(zoneID).toInstant()
-			);
-		return new ContractParams(
-				new Symbol(s),
-				dataTrackingPeriod,
-				tradeAllowedPeriod
-			);
+		return new ContractParams(new Symbol(s), dataTrackingPeriod);
 	}
 	
 	@Override

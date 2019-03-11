@@ -9,6 +9,7 @@ import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 import ru.prolib.aquila.core.BusinessEntities.CDecimalBD;
 import ru.prolib.aquila.core.BusinessEntities.Portfolio;
 import ru.prolib.aquila.core.BusinessEntities.Security;
+import ru.prolib.aquila.core.utils.LocalTimeTable;
 
 /**
  * Strategy risk management of separate contract.
@@ -18,6 +19,7 @@ public class RMContractStrategy {
 	private Portfolio portfolio;
 	private Security security;
 	private RMPriceStats priceStats;
+	private LocalTimeTable timetable;
 
 	public void setStrategyParams(RMContractStrategyParams params) {
 		this.params = params;
@@ -34,9 +36,20 @@ public class RMContractStrategy {
 	public void setPriceStats(RMPriceStats stats) {
 		this.priceStats = stats;
 	}
+	
+	public void setTradingTimetable(LocalTimeTable timetable) {
+		this.timetable = timetable;
+	}
 
 	public RMContractStrategyParams getStrategyParams() {
 		return params;
+	}
+	
+	public LocalTimeTable getTradingTimetable() {
+		if ( timetable == null ) {
+			throw new NullPointerException("Timetable not defined");
+		}
+		return timetable;
 	}
 	
 	public Portfolio getPortfolio() {

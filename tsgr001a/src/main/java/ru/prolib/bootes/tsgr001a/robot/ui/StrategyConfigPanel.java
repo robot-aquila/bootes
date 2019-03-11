@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 
 import net.miginfocom.swing.MigLayout;
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
+import ru.prolib.aquila.core.BusinessEntities.Security;
+import ru.prolib.aquila.core.BusinessEntities.Terminal;
 import ru.prolib.aquila.core.text.IMessages;
 import ru.prolib.aquila.core.text.MsgID;
 import ru.prolib.bootes.tsgr001a.rm.RMContractStrategy;
@@ -36,15 +38,18 @@ public class StrategyConfigPanel extends JPanel {
 	private JLabel jlNumberOfContracts = new JLabel();
 	private JLabel jlTakeProfit = new JLabel();
 	private JLabel jlStopLoss = new JLabel();
+	private final Terminal terminal;
 
 	public StrategyConfigPanel(IMessages messages,
 			RobotState state,
-			ZoneId zoneID)
+			ZoneId zoneID,
+			Terminal terminal)
 	{
 		super(new MigLayout());
 		this.messages = messages;
 		this.state = state;
 		this.zoneID = zoneID;
+		this.terminal = terminal;
 		addFormRow(StrategyConfigMsg.ACCOUNT, jlAccount);
 		addFormRow(StrategyConfigMsg.CONTRACT_NAME, jlContractName);
 		addFormRow(StrategyConfigMsg.CONTRACT_SYMBOL, jlContractSymbol);
@@ -90,19 +95,33 @@ public class StrategyConfigPanel extends JPanel {
 	}
 	
 	public void updateView() {
-		RMContractStrategy cs = state.getContractStrategy();
-		RMContractStrategyParams csp = cs.getStrategyParams();
-		
-		jlAccount.setText(state.getAccountCode());
-		jlContractName.setText(state.getContractName());
-		
+		RMContractStrategy cs;
+		RMContractStrategyParams csp;
+		ContractParams cp = null;
+		Security security = null;
+		RMContractStrategyPositionParams cspp = null;
+		synchronized ( state ) {
+			cs = state.getContractStrategy();
+			csp = cs.getStrategyParams();
+			if ( state.isSeriesHandlerT0Defined() ) {
+				security = state.getSecurity();
+			}
+			if ( state.isContractParamsDefined() ) {
+				cp = state.getContractParams();
+			}
+			if ( state.isPositionParamsDefined() ) {
+				 cspp = state.getPositionParams();
+			}
+			jlAccount.setText(state.getAccountCode());
+			jlContractName.setText(state.getContractName());
+		}
 		jlExpDailyPriceMove.setText(percents(csp.getExpDailyPriceMovePer()));
 		jlExpLocalPriceMove.setText(percents(csp.getExpLocalPriceMovePer()));
-		
-		if ( state.isContractParamsDefined() ) {
-			ContractParams cp = state.getContractParams();
+
+		if ( cp != null ) {
 			jlContractSymbol.setText(cp.getSymbol().toString());
-			jlTradingPeriod.setText(cp.getTradeAllowedPeriod()
+			jlTradingPeriod.setText(cs.getTradingTimetable()
+					.getActiveOrComing(terminal.getCurrentTime())
 					.getStart()
 					.atZone(zoneID)
 					.toLocalDate()
@@ -113,16 +132,15 @@ public class StrategyConfigPanel extends JPanel {
 			jlTradingPeriod.setText(NA());
 		}
 		
-		if ( state.isSeriesHandlerT0Defined() ) {
+		if ( security != null ) {
 			long slippage = csp.getSlippageStp();
 			jlSlippage.setText(messages.format(StrategyConfigMsg.VAL_STEPS_POINTS, slippage,
-					state.getSecurity().getTickSize().multiply(slippage)));
+					security.getTickSize().multiply(slippage)));
 		} else {
 			jlSlippage.setText(messages.format(StrategyConfigMsg.VAL_STEPS, csp.getSlippageStp()));
 		}
 		
-		if ( state.isPositionParamsDefined() ) {
-			RMContractStrategyPositionParams cspp = state.getPositionParams();
+		if ( cspp != null ) {
 			jlTradeGoalCap.setText(percentsAndMoney(csp.getTradeGoalCapPer(), cspp.getTradeGoalCap()));
 			jlTradeLossCap.setText(percentsAndMoney(csp.getTradeLossCapPer(), cspp.getTradeLossCap()));
 			

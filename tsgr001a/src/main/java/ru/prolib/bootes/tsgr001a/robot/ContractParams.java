@@ -11,15 +11,11 @@ import ru.prolib.aquila.core.BusinessEntities.Symbol;
 
 public class ContractParams {
 	private final Symbol symbol;
-	private final Interval dataTrackingPeriod, tradeAllowedPeriod;
+	private final Interval dataTrackingPeriod;
 	
-	public ContractParams(Symbol symbol,
-		Interval dataTrackingPeriod,
-		Interval tradeAllowedPeriod)
-	{
+	public ContractParams(Symbol symbol, Interval dataTrackingPeriod) {
 		this.symbol = symbol;
 		this.dataTrackingPeriod = dataTrackingPeriod;
-		this.tradeAllowedPeriod = tradeAllowedPeriod;
 	}
 	
 	/**
@@ -41,22 +37,11 @@ public class ContractParams {
 		return dataTrackingPeriod;
 	}
 
-	/**
-	 * Get closest trading period.
-	 * <p>
-	 * @return period in which contract can be traded potentially.
-	 * Outside that period contract considered as unavailable for trading.
-	 */
-	public Interval getTradeAllowedPeriod() {
-		return tradeAllowedPeriod;
-	}
-	
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder(1097221, 505)
 				.append(symbol)
 				.append(dataTrackingPeriod)
-				.append(tradeAllowedPeriod)
 				.build();
 	}
 	
@@ -72,7 +57,6 @@ public class ContractParams {
 		return new EqualsBuilder()
 				.append(o.symbol, symbol)
 				.append(o.dataTrackingPeriod, dataTrackingPeriod)
-				.append(o.tradeAllowedPeriod, tradeAllowedPeriod)
 				.build();
 	}
 	

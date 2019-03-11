@@ -24,6 +24,7 @@ import ru.prolib.aquila.core.BusinessEntities.PortfolioField;
 import ru.prolib.aquila.core.BusinessEntities.SecurityField;
 import ru.prolib.aquila.core.BusinessEntities.Symbol;
 import ru.prolib.aquila.core.data.DataProviderStub;
+import ru.prolib.aquila.core.utils.LocalTimeTable;
 
 public class RMContractStrategyTest {
 	
@@ -622,6 +623,19 @@ public class RMContractStrategyTest {
 				of("130.50992")		// local price move
 			);
 		assertEquals(expected, actual);
+	}
+
+	@Test (expected=NullPointerException.class)
+	public void testGetTradingTimetable_ThrowsIfNotDefined() {
+		service.getTradingTimetable();
+	}
+
+	@Test
+	public void testGetTradingTimetable() {
+		LocalTimeTable ttMock = control.createMock(LocalTimeTable.class);
+		service.setTradingTimetable(ttMock);
+		
+		assertSame(ttMock, service.getTradingTimetable());
 	}
 
 }

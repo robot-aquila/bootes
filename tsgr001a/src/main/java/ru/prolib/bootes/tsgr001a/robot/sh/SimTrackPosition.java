@@ -51,8 +51,8 @@ public class SimTrackPosition extends CommonHandler implements SMInputAction, SM
 		Terminal terminal = serviceLocator.getTerminal();
 		Instant curr_time = terminal.getCurrentTime();
 		synchronized ( state ) {
-			Interval trade_period = state.getContractParams().getTradeAllowedPeriod(); 
-			triggers.add(newExitOnTimer(terminal,trade_period.getEnd(), in));
+			Interval tp = state.getContractStrategy().getTradingTimetable().getActiveOrComing(curr_time); 
+			triggers.add(newExitOnTimer(terminal, tp.getEnd(), in));
 			triggers.add(newTriggerOnEvent(state.getSecurity().onLastTrade(), in));
 			spec = state.getActiveSpeculation();
 		}

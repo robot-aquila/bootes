@@ -14,6 +14,7 @@ import ru.prolib.aquila.core.sm.SMExit;
 import ru.prolib.aquila.core.sm.SMInput;
 import ru.prolib.aquila.core.sm.SMInputAction;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
+import ru.prolib.aquila.core.utils.LocalTimeTable;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.data.ts.S3CESDSignalTrigger;
 import ru.prolib.bootes.lib.data.ts.SignalType;
@@ -49,6 +50,8 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 	private final S3CESDSignalTrigger trigger;
 	private final SMInput in;
 	private final IFilterSet<S3TradeSignal> filters;
+	private Interval tradingPeriod, trackingPeriod;
+	private LocalTimeTable timetable;
 
 	public WaitForMarketSignal(AppServiceLocator serviceLocator,
 			RoboServiceLocator roboServices,
@@ -70,7 +73,6 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 			.addFilter(new StopLossGtATR(state))
 			.addFilter(new MADevLimit(state))
 			.addFilter(new ByTrendT1(state)) // filtered too much, not so effective, check it
-			.addFilter(new SignalTimetable(serviceLocator.getUIService().getZoneID()))
 			.addFilter(new FilterFCSD(state));
 	}
 	
@@ -81,16 +83,28 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 	@Override
 	public SMExit input(Object data) {
 		ca.updatePositionParams(serviceLocator, state);
-		Instant time = serviceLocator.getTerminal().getCurrentTime();
+		Instant curr_time = serviceLocator.getTerminal().getCurrentTime();
+		if ( isAfterTrackingPeriod(curr_time) ) {
+			return onTrackingPeriodEnd();
+		}
+		if ( isBeforeTradingPeriod(curr_time) ) {
+			return null;
+		}
+		if ( ! tradingPeriod.contains(curr_time) ) {
+			tradingPeriod = timetable.getActiveOrComing(curr_time);
+			logger.debug("New trading period: {}", tradingPeriod);
+			return null;
+		}
+		
 		S3TradeSignal signal = null;
 		RMContractStrategyPositionParams cspp = null;
-		switch ( trigger.getSignal(time) ) {
+		switch ( trigger.getSignal(curr_time) ) {
 		case BUY:
 			synchronized ( state ) {
 				cspp = state.getPositionParams();
 				signal = new S3TradeSignal(
 						SignalType.BUY,
-						time,
+						curr_time,
 						getLastPrice(),
 						CDecimalBD.of((long) cspp.getNumberOfContracts()),
 						cspp.getTakeProfitPts(),
@@ -104,7 +118,7 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 				cspp = state.getPositionParams();
 				signal = new S3TradeSignal(
 						SignalType.SELL,
-						time,
+						curr_time,
 						getLastPrice(),
 						CDecimalBD.of((long) cspp.getNumberOfContracts()),
 						cspp.getTakeProfitPts(),
@@ -139,11 +153,13 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 		Instant curr_time = terminal.getCurrentTime();
 		synchronized ( state ) {
 			state.setActiveSpeculation(null);
-			Interval trade_period = state.getContractParams().getTradeAllowedPeriod();
-			if ( curr_time.compareTo(trade_period.getEnd()) >= 0 ) {
-				return getExit(E_STOP_TRADING);
+			timetable = state.getContractStrategy().getTradingTimetable();
+			tradingPeriod = timetable.getActiveOrComing(curr_time);
+			trackingPeriod = state.getContractParams().getDataTrackingPeriod();
+			if ( isAfterTrackingPeriod(curr_time) ) {
+				return onTrackingPeriodEnd();
 			}
-			triggers.add(newExitOnTimer(terminal, trade_period.getEnd(), E_STOP_TRADING));
+			triggers.add(newExitOnTimer(terminal, trackingPeriod.getEnd(), E_STOP_TRADING));
 			triggers.add(newTriggerOnEvent(state.getSeriesHandlerT0().getSeries().onLengthUpdate(), in));
 			trigger.setSource(state.getSeriesHandlerT0().getSeries().getSeries(SetupT0.SID_PVC_WAVG));
 		}
@@ -152,6 +168,19 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 
 	private String toString(IFilterSetState result) {
 		return result.toString();
+	}
+	
+	private boolean isAfterTrackingPeriod(Instant time) {
+		return time.compareTo(trackingPeriod.getEnd()) >= 0; 
+	}
+	
+	private boolean isBeforeTradingPeriod(Instant time) {
+		return time.compareTo(tradingPeriod.getStart()) < 0;
+	}
+	
+	private SMExit onTrackingPeriodEnd() {
+		logger.debug("Tracking period ended: {}", trackingPeriod);
+		return getExit(E_STOP_TRADING);
 	}
 
 }

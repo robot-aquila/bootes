@@ -7,6 +7,7 @@ import java.time.ZonedDateTime;
 import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 import ru.prolib.bootes.lib.data.ts.filter.impl.AbstractFilter;
 
+@Deprecated // Use strategy timetable instead
 public class SignalTimetable extends AbstractFilter<S3TradeSignal> {
 	private final ZoneId zoneID;
 

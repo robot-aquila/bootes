@@ -31,7 +31,7 @@ public class ChartsView extends JPanel {
 		t0 = new ChartT0(zoneID, roboServices.getBlockReportStorage());
 		t1 = new ChartT1(zoneID);
 		t2 = new ChartT2(zoneID);
-		cfg = new StrategyConfigPanel(serviceLocator.getMessages(), state, zoneID);
+		cfg = new StrategyConfigPanel(serviceLocator.getMessages(), state, zoneID, serviceLocator.getTerminal());
 		
 		double top_weight = 0.8d, bot_charts_weight = 0.8d, cfg_weight = 0.2d;
 		

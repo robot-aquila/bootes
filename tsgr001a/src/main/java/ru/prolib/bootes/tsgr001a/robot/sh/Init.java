@@ -2,8 +2,12 @@ package ru.prolib.bootes.tsgr001a.robot.sh;
 
 import static ru.prolib.aquila.core.BusinessEntities.CDecimalBD.*;
 
+import java.time.LocalTime;
+import java.time.ZoneId;
+
 import ru.prolib.aquila.core.sm.SMExit;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
+import ru.prolib.aquila.core.utils.LocalTimeTable;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.tsgr001a.rm.RMContractStrategy;
 import ru.prolib.bootes.tsgr001a.rm.RMContractStrategyParams;
@@ -35,6 +39,10 @@ public class Init extends CommonHandler {
 				3,
 				of(1L)
 			));
+		cs.setTradingTimetable(new LocalTimeTable(ZoneId.of("Europe/Moscow"))
+				.addPeriod(LocalTime.of(10, 30), LocalTime.of(13, 50))
+				.addPeriod(LocalTime.of(14, 10), LocalTime.of(18, 30))
+			);
 		state.setContractStrategy(cs);
 		
 		state.getStateListener().robotStarted();

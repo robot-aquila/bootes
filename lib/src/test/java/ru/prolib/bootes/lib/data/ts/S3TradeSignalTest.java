@@ -31,7 +31,10 @@ public class S3TradeSignalTest {
 				of("1.0"),
 				of("20.00"),
 				of("10.00"),
-				of("2.00")
+				of("2.00"),
+				ofRUB5("10000.00"),
+				ofRUB5( "7500.00"),
+				ofRUB5( "1200.00")
 			);
 	}
 	
@@ -44,6 +47,9 @@ public class S3TradeSignalTest {
 		assertEquals(of("20.00"), service.getTakeProfitPts());
 		assertEquals(of("10.00"), service.getStopLossPts());
 		assertEquals(of("2.00"), service.getSlippagePts());
+		assertEquals(ofRUB5("10000.00"), service.getBaseCap());
+		assertEquals(ofRUB5( "7500.00"), service.getGoalCap());
+		assertEquals(ofRUB5( "1200.00"), service.getLossCap());
 	}
 	
 	@Test
@@ -56,7 +62,10 @@ public class S3TradeSignalTest {
 				.append("expectedQty=1.0,")
 				.append("takeProfitPts=20.00,")
 				.append("stopLossPts=10.00,")
-				.append("slippagePts=2.00")
+				.append("slippagePts=2.00,")
+				.append("baseCap=10000.00000 RUB,")
+				.append("goalCap=7500.00000 RUB,")
+				.append("lossCap=1200.00000 RUB")
 				.append("]")
 				.toString();
 		
@@ -73,6 +82,9 @@ public class S3TradeSignalTest {
 				.append(of("20.00"))
 				.append(of("10.00"))
 				.append(of("2.00"))
+				.append(ofRUB5("10000.00"))
+				.append(ofRUB5("7500.00"))
+				.append(ofRUB5("1200.00"))
 				.build();
 		
 		assertEquals(expected, service.hashCode());
@@ -94,12 +106,26 @@ public class S3TradeSignalTest {
 			vEQT = new Variant<>(vEPR, of("1.0"), of("2.0")),
 			vTPP = new Variant<>(vEQT, of("20.00"), of("21.43")),
 			vSLP = new Variant<>(vTPP, of("10.00"), of("10.52")),
-			vSLI = new Variant<>(vSLP, of("2.00"), of("0.50"));
+			vSLI = new Variant<>(vSLP, of("2.00"), of("0.50")),
+			vBCap = new Variant<>(vSLI, ofRUB5("10000"), ofUSD5("7000")),
+			vGCap = new Variant<>(vBCap, ofRUB5("7500"), ofUSD2("400")),
+			vLCap = new Variant<>(vGCap, ofRUB5("1200"), ofUSD5("200"));
 		Variant<?> iterator = vSLP;
 		int foundCnt = 0;
 		S3TradeSignal x, found = null;
 		do {
-			x = new S3TradeSignal(vType.get(), vTime.get(), vEPR.get(), vEQT.get(), vTPP.get(), vSLP.get(), vSLI.get());
+			x = new S3TradeSignal(
+					vType.get(),
+					vTime.get(),
+					vEPR.get(),
+					vEQT.get(),
+					vTPP.get(),
+					vSLP.get(),
+					vSLI.get(),
+					vBCap.get(),
+					vGCap.get(),
+					vLCap.get()
+				);
 			if ( service.equals(x) ) {
 				foundCnt ++;
 				found = x;
@@ -113,6 +139,9 @@ public class S3TradeSignalTest {
 		assertEquals(of("20.00"), found.getTakeProfitPts());
 		assertEquals(of("10.00"), found.getStopLossPts());
 		assertEquals(of("2.00"), found.getSlippagePts());
+		assertEquals(ofRUB5("10000.00"), found.getBaseCap());
+		assertEquals(ofRUB5("7500.00"), found.getGoalCap());
+		assertEquals(ofRUB5("1200.00"), found.getLossCap());
 	}
 
 }

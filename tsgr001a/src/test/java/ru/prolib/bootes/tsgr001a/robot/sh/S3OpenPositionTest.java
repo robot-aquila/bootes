@@ -5,6 +5,7 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.expectLastCall;
 import static org.junit.Assert.*;
 import static ru.prolib.aquila.core.BusinessEntities.CDecimalBD.of;
+import static ru.prolib.aquila.core.BusinessEntities.CDecimalBD.ofRUB5;
 
 import java.time.Instant;
 import java.util.List;
@@ -218,7 +219,10 @@ public class S3OpenPositionTest {
 				of(0L),
 				of("13.00"),
 				of("5.00"),
-				of("1.00")
+				of("1.00"),
+				ofRUB5("10000.00"),
+				ofRUB5( "7500.00"),
+				ofRUB5( "1200.00")
 			));
 		state.setActiveSpeculation(spec);
 		control.replay();
@@ -237,7 +241,10 @@ public class S3OpenPositionTest {
 				of(10L),
 				of("13.00"),
 				of("5.00"),
-				of("1.00")
+				of("1.00"),
+				ofRUB5("10000.00"),
+				ofRUB5( "7500.00"),
+				ofRUB5( "1200.00")
 			));
 		state.setActiveSpeculation(spec);
 		control.replay();
@@ -256,7 +263,10 @@ public class S3OpenPositionTest {
 				of(10L),
 				of("13.00"),
 				of("5.00"),
-				of("1.00")
+				of("1.00"),
+				ofRUB5("10000.00"),
+				ofRUB5( "7500.00"),
+				ofRUB5( "1200.00")
 			));
 		state.setActiveSpeculation(spec);
 		expect(terminalMock.createOrder(ACCOUNT, SYMBOL, OrderAction.BUY, of(10L), of("121.96"))).andReturn(orderMock);
@@ -285,7 +295,10 @@ public class S3OpenPositionTest {
 				of(10L),
 				of("13.00"),
 				of("5.00"),
-				of("1.00")
+				of("1.00"),
+				ofRUB5("10000.00"),
+				ofRUB5( "7500.00"),
+				ofRUB5( "1200.00")
 			));
 		state.setActiveSpeculation(spec);
 		expect(terminalMock.createOrder(ACCOUNT, SYMBOL, OrderAction.SELL, of(10L), of("119.96"))).andReturn(orderMock);
@@ -314,7 +327,10 @@ public class S3OpenPositionTest {
 				of(10L),
 				of("13.00"),
 				of("5.00"),
-				of("1.00")
+				of("1.00"),
+				ofRUB5("10000.00"),
+				ofRUB5( "7500.00"),
+				ofRUB5( "1200.00")
 			));
 		state.setActiveSpeculation(spec);
 		expect(terminalMock.createOrder(ACCOUNT, SYMBOL, OrderAction.SELL, of(10L), of("119.96"))).andReturn(orderMock);
@@ -359,7 +375,10 @@ public class S3OpenPositionTest {
 				of(10L),
 				of("13.00"),
 				of("5.00"),
-				of("1.00")
+				of("1.00"),
+				ofRUB5("10000.00"),
+				ofRUB5( "7500.00"),
+				ofRUB5( "1200.00")
 			));
 		state.setActiveSpeculation(spec);
 		EditableOrder order = terminal.createOrder(ACCOUNT, SYMBOL);
@@ -392,7 +411,10 @@ public class S3OpenPositionTest {
 				of(10L),
 				of("13.00"),
 				of("5.00"),
-				of("1.00")
+				of("1.00"),
+				ofRUB5("10000.00"),
+				ofRUB5( "7500.00"),
+				ofRUB5( "1200.00")
 			));
 		state.setActiveSpeculation(spec);
 		EditableOrder order = terminal.createOrder(ACCOUNT, SYMBOL);

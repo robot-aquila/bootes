@@ -108,7 +108,10 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 						CDecimalBD.of((long) cspp.getNumberOfContracts()),
 						cspp.getTakeProfitPts(),
 						cspp.getStopLossPts(),
-						cspp.getSlippagePts()
+						cspp.getSlippagePts(),
+						cspp.getTradeGoalCap(),
+						cspp.getTradeLossCap(),
+						cspp.getBaseCap()
 					);
 			}
 			break;
@@ -122,7 +125,10 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 						CDecimalBD.of((long) cspp.getNumberOfContracts()),
 						cspp.getTakeProfitPts(),
 						cspp.getStopLossPts(),
-						cspp.getSlippagePts()
+						cspp.getSlippagePts(),
+						cspp.getTradeGoalCap(),
+						cspp.getTradeLossCap(),
+						cspp.getBaseCap()
 					);
 			}
 			break;

@@ -60,7 +60,7 @@ public class FilterSetStateTest {
 		states.add(new FilterState("foo", false));
 		states.add(new FilterState("bar", true));
 		states.add(new FilterState("buz", false));
-		String expected = "FS[foo=D,bar=A,buz=D]";
+		String expected = "FS[DAD foo=D,bar=A,buz=D]";
 		
 		assertEquals(expected, service.toString());
 	}

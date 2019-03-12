@@ -95,7 +95,8 @@ public class RMContractStrategy {
 				priceToMoney(of(0L)),
 				priceToMoney(of(0L)),
 				stepsToPrice(0),
-				stepsToPrice(0)
+				stepsToPrice(0),
+				priceToMoney(of(0L))
 			);
 	}
 	
@@ -163,7 +164,8 @@ public class RMContractStrategy {
 				d_trade_goal_cap,
 				d_trade_loss_cap,
 				d_avg_daily_price_move,
-				d_avg_local_price_move
+				d_avg_local_price_move,
+				d_basis_value
 			);
 	}
 

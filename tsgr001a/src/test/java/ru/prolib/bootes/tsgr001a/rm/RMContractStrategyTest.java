@@ -216,7 +216,8 @@ public class RMContractStrategyTest {
 				ofRUB2("78358.51"),
 				ofRUB2("12537.36"),
 				of("3659.02861"),
-				of("115.47992")
+				of("115.47992"),
+				ofRUB2("1044780.17")
 			);
 		assertEquals(expected, actual);
 	}
@@ -239,7 +240,8 @@ public class RMContractStrategyTest {
 				ofRUB2("78358.51"),
 				ofRUB2("12537.36"),
 				of("3300.01726"),
-				of("130.50992")
+				of("130.50992"),
+				ofRUB2("1044780.17")
 			);
 		assertEquals(expected, actual);
 	}
@@ -262,7 +264,8 @@ public class RMContractStrategyTest {
 				ofRUB2("78358.51"),
 				ofRUB2("12537.36"),
 				of("289.02761"),
-				of("52.40061")
+				of("52.40061"),
+				ofRUB2("1044780.17")
 			);
 		assertEquals(expected, actual);
 	}
@@ -285,7 +288,8 @@ public class RMContractStrategyTest {
 				ofRUB2("78358.51"),
 				ofRUB2("12537.36"),
 				of("879.71002"),
-				of("76.11972")
+				of("76.11972"),
+				ofRUB2("1044780.17")
 			);
 		assertEquals(expected, actual);
 	}
@@ -308,7 +312,8 @@ public class RMContractStrategyTest {
 				ofRUB2("78358.51"),
 				ofRUB2("12537.36"),
 				of("2.9801562"),
-				of("0.136678")
+				of("0.136678"),
+				ofRUB2("1044780.17")
 			);
 		assertEquals(expected, actual);
 	}
@@ -331,7 +336,8 @@ public class RMContractStrategyTest {
 				ofRUB2("78358.51"),
 				ofRUB2("12537.36"),
 				of("895.40182"),
-				of("49.76512")
+				of("49.76512"),
+				ofRUB2("1044780.17")
 			);
 		assertEquals(expected, actual);
 	}
@@ -354,7 +360,8 @@ public class RMContractStrategyTest {
 				ofRUB2("78358.51"),
 				ofRUB2("12537.36"),
 				of("10.801772"),
-				of("3.99012")
+				of("3.99012"),
+				ofRUB2("1044780.17")
 			);
 		assertEquals(expected, actual);
 	}
@@ -380,7 +387,8 @@ public class RMContractStrategyTest {
 				ofRUB2("0.00"),
 				ofRUB2("0.00"),
 				of(0L),
-				of(0L)
+				of(0L),
+				ofRUB2("0.00")
 			);
 		assertEquals(expected, actual);
 	}
@@ -410,7 +418,8 @@ public class RMContractStrategyTest {
 				ofRUB2("0.00"),
 				ofRUB2("0.00"),
 				of(0L),
-				of(0L)
+				of(0L),
+				ofRUB2("0.00")
 			);
 		assertEquals(expected, actual);
 	}
@@ -440,7 +449,8 @@ public class RMContractStrategyTest {
 				ofRUB2("0.00"),
 				ofRUB2("0.00"),
 				of(0L),
-				of(0L)
+				of(0L),
+				ofRUB2("0.00")
 			);
 		assertEquals(expected, actual);
 	}
@@ -467,7 +477,8 @@ public class RMContractStrategyTest {
 				ofRUB2("0.00"),
 				ofRUB2("0.00"),
 				of(0L),
-				of(0L)
+				of(0L),
+				ofRUB2("0.00")
 			);
 		assertEquals(expected, actual);
 	}
@@ -494,7 +505,8 @@ public class RMContractStrategyTest {
 				ofRUB2("0.00"),
 				ofRUB2("0.00"),
 				of(0L),
-				of(0L)
+				of(0L),
+				ofRUB2("0.00")
 			);
 		assertEquals(expected, actual);
 	}
@@ -524,7 +536,8 @@ public class RMContractStrategyTest {
 				ofRUB2("0.00"),
 				ofRUB2("0.00"),
 				of(0L),
-				of(0L)
+				of(0L),
+				ofRUB2("0.00")
 			);
 		assertEquals(expected, actual);
 	}
@@ -554,7 +567,8 @@ public class RMContractStrategyTest {
 				ofRUB2("0.00"),
 				ofRUB2("0.00"),
 				of(0L),
-				of(0L)
+				of(0L),
+				ofRUB2("0.00")
 			);
 		assertEquals(expected, actual);
 	}
@@ -589,7 +603,8 @@ public class RMContractStrategyTest {
 				ofRUB2( "5014.95"), // loss cap: 417912.06800 * 0.012 =  5014.94482 = 5014.95
 									//     because loss cap percentage has scale of 3 ^^^^^^^
 				of("3300.01726"),	// daily price move
-				of("130.50992")		// local price move
+				of("130.50992"),	// local price move
+				ofRUB2("417912.07")
 			);
 		assertEquals(expected, actual);
 	}
@@ -620,7 +635,8 @@ public class RMContractStrategyTest {
 				ofRUB2("31343.41"), // goal cap: 417912.06800 * 0.075 = 31343.40510 
 				ofRUB2( "5014.95"), // loss cap: 417912.06800 * 0.012 =  5014.94482 = 5014.95
 				of("800.72651"),	// daily price move
-				of("130.50992")		// local price move
+				of("130.50992"),	// local price move
+				ofRUB2("417912.07")
 			);
 		assertEquals(expected, actual);
 	}

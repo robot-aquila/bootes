@@ -17,7 +17,8 @@ import ru.prolib.aquila.core.BusinessEntities.TStamped;
 public class S3TradeSignal implements TStamped {
 	private final SignalType type;
 	private Instant time;
-	private final CDecimal expectedPrice, expectedQty, takeProfitPts,  stopLossPts, slippagePts;
+	private final CDecimal expectedPrice, expectedQty, takeProfitPts,  stopLossPts, slippagePts,
+		baseCap, goalCap, lossCap;
 	
 	public S3TradeSignal(SignalType type,
 			Instant time,
@@ -25,7 +26,10 @@ public class S3TradeSignal implements TStamped {
 			CDecimal expectedQty,
 			CDecimal takeProfitPts,
 			CDecimal stopLossPts,
-			CDecimal slippagePts)
+			CDecimal slippagePts,
+			CDecimal baseCap,
+			CDecimal goalCap,
+			CDecimal lossCap)
 	{
 		this.type = type;
 		this.time = time;
@@ -34,6 +38,9 @@ public class S3TradeSignal implements TStamped {
 		this.takeProfitPts = takeProfitPts;
 		this.stopLossPts = stopLossPts;
 		this.slippagePts = slippagePts;
+		this.baseCap = baseCap;
+		this.goalCap = goalCap;
+		this.lossCap = lossCap;
 	}
 	
 	/**
@@ -95,6 +102,38 @@ public class S3TradeSignal implements TStamped {
 		return slippagePts;
 	}
 	
+	/**
+	 * Get base capital.
+	 * <p>
+	 * Base capital is a value at the moment of signal detection used to
+	 * determine all derived values. It's not an account value. It's a
+	 * share in absolute value dedicated for the strategy at the moment
+	 * of signal detection
+	 * <p>
+	 * @return base capital in money
+	 */
+	public CDecimal getBaseCap() {
+		return baseCap;
+	}
+	
+	/**
+	 * Get goal of capital increment.
+	 * <p> 
+	 * @return goal in money
+	 */
+	public CDecimal getGoalCap() {
+		return goalCap;
+	}
+	
+	/**
+	 * Get maximum of capital loss.
+	 * <p>
+	 * @return possible loss in money
+	 */
+	public CDecimal getLossCap() {
+		return lossCap;
+	}
+	
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
@@ -110,6 +149,9 @@ public class S3TradeSignal implements TStamped {
 				.append(takeProfitPts)
 				.append(stopLossPts)
 				.append(slippagePts)
+				.append(baseCap)
+				.append(goalCap)
+				.append(lossCap)
 				.build();
 	}
 	

@@ -11,7 +11,8 @@ public class RMContractStrategyPositionParams {
 	private final int numContracts;
 	private final CDecimal takeProfit, stopLoss, slippage,
 		tradeGoalCap, tradeLossCap,
-		avgDailyPriceMove, avgLocalPriceMove;
+		avgDailyPriceMove, avgLocalPriceMove,
+		baseCap;
 	
 	public RMContractStrategyPositionParams(int numContracts,
 			CDecimal takeProfit,
@@ -20,7 +21,8 @@ public class RMContractStrategyPositionParams {
 			CDecimal tradeGoalCap,
 			CDecimal tradeLossCap,
 			CDecimal avgDailyPriceMove,
-			CDecimal avgLocalPriceMove)
+			CDecimal avgLocalPriceMove,
+			CDecimal baseCap)
 	{
 		this.numContracts = numContracts;
 		this.takeProfit = takeProfit;
@@ -30,6 +32,7 @@ public class RMContractStrategyPositionParams {
 		this.tradeLossCap = tradeLossCap;
 		this.avgDailyPriceMove = avgDailyPriceMove;
 		this.avgLocalPriceMove = avgLocalPriceMove;
+		this.baseCap = baseCap;
 	}
 	
 	/**
@@ -84,6 +87,21 @@ public class RMContractStrategyPositionParams {
 		return avgLocalPriceMove;
 	}
 	
+	/**
+	 * /**
+	 * Get base capital.
+	 * <p>
+	 * Base capital is a value at the moment of signal detection used to
+	 * determine all derived values. It's not an account value. It's a
+	 * share in absolute value dedicated for the strategy at the moment
+	 * of signal detection
+	 * <p>
+	 * @return base capital in money
+	 */
+	public CDecimal getBaseCap() {
+		return baseCap;
+	}
+	
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
@@ -100,6 +118,7 @@ public class RMContractStrategyPositionParams {
 				.append(tradeLossCap)
 				.append(avgDailyPriceMove)
 				.append(avgLocalPriceMove)
+				.append(baseCap)
 				.build();
 	}
 	
@@ -121,6 +140,7 @@ public class RMContractStrategyPositionParams {
 				.append(o.tradeLossCap, tradeLossCap)
 				.append(o.avgDailyPriceMove, avgDailyPriceMove)
 				.append(o.avgLocalPriceMove, avgLocalPriceMove)
+				.append(o.baseCap, baseCap)
 				.build();
 	}
 

@@ -222,7 +222,10 @@ public class S3ClosePositionTest {
 				of(50L),
 				of("13.00"),
 				of("5.00"),
-				of("1.00")
+				of("1.00"),
+				ofRUB5("10000.00"),
+				ofRUB5( "7500.00"),
+				ofRUB5( "1200.00")
 			));
 		spec.setEntryPoint(Tick.of(TickType.TRADE, T("2019-03-06T19:13:00Z"), of("120.98"), of(50L), of("243.61")));
 		spec.setExitPoint(Tick.of(TickType.TRADE, T("2019-03-06T20:15:00Z"), of("130.98"), of(50L), of("260.29")));
@@ -243,7 +246,10 @@ public class S3ClosePositionTest {
 				of(50L),
 				of("13.00"),
 				of("5.00"),
-				of("1.00")
+				of("1.00"),
+				ofRUB5("10000.00"),
+				ofRUB5( "7500.00"),
+				ofRUB5( "1200.00")
 			));
 		spec.setEntryPoint(Tick.of(TickType.TRADE, T("2019-03-06T19:13:00Z"), of("120.98"), of(50L), of("243.61")));
 		state.setActiveSpeculation(spec);
@@ -263,7 +269,10 @@ public class S3ClosePositionTest {
 				of(50L),
 				of("13.00"),
 				of("5.00"),
-				of("1.00")
+				of("1.00"),
+				ofRUB5("10000.00"),
+				ofRUB5( "7500.00"),
+				ofRUB5( "1200.00")
 			));
 		spec.setEntryPoint(Tick.of(TickType.TRADE, T("2019-03-06T19:13:00Z"), of("120.98"), of(50L), of("243.61")));
 		state.setActiveSpeculation(spec);
@@ -293,7 +302,10 @@ public class S3ClosePositionTest {
 				of(50L),
 				of("13.00"),
 				of("5.00"),
-				of("1.00")
+				of("1.00"),
+				ofRUB5("10000.00"),
+				ofRUB5( "7500.00"),
+				ofRUB5( "1200.00")
 			));
 		spec.setEntryPoint(Tick.of(TickType.TRADE, T("2019-03-06T19:13:00Z"), of("120.98"), of(50L), of("243.61")));
 		spec.setExitPoint(Tick.of(TickType.TRADE, T("2019-03-06T20:15:00Z"), of("130.98"), of(30L), of("260.29")));
@@ -324,7 +336,10 @@ public class S3ClosePositionTest {
 				of(50L),
 				of("13.00"),
 				of("5.00"),
-				of("1.00")
+				of("1.00"),
+				ofRUB5("10000.00"),
+				ofRUB5( "7500.00"),
+				ofRUB5( "1200.00")
 			));
 		spec.setEntryPoint(Tick.of(TickType.TRADE, T("2019-03-06T19:13:00Z"), of("120.55"), of(20L), of("237.92")));
 		state.setActiveSpeculation(spec);
@@ -354,7 +369,10 @@ public class S3ClosePositionTest {
 				of(50L),
 				of("13.00"),
 				of("5.00"),
-				of("1.00")
+				of("1.00"),
+				ofRUB5("10000.00"),
+				ofRUB5( "7500.00"),
+				ofRUB5( "1200.00")
 			));
 		spec.setEntryPoint(Tick.of(TickType.TRADE, T("2019-03-06T19:13:00Z"), of("120.55"), of(20L), of("237.92")));
 		spec.setExitPoint(Tick.of(TickType.TRADE, T("2019-03-06T19:20:00Z"), of("115.04"), of(5L), of("104.17")));
@@ -385,7 +403,10 @@ public class S3ClosePositionTest {
 				of(50L),
 				of("13.00"),
 				of("5.00"),
-				of("1.00")
+				of("1.00"),
+				ofRUB5("10000.00"),
+				ofRUB5( "7500.00"),
+				ofRUB5( "1200.00")
 			));
 		spec.setEntryPoint(Tick.of(TickType.TRADE, T("2019-03-06T19:13:00Z"), of("120.55"), of(20L), of("237.92")));
 		state.setActiveSpeculation(spec);
@@ -431,7 +452,10 @@ public class S3ClosePositionTest {
 				of(50L),
 				of("13.00"),
 				of("5.00"),
-				of("1.00")
+				of("1.00"),
+				ofRUB5("10000.00"),
+				ofRUB5( "7500.00"),
+				ofRUB5( "1200.00")
 			));
 		spec.setEntryPoint(Tick.of(TickType.TRADE, T("2019-03-06T21:20:03Z"), of("19.03"), of(20L), of("761.20")));
 		state.setActiveSpeculation(spec);
@@ -466,7 +490,10 @@ public class S3ClosePositionTest {
 				of(50L),
 				of("13.00"),
 				of("5.00"),
-				of("1.00")
+				of("1.00"),
+				ofRUB5("10000.00"),
+				ofRUB5( "7500.00"),
+				ofRUB5( "1200.00")
 			));
 		spec.setEntryPoint(Tick.of(TickType.TRADE, T("2019-03-06T21:20:03Z"), of("19.03"), of(20L), of("761.20")));
 		state.setActiveSpeculation(spec);
@@ -500,7 +527,10 @@ public class S3ClosePositionTest {
 				of(50L),
 				of("13.00"),
 				of("5.00"),
-				of("1.00")
+				of("1.00"),
+				ofRUB5("10000.00"),
+				ofRUB5( "7500.00"),
+				ofRUB5( "1200.00")
 			));
 		spec.setEntryPoint(Tick.of(TickType.TRADE, T("2019-03-06T21:20:03Z"), of("19.03"), of(20L), of("761.20")));
 		spec.setExitPoint(Tick.of(TickType.TRADE, T("2019-03-06T21:26:55Z"), of("19.05"), of(10L), of("381.00")));
@@ -535,7 +565,10 @@ public class S3ClosePositionTest {
 				of(50L),
 				of("13.00"),
 				of("5.00"),
-				of("1.00")
+				of("1.00"),
+				ofRUB5("10000.00"),
+				ofRUB5( "7500.00"),
+				ofRUB5( "1200.00")
 			));
 		spec.setEntryPoint(Tick.of(TickType.TRADE, T("2019-03-06T21:20:03Z"), of("19.03"), of(20L), of("761.20")));
 		spec.setExitPoint(Tick.of(TickType.TRADE, T("2019-03-06T21:26:55Z"), of("19.05"), of(10L), of("381.00")));
@@ -569,7 +602,10 @@ public class S3ClosePositionTest {
 				of(50L),
 				of("13.00"),
 				of("5.00"),
-				of("1.00")
+				of("1.00"),
+				ofRUB5("10000.00"),
+				ofRUB5( "7500.00"),
+				ofRUB5( "1200.00")
 			));
 		spec.setEntryPoint(Tick.of(TickType.TRADE, T("2019-03-06T21:20:03Z"), of("19.03"), of(20L), of("761.20")));
 		state.setActiveSpeculation(spec);
@@ -604,7 +640,10 @@ public class S3ClosePositionTest {
 				of(50L),
 				of("13.00"),
 				of("5.00"),
-				of("1.00")
+				of("1.00"),
+				ofRUB5("10000.00"),
+				ofRUB5( "7500.00"),
+				ofRUB5( "1200.00")
 			));
 		spec.setEntryPoint(Tick.of(TickType.TRADE, T("2019-03-06T21:20:03Z"), of("19.03"), of(20L), of("761.20")));
 		state.setActiveSpeculation(spec);
@@ -637,7 +676,10 @@ public class S3ClosePositionTest {
 				of(50L),
 				of("13.00"),
 				of("5.00"),
-				of("1.00")
+				of("1.00"),
+				ofRUB5("10000.00"),
+				ofRUB5( "7500.00"),
+				ofRUB5( "1200.00")
 			));
 		spec.setEntryPoint(Tick.of(TickType.TRADE, T("2019-03-06T21:20:03Z"), of("19.03"), of(20L), of("761.20")));
 		spec.setExitPoint(Tick.of(TickType.TRADE, T("2019-03-06T21:25:00Z"), of("19.27"), of(10L), of("385.40")));
@@ -672,7 +714,10 @@ public class S3ClosePositionTest {
 				of(50L),
 				of("13.00"),
 				of("5.00"),
-				of("1.00")
+				of("1.00"),
+				ofRUB5("10000.00"),
+				ofRUB5( "7500.00"),
+				ofRUB5( "1200.00")
 			));
 		spec.setEntryPoint(Tick.of(TickType.TRADE, T("2019-03-06T21:20:03Z"), of("19.03"), of(20L), of("761.20")));
 		spec.setExitPoint(Tick.of(TickType.TRADE, T("2019-03-06T21:25:00Z"), of("19.27"), of(10L), of("385.40")));

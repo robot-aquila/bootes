@@ -36,7 +36,10 @@ public class FilterFCSDTest {
 				of(1000L),
 				of("50.00"),
 				of("10.00"),
-				of("5.00")
+				of("5.00"),
+				ofRUB5("10000.00"),
+				ofRUB5( "7500.00"),
+				ofRUB5( "1200.00")
 			);
 	}
 	

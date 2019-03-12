@@ -41,16 +41,20 @@ public class FilterSetState implements IFilterSetState {
 	
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder().append("FS[");
+		StringBuilder sb1 = new StringBuilder().append("FS["), sb2 = new StringBuilder();
 		int count = states.size(), last = count - 1;
 		for ( int i = 0; i < count; i ++ ) {
 			IFilterState state = states.get(i);
-			sb.append(state.getID()).append("=").append(state.isApproved() ? "A" : "D");
-			if ( i != last ) {
-				sb.append(",");
+			String x = state.isApproved() ? "A" : "D";
+			sb1.append(x);
+			sb2.append(state.getID()).append("=").append(x);
+			if ( i == last ) {
+				sb1.append(" ");
+			} else {
+				sb2.append(",");
 			}
 		}
-		return sb.append("]").toString();
+		return sb1.append(sb2.toString()).append("]").toString();
 	}
 	
 	@Override

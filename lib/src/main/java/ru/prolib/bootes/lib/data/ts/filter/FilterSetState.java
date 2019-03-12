@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 public class FilterSetState implements IFilterSetState {
 	private final List<IFilterState> states;
@@ -43,7 +41,16 @@ public class FilterSetState implements IFilterSetState {
 	
 	@Override
 	public String toString() {
-		return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
+		StringBuilder sb = new StringBuilder().append("FS[");
+		int count = states.size(), last = count - 1;
+		for ( int i = 0; i < count; i ++ ) {
+			IFilterState state = states.get(i);
+			sb.append(state.getID()).append("=").append(state.isApproved() ? "A" : "D");
+			if ( i != last ) {
+				sb.append(",");
+			}
+		}
+		return sb.append("]").toString();
 	}
 	
 	@Override

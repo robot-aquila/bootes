@@ -1,8 +1,12 @@
 package ru.prolib.bootes.tsgr001a.robot.report;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ru.prolib.aquila.core.BusinessEntities.Tick;
 import ru.prolib.bootes.lib.data.ts.SignalType;
 import ru.prolib.bootes.lib.report.s3rep.IS3Report;
+import ru.prolib.bootes.lib.report.s3rep.S3RRecord;
 import ru.prolib.bootes.lib.report.s3rep.S3RRecordCreate;
 import ru.prolib.bootes.lib.report.s3rep.S3RRecordUpdateLast;
 import ru.prolib.bootes.lib.report.s3rep.S3RType;
@@ -11,12 +15,24 @@ import ru.prolib.bootes.tsgr001a.robot.RobotState;
 import ru.prolib.bootes.tsgr001a.robot.RobotStateListener;
 
 public class S3ReportHandler implements RobotStateListener {
+	private static final Logger logger;
+	
+	static {
+		logger = LoggerFactory.getLogger(S3ReportHandler.class);
+	}
+	
 	private final RobotState state;
 	private final IS3Report report;
+	private final boolean dumpResult;
 	
-	public S3ReportHandler(RobotState state, IS3Report report) {
+	public S3ReportHandler(RobotState state, IS3Report report, boolean dumpResult) {
 		this.state = state;
 		this.report = report;
+		this.dumpResult = dumpResult;
+	}
+	
+	public S3ReportHandler(RobotState state, IS3Report report) {
+		this(state, report, false);
 	}
 	
 	private Speculation getSpeculation() {
@@ -96,7 +112,27 @@ public class S3ReportHandler implements RobotStateListener {
 
 	@Override
 	public void robotStopped() {
-		
+		if ( ! dumpResult ) {
+			return;
+		}
+
+		String r_sep = " ", l_sep = System.lineSeparator();
+		StringBuilder sb = new StringBuilder()
+				.append(l_sep)
+				.append("S3 Trades Report -----------------------------------------")
+				.append(l_sep);
+		synchronized ( report ) {
+			int record_count = report.getRecordCount();
+			for ( int i = 0; i < record_count; i ++ ) {
+				S3RRecord rec = report.getRecord(i);
+				sb.append(String.format("%06d", rec.getID())).append(r_sep)
+					.append(rec.getType()).append(r_sep)
+					.append(rec.getEntryTime()).append(" -> ").append(rec.getExitTime()).append(r_sep)
+					.append(rec.getProfitAndLoss())
+					.append(l_sep);
+			}
+		}
+		logger.debug(sb.toString());
 	}
 
 }

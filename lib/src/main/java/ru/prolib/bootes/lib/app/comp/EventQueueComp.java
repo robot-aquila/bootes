@@ -51,7 +51,7 @@ public class EventQueueComp extends CommonComp {
 			logger.debug("Building task list time: {} ns", stats.getBuildingTaskListTime());
 			logger.debug("       Dispatching time: {} ns", stats.getDispatchingTime());
 			logger.debug("        Delivering time: {} ns", stats.getDeliveryTime());
-			
+			stats.dumpSecondaryStats();
 		}
 	}
 

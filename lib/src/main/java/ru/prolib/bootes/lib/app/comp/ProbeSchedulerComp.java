@@ -8,7 +8,7 @@ import ru.prolib.aquila.probe.SchedulerImpl;
 import ru.prolib.aquila.probe.scheduler.ui.SchedulerControlToolbar;
 import ru.prolib.aquila.probe.scheduler.ui.SchedulerTaskFilter;
 import ru.prolib.aquila.probe.scheduler.ui.SymbolUpdateTaskFilter;
-import ru.prolib.aquila.probe.scheduler.utils.EventQueueSynchronizer;
+import ru.prolib.aquila.probe.scheduler.utils.EventQueueSynchronizerV2;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.config.AppConfig;
 import ru.prolib.bootes.lib.config.SchedulerConfig;
@@ -43,7 +43,7 @@ public class ProbeSchedulerComp extends CommonComp {
 		
 		SchedulerImpl scheduler = builder.buildScheduler();
 		serviceLocator.setScheduler(scheduler);
-		scheduler.addSynchronizer(new EventQueueSynchronizer(serviceLocator.getEventQueue()));
+		scheduler.addSynchronizer(new EventQueueSynchronizerV2(serviceLocator.getEventQueue()));
 
 		ARSHandlerBuilder hb = new ARSHandlerBuilder()
 				.withID(serviceID)

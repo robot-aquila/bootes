@@ -22,6 +22,7 @@ public class RobotUIService implements RobotStateListener {
 	private Runnable chartsViewUpdateConfig, chartsViewUpdateAll, reportsViewUpdateAll;
 	private ChartsView chartsView;
 	private ReportsView reportsView;
+	private EquityCurveView equityView;
 	
 	public RobotUIService(AppServiceLocator serviceLocator, RoboServiceLocator roboServices, RobotState state) {
 		this.serviceLocator = serviceLocator;
@@ -44,9 +45,12 @@ public class RobotUIService implements RobotStateListener {
 		reportsViewUpdateAll = new Runnable() { public void run() { reportsView.updateView(); } };
 		reportsView.updateView();
 		
+		equityView = new EquityCurveView();
+		
 		JTabbedPane tabs = new JTabbedPane();
 		tabs.addTab(messages.get(RobotCommonMsg.CHARTS), chartsView);
 		tabs.addTab(messages.get(RobotCommonMsg.REPORTS), reportsView);
+		tabs.addTab(messages.get(RobotCommonMsg.EQUITY_CURVE), equityView);
 		
 		JPanel root = new JPanel();
 		root.setLayout(new BoxLayout(root, BoxLayout.X_AXIS));

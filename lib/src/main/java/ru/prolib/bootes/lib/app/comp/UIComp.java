@@ -29,7 +29,7 @@ public class UIComp extends CommonComp {
 		if ( headless ) {
 			return;
 		}
-		serviceLocator.setUIService(uis = new UIService());
+		serviceLocator.setUIService(uis = new UIService(serviceLocator.getZoneID()));
 		uis.getFrame().addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosed(WindowEvent e) {

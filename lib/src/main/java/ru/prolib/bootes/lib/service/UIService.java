@@ -1,7 +1,6 @@
 package ru.prolib.bootes.lib.service;
 
 import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.time.ZoneId;
 
 import javax.swing.BorderFactory;
@@ -16,14 +15,15 @@ import ru.prolib.aquila.core.text.Messages;
 public class UIService {
 	private static final String DEFAULT_TITLE = "Bootes App";
 
-	protected final ZoneId zoneID = ZoneId.of("Europe/Moscow"); // TODO: Move to loadable configuration
+	protected final ZoneId zoneID;
 	protected final IMessages messages = new Messages();
 	protected final JFrame frame = new JFrame();
 	protected final JPanel mainPanel = new JPanel();
 	protected final JPanel topPanel = new JPanel();
 	protected final JTabbedPane tabPanel = new JTabbedPane();;
 	
-	public UIService() {
+	public UIService(ZoneId zoneID) {
+		this.zoneID = zoneID;
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setSize(800,  600);
 		frame.setTitle(DEFAULT_TITLE);

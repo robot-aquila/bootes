@@ -1,10 +1,12 @@
 package ru.prolib.bootes.tsgr001a.robot;
 
+import ru.prolib.aquila.core.data.OHLCScalableSeries;
 import ru.prolib.aquila.core.sm.SMStateMachine;
 import ru.prolib.bootes.lib.app.AppComponent;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.config.AppConfig;
 import ru.prolib.bootes.tsgr001a.robot.report.BlockReportHandler;
+import ru.prolib.bootes.tsgr001a.robot.report.EquityCurveReportHandler;
 import ru.prolib.bootes.tsgr001a.robot.report.S3ReportHandler;
 import ru.prolib.bootes.tsgr001a.robot.report.SummaryReportDumpAtShutdown;
 import ru.prolib.bootes.tsgr001a.robot.report.SummaryReportHandler;
@@ -20,7 +22,16 @@ public class TSGR001ARobotComp implements AppComponent {
 	public TSGR001ARobotComp(AppConfig appConfig, AppServiceLocator serviceLocator) {
 		this.appConfig = appConfig;
 		this.serviceLocator = serviceLocator;
-		this.roboServices = new RoboServiceLocator();
+		this.roboServices = new RoboServiceLocator(serviceLocator.getZoneID());
+	}
+	
+	private OHLCScalableSeries createEquityReportS() {
+		return new OHLCScalableSeries(
+				serviceLocator.getEventQueue(),
+				"EQUITY_REPORT",
+				50,
+				serviceLocator.getZoneID()
+			);
 	}
 
 	@Override
@@ -34,6 +45,7 @@ public class TSGR001ARobotComp implements AppComponent {
 		stateListener.addListener(new S3ReportHandler(state, roboServices.getTradesReport(), true));
 		stateListener.addListener(new S3ReportHandler(state, roboServices.getShortDurationTradesReport()));
 		stateListener.addListener(new S3ReportHandler(state, roboServices.getMidDayClearingTradesReport()));
+		stateListener.addListener(new EquityCurveReportHandler(state, createEquityReportS(), true));
 		if ( ! appConfig.getBasicConfig().isHeadless() ) {
 			stateListener.addListener(new BlockReportHandler(state, roboServices.getBlockReportStorage()));
 			stateListener.addListener(new RobotUIService(serviceLocator, roboServices, state));

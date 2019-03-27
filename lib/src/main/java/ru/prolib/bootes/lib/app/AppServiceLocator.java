@@ -1,5 +1,7 @@
 package ru.prolib.bootes.lib.app;
 
+import java.time.ZoneId;
+
 import ru.prolib.aquila.core.EventQueue;
 import ru.prolib.aquila.core.BusinessEntities.Scheduler;
 import ru.prolib.aquila.core.BusinessEntities.Terminal;
@@ -19,9 +21,11 @@ public class AppServiceLocator {
 	private UIService uis;
 	private MDStorage<TFSymbol, Candle> ohlcHistoryStorage;
 	private IMessages messages;
+	private ZoneId zoneID;
 	
 	public AppServiceLocator(AppRuntimeService ars) {
 		this.ars = ars;
+		zoneID = ZoneId.systemDefault();
 	}
 	
 	public synchronized void setPriceScaleDB(PriceScaleDB scaleDB) {
@@ -103,6 +107,14 @@ public class AppServiceLocator {
 	
 	public synchronized void setMessages(IMessages messages) {
 		this.messages = messages;
+	}
+	
+	public synchronized ZoneId getZoneID() {
+		return zoneID;
+	}
+	
+	public synchronized void setZoneID(ZoneId zoneID) {
+		this.zoneID = zoneID;
 	}
 
 }

@@ -18,7 +18,7 @@ public class RoboServiceLocator {
 	private final IBlockReportStorage brs;
 	private final IS3Report tradesReport, shortDurationTradesReport, midDayClearingTradesReport;
 	
-	public RoboServiceLocator() {
+	public RoboServiceLocator(ZoneId zoneID) {
 		srt = new SummaryReportTracker();
 		brs = new BlockReportStorage();
 		tradesReport = new S3Report();
@@ -26,7 +26,7 @@ public class RoboServiceLocator {
 		midDayClearingTradesReport = new S3Report(new S3RCrossingIntradayPeriod(new LocalTimePeriod(
 				LocalTime.of(14, 0),
 				LocalTime.of(14, 5),
-				ZoneId.of("Europe/Moscow")
+				zoneID
 			)));
 	}
 	

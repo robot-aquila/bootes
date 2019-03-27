@@ -4,6 +4,7 @@ import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
 import java.time.Instant;
+import java.time.ZoneId;
 
 import org.easymock.IMocksControl;
 import org.junit.Before;
@@ -169,6 +170,14 @@ public class AppServiceLocatorTest {
 	@Test (expected=NullPointerException.class)
 	public void testGetMessages_ThrowsIfNotDefined() {
 		service.getMessages();
+	}
+	
+	@Test
+	public void testGetZoneID() {
+		ZoneId x = ZoneId.of("America/Asuncion");
+		assertEquals(ZoneId.systemDefault(), service.getZoneID());
+		service.setZoneID(x);
+		assertEquals(x, service.getZoneID());
 	}
 
 }

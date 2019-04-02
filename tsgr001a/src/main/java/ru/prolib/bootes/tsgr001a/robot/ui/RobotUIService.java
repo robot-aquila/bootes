@@ -45,7 +45,7 @@ public class RobotUIService implements RobotStateListener {
 		reportsViewUpdateAll = new Runnable() { public void run() { reportsView.updateView(); } };
 		reportsView.updateView();
 		
-		equityView = new EquityCurveView();
+		equityView = new EquityCurveView(roboServices);
 		
 		JTabbedPane tabs = new JTabbedPane();
 		tabs.addTab(messages.get(RobotCommonMsg.CHARTS), chartsView);

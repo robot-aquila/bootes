@@ -39,6 +39,7 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 	public static final String E_BUY = "BUY";
 	public static final String E_SELL = "SELL";
 	
+	@SuppressWarnings("unused")
 	private static final Logger logger;
 	
 	static {
@@ -91,7 +92,7 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 		}
 		if ( ! tradingPeriod.contains(curr_time) ) {
 			tradingPeriod = timetable.getActiveOrComing(curr_time);
-			logger.debug("New trading period: {}", tradingPeriod);
+			//logger.debug("New trading period: {}", tradingPeriod);
 			return null;
 		}
 		
@@ -138,16 +139,16 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 
 		IFilterSetState result = filters.approve(signal);
 		if ( result.hasDeclined() ) {
-			logger.debug("Signal declined: {}", toString(result));
+			//logger.debug("Signal declined: {}", toString(result));
 			return null;
 		} else {
-			logger.debug("Signal approved: {}", toString(result));
+			//logger.debug("Signal approved: {}", toString(result));
 		}
 		
 		synchronized ( state ) {
 			state.setActiveSpeculation(new Speculation(signal));
 		}
-		logger.debug("Detected signal: {}", signal);
+		//logger.debug("Detected signal: {}", signal);
 		return getExit(signal.getType() == SignalType.BUY ? E_BUY : E_SELL);
 	}
 	
@@ -171,7 +172,7 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 		return null;
 	}
 
-	private String toString(IFilterSetState result) {
+	String toString(IFilterSetState result) {
 		return result.toString();
 	}
 	
@@ -184,7 +185,7 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 	}
 	
 	private SMExit onTrackingPeriodEnd() {
-		logger.debug("Tracking period ended: {}", trackingPeriod);
+		//logger.debug("Tracking period ended: {}", trackingPeriod);
 		return getExit(E_STOP_TRADING);
 	}
 

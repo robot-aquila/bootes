@@ -3,11 +3,12 @@ package ru.prolib.bootes.tsgr001a.robot.ui;
 import java.awt.Color;
 import java.time.ZoneId;
 
+import javax.swing.JPanel;
+
 import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.utils.experimental.chart.BarChart;
 import ru.prolib.aquila.utils.experimental.chart.BarChartLayer;
 import ru.prolib.aquila.utils.experimental.chart.ChartSpaceManager;
-import ru.prolib.aquila.utils.experimental.chart.axis.CategoryAxisViewport;
 import ru.prolib.aquila.utils.experimental.chart.axis.ValueAxisDriver;
 import ru.prolib.aquila.utils.experimental.chart.swing.axis.SWTimeAxisRulerSetup;
 import ru.prolib.aquila.utils.experimental.chart.swing.axis.SWValueAxisRulerRenderer;
@@ -121,10 +122,12 @@ public class ChartT2 extends SecurityChartPanel {
 		super.updateSecurity(security);
 		atrValueRulerRenderer.setTickSize(security.getTickSize());
 	}
-
+	
 	@Override
-	protected void updateViewport(CategoryAxisViewport viewport) {
-		super.updateViewport(viewport);
-		viewport.setPreferredNumberOfBars(90); // 3 months=90 days
+	public JPanel create() {
+		JPanel panel = super.create();
+		chartPanel.setPreferredNumberOfBars(90); // 3 months=90 days
+		return panel;
 	}
+	
 }

@@ -1,6 +1,5 @@
 package ru.prolib.bootes.tsgr001a.robot;
 
-import ru.prolib.aquila.core.data.OHLCScalableSeries;
 import ru.prolib.aquila.core.sm.SMStateMachine;
 import ru.prolib.bootes.lib.app.AppComponent;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
@@ -16,26 +15,17 @@ import ru.prolib.bootes.tsgr001a.robot.ui.RobotUIService;
 public class TSGR001ARobotComp implements AppComponent {
 	private final AppConfig appConfig;
 	private final AppServiceLocator serviceLocator;
-	private final RoboServiceLocator roboServices;
+	private RoboServiceLocator roboServices;
 	private Robot robot;
 	
 	public TSGR001ARobotComp(AppConfig appConfig, AppServiceLocator serviceLocator) {
 		this.appConfig = appConfig;
 		this.serviceLocator = serviceLocator;
-		this.roboServices = new RoboServiceLocator(serviceLocator.getZoneID());
-	}
-	
-	private OHLCScalableSeries createEquityReportS() {
-		return new OHLCScalableSeries(
-				serviceLocator.getEventQueue(),
-				"EQUITY_REPORT",
-				50,
-				serviceLocator.getZoneID()
-			);
 	}
 
 	@Override
 	public void init() throws Throwable {
+		roboServices = new RoboServiceLocator(serviceLocator);
 		RobotStateListenerComp stateListener = new RobotStateListenerComp();
 		robot = new TSGR001ARobotBuilder(serviceLocator, roboServices)
 				.build(stateListener, appConfig.getBasicConfig().isNoOrders());
@@ -45,7 +35,8 @@ public class TSGR001ARobotComp implements AppComponent {
 		stateListener.addListener(new S3ReportHandler(state, roboServices.getTradesReport(), true));
 		stateListener.addListener(new S3ReportHandler(state, roboServices.getShortDurationTradesReport()));
 		stateListener.addListener(new S3ReportHandler(state, roboServices.getMidDayClearingTradesReport()));
-		stateListener.addListener(new EquityCurveReportHandler(state, createEquityReportS(), true));
+		stateListener.addListener(new EquityCurveReportHandler(state, roboServices.getEquityCurveReportS(), true));
+		stateListener.addListener(new EquityCurveReportHandler(state, roboServices.getEquityCurveReportL()));
 		if ( ! appConfig.getBasicConfig().isHeadless() ) {
 			stateListener.addListener(new BlockReportHandler(state, roboServices.getBlockReportStorage()));
 			stateListener.addListener(new RobotUIService(serviceLocator, roboServices, state));

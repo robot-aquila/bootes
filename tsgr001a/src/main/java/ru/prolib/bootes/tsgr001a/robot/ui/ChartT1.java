@@ -3,9 +3,10 @@ package ru.prolib.bootes.tsgr001a.robot.ui;
 import java.awt.Color;
 import java.time.ZoneId;
 
+import javax.swing.JPanel;
+
 import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.utils.experimental.chart.BarChartLayer;
-import ru.prolib.aquila.utils.experimental.chart.axis.CategoryAxisViewport;
 import ru.prolib.aquila.utils.experimental.chart.swing.layer.SWSimpleTextOverlay;
 import ru.prolib.bootes.lib.ui.SecurityChartPanel;
 import ru.prolib.bootes.tsgr001a.robot.SetupT1;
@@ -74,9 +75,10 @@ public class ChartT1 extends SecurityChartPanel {
 	}
 	
 	@Override
-	protected void updateViewport(CategoryAxisViewport viewport) {
-		super.updateViewport(viewport);
-		viewport.setPreferredNumberOfBars(140); // 10 days=10*14=140 hours
+	public JPanel create() {
+		JPanel panel = super.create();
+		chartPanel.setPreferredNumberOfBars(140); // 10 days=10*14=140 hours
+		return panel;
 	}
 
 }

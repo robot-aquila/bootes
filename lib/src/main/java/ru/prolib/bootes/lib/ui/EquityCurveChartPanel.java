@@ -1,36 +1,32 @@
 package ru.prolib.bootes.lib.ui;
 
+import java.awt.Color;
 import java.awt.GridLayout;
 
 import javax.swing.JPanel;
 
+import ru.prolib.aquila.core.BusinessEntities.CDecimal;
+import ru.prolib.aquila.core.data.Candle;
+import ru.prolib.aquila.core.data.CandleHighSeries;
+import ru.prolib.aquila.core.data.CandleLowSeries;
 import ru.prolib.aquila.core.data.ObservableSeries;
+import ru.prolib.aquila.core.data.Series;
 import ru.prolib.aquila.utils.experimental.chart.BarChart;
+import ru.prolib.aquila.utils.experimental.chart.BarChartLayer;
 import ru.prolib.aquila.utils.experimental.chart.BarChartOrientation;
 import ru.prolib.aquila.utils.experimental.chart.ChartSpaceManager;
-import ru.prolib.aquila.utils.experimental.chart.axis.CategoryAxisViewport;
 import ru.prolib.aquila.utils.experimental.chart.axis.ValueAxisDriver;
 import ru.prolib.aquila.utils.experimental.chart.swing.BarChartPanelImpl;
 import ru.prolib.aquila.utils.experimental.chart.swing.axis.SWValueAxisRulerRenderer;
+import ru.prolib.aquila.utils.experimental.chart.swing.layer.SWAreaLayer;
 
 public class EquityCurveChartPanel {
 	protected BarChartPanelImpl chartPanel;
 	protected BarChart chart;
 	protected SWValueAxisRulerRenderer valueRulerRenderer;
-	protected ObservableSeries<?> source;
-	
-	protected void updateViewport(CategoryAxisViewport viewport) {
-		viewport.setPreferredNumberOfBars(100);
-		if ( source != null ) {
-			viewport.setCategoryRangeByFirstAndNumber(0, source.getLength());
-		} else {
-			viewport.setCategoryRangeByFirstAndNumber(0, 0);
-		}
-	}
-	
-	protected void updateViewport() {
-		updateViewport(chartPanel.getCategoryAxisViewport()); 
-	}
+	protected ObservableSeries<Candle> source;
+	protected Series<CDecimal> sourceMax, sourceMin;
+	protected BarChartLayer layerMin, layerMax;
 
 	protected void createChart() {
 		chart = chartPanel.addChart("EQUITY");
@@ -44,15 +40,28 @@ public class EquityCurveChartPanel {
 	}
 	
 	protected void createLayers() {
-		
+		if ( chart == null ) {
+			return;
+		}
+		layerMin = chart.addLayer(new SWAreaLayer(sourceMin).setColor(new Color(127, 127, 127, 127)));
+		layerMax = chart.addLayer(new SWAreaLayer(sourceMax).setColor(new Color(127, 127, 0, 127)));
 	}
 	
 	protected void dropLayers() {
-		
+		if ( layerMin != null ) {
+			chart.dropLayer(layerMin.getId());
+			layerMin = null;
+		}
+		if ( layerMax != null ) {
+			chart.dropLayer(layerMax.getId());
+			layerMax = null;
+		}
 	}
 	
-	protected void updateSource(ObservableSeries<?> source) {
+	protected void updateSource(ObservableSeries<Candle> source) {
 		chartPanel.setCategories(this.source = source);
+		sourceMax = new CandleHighSeries(source);
+		sourceMin = new CandleLowSeries(source);
 	}
 
 	/**
@@ -66,7 +75,6 @@ public class EquityCurveChartPanel {
 		}
 		chartPanel = new BarChartPanelImpl(BarChartOrientation.LEFT_TO_RIGHT);
 		createChart();
-		updateViewport();
 		
 		JPanel chartRoot = new JPanel(new GridLayout(1, 1));
 		chartRoot.add(chartPanel.getRootPanel());
@@ -81,11 +89,10 @@ public class EquityCurveChartPanel {
 	 * <p>
 	 * @param source - data source instance
 	 */
-	public void update(ObservableSeries<?> source) {
+	public void update(ObservableSeries<Candle> source) {
 		dropLayers();
 		updateSource(source);
 		createLayers();
-		updateViewport();
 	}
 	
 }

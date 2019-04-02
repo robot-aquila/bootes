@@ -13,7 +13,6 @@ import ru.prolib.aquila.utils.experimental.chart.BarChartLayer;
 import ru.prolib.aquila.utils.experimental.chart.BarChartOrientation;
 import ru.prolib.aquila.utils.experimental.chart.ChartSpaceManager;
 import ru.prolib.aquila.utils.experimental.chart.axis.CategoryAxisDriver;
-import ru.prolib.aquila.utils.experimental.chart.axis.CategoryAxisViewport;
 import ru.prolib.aquila.utils.experimental.chart.axis.ValueAxisDriver;
 import ru.prolib.aquila.utils.experimental.chart.swing.BarChartPanelImpl;
 import ru.prolib.aquila.utils.experimental.chart.swing.axis.SWTimeAxisRulerRendererV2;
@@ -31,19 +30,6 @@ abstract public class SecurityChartPanel {
 	protected STSeries source;
 	protected Security security;
 
-	protected void updateViewport(CategoryAxisViewport viewport) {
-		viewport.setPreferredNumberOfBars(100);
-		if ( source != null ) {
-			viewport.setCategoryRangeByFirstAndNumber(0, source.getLength());
-		} else {
-			viewport.setCategoryRangeByFirstAndNumber(0, 0);
-		}
-	}
-	
-	protected void updateViewport() {
-		updateViewport(chartPanel.getCategoryAxisViewport()); 
-	}
-	
 	abstract protected String getOhlcSeriesID();
 	abstract protected String getVolumeSeriesID();
 	
@@ -140,12 +126,12 @@ abstract public class SecurityChartPanel {
 	
 	public JPanel create() {
 		chartPanel = new BarChartPanelImpl(BarChartOrientation.LEFT_TO_RIGHT);
+		chartPanel.setPreferredNumberOfBars(100);
 		
 		CategoryAxisDriver cad = chartPanel.getCategoryAxisDriver();
 		cad.registerRenderer(timeRulerRenderer = new SWTimeAxisRulerRendererV2("TIME"));
 		
 		createCharts();
-		updateViewport();
 		
 		JPanel chartRoot = new JPanel(new GridLayout(1, 1));
 		chartRoot.add(chartPanel.getRootPanel());
@@ -170,7 +156,6 @@ abstract public class SecurityChartPanel {
 		updateSource(source);
 		updateSecurity(security);
 		createLayers();
-		updateViewport();
 	}
 	
 	public void clear() {

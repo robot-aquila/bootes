@@ -84,5 +84,19 @@ public class BasicConfigBulderTest {
 		actual = service.build();
 		assertNull(actual.getConfigFile());
 	}
+	
+	@Test
+	public void testWithReportsDirectory() throws Exception {
+		BasicConfig actual = service.build();
+		assertNull(actual.getReportsDirectory());
+		
+		assertSame(service, service.withReportsDirectory(new File("reports")));
+		actual = service.build();
+		assertEquals(new File("reports"), actual.getReportsDirectory());
+		
+		assertSame(service, service.withReportsDirectory(null));
+		actual = service.build();
+		assertNull(actual.getReportsDirectory());
+	}
 
 }

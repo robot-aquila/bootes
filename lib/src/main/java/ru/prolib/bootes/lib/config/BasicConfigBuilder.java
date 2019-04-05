@@ -13,7 +13,7 @@ public class BasicConfigBuilder {
 	}
 	
 	private boolean showHelp, headless, noOrders;
-	private File dataDir, configFile;
+	private File dataDir, configFile, reportsDir;
 	
 	public BasicConfig build() throws ConfigException {
 		return new BasicConfig(
@@ -21,7 +21,8 @@ public class BasicConfigBuilder {
 				headless,
 				noOrders,
 				dataDir,
-				configFile
+				configFile,
+				reportsDir
 			);
 	}
 	
@@ -52,6 +53,12 @@ public class BasicConfigBuilder {
 	public BasicConfigBuilder withConfigFile(File configFile) {
 		logger.debug("withConfigFile={}", configFile);
 		this.configFile = configFile;
+		return this;
+	}
+	
+	public BasicConfigBuilder withReportsDirectory(File dir) {
+		logger.debug("withReportsDirectory={}", dir);
+		this.reportsDir = dir;
 		return this;
 	}
 

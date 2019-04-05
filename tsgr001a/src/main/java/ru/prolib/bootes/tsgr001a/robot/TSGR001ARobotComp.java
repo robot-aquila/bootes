@@ -1,10 +1,8 @@
 package ru.prolib.bootes.tsgr001a.robot;
 
 import java.io.File;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+
+import org.apache.commons.io.FileUtils;
 
 import ru.prolib.aquila.core.sm.SMStateMachine;
 import ru.prolib.bootes.lib.app.AppComponent;
@@ -67,20 +65,16 @@ public class TSGR001ARobotComp implements AppComponent {
 			}
 		}
 		// TODO: Here! Wait for automat finished work.
-		
-		ZoneId zoneID = serviceLocator.getZoneID();
-		ZonedDateTime now = ZonedDateTime.now(zoneID);
-		LocalDate ld = now.toLocalDate();
-		LocalTime lt = now.toLocalTime();
-		File report_file = new File(String.format(
-				"tsgr001a-%4d%02d%02d%02d%02d.report",
-				ld.getYear(),
-				ld.getMonthValue(),
-				ld.getDayOfMonth(),
-				lt.getHour(),
-				lt.getMinute()
-			));
-		new ReportPrinter(zoneID)
+
+		// Save report
+		File report_dir = appConfig.getBasicConfig().getReportsDirectory(); 
+		FileUtils.forceMkdir(report_dir);
+		File report_file = new File(report_dir, new StringBuilder()
+				.append("tsgr001a-")
+				.append(robot.getState().getContractName())
+				.append(".report")
+				.toString());  
+		new ReportPrinter(serviceLocator.getZoneID())
 			.add(roboServices.getSummaryReportTracker().getCurrentStats(), "Summary")
 			.add(roboServices.getTradesReport(), "Trades")
 			.save(report_file);

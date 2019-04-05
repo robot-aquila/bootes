@@ -12,19 +12,21 @@ import org.apache.commons.lang3.builder.ToStringStyle;
  */
 public class BasicConfig {
 	private final boolean showHelp, headless, noOrders;
-	private final File dataDir, configFile;
+	private final File dataDir, configFile, reportsDir;
 	
 	public BasicConfig(boolean help,
 			boolean headless,
 			boolean noOrders,
 			File dataDir,
-			File configFile)
+			File configFile,
+			File reportsDir)
 	{
 		this.showHelp = help;
 		this.headless = headless;
 		this.noOrders = noOrders;
 		this.dataDir = dataDir;
 		this.configFile = configFile;
+		this.reportsDir = reportsDir;
 	}
 	
 	public boolean isShowHelp() {
@@ -47,6 +49,10 @@ public class BasicConfig {
 		return configFile;
 	}
 	
+	public File getReportsDirectory() {
+		return reportsDir;
+	}
+	
 	@Override
 	public boolean equals(Object other) {
 		if ( other == this ) {
@@ -62,6 +68,7 @@ public class BasicConfig {
 			.append(o.noOrders, noOrders)
 			.append(o.dataDir, dataDir)
 			.append(o.configFile, configFile)
+			.append(o.reportsDir, reportsDir)
 			.isEquals();
 	}
 	
@@ -73,6 +80,7 @@ public class BasicConfig {
 			.append("noOrders", noOrders)
 			.append("dataDir", dataDir)
 			.append("configFile", configFile)
+			.append("reportsDir", reportsDir)
 			.toString();
 	}
 	
@@ -84,6 +92,7 @@ public class BasicConfig {
 			.append(noOrders)
 			.append(dataDir)
 			.append(configFile)
+			.append(reportsDir)
 			.toHashCode();
 	}
 	

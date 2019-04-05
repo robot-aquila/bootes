@@ -15,7 +15,13 @@ public class BasicConfigTest {
 
 	@Before
 	public void setUp() throws Exception {
-		service = new BasicConfig(false, true, true, new File("foo/bar"), new File("my-conf.ini"));
+		service = new BasicConfig(false,
+				true,
+				true,
+				new File("foo/bar"),
+				new File("my-conf.ini"),
+				new File("reports")
+			);
 	}
 	
 	@Test
@@ -25,6 +31,7 @@ public class BasicConfigTest {
 		assertTrue(service.isNoOrders());
 		assertEquals(new File("foo/bar"), service.getDataDirectory());
 		assertEquals(new File("my-conf.ini"), service.getConfigFile());
+		assertEquals(new File("reports"), service.getReportsDirectory());
 	}
 	
 	@Test
@@ -41,11 +48,19 @@ public class BasicConfigTest {
 		Variant<Boolean> vIsNoOrd = new Variant<>(vIsHdls, true, false);
 		Variant<File> vDDir = new Variant<>(vIsNoOrd, new File("foo/bar"), null, new File("bar/foo"));
 		Variant<File> vFCfg = new Variant<>(vDDir, new File("my-conf.ini"), new File("old-conf.ini"));
-		Variant<?> iterator = vFCfg;
+		Variant<File> vRDir = new Variant<>(vFCfg, new File("reports"), new File("my/reports"));
+		Variant<?> iterator = vRDir;
 		int foundCnt = 0;
 		BasicConfig x, found = null;
 		do {
-			x = new BasicConfig(vIsHelp.get(), vIsHdls.get(), vIsNoOrd.get(), vDDir.get(), vFCfg.get());
+			x = new BasicConfig(
+					vIsHelp.get(),
+					vIsHdls.get(),
+					vIsNoOrd.get(),
+					vDDir.get(),
+					vFCfg.get(),
+					vRDir.get()
+				);
 			if ( service.equals(x) ) {
 				foundCnt ++;
 				found = x;
@@ -57,6 +72,7 @@ public class BasicConfigTest {
 		assertTrue(found.isNoOrders());
 		assertEquals(new File("foo/bar"), found.getDataDirectory());
 		assertEquals(new File("my-conf.ini"), found.getConfigFile());
+		assertEquals(new File("reports"), found.getReportsDirectory());
 	}
 	
 	@Test
@@ -67,6 +83,7 @@ public class BasicConfigTest {
 			.append(true)
 			.append(new File("foo/bar"))
 			.append(new File("my-conf.ini"))
+			.append(new File("reports"))
 			.toHashCode();
 		
 		assertEquals(expected, service.hashCode());
@@ -80,7 +97,8 @@ public class BasicConfigTest {
 				.append("headless=true,")
 				.append("noOrders=true,")
 				.append("dataDir=foo").append(File.separator).append("bar,")
-				.append("configFile=my-conf.ini")
+				.append("configFile=my-conf.ini,")
+				.append("reportsDir=reports")
 				.append("]")
 				.toString();
 		

@@ -1,9 +1,16 @@
 package ru.prolib.bootes.tsgr001a.robot;
 
+import java.io.File;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+
 import ru.prolib.aquila.core.sm.SMStateMachine;
 import ru.prolib.bootes.lib.app.AppComponent;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.config.AppConfig;
+import ru.prolib.bootes.lib.report.ReportPrinter;
 import ru.prolib.bootes.tsgr001a.robot.report.BlockReportHandler;
 import ru.prolib.bootes.tsgr001a.robot.report.EquityCurveReportHandler;
 import ru.prolib.bootes.tsgr001a.robot.report.S3ReportHandler;
@@ -60,6 +67,23 @@ public class TSGR001ARobotComp implements AppComponent {
 			}
 		}
 		// TODO: Here! Wait for automat finished work.
+		
+		ZoneId zoneID = serviceLocator.getZoneID();
+		ZonedDateTime now = ZonedDateTime.now(zoneID);
+		LocalDate ld = now.toLocalDate();
+		LocalTime lt = now.toLocalTime();
+		File report_file = new File(String.format(
+				"tsgr001a-%4d%02d%02d%02d%02d.report",
+				ld.getYear(),
+				ld.getMonthValue(),
+				ld.getDayOfMonth(),
+				lt.getHour(),
+				lt.getMinute()
+			));
+		new ReportPrinter(zoneID)
+			.add(roboServices.getSummaryReportTracker().getCurrentStats(), "Summary")
+			.add(roboServices.getTradesReport(), "Trades")
+			.save(report_file);
 	}
 
 }

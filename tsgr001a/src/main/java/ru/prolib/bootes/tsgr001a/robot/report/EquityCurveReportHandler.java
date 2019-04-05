@@ -146,7 +146,14 @@ public class EquityCurveReportHandler implements RobotStateListener, EventListen
 
 	@Override
 	public void run() {
-		report.append(portfolio.getEquity(), portfolio.getTerminal().getCurrentTime());
+		lock.lock();
+		try {
+			if ( portfolio != null ) {
+				report.append(portfolio.getEquity(), portfolio.getTerminal().getCurrentTime());
+			}
+		} finally {
+			lock.unlock();
+		}
 	}
 
 	@Override

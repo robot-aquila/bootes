@@ -77,6 +77,7 @@ public class TSGR001ARobotComp implements AppComponent {
 		new ReportPrinter(serviceLocator.getZoneID())
 			.add(roboServices.getSummaryReportTracker().getCurrentStats(), "Summary")
 			.add(roboServices.getTradesReport(), "Trades")
+			.add(roboServices.getEquityCurveReportS(), "Equity")
 			.save(report_file);
 	}
 

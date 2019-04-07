@@ -9,6 +9,8 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.prolib.aquila.core.data.OHLCScalableSeries;
+import ru.prolib.bootes.lib.report.equirep.EquityReportBlockPrinter;
 import ru.prolib.bootes.lib.report.s3rep.IS3Report;
 import ru.prolib.bootes.lib.report.s3rep.S3ReportBlockPrinter;
 import ru.prolib.bootes.lib.report.summarep.ISummaryReport;
@@ -42,6 +44,10 @@ public class ReportPrinter {
 	
 	public ReportPrinter add(ISummaryReport report, String title) {
 		return add(new SummaryReportBlockPrinter(report, title, zoneID));
+	}
+	
+	public ReportPrinter add(OHLCScalableSeries equity_report, String title) {
+		return add(new EquityReportBlockPrinter(equity_report, title));
 	}
 	
 	public void print(PrintStream stream) {

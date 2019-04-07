@@ -16,6 +16,9 @@ import static org.easymock.EasyMock.*;
 import org.junit.Before;
 import org.junit.Test;
 
+import ru.prolib.aquila.core.data.OHLCScalableSeries;
+import ru.prolib.aquila.core.data.timeframe.ZTFMinutes;
+import ru.prolib.bootes.lib.report.equirep.EquityReportBlockPrinter;
 import ru.prolib.bootes.lib.report.s3rep.IS3Report;
 import ru.prolib.bootes.lib.report.s3rep.S3ReportBlockPrinter;
 import ru.prolib.bootes.lib.report.summarep.ISummaryReport;
@@ -76,6 +79,20 @@ public class ReportPrinterTest {
 		assertEquals(reportMock, actual.getReport());
 		assertEquals(ZONE_ID, actual.getZoneID());
 		assertEquals("zulu24", actual.getTitle());
+	}
+	
+	@Test
+	public void testAdd_Equity() {
+		OHLCScalableSeries reportMock = control.createMock(OHLCScalableSeries.class);
+		expect(reportMock.getTimeFrame()).andReturn(new ZTFMinutes(1, ZONE_ID));
+		control.replay();
+		
+		assertSame(service, service.add(reportMock, "hello_dolly"));
+		
+		control.verify();
+		EquityReportBlockPrinter actual = (EquityReportBlockPrinter) blocks.get(0);
+		assertEquals(reportMock, actual.getReport());
+		assertEquals("hello_dolly", actual.getTitle());
 	}
 
 	@Test

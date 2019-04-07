@@ -37,7 +37,7 @@ public class S3ClosePosition extends CommonHandler implements
 	/**
 	 * Timeout to close position.
 	 */
-	public static final long TIMEOUT_SECONDS = 15;
+	public static final long TIMEOUT_SECONDS = 300; // 5 minutes
 	
 	public static final String E_CLOSED = "CLOSED";
 	public static final String E_NEED_CLOSE = "NEED_CLOSE";

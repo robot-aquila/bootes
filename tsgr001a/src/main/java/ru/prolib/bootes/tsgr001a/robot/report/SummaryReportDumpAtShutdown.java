@@ -5,9 +5,9 @@ import org.slf4j.LoggerFactory;
 
 import ru.prolib.bootes.lib.report.summarep.ISummaryReport;
 import ru.prolib.bootes.lib.report.summarep.ISummaryReportTracker;
-import ru.prolib.bootes.tsgr001a.robot.RobotStateListener;
+import ru.prolib.bootes.lib.s3.S3RobotStateListener;
 
-public class SummaryReportDumpAtShutdown implements RobotStateListener {
+public class SummaryReportDumpAtShutdown implements S3RobotStateListener {
 	private static final Logger logger;
 	
 	static {

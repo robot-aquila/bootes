@@ -1,6 +1,6 @@
-package ru.prolib.bootes.tsgr001a.robot;
+package ru.prolib.bootes.lib.s3;
 
-public interface RobotStateListener {
+public interface S3RobotStateListener {
 	void robotStarted();
 	void accountSelected();
 	void contractSelected();

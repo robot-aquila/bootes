@@ -1,4 +1,4 @@
-package ru.prolib.bootes.tsgr001a.robot;
+package ru.prolib.bootes.lib.s3;
 
 import static org.junit.Assert.*;
 
@@ -11,20 +11,23 @@ import org.easymock.IMocksControl;
 import org.junit.Before;
 import org.junit.Test;
 
+import ru.prolib.bootes.lib.s3.S3RobotStateListener;
+import ru.prolib.bootes.lib.s3.S3RobotStateListenerComp;
+
 public class RobotStateListenerCompTest {
 	private IMocksControl control;
-	private RobotStateListener listenerMock1, listenerMock2, listenerMock3;
-	private Set<RobotStateListener> listeners;
-	private RobotStateListenerComp service;
+	private S3RobotStateListener listenerMock1, listenerMock2, listenerMock3;
+	private Set<S3RobotStateListener> listeners;
+	private S3RobotStateListenerComp service;
 
 	@Before
 	public void setUp() throws Exception {
 		control = createStrictControl();
-		listenerMock1 = control.createMock(RobotStateListener.class);
-		listenerMock2 = control.createMock(RobotStateListener.class);
-		listenerMock3 = control.createMock(RobotStateListener.class);
+		listenerMock1 = control.createMock(S3RobotStateListener.class);
+		listenerMock2 = control.createMock(S3RobotStateListener.class);
+		listenerMock3 = control.createMock(S3RobotStateListener.class);
 		listeners = new LinkedHashSet<>();
-		service = new RobotStateListenerComp(listeners);
+		service = new S3RobotStateListenerComp(listeners);
 	}
 	
 	@Test
@@ -32,7 +35,7 @@ public class RobotStateListenerCompTest {
 		assertSame(service, service.addListener(listenerMock1));
 		assertSame(service, service.addListener(listenerMock2));
 		
-		Set<RobotStateListener> expected = new LinkedHashSet<>();
+		Set<S3RobotStateListener> expected = new LinkedHashSet<>();
 		expected.add(listenerMock1);
 		expected.add(listenerMock2);
 		assertEquals(expected, listeners);
@@ -46,7 +49,7 @@ public class RobotStateListenerCompTest {
 		
 		assertSame(service, service.removeListener(listenerMock2));
 		
-		Set<RobotStateListener> expected = new LinkedHashSet<>();
+		Set<S3RobotStateListener> expected = new LinkedHashSet<>();
 		expected.add(listenerMock1);
 		expected.add(listenerMock3);
 		assertEquals(expected, listeners);

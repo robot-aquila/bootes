@@ -12,6 +12,7 @@
 
     <modules>
 		<module>lib</module>
+		<module>protos</module>
 		<module>tsgr001a</module>
     </modules>
 

@@ -3,6 +3,7 @@ package ru.prolib.bootes.tsgr001a.robot;
 import ru.prolib.aquila.core.sm.SMBuilder;
 import ru.prolib.aquila.core.sm.SMStateMachine;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
+import ru.prolib.bootes.lib.s3.S3RobotStateListener;
 import ru.prolib.bootes.tsgr001a.robot.sh.ChooseContract;
 import ru.prolib.bootes.tsgr001a.robot.sh.CleanSessionData;
 import ru.prolib.bootes.tsgr001a.robot.sh.CommonActions;
@@ -43,7 +44,7 @@ public class TSGR001ARobotBuilder {
 		this.roboServices = roboServices;
 	}
 
-	public Robot build(RobotStateListener stateListener, boolean no_orders) {
+	public Robot build(S3RobotStateListener stateListener, boolean no_orders) {
 		CommonActions ca = new CommonActions();
 		RobotState state = new RobotState(stateListener);
 		SMBuilder builder = new SMBuilder()

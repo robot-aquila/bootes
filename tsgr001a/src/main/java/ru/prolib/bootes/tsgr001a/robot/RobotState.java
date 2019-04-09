@@ -3,6 +3,7 @@ package ru.prolib.bootes.tsgr001a.robot;
 import ru.prolib.aquila.core.BusinessEntities.Portfolio;
 import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
+import ru.prolib.bootes.lib.s3.S3RobotStateListener;
 import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
 import ru.prolib.bootes.tsgr001a.rm.RMContractStrategy;
 import ru.prolib.bootes.tsgr001a.rm.RMContractStrategyPositionParams;
@@ -13,7 +14,7 @@ import ru.prolib.bootes.tsgr001a.rm.RMContractStrategyPositionParams;
  * This class is intended to be accessible outside. Thus, all methods must be synchronized.
  */
 public class RobotState {
-	private final RobotStateListener stateListener;
+	private final S3RobotStateListener stateListener;
 	private String contractName, accountCode;
 	private ContractResolver contractResolver;
 	private ContractParams contractParams;
@@ -24,11 +25,11 @@ public class RobotState {
 	private STSeriesHandler sht0, sht1, sht2;
 	private Speculation speculation;
 	
-	public RobotState(RobotStateListener stateListener) {
+	public RobotState(S3RobotStateListener stateListener) {
 		this.stateListener = stateListener;
 	}
 	
-	public RobotStateListener getStateListener() {
+	public S3RobotStateListener getStateListener() {
 		return stateListener;
 	}
 	

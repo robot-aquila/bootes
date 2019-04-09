@@ -9,6 +9,7 @@ import ru.prolib.bootes.lib.app.AppComponent;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.config.AppConfig;
 import ru.prolib.bootes.lib.report.ReportPrinter;
+import ru.prolib.bootes.lib.s3.S3RobotStateListenerComp;
 import ru.prolib.bootes.tsgr001a.robot.report.BlockReportHandler;
 import ru.prolib.bootes.tsgr001a.robot.report.EquityCurveReportHandler;
 import ru.prolib.bootes.tsgr001a.robot.report.S3ReportHandler;
@@ -31,7 +32,7 @@ public class TSGR001ARobotComp implements AppComponent {
 	@Override
 	public void init() throws Throwable {
 		roboServices = new RoboServiceLocator(serviceLocator);
-		RobotStateListenerComp stateListener = new RobotStateListenerComp();
+		S3RobotStateListenerComp stateListener = new S3RobotStateListenerComp();
 		robot = new TSGR001ARobotBuilder(serviceLocator, roboServices)
 				.build(stateListener, appConfig.getBasicConfig().isNoOrders());
 		RobotState state = robot.getState();

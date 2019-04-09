@@ -3,8 +3,8 @@ package ru.prolib.bootes.tsgr001a.robot.sh;
 import ru.prolib.aquila.core.sm.SMExit;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
+import ru.prolib.bootes.lib.s3.S3RobotStateListener;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
-import ru.prolib.bootes.tsgr001a.robot.RobotStateListener;
 
 public class Cleanup extends CommonHandler {
 	public static final String E_OK = "OK";
@@ -17,7 +17,7 @@ public class Cleanup extends CommonHandler {
 	@Override
 	public SMExit enter(SMTriggerRegistry triggers) {
 		super.enter(triggers);
-		RobotStateListener listener = null;
+		S3RobotStateListener listener = null;
 		synchronized ( state ) {
 			listener = state.getStateListener();
 		}

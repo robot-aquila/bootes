@@ -13,9 +13,9 @@ import ru.prolib.aquila.core.BusinessEntities.TickType;
 import ru.prolib.aquila.core.sm.SMExit;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
+import ru.prolib.bootes.lib.s3.S3RobotStateListener;
 import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
-import ru.prolib.bootes.tsgr001a.robot.RobotStateListener;
 
 public class SimClosePosition extends CommonHandler {
 	private static final Logger logger;
@@ -51,7 +51,7 @@ public class SimClosePosition extends CommonHandler {
 		super.enter(triggers);
 		Speculation spec = null;
 		Security security = null;
-		RobotStateListener listener = null;
+		S3RobotStateListener listener = null;
 		synchronized ( state ) {
 			spec = state.getActiveSpeculation();
 			security = state.getSecurity();

@@ -16,6 +16,8 @@ import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.core.BusinessEntities.Terminal;
 import ru.prolib.aquila.core.BusinessEntities.Tick;
 import ru.prolib.aquila.core.BusinessEntities.TickType;
+import ru.prolib.aquila.core.sm.OnFinishAction;
+import ru.prolib.aquila.core.sm.OnTimeoutAction;
 import ru.prolib.aquila.core.sm.SMExit;
 import ru.prolib.aquila.core.sm.SMExitAction;
 import ru.prolib.aquila.core.sm.SMInput;
@@ -23,11 +25,9 @@ import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 import ru.prolib.bootes.lib.data.ts.SignalType;
-import ru.prolib.bootes.lib.sm.OnTimeoutAction;
-import ru.prolib.bootes.lib.sm.OnFinishAction;
+import ru.prolib.bootes.lib.s3.S3RobotStateListener;
 import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
-import ru.prolib.bootes.tsgr001a.robot.RobotStateListener;
 
 public class S3ClosePosition extends CommonHandler implements
 	SMExitAction,
@@ -180,7 +180,7 @@ public class S3ClosePosition extends CommonHandler implements
 			return;
 		}
 		Speculation spec;
-		RobotStateListener listener;
+		S3RobotStateListener listener;
 		synchronized ( state ) {
 			spec = state.getActiveSpeculation();
 			listener = state.getStateListener();

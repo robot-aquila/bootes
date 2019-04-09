@@ -17,9 +17,9 @@ import ru.prolib.aquila.core.sm.SMInputAction;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
+import ru.prolib.bootes.lib.s3.S3RobotStateListener;
 import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
-import ru.prolib.bootes.tsgr001a.robot.RobotStateListener;
 
 public class SimTrackPosition extends CommonHandler implements SMInputAction, SMExitAction {
 	private static final Logger logger;
@@ -60,7 +60,7 @@ public class SimTrackPosition extends CommonHandler implements SMInputAction, SM
 		high = null;
 		low = null;
 		
-		RobotStateListener listener;
+		S3RobotStateListener listener;
 		synchronized ( spec ) {
 			listener = state.getStateListener();
 			sig = spec.getTradeSignal();

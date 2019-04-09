@@ -1,6 +1,6 @@
-package ru.prolib.bootes.tsgr001a.robot;
+package ru.prolib.bootes.lib.s3;
 
-public class RobotStateListenerStub implements RobotStateListener {
+public class S3RobotStateListenerStub implements S3RobotStateListener {
 
 	@Override
 	public void robotStarted() {

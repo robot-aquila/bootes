@@ -30,6 +30,9 @@ import ru.prolib.aquila.core.BusinessEntities.Symbol;
 import ru.prolib.aquila.core.BusinessEntities.Tick;
 import ru.prolib.aquila.core.BusinessEntities.TickType;
 import ru.prolib.aquila.core.data.DataProviderStub;
+import ru.prolib.aquila.core.sm.OnFinishAction;
+import ru.prolib.aquila.core.sm.OnInterruptAction;
+import ru.prolib.aquila.core.sm.OnTimeoutAction;
 import ru.prolib.aquila.core.sm.SMInput;
 import ru.prolib.aquila.core.sm.SMTriggerOnEvent;
 import ru.prolib.aquila.core.sm.SMTriggerOnTimer;
@@ -37,12 +40,9 @@ import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 import ru.prolib.bootes.lib.data.ts.SignalType;
-import ru.prolib.bootes.lib.sm.OnFinishAction;
-import ru.prolib.bootes.lib.sm.OnInterruptAction;
-import ru.prolib.bootes.lib.sm.OnTimeoutAction;
+import ru.prolib.bootes.lib.s3.S3RobotStateListener;
 import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
-import ru.prolib.bootes.tsgr001a.robot.RobotStateListener;
 
 public class S3OpenPositionTest {
 	private static Account ACCOUNT = new Account("TEST");
@@ -61,7 +61,7 @@ public class S3OpenPositionTest {
 	private IMocksControl control;
 	private EditableTerminal terminalMock, terminal;
 	private EditableOrder orderMock;
-	private RobotStateListener rlistenerMock;
+	private S3RobotStateListener rlistenerMock;
 	private SMTriggerRegistry tregMock;
 	private EventType eventTypeMock;
 	private AppServiceLocator serviceLocator;
@@ -75,7 +75,7 @@ public class S3OpenPositionTest {
 		orderMock = control.createMock(EditableOrder.class);
 		tregMock = control.createMock(SMTriggerRegistry.class);
 		eventTypeMock = control.createMock(EventType.class);
-		rlistenerMock = control.createMock(RobotStateListener.class);
+		rlistenerMock = control.createMock(S3RobotStateListener.class);
 		state = new RobotState(rlistenerMock);
 		terminal = new BasicTerminalBuilder()
 				.withDataProvider(new DataProviderStub())

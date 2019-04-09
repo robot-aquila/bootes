@@ -1,95 +1,95 @@
-package ru.prolib.bootes.tsgr001a.robot;
+package ru.prolib.bootes.lib.s3;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-public class RobotStateListenerComp implements RobotStateListener {
-	private Set<RobotStateListener> listeners;
+public class S3RobotStateListenerComp implements S3RobotStateListener {
+	private Set<S3RobotStateListener> listeners;
 	
-	public RobotStateListenerComp(Set<RobotStateListener> listeners) {
+	public S3RobotStateListenerComp(Set<S3RobotStateListener> listeners) {
 		this.listeners = listeners;
 	}
 	
-	public RobotStateListenerComp() {
+	public S3RobotStateListenerComp() {
 		this(new LinkedHashSet<>());
 	}
 	
-	public RobotStateListenerComp addListener(RobotStateListener listener) {
+	public S3RobotStateListenerComp addListener(S3RobotStateListener listener) {
 		listeners.add(listener);
 		return this;
 	}
 	
-	public RobotStateListenerComp removeListener(RobotStateListener listener) {
+	public S3RobotStateListenerComp removeListener(S3RobotStateListener listener) {
 		listeners.remove(listener);
 		return this;
 	}
 
 	@Override
 	public void robotStarted() {
-		for ( RobotStateListener listener : listeners ) {
+		for ( S3RobotStateListener listener : listeners ) {
 			listener.robotStarted();
 		}
 	}
 
 	@Override
 	public void accountSelected() {
-		for ( RobotStateListener listener : listeners ) {
+		for ( S3RobotStateListener listener : listeners ) {
 			listener.accountSelected();
 		}
 	}
 
 	@Override
 	public void contractSelected() {
-		for ( RobotStateListener listener : listeners ) {
+		for ( S3RobotStateListener listener : listeners ) {
 			listener.contractSelected();
 		}
 	}
 
 	@Override
 	public void sessionDataAvailable() {
-		for ( RobotStateListener listener : listeners ) {
+		for ( S3RobotStateListener listener : listeners ) {
 			listener.sessionDataAvailable();
 		}
 	}
 
 	@Override
 	public void riskManagementUpdate() {
-		for ( RobotStateListener listener : listeners ) {
+		for ( S3RobotStateListener listener : listeners ) {
 			listener.riskManagementUpdate();
 		}
 	}
 
 	@Override
 	public void speculationOpened() {
-		for ( RobotStateListener listener : listeners ) {
+		for ( S3RobotStateListener listener : listeners ) {
 			listener.speculationOpened();
 		}
 	}
 	
 	@Override
 	public void speculationUpdate() {
-		for ( RobotStateListener listener : listeners ) {
+		for ( S3RobotStateListener listener : listeners ) {
 			listener.speculationUpdate();
 		}
 	}
 
 	@Override
 	public void speculationClosed() {
-		for ( RobotStateListener listener : listeners ) {
+		for ( S3RobotStateListener listener : listeners ) {
 			listener.speculationClosed();
 		}
 	}
 
 	@Override
 	public void sessionDataCleanup() {
-		for ( RobotStateListener listener : listeners ) {
+		for ( S3RobotStateListener listener : listeners ) {
 			listener.sessionDataCleanup();
 		}
 	}
 
 	@Override
 	public void robotStopped() {
-		for ( RobotStateListener listener : listeners ) {
+		for ( S3RobotStateListener listener : listeners ) {
 			listener.robotStopped();
 		}
 	}

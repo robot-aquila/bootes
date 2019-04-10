@@ -12,9 +12,9 @@ import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.core.BusinessEntities.Terminal;
 import ru.prolib.aquila.core.text.IMessages;
 import ru.prolib.aquila.core.text.MsgID;
-import ru.prolib.bootes.tsgr001a.rm.RMContractStrategy;
-import ru.prolib.bootes.tsgr001a.rm.RMContractStrategyParams;
-import ru.prolib.bootes.tsgr001a.rm.RMContractStrategyPositionParams;
+import ru.prolib.bootes.lib.rm.RMContractStrategy;
+import ru.prolib.bootes.lib.rm.RMContractStrategyParams;
+import ru.prolib.bootes.lib.rm.RMContractStrategyPositionParams;
 import ru.prolib.bootes.tsgr001a.robot.ContractParams;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 

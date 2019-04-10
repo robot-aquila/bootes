@@ -9,8 +9,8 @@ import ru.prolib.aquila.core.sm.SMExit;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.aquila.core.utils.LocalTimeTable;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
-import ru.prolib.bootes.tsgr001a.rm.RMContractStrategy;
-import ru.prolib.bootes.tsgr001a.rm.RMContractStrategyParams;
+import ru.prolib.bootes.lib.rm.RMContractStrategy;
+import ru.prolib.bootes.lib.rm.RMContractStrategyParams;
 import ru.prolib.bootes.tsgr001a.robot.ContractResolverRegistry;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 

@@ -1,4 +1,4 @@
-package ru.prolib.bootes.tsgr001a.rm;
+package ru.prolib.bootes.lib.rm;
 
 import static ru.prolib.aquila.core.BusinessEntities.CDecimalBD.*;
 
@@ -107,7 +107,6 @@ public class RMContractStrategy {
 	 * @return position parameters
 	 */
 	public RMContractStrategyPositionParams getPositionParams(Instant time) {
-		// TODO: от баланса или эквити?
 		CDecimal d_trade_loss_cap_per = params.getTradeLossCapPer();
 		CDecimal d_trade_goal_cap_per = params.getTradeGoalCapPer();
 		CDecimal d_price_step_size = security.getTickSize();
@@ -125,7 +124,9 @@ public class RMContractStrategy {
 		{
 			return emptyPositionParams();
 		}
-		
+
+		// TODO: От баланса, эквити или свободной маржи?
+		// Скорее всего от эквити, но не более свободной маржи.
 		CDecimal d_basis_value = portfolio.getFreeMargin().multiply(d_strategy_cap_share_per);
 		if ( d_basis_value.toAbstract().compareTo(ZERO) == 0 ) {
 			return emptyPositionParams();

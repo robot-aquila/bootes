@@ -1,4 +1,4 @@
-package ru.prolib.bootes.tsgr001a.rm;
+package ru.prolib.bootes.lib.rm;
 
 import static org.junit.Assert.*;
 import static org.easymock.EasyMock.*;
@@ -25,6 +25,10 @@ import ru.prolib.aquila.core.BusinessEntities.SecurityField;
 import ru.prolib.aquila.core.BusinessEntities.Symbol;
 import ru.prolib.aquila.core.data.DataProviderStub;
 import ru.prolib.aquila.core.utils.LocalTimeTable;
+import ru.prolib.bootes.lib.rm.RMContractStrategy;
+import ru.prolib.bootes.lib.rm.RMContractStrategyParams;
+import ru.prolib.bootes.lib.rm.RMContractStrategyPositionParams;
+import ru.prolib.bootes.lib.rm.RMPriceStats;
 
 public class RMContractStrategyTest {
 	

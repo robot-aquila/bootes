@@ -1,4 +1,4 @@
-package ru.prolib.bootes.tsgr001a.rm;
+package ru.prolib.bootes.lib.rm;
 
 import static org.junit.Assert.*;
 import static ru.prolib.aquila.core.BusinessEntities.CDecimalBD.*;
@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 import ru.prolib.aquila.core.utils.Variant;
+import ru.prolib.bootes.lib.rm.RMContractStrategyParams;
 
 public class RMContractStrategyParamsTest {
 	private RMContractStrategyParams service;

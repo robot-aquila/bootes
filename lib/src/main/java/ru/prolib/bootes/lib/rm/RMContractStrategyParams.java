@@ -1,4 +1,4 @@
-package ru.prolib.bootes.tsgr001a.rm;
+package ru.prolib.bootes.lib.rm;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;

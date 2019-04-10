@@ -1,4 +1,4 @@
-package ru.prolib.bootes.tsgr001a.rm;
+package ru.prolib.bootes.lib.rm;
 
 import java.time.Instant;
 

@@ -2,4 +2,4 @@
  * Short-term Speculative Strategy components.
  *
  */
-package ru.prolib.bootes.lib.s3;
+package ru.prolib.bootes.lib.robo.s3;

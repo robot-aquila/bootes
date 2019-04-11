@@ -15,7 +15,7 @@ import ru.prolib.aquila.core.BusinessEntities.SPRunnable;
 import ru.prolib.aquila.core.BusinessEntities.TaskHandler;
 import ru.prolib.aquila.core.data.OHLCScalableSeries;
 import ru.prolib.aquila.core.data.ValueException;
-import ru.prolib.bootes.lib.s3.S3RobotStateListener;
+import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
 public class EquityCurveReportHandler implements S3RobotStateListener, EventListener, SPRunnable {

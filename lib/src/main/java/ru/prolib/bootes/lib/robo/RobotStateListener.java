@@ -1,14 +1,19 @@
-package ru.prolib.bootes.lib.s3;
+package ru.prolib.bootes.lib.robo;
 
-public interface S3RobotStateListener {
+public interface RobotStateListener {
+
 	void robotStarted();
+
 	void accountSelected();
+
 	void contractSelected();
+
 	void sessionDataAvailable();
+
 	void riskManagementUpdate();
-	void speculationOpened();
-	void speculationUpdate();
-	void speculationClosed();
+
 	void sessionDataCleanup();
+
 	void robotStopped();
+
 }

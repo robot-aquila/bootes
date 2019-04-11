@@ -1,7 +1,9 @@
-package ru.prolib.bootes.lib.s3;
+package ru.prolib.bootes.lib.robo.s3;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
+
+import ru.prolib.bootes.lib.robo.RobotStateListener;
 
 public class S3RobotStateListenerComp implements S3RobotStateListener {
 	private Set<S3RobotStateListener> listeners;
@@ -19,42 +21,42 @@ public class S3RobotStateListenerComp implements S3RobotStateListener {
 		return this;
 	}
 	
-	public S3RobotStateListenerComp removeListener(S3RobotStateListener listener) {
+	public S3RobotStateListenerComp removeListener(RobotStateListener listener) {
 		listeners.remove(listener);
 		return this;
 	}
 
 	@Override
 	public void robotStarted() {
-		for ( S3RobotStateListener listener : listeners ) {
+		for ( RobotStateListener listener : listeners ) {
 			listener.robotStarted();
 		}
 	}
 
 	@Override
 	public void accountSelected() {
-		for ( S3RobotStateListener listener : listeners ) {
+		for ( RobotStateListener listener : listeners ) {
 			listener.accountSelected();
 		}
 	}
 
 	@Override
 	public void contractSelected() {
-		for ( S3RobotStateListener listener : listeners ) {
+		for ( RobotStateListener listener : listeners ) {
 			listener.contractSelected();
 		}
 	}
 
 	@Override
 	public void sessionDataAvailable() {
-		for ( S3RobotStateListener listener : listeners ) {
+		for ( RobotStateListener listener : listeners ) {
 			listener.sessionDataAvailable();
 		}
 	}
 
 	@Override
 	public void riskManagementUpdate() {
-		for ( S3RobotStateListener listener : listeners ) {
+		for ( RobotStateListener listener : listeners ) {
 			listener.riskManagementUpdate();
 		}
 	}
@@ -82,14 +84,14 @@ public class S3RobotStateListenerComp implements S3RobotStateListener {
 
 	@Override
 	public void sessionDataCleanup() {
-		for ( S3RobotStateListener listener : listeners ) {
+		for ( RobotStateListener listener : listeners ) {
 			listener.sessionDataCleanup();
 		}
 	}
 
 	@Override
 	public void robotStopped() {
-		for ( S3RobotStateListener listener : listeners ) {
+		for ( RobotStateListener listener : listeners ) {
 			listener.robotStopped();
 		}
 	}

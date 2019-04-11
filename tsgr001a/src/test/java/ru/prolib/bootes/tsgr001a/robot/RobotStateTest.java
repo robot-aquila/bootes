@@ -15,8 +15,8 @@ import ru.prolib.bootes.lib.cr.ContractParams;
 import ru.prolib.bootes.lib.cr.ContractResolver;
 import ru.prolib.bootes.lib.rm.RMContractStrategy;
 import ru.prolib.bootes.lib.rm.RMContractStrategyPositionParams;
-import ru.prolib.bootes.lib.s3.S3RobotStateListener;
-import ru.prolib.bootes.lib.s3.S3RobotStateListenerStub;
+import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
+import ru.prolib.bootes.lib.robo.s3.S3RobotStateListenerStub;
 import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
 
 public class RobotStateTest {

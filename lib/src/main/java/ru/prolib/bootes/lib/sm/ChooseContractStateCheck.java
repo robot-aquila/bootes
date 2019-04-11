@@ -1,6 +1,6 @@
-package ru.prolib.bootes.tsgr001a.robot.sh;
+package ru.prolib.bootes.lib.sm;
 
-import static ru.prolib.bootes.tsgr001a.robot.sh.ChooseContract.*;
+import static ru.prolib.bootes.lib.sm.ChooseContract.*;
 
 import java.time.Instant;
 
@@ -12,13 +12,15 @@ import ru.prolib.aquila.core.BusinessEntities.Symbol;
 import ru.prolib.aquila.core.BusinessEntities.Terminal;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.cr.ContractParams;
-import ru.prolib.bootes.tsgr001a.robot.RobotState;
+import ru.prolib.bootes.lib.sm.statereq.IContractDeterminable;
 
 public class ChooseContractStateCheck {
 	private final AppServiceLocator serviceLocator;
-	private final RobotState state;
+	private final IContractDeterminable state;
 	
-	public ChooseContractStateCheck(AppServiceLocator serviceLocator, RobotState state) {
+	public ChooseContractStateCheck(AppServiceLocator serviceLocator,
+			IContractDeterminable state)
+	{
 		this.serviceLocator = serviceLocator;
 		this.state = state;
 	}
@@ -26,7 +28,7 @@ public class ChooseContractStateCheck {
 	public String checkState() {
 		Terminal terminal = serviceLocator.getTerminal();
 		Instant currTime = terminal.getCurrentTime();
-		ContractParams params = state.getContractParams();
+		ContractParams params = state.getCurrentContractParams();
 		Interval dtp = params.getDataTrackingPeriod();
 		// This check should be first
 		if ( currTime.compareTo(dtp.getEnd()) >= 0 ) {

@@ -10,7 +10,7 @@ import ru.prolib.bootes.lib.report.s3rep.S3RRecord;
 import ru.prolib.bootes.lib.report.s3rep.S3RRecordCreate;
 import ru.prolib.bootes.lib.report.s3rep.S3RRecordUpdateLast;
 import ru.prolib.bootes.lib.report.s3rep.S3RType;
-import ru.prolib.bootes.lib.s3.S3RobotStateListener;
+import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
 import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 

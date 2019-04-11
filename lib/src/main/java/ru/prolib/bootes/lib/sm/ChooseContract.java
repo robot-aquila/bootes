@@ -1,4 +1,4 @@
-package ru.prolib.bootes.tsgr001a.robot.sh;
+package ru.prolib.bootes.lib.sm;
 
 import java.time.Instant;
 
@@ -13,12 +13,13 @@ import ru.prolib.aquila.core.sm.SMExit;
 import ru.prolib.aquila.core.sm.SMExitAction;
 import ru.prolib.aquila.core.sm.SMInput;
 import ru.prolib.aquila.core.sm.SMInputAction;
+import ru.prolib.aquila.core.sm.SMStateHandlerEx;
 import ru.prolib.aquila.core.sm.SMTriggerOnEvent;
 import ru.prolib.aquila.core.sm.SMTriggerOnTimer;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.cr.ContractParams;
-import ru.prolib.bootes.tsgr001a.robot.RobotState;
+import ru.prolib.bootes.lib.sm.statereq.IContractDeterminable;
 
 /**
  * Choosing the contract. 
@@ -26,7 +27,9 @@ import ru.prolib.bootes.tsgr001a.robot.RobotState;
  * The state handler to choose current contract and wait for security and data
  * tracking period. Require terminal and contract resolver to be set.
  */
-public class ChooseContract extends CommonHandler implements SMInputAction, SMExitAction {
+public class ChooseContract extends SMStateHandlerEx
+	implements SMInputAction, SMExitAction
+{
 	public static final String E_OK = "OK";
 	public static final String E_NEW_SESSION = "NEW_SESSION";
 	
@@ -36,14 +39,17 @@ public class ChooseContract extends CommonHandler implements SMInputAction, SMEx
 		logger = LoggerFactory.getLogger(ChooseContract.class);
 	}
 	
+	private final AppServiceLocator serviceLocator;
+	private final IContractDeterminable state;
 	private final SMInput in;
 	private final ChooseContractStateCheck stateCheck;
 
 	public ChooseContract(AppServiceLocator serviceLocator,
-			RobotState state,
+			IContractDeterminable state,
 			ChooseContractStateCheck stateCheck)
 	{
-		super(serviceLocator, state);
+		this.serviceLocator = serviceLocator;
+		this.state = state;
 		this.stateCheck = stateCheck;
 		setExitAction(this);
 		registerExit(E_OK);
@@ -52,7 +58,7 @@ public class ChooseContract extends CommonHandler implements SMInputAction, SMEx
 	}
 	
 	public ChooseContract(AppServiceLocator serviceLocator,
-			RobotState state)
+			IContractDeterminable state)
 	{
 		this(serviceLocator,
 			 state,
@@ -64,7 +70,7 @@ public class ChooseContract extends CommonHandler implements SMInputAction, SMEx
 		super.enter(triggers);
 		Terminal terminal = serviceLocator.getTerminal();
 		Instant currTime = terminal.getCurrentTime();
-		ContractParams currParams = state.getContractResolver().determineContract(currTime);
+		ContractParams currParams = state.determineContractParams(currTime);
 		Interval dtp = currParams.getDataTrackingPeriod();
 		if ( currTime.compareTo(dtp.getEnd()) >= 0 ) {
 			// This is an error! Period of the closest session must be
@@ -78,8 +84,7 @@ public class ChooseContract extends CommonHandler implements SMInputAction, SMEx
 			triggers.add(new SMTriggerOnTimer(terminal, dtp.getStart(), in));
 		}
 		
-		ContractParams prevParams = state.isContractParamsDefined()
-				? state.getContractParams() : null;
+		ContractParams prevParams = state.getCurrentContractParamsOrNull();
 		Symbol currSymbol = currParams.getSymbol();
 		Symbol prevSymbol = prevParams == null ? null : prevParams.getSymbol();
 		logger.debug("Contract selected: {} at time {}", currSymbol, currTime);
@@ -91,7 +96,7 @@ public class ChooseContract extends CommonHandler implements SMInputAction, SMEx
 			terminal.subscribe(currSymbol);
 			logger.debug("Subscribed: {}", currSymbol);
 		}
-		state.setContractParams(currParams);
+		state.setCurrentContractParams(currParams);
 		
 		return checkState();
 	}
@@ -110,8 +115,8 @@ public class ChooseContract extends CommonHandler implements SMInputAction, SMEx
 		String exitID = stateCheck.checkState();
 		if ( exitID != null && E_OK.equals(exitID) ) {
 			try {
-				state.setSecurity(serviceLocator.getTerminal()
-						.getSecurity(state.getContractParams().getSymbol()));
+				state.setCurrentSecurity(serviceLocator.getTerminal()
+					.getSecurity(state.getCurrentContractParams().getSymbol()));
 			} catch ( SecurityException e ) {
 				throw new IllegalStateException("Unexpected exception", e);
 			}

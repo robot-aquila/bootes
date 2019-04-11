@@ -1,5 +1,7 @@
 package ru.prolib.bootes.tsgr001a.robot;
 
+import java.time.Instant;
+
 import ru.prolib.aquila.core.BusinessEntities.Portfolio;
 import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
@@ -7,7 +9,8 @@ import ru.prolib.bootes.lib.cr.ContractParams;
 import ru.prolib.bootes.lib.cr.ContractResolver;
 import ru.prolib.bootes.lib.rm.RMContractStrategy;
 import ru.prolib.bootes.lib.rm.RMContractStrategyPositionParams;
-import ru.prolib.bootes.lib.s3.S3RobotStateListener;
+import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
+import ru.prolib.bootes.lib.sm.statereq.IContractDeterminable;
 import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
 
 /**
@@ -15,7 +18,7 @@ import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
  * <p>
  * This class is intended to be accessible outside. Thus, all methods must be synchronized.
  */
-public class RobotState {
+public class RobotState implements IContractDeterminable {
 	private final S3RobotStateListener stateListener;
 	private String contractName, accountCode;
 	private ContractResolver contractResolver;
@@ -185,6 +188,41 @@ public class RobotState {
 			throw new NullPointerException();
 		}
 		return speculation;
+	}
+
+	@Override
+	public ContractParams determineContractParams(Instant time) {
+		return getContractResolver().determineContract(time);
+	}
+
+	@Override
+	public ContractParams getCurrentContractParamsOrNull() {
+		return contractParams;
+	}
+
+	@Override
+	public ContractParams getCurrentContractParams() {
+		return getContractParams();
+	}
+
+	@Override
+	public boolean isCurrentContractParamsDefined() {
+		return isContractParamsDefined();
+	}
+
+	@Override
+	public void setCurrentContractParams(ContractParams params) {
+		setContractParams(params);
+	}
+
+	@Override
+	public void setCurrentSecurity(Security security) {
+		setSecurity(security);
+	}
+
+	@Override
+	public Security getCurrentSecurity() {
+		return getSecurity();
 	}
 	
 }

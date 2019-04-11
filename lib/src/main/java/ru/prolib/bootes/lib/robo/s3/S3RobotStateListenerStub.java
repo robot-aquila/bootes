@@ -1,4 +1,4 @@
-package ru.prolib.bootes.lib.s3;
+package ru.prolib.bootes.lib.robo.s3;
 
 public class S3RobotStateListenerStub implements S3RobotStateListener {
 

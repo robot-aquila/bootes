@@ -1,4 +1,4 @@
-package ru.prolib.bootes.lib.s3;
+package ru.prolib.bootes.lib.robo.s3;
 
 import static org.junit.Assert.*;
 
@@ -11,8 +11,8 @@ import org.easymock.IMocksControl;
 import org.junit.Before;
 import org.junit.Test;
 
-import ru.prolib.bootes.lib.s3.S3RobotStateListener;
-import ru.prolib.bootes.lib.s3.S3RobotStateListenerComp;
+import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
+import ru.prolib.bootes.lib.robo.s3.S3RobotStateListenerComp;
 
 public class RobotStateListenerCompTest {
 	private IMocksControl control;

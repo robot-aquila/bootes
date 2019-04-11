@@ -3,7 +3,7 @@ package ru.prolib.bootes.tsgr001a.robot.report;
 import ru.prolib.bootes.lib.data.ts.SignalType;
 import ru.prolib.bootes.lib.report.summarep.ISummaryReportTracker;
 import ru.prolib.bootes.lib.report.summarep.SREntry;
-import ru.prolib.bootes.lib.s3.S3RobotStateListener;
+import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
 import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 

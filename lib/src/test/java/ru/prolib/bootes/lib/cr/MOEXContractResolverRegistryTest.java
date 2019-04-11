@@ -1,4 +1,4 @@
-package ru.prolib.bootes.tsgr001a.robot;
+package ru.prolib.bootes.lib.cr;
 
 import static org.junit.Assert.*;
 
@@ -7,13 +7,17 @@ import java.time.ZoneId;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ContractResolverRegistryTest {
+import ru.prolib.bootes.lib.cr.ContractResolver;
+import ru.prolib.bootes.lib.cr.ContractResolverM3RTS;
+import ru.prolib.bootes.lib.cr.MOEXContractResolverRegistry;
+
+public class MOEXContractResolverRegistryTest {
 	private static final ZoneId ZONE = ZoneId.of("Europe/Moscow");
 	private ContractResolverRegistry service;
 
 	@Before
 	public void setUp() throws Exception {
-		service = new ContractResolverRegistry();
+		service = new MOEXContractResolverRegistry();
 	}
 
 	@Test (expected=IllegalArgumentException.class)

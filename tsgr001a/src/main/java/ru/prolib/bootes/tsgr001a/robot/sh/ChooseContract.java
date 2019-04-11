@@ -17,7 +17,7 @@ import ru.prolib.aquila.core.sm.SMTriggerOnEvent;
 import ru.prolib.aquila.core.sm.SMTriggerOnTimer;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
-import ru.prolib.bootes.tsgr001a.robot.ContractParams;
+import ru.prolib.bootes.lib.cr.ContractParams;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
 /**

@@ -10,9 +10,9 @@ import ru.prolib.aquila.core.data.tseries.QEMATSeriesFast;
 import ru.prolib.aquila.core.data.tseries.STSeries;
 import ru.prolib.aquila.core.data.tseries.TSeriesCacheController;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
-import ru.prolib.bootes.tsgr001a.data.PVCluster;
-import ru.prolib.bootes.tsgr001a.data.PVClusterSeriesByLastTrade;
-import ru.prolib.bootes.tsgr001a.data.WeightedAverageTSeries;
+import ru.prolib.bootes.lib.data.PVCluster;
+import ru.prolib.bootes.lib.data.PVClusterSeriesByLastTrade;
+import ru.prolib.bootes.lib.data.WeightedAverageTSeries;
 
 /**
  * Setup of data handler of primary timeframe (T=T0=TZ).

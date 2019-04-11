@@ -1,4 +1,4 @@
-package ru.prolib.bootes.tsgr001a.data;
+package ru.prolib.bootes.lib.data;
 
 import ru.prolib.aquila.core.Event;
 import ru.prolib.aquila.core.BusinessEntities.Security;

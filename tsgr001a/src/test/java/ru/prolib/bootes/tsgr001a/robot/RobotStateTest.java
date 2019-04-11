@@ -11,6 +11,8 @@ import org.junit.Test;
 import ru.prolib.aquila.core.BusinessEntities.Portfolio;
 import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
+import ru.prolib.bootes.lib.cr.ContractParams;
+import ru.prolib.bootes.lib.cr.ContractResolver;
 import ru.prolib.bootes.lib.rm.RMContractStrategy;
 import ru.prolib.bootes.lib.rm.RMContractStrategyPositionParams;
 import ru.prolib.bootes.lib.s3.S3RobotStateListener;

@@ -1,22 +1,26 @@
-package ru.prolib.bootes.tsgr001a.robot;
+package ru.prolib.bootes.lib.cr;
 
 import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ContractResolverRegistry {
+public class MOEXContractResolverRegistry implements ContractResolverRegistry {
 	private final ZoneId zoneID; 
 	private final Map<String, ContractResolver> cache;
 	
-	public ContractResolverRegistry(ZoneId zoneID, Map<String, ContractResolver> cache) {
+	public MOEXContractResolverRegistry(ZoneId zoneID, Map<String, ContractResolver> cache) {
 		this.zoneID = zoneID;
 		this.cache = cache;
 	}
 	
-	public ContractResolverRegistry() {
+	public MOEXContractResolverRegistry() {
 		this(ZoneId.of("Europe/Moscow"), new HashMap<>());
 	}
 	
+	/* (non-Javadoc)
+	 * @see ru.prolib.bootes.lib.cr.ContractResolverRegistry#getResolver(java.lang.String)
+	 */
+	@Override
 	public synchronized ContractResolver getResolver(String symbolName) {
 		ContractResolver r = cache.get(symbolName);
 		if ( r == null ) {

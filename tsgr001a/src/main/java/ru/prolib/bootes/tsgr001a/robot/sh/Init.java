@@ -9,9 +9,9 @@ import ru.prolib.aquila.core.sm.SMExit;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.aquila.core.utils.LocalTimeTable;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
+import ru.prolib.bootes.lib.cr.MOEXContractResolverRegistry;
 import ru.prolib.bootes.lib.rm.RMContractStrategy;
 import ru.prolib.bootes.lib.rm.RMContractStrategyParams;
-import ru.prolib.bootes.tsgr001a.robot.ContractResolverRegistry;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
 public class Init extends CommonHandler {
@@ -27,7 +27,7 @@ public class Init extends CommonHandler {
 		super.enter(triggers);
 		final String cn = "RTS", an = "QFORTS-TEST";
 		state.setContractName(cn);
-		state.setContractResolver(new ContractResolverRegistry().getResolver(cn));
+		state.setContractResolver(new MOEXContractResolverRegistry().getResolver(cn));
 		state.setAccountCode(an);
 		
 		RMContractStrategy cs = new RMContractStrategy();

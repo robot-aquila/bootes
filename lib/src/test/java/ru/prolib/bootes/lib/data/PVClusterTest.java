@@ -1,10 +1,12 @@
-package ru.prolib.bootes.tsgr001a.data;
+package ru.prolib.bootes.lib.data;
 
 import static org.junit.Assert.*;
 import static ru.prolib.aquila.core.BusinessEntities.CDecimalBD.*;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import ru.prolib.bootes.lib.data.PVCluster;
 
 public class PVClusterTest {
 	private PVCluster service;

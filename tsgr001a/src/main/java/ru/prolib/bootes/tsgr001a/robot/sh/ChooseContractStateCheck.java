@@ -11,7 +11,7 @@ import ru.prolib.aquila.core.BusinessEntities.SecurityException;
 import ru.prolib.aquila.core.BusinessEntities.Symbol;
 import ru.prolib.aquila.core.BusinessEntities.Terminal;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
-import ru.prolib.bootes.tsgr001a.robot.ContractParams;
+import ru.prolib.bootes.lib.cr.ContractParams;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
 public class ChooseContractStateCheck {

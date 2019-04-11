@@ -1,4 +1,4 @@
-package ru.prolib.bootes.tsgr001a.robot;
+package ru.prolib.bootes.lib.cr;
 
 import static org.junit.Assert.*;
 
@@ -12,6 +12,7 @@ import org.threeten.extra.Interval;
 
 import ru.prolib.aquila.core.BusinessEntities.Symbol;
 import ru.prolib.aquila.core.utils.Variant;
+import ru.prolib.bootes.lib.cr.ContractParams;
 
 public class ContractParamsTest {
 	

@@ -1,4 +1,4 @@
-package ru.prolib.bootes.tsgr001a.data;
+package ru.prolib.bootes.lib.data;
 
 import static org.junit.Assert.*;
 import static org.easymock.EasyMock.*;
@@ -13,6 +13,8 @@ import org.junit.Test;
 import ru.prolib.aquila.core.concurrency.LID;
 import ru.prolib.aquila.core.data.TSeries;
 import ru.prolib.aquila.core.data.ZTFrame;
+import ru.prolib.bootes.lib.data.PVCluster;
+import ru.prolib.bootes.lib.data.WeightedAverageTSeries;
 
 public class WeightedAverageTSeriesTest {
 	

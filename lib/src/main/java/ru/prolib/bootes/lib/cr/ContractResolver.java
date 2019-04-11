@@ -1,4 +1,4 @@
-package ru.prolib.bootes.tsgr001a.robot;
+package ru.prolib.bootes.lib.cr;
 
 import java.time.Instant;
 

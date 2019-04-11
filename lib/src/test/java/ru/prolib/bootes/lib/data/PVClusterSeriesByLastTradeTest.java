@@ -1,4 +1,4 @@
-package ru.prolib.bootes.tsgr001a.data;
+package ru.prolib.bootes.lib.data;
 
 import static org.junit.Assert.*;
 
@@ -21,6 +21,9 @@ import ru.prolib.aquila.core.BusinessEntities.Tick;
 import ru.prolib.aquila.core.data.DataProviderStub;
 import ru.prolib.aquila.core.data.TSeriesImpl;
 import ru.prolib.aquila.core.data.ZTFrame;
+import ru.prolib.bootes.lib.data.PVCluster;
+import ru.prolib.bootes.lib.data.PVClusterAggregator;
+import ru.prolib.bootes.lib.data.PVClusterSeriesByLastTrade;
 
 public class PVClusterSeriesByLastTradeTest {
 	

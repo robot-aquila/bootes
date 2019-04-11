@@ -1,4 +1,4 @@
-package ru.prolib.bootes.lib.sm;
+package ru.prolib.bootes.lib.robo.sh;
 
 import java.time.Instant;
 
@@ -19,7 +19,7 @@ import ru.prolib.aquila.core.sm.SMTriggerOnTimer;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.cr.ContractParams;
-import ru.prolib.bootes.lib.sm.statereq.IContractDeterminable;
+import ru.prolib.bootes.lib.robo.sh.statereq.IContractDeterminable;
 
 /**
  * Choosing the contract. 

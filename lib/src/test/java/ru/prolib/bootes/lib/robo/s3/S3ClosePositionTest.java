@@ -1,4 +1,4 @@
-package ru.prolib.bootes.tsgr001a.robot.sh;
+package ru.prolib.bootes.lib.robo.s3;
 
 import static org.junit.Assert.*;
 
@@ -25,6 +25,8 @@ import ru.prolib.aquila.core.BusinessEntities.OrderAction;
 import ru.prolib.aquila.core.BusinessEntities.OrderException;
 import ru.prolib.aquila.core.BusinessEntities.OrderField;
 import ru.prolib.aquila.core.BusinessEntities.OrderStatus;
+import ru.prolib.aquila.core.BusinessEntities.Portfolio;
+import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.core.BusinessEntities.SecurityField;
 import ru.prolib.aquila.core.BusinessEntities.Symbol;
 import ru.prolib.aquila.core.BusinessEntities.Tick;
@@ -38,11 +40,13 @@ import ru.prolib.aquila.core.sm.SMTriggerOnEvent;
 import ru.prolib.aquila.core.sm.SMTriggerOnTimer;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
+import ru.prolib.bootes.lib.cr.ContractParams;
 import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 import ru.prolib.bootes.lib.data.ts.SignalType;
+import ru.prolib.bootes.lib.robo.s3.S3ClosePosition;
 import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
 import ru.prolib.bootes.lib.robo.s3.S3Speculation;
-import ru.prolib.bootes.tsgr001a.robot.RobotState;
+import ru.prolib.bootes.lib.robo.s3.statereq.IS3Speculative;
 
 public class S3ClosePositionTest {
 	private static Account ACCOUNT = new Account("TEST");
@@ -58,6 +62,83 @@ public class S3ClosePositionTest {
 		return Instant.parse(timeString);
 	}
 	
+	public static class StateStub implements IS3Speculative {
+		private S3RobotStateListener listener;
+		private Portfolio portfolio;
+		private Security security;
+		private S3Speculation speculation;
+		
+		StateStub(S3RobotStateListener listener) {
+			this.listener = listener;
+		}
+
+		@Override
+		public S3RobotStateListener getStateListener() {
+			return listener;
+		}
+
+		@Override
+		public Account getAccount() {
+			return portfolio.getAccount();
+		}
+
+		@Override
+		public void setPortfolio(Portfolio portfolio) {
+			this.portfolio = portfolio;
+		}
+
+		@Override
+		public Portfolio getPortfolio() {
+			return portfolio;
+		}
+
+		@Override
+		public ContractParams determineContractParams(Instant time) {
+			throw new IllegalStateException("Operation not supported");
+		}
+
+		@Override
+		public ContractParams getContractParamsOrNull() {
+			throw new IllegalStateException("Operation not supported");
+		}
+
+		@Override
+		public ContractParams getContractParams() {
+			throw new IllegalStateException("Operation not supported");
+		}
+
+		@Override
+		public boolean isContractParamsDefined() {
+			throw new IllegalStateException("Operation not supported");
+		}
+
+		@Override
+		public void setContractParams(ContractParams params) {
+			throw new IllegalStateException("Operation not supported");
+		}
+
+		@Override
+		public void setSecurity(Security security) {
+			this.security = security;
+		}
+
+		@Override
+		public Security getSecurity() {
+			return security;
+		}
+
+		@Override
+		public S3Speculation getActiveSpeculation() {
+			return speculation;
+		}
+
+		@Override
+		public void setActiveSpeculation(S3Speculation spec) {
+			this.speculation = spec;
+		}
+		
+	}
+	
 	private IMocksControl control;
 	private EditableTerminal terminalMock, terminal;
 	private EditableSecurity security;
@@ -66,7 +147,7 @@ public class S3ClosePositionTest {
 	private SMTriggerRegistry tregMock;
 	private EventType eventTypeMock;
 	private AppServiceLocator serviceLocator;
-	private RobotState state;
+	private IS3Speculative state;
 	private S3ClosePosition service;
 
 	@Before
@@ -77,7 +158,7 @@ public class S3ClosePositionTest {
 		tregMock = control.createMock(SMTriggerRegistry.class);
 		eventTypeMock = control.createMock(EventType.class);
 		rlistenerMock = control.createMock(S3RobotStateListener.class);
-		state = new RobotState(rlistenerMock);
+		state = new StateStub(rlistenerMock);
 		terminal = new BasicTerminalBuilder()
 				.withDataProvider(new DataProviderStub())
 				.buildTerminal();

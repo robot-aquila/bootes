@@ -1,4 +1,4 @@
-package ru.prolib.bootes.lib.sm;
+package ru.prolib.bootes.lib.robo.sh;
 
 import ru.prolib.aquila.core.BusinessEntities.Account;
 import ru.prolib.aquila.core.BusinessEntities.Portfolio;
@@ -10,7 +10,7 @@ import ru.prolib.aquila.core.sm.SMStateHandlerEx;
 import ru.prolib.aquila.core.sm.SMTriggerOnEvent;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
-import ru.prolib.bootes.lib.sm.statereq.IAccountDeterminable;
+import ru.prolib.bootes.lib.robo.sh.statereq.IAccountDeterminable;
 
 public class WaitForAccount extends SMStateHandlerEx implements SMInputAction {
 	public static final String E_OK = "OK";

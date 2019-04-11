@@ -1,6 +1,6 @@
-package ru.prolib.bootes.lib.sm;
+package ru.prolib.bootes.lib.robo.sh;
 
-import static ru.prolib.bootes.lib.sm.ChooseContract.*;
+import static ru.prolib.bootes.lib.robo.sh.ChooseContract.*;
 
 import java.time.Instant;
 
@@ -12,7 +12,7 @@ import ru.prolib.aquila.core.BusinessEntities.Symbol;
 import ru.prolib.aquila.core.BusinessEntities.Terminal;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.cr.ContractParams;
-import ru.prolib.bootes.lib.sm.statereq.IContractDeterminable;
+import ru.prolib.bootes.lib.robo.sh.statereq.IContractDeterminable;
 
 public class ChooseContractStateCheck {
 	private final AppServiceLocator serviceLocator;

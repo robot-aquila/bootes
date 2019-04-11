@@ -1,4 +1,4 @@
-package ru.prolib.bootes.tsgr001a.robot.sh;
+package ru.prolib.bootes.lib.robo.s3;
 
 import static org.easymock.EasyMock.createStrictControl;
 import static org.easymock.EasyMock.expect;
@@ -40,9 +40,10 @@ import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 import ru.prolib.bootes.lib.data.ts.SignalType;
+import ru.prolib.bootes.lib.robo.s3.S3ClosePositionTest.StateStub;
+import ru.prolib.bootes.lib.robo.s3.S3OpenPosition;
 import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
 import ru.prolib.bootes.lib.robo.s3.S3Speculation;
-import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
 public class S3OpenPositionTest {
 	private static Account ACCOUNT = new Account("TEST");
@@ -65,7 +66,7 @@ public class S3OpenPositionTest {
 	private SMTriggerRegistry tregMock;
 	private EventType eventTypeMock;
 	private AppServiceLocator serviceLocator;
-	private RobotState state;
+	private StateStub state;
 	private S3OpenPosition service;
 	
 	@Before
@@ -76,7 +77,7 @@ public class S3OpenPositionTest {
 		tregMock = control.createMock(SMTriggerRegistry.class);
 		eventTypeMock = control.createMock(EventType.class);
 		rlistenerMock = control.createMock(S3RobotStateListener.class);
-		state = new RobotState(rlistenerMock);
+		state = new StateStub(rlistenerMock);
 		terminal = new BasicTerminalBuilder()
 				.withDataProvider(new DataProviderStub())
 				.buildTerminal();

@@ -1,10 +1,10 @@
-package ru.prolib.bootes.lib.sm;
+package ru.prolib.bootes.lib.robo.sh;
 
 import ru.prolib.aquila.core.sm.SMExit;
 import ru.prolib.aquila.core.sm.SMStateHandlerEx;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
-import ru.prolib.bootes.lib.sm.statereq.IStateObservable;
+import ru.prolib.bootes.lib.robo.sh.statereq.IStateObservable;
 
 public class Cleanup extends SMStateHandlerEx {
 	public static final String E_OK = "OK";

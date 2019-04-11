@@ -1,4 +1,4 @@
-package ru.prolib.bootes.lib.sm.statereq;
+package ru.prolib.bootes.lib.robo.sh.statereq;
 
 import ru.prolib.aquila.core.BusinessEntities.Account;
 import ru.prolib.aquila.core.BusinessEntities.Portfolio;

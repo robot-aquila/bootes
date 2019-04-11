@@ -4,7 +4,7 @@ import ru.prolib.bootes.lib.data.ts.SignalType;
 import ru.prolib.bootes.lib.report.summarep.ISummaryReportTracker;
 import ru.prolib.bootes.lib.report.summarep.SREntry;
 import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
-import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
+import ru.prolib.bootes.lib.robo.s3.S3Speculation;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
 public class SummaryReportHandler implements S3RobotStateListener {
@@ -16,7 +16,7 @@ public class SummaryReportHandler implements S3RobotStateListener {
 		this.tracker = tracker;
 	}
 	
-	private Speculation getSpeculation() {
+	private S3Speculation getSpeculation() {
 		synchronized ( state ) {
 			return state.getActiveSpeculation();
 		}
@@ -59,7 +59,7 @@ public class SummaryReportHandler implements S3RobotStateListener {
 
 	@Override
 	public void speculationClosed() {
-		Speculation spec = getSpeculation();
+		S3Speculation spec = getSpeculation();
 		SREntry tr = null;
 		synchronized ( spec ) {
 			tr = new SREntry(

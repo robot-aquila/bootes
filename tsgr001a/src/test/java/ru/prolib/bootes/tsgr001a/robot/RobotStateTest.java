@@ -17,7 +17,7 @@ import ru.prolib.bootes.lib.rm.RMContractStrategy;
 import ru.prolib.bootes.lib.rm.RMContractStrategyPositionParams;
 import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
 import ru.prolib.bootes.lib.robo.s3.S3RobotStateListenerStub;
-import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
+import ru.prolib.bootes.lib.robo.s3.S3Speculation;
 
 public class RobotStateTest {
 	private IMocksControl control;
@@ -47,7 +47,7 @@ public class RobotStateTest {
 		STSeriesHandler sht1Mock = control.createMock(STSeriesHandler.class);
 		STSeriesHandler sht2Mock = control.createMock(STSeriesHandler.class);
 		RMContractStrategyPositionParams ppMock = control.createMock(RMContractStrategyPositionParams.class);
-		Speculation specMock = control.createMock(Speculation.class);
+		S3Speculation specMock = control.createMock(S3Speculation.class);
 		
 		service.setContractName("RTS");
 		service.setAccountCode("ZX-48");

@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.apache.commons.io.FileUtils;
 
+import ru.prolib.aquila.core.sm.SMStateHandlerEx;
 import ru.prolib.aquila.core.sm.SMStateMachine;
 import ru.prolib.bootes.lib.app.AppComponent;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
@@ -15,7 +16,6 @@ import ru.prolib.bootes.tsgr001a.robot.report.EquityCurveReportHandler;
 import ru.prolib.bootes.tsgr001a.robot.report.S3ReportHandler;
 import ru.prolib.bootes.tsgr001a.robot.report.SummaryReportDumpAtShutdown;
 import ru.prolib.bootes.tsgr001a.robot.report.SummaryReportHandler;
-import ru.prolib.bootes.tsgr001a.robot.sh.CommonHandler;
 import ru.prolib.bootes.tsgr001a.robot.ui.RobotUIService;
 
 public class TSGR001ARobotComp implements AppComponent {
@@ -61,8 +61,8 @@ public class TSGR001ARobotComp implements AppComponent {
 		SMStateMachine automat = robot.getAutomat();
 		synchronized ( automat ) {
 			if ( ! automat.finished() ) {
-				CommonHandler sh = (CommonHandler) automat.getCurrentState();
-				automat.input(sh.getInputOfInterruption(), null);
+				SMStateHandlerEx sh = (SMStateHandlerEx) automat.getCurrentState();
+				automat.input(sh.getInterrupt(), null);
 			}
 		}
 		// TODO: Here! Wait for automat finished work.

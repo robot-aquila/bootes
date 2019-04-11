@@ -9,7 +9,7 @@ import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
-import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
+import ru.prolib.bootes.lib.robo.s3.S3Speculation;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
 public class SimOpenPosition extends CommonHandler {
@@ -25,7 +25,7 @@ public class SimOpenPosition extends CommonHandler {
 	@Override
 	public SMExit enter(SMTriggerRegistry triggers) {
 		super.enter(triggers);
-		Speculation spec = null;
+		S3Speculation spec = null;
 		Security security = null;
 		S3RobotStateListener listener = null;
 		synchronized ( state ) {
@@ -42,7 +42,7 @@ public class SimOpenPosition extends CommonHandler {
 					signal.getExpectedQty(),
 					security.priceToValueWR(price, signal.getExpectedQty())
 				);
-			spec.setFlags(Speculation.SF_NEW);
+			spec.setFlags(S3Speculation.SF_NEW);
 			spec.setEntryPoint(entry);
 		}
 		listener.speculationOpened();

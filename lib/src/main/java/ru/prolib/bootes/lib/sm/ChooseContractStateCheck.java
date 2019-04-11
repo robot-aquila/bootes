@@ -28,7 +28,7 @@ public class ChooseContractStateCheck {
 	public String checkState() {
 		Terminal terminal = serviceLocator.getTerminal();
 		Instant currTime = terminal.getCurrentTime();
-		ContractParams params = state.getCurrentContractParams();
+		ContractParams params = state.getContractParams();
 		Interval dtp = params.getDataTrackingPeriod();
 		// This check should be first
 		if ( currTime.compareTo(dtp.getEnd()) >= 0 ) {

@@ -25,7 +25,7 @@ import ru.prolib.bootes.lib.data.ts.filter.IFilterSetState;
 import ru.prolib.bootes.lib.data.ts.filter.impl.CooldownFilter;
 import ru.prolib.bootes.lib.report.s3rep.utils.S3RLastSpeculationEndTime;
 import ru.prolib.bootes.lib.rm.RMContractStrategyPositionParams;
-import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
+import ru.prolib.bootes.lib.robo.s3.S3Speculation;
 import ru.prolib.bootes.tsgr001a.robot.RoboServiceLocator;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 import ru.prolib.bootes.tsgr001a.robot.SetupT0;
@@ -146,7 +146,7 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 		}
 		
 		synchronized ( state ) {
-			state.setActiveSpeculation(new Speculation(signal));
+			state.setActiveSpeculation(new S3Speculation(signal));
 		}
 		//logger.debug("Detected signal: {}", signal);
 		return getExit(signal.getType() == SignalType.BUY ? E_BUY : E_SELL);

@@ -26,7 +26,7 @@ import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 import ru.prolib.bootes.lib.data.ts.SignalType;
 import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
-import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
+import ru.prolib.bootes.lib.robo.s3.S3Speculation;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
 public class S3ClosePosition extends CommonHandler implements
@@ -110,7 +110,7 @@ public class S3ClosePosition extends CommonHandler implements
 	public SMExit enter(SMTriggerRegistry triggers) {
 		super.enter(triggers);
 		
-		Speculation spec;
+		S3Speculation spec;
 		Security security;
 		Portfolio portfolio;
 		synchronized ( state ) {
@@ -179,7 +179,7 @@ public class S3ClosePosition extends CommonHandler implements
 		if ( filled_volume.compareTo(CDecimalBD.ZERO) == 0 ) {
 			return;
 		}
-		Speculation spec;
+		S3Speculation spec;
 		S3RobotStateListener listener;
 		synchronized ( state ) {
 			spec = state.getActiveSpeculation();
@@ -223,7 +223,7 @@ public class S3ClosePosition extends CommonHandler implements
 		synchronized ( spec ) {
 			spec.setExitPoint(exit_point);
 			if ( closed ) {
-				spec.setFlags(spec.getFlags() | Speculation.SF_STATUS_CLOSED);
+				spec.setFlags(spec.getFlags() | S3Speculation.SF_STATUS_CLOSED);
 				switch ( signal.getType() ) {
 				case BUY:
 					spec.setResult(exit_point.getValue().subtract(entry_point.getValue()));

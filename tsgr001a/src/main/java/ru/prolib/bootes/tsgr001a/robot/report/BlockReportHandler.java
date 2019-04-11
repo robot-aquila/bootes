@@ -6,7 +6,7 @@ import ru.prolib.bootes.lib.report.blockrep.BlockReport;
 import ru.prolib.bootes.lib.report.blockrep.IBlockReport;
 import ru.prolib.bootes.lib.report.blockrep.IBlockReportStorage;
 import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
-import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
+import ru.prolib.bootes.lib.robo.s3.S3Speculation;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
 public class BlockReportHandler implements S3RobotStateListener {
@@ -24,7 +24,7 @@ public class BlockReportHandler implements S3RobotStateListener {
 		this.storage = storage;
 	}
 	
-	private Speculation getSpeculation() {
+	private S3Speculation getSpeculation() {
 		synchronized ( state ) {
 			return state.getActiveSpeculation();
 		}
@@ -57,7 +57,7 @@ public class BlockReportHandler implements S3RobotStateListener {
 
 	@Override
 	public void speculationOpened() {
-		Speculation spec = getSpeculation();
+		S3Speculation spec = getSpeculation();
 		synchronized ( spec ) {
 			Tick en_p = spec.getEntryPoint(); 
 			currSpecReport = new BlockReport(new Block(ID_OPEN, en_p.getPrice(), en_p.getTime()));
@@ -67,7 +67,7 @@ public class BlockReportHandler implements S3RobotStateListener {
 
 	@Override
 	public void speculationUpdate() {
-		Speculation spec = getSpeculation();
+		S3Speculation spec = getSpeculation();
 		synchronized ( spec ) {
 			currSpecReport.setBlock(new Block(ID_TAKE_PROFIT, spec.getTakeProfit(), null));
 			currSpecReport.setBlock(new Block(ID_STOP_LOSS, spec.getStopLoss(), null));
@@ -77,7 +77,7 @@ public class BlockReportHandler implements S3RobotStateListener {
 
 	@Override
 	public void speculationClosed() {
-		Speculation spec = getSpeculation();
+		S3Speculation spec = getSpeculation();
 		synchronized ( spec ) {
 			Tick ex_p = spec.getExitPoint();
 			currSpecReport.setBlock(new Block(ID_CLOSE, ex_p.getPrice(), ex_p.getTime()));

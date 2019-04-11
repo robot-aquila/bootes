@@ -41,7 +41,7 @@ import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 import ru.prolib.bootes.lib.data.ts.SignalType;
 import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
-import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
+import ru.prolib.bootes.lib.robo.s3.S3Speculation;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
 public class S3OpenPositionTest {
@@ -212,7 +212,7 @@ public class S3OpenPositionTest {
 	
 	@Test
 	public void testEnter_NothingToOpen() throws Exception {
-		Speculation spec = new Speculation(new S3TradeSignal(
+		S3Speculation spec = new S3Speculation(new S3TradeSignal(
 				SignalType.BUY,
 				T("2019-03-06T19:13:00Z"),
 				of("120.96"),
@@ -234,7 +234,7 @@ public class S3OpenPositionTest {
 	
 	@Test
 	public void testEnter_UnknownSignalType() throws Exception {
-		Speculation spec = new Speculation(new S3TradeSignal(
+		S3Speculation spec = new S3Speculation(new S3TradeSignal(
 				SignalType.NONE,
 				T("2019-03-06T19:13:00Z"),
 				of("120.96"),
@@ -256,7 +256,7 @@ public class S3OpenPositionTest {
 	
 	@Test
 	public void testEnter_Buy() throws Exception {
-		Speculation spec = new Speculation(new S3TradeSignal(
+		S3Speculation spec = new S3Speculation(new S3TradeSignal(
 				SignalType.BUY,
 				T("2019-03-06T19:13:00Z"),
 				of("120.96"),
@@ -288,7 +288,7 @@ public class S3OpenPositionTest {
 	
 	@Test
 	public void testEnter_Sell() throws Exception {
-		Speculation spec = new Speculation(new S3TradeSignal(
+		S3Speculation spec = new S3Speculation(new S3TradeSignal(
 				SignalType.SELL,
 				T("2019-03-06T19:13:00Z"),
 				of("120.96"),
@@ -320,7 +320,7 @@ public class S3OpenPositionTest {
 	
 	@Test
 	public void testEnter_ErrorPlacingOrder() throws Exception {
-		Speculation spec = new Speculation(new S3TradeSignal(
+		S3Speculation spec = new S3Speculation(new S3TradeSignal(
 				SignalType.SELL,
 				T("2019-03-06T19:13:00Z"),
 				of("120.96"),
@@ -368,7 +368,7 @@ public class S3OpenPositionTest {
 	
 	@Test
 	public void testExit_PartiallyFilled() throws Exception {
-		Speculation spec = new Speculation(new S3TradeSignal(
+		S3Speculation spec = new S3Speculation(new S3TradeSignal(
 				SignalType.SELL,
 				T("2019-03-06T19:13:00Z"),
 				of("120.96"),
@@ -398,13 +398,13 @@ public class S3OpenPositionTest {
 		control.verify();
 		Tick expected_enter = Tick.of(TickType.TRADE, T("2019-03-06T21:27:01Z"), of("19.17"), of(15L), of("575.10"));
 		assertEquals(expected_enter, spec.getEntryPoint());
-		assertEquals(Speculation.SF_NEW, spec.getFlags());
+		assertEquals(S3Speculation.SF_NEW, spec.getFlags());
 		assertNull(spec.getResult());
 	}
 	
 	@Test
 	public void testExit_CompletelyFilled() throws Exception {
-		Speculation spec = new Speculation(new S3TradeSignal(
+		S3Speculation spec = new S3Speculation(new S3TradeSignal(
 				SignalType.SELL,
 				T("2019-03-06T19:13:00Z"),
 				of("120.96"),
@@ -435,7 +435,7 @@ public class S3OpenPositionTest {
 		control.verify();
 		Tick expected_enter = Tick.of(TickType.TRADE, T("2019-03-06T21:27:01Z"), of("19.17"), of(20L), of("766.60"));
 		assertEquals(expected_enter, spec.getEntryPoint());
-		assertEquals(Speculation.SF_NEW, spec.getFlags());
+		assertEquals(S3Speculation.SF_NEW, spec.getFlags());
 		assertNull(spec.getResult());
 	}
 

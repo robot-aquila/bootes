@@ -1,4 +1,4 @@
-package ru.prolib.bootes.tsgr001a.robot.sh;
+package ru.prolib.bootes.lib.sm;
 
 import ru.prolib.aquila.core.BusinessEntities.Account;
 import ru.prolib.aquila.core.BusinessEntities.Portfolio;
@@ -6,18 +6,24 @@ import ru.prolib.aquila.core.BusinessEntities.Terminal;
 import ru.prolib.aquila.core.sm.SMExit;
 import ru.prolib.aquila.core.sm.SMInput;
 import ru.prolib.aquila.core.sm.SMInputAction;
+import ru.prolib.aquila.core.sm.SMStateHandlerEx;
 import ru.prolib.aquila.core.sm.SMTriggerOnEvent;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
-import ru.prolib.bootes.tsgr001a.robot.RobotState;
+import ru.prolib.bootes.lib.sm.statereq.IAccountDeterminable;
 
-public class WaitForAccount extends CommonHandler implements SMInputAction {
+public class WaitForAccount extends SMStateHandlerEx implements SMInputAction {
 	public static final String E_OK = "OK";
 	
+	private final AppServiceLocator serviceLocator;
+	private final IAccountDeterminable state;
 	private final SMInput in;
 	
-	public WaitForAccount(AppServiceLocator serviceLocator, RobotState state) {
-		super(serviceLocator, state);
+	public WaitForAccount(AppServiceLocator serviceLocator,
+						  IAccountDeterminable state)
+	{
+		this.serviceLocator = serviceLocator;
+		this.state = state;
 		registerExit(E_OK);
 		in = registerInput(this);
 	}
@@ -37,7 +43,7 @@ public class WaitForAccount extends CommonHandler implements SMInputAction {
 	private SMExit objectsAvailable() {
 		try {
 			Terminal terminal = serviceLocator.getTerminal();
-			Account account = new Account(state.getAccountCode());
+			Account account = state.getAccount();
 			if ( ! terminal.isPortfolioExists(account) ) {
 				return null;
 			}

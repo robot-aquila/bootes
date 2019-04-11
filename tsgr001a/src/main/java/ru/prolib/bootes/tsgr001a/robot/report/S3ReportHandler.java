@@ -11,7 +11,7 @@ import ru.prolib.bootes.lib.report.s3rep.S3RRecordCreate;
 import ru.prolib.bootes.lib.report.s3rep.S3RRecordUpdateLast;
 import ru.prolib.bootes.lib.report.s3rep.S3RType;
 import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
-import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
+import ru.prolib.bootes.lib.robo.s3.S3Speculation;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
 public class S3ReportHandler implements S3RobotStateListener {
@@ -35,7 +35,7 @@ public class S3ReportHandler implements S3RobotStateListener {
 		this(state, report, false);
 	}
 	
-	private Speculation getSpeculation() {
+	private S3Speculation getSpeculation() {
 		synchronized ( state ) {
 			return state.getActiveSpeculation();
 		}
@@ -73,7 +73,7 @@ public class S3ReportHandler implements S3RobotStateListener {
 
 	@Override
 	public void speculationUpdate() {
-		Speculation spec = getSpeculation();
+		S3Speculation spec = getSpeculation();
 		S3RRecordCreate request;
 		synchronized ( spec ) {
 			Tick en_p = spec.getEntryPoint();
@@ -92,7 +92,7 @@ public class S3ReportHandler implements S3RobotStateListener {
 
 	@Override
 	public void speculationClosed() {
-		Speculation spec = getSpeculation();
+		S3Speculation spec = getSpeculation();
 		S3RRecordUpdateLast request;
 		synchronized ( spec ) {
 			Tick ex_p = spec.getExitPoint();

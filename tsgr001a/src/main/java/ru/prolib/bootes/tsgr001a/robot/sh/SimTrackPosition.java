@@ -18,7 +18,7 @@ import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
-import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
+import ru.prolib.bootes.lib.robo.s3.S3Speculation;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
 public class SimTrackPosition extends CommonHandler implements SMInputAction, SMExitAction {
@@ -31,7 +31,7 @@ public class SimTrackPosition extends CommonHandler implements SMInputAction, SM
 	public static final String E_CLOSE_POSITION = "CLOSE_POSITION";
 	
 	private final SMInput in;
-	private Speculation spec;
+	private S3Speculation spec;
 	private S3TradeSignal sig;
 	private CDecimal stopLoss, takeProfit, breakEven;
 	private TStampedVal<CDecimal> low, high;
@@ -94,7 +94,7 @@ public class SimTrackPosition extends CommonHandler implements SMInputAction, SM
 	public SMExit input(Object data) {
 		Instant curr_time = serviceLocator.getTerminal().getCurrentTime();
 		Security security = null;
-		Speculation spec = null;
+		S3Speculation spec = null;
 		synchronized ( state ) {
 			security = state.getSecurity();
 			spec = state.getActiveSpeculation();
@@ -102,7 +102,7 @@ public class SimTrackPosition extends CommonHandler implements SMInputAction, SM
 		synchronized ( spec ) {
 			CDecimal last_price = security.getLastTrade().getPrice();
 			if ( data instanceof Instant ) {
-				spec.setFlags(spec.getFlags() | Speculation.SF_TIMEOUT);
+				spec.setFlags(spec.getFlags() | S3Speculation.SF_TIMEOUT);
 				return getExit(E_CLOSE_POSITION);
 			}
 			
@@ -124,10 +124,10 @@ public class SimTrackPosition extends CommonHandler implements SMInputAction, SM
 					return getExit(E_CLOSE_POSITION);
 				}
 				if ( breakEven != null
-				  && (Speculation.SF_BREAK_EVEN & spec.getFlags()) == 0
+				  && (S3Speculation.SF_BREAK_EVEN & spec.getFlags()) == 0
 				  && last_price.compareTo(breakEven) >= 0 )
 				{
-					spec.setFlags(spec.getFlags() | Speculation.SF_BREAK_EVEN);
+					spec.setFlags(spec.getFlags() | S3Speculation.SF_BREAK_EVEN);
 					// TODO: more precise stop-loss calculation
 					stopLoss = spec.getEntryPoint().getPrice();
 					logger.debug("{} Long became a break-even @{}", curr_time, last_price);
@@ -145,10 +145,10 @@ public class SimTrackPosition extends CommonHandler implements SMInputAction, SM
 					return getExit(E_CLOSE_POSITION);
 				}
 				if ( breakEven != null
-				  && (Speculation.SF_BREAK_EVEN & spec.getFlags()) == 0
+				  && (S3Speculation.SF_BREAK_EVEN & spec.getFlags()) == 0
 				  && last_price.compareTo(breakEven) <= 0 )
 				{
-					spec.setFlags(spec.getFlags() | Speculation.SF_BREAK_EVEN);
+					spec.setFlags(spec.getFlags() | S3Speculation.SF_BREAK_EVEN);
 					// TODO: more precise stop-loss calculation
 					stopLoss = spec.getEntryPoint().getPrice();
 					logger.debug("{} Short became a break-even @{}", curr_time, last_price);

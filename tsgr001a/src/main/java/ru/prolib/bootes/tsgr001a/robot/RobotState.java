@@ -2,6 +2,7 @@ package ru.prolib.bootes.tsgr001a.robot;
 
 import java.time.Instant;
 
+import ru.prolib.aquila.core.BusinessEntities.Account;
 import ru.prolib.aquila.core.BusinessEntities.Portfolio;
 import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
@@ -10,15 +11,15 @@ import ru.prolib.bootes.lib.cr.ContractResolver;
 import ru.prolib.bootes.lib.rm.RMContractStrategy;
 import ru.prolib.bootes.lib.rm.RMContractStrategyPositionParams;
 import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
-import ru.prolib.bootes.lib.sm.statereq.IContractDeterminable;
-import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
+import ru.prolib.bootes.lib.robo.s3.S3Speculation;
+import ru.prolib.bootes.lib.robo.s3.statereq.IS3Speculative;
 
 /**
  * Robot state.
  * <p>
  * This class is intended to be accessible outside. Thus, all methods must be synchronized.
  */
-public class RobotState implements IContractDeterminable {
+public class RobotState implements IS3Speculative {
 	private final S3RobotStateListener stateListener;
 	private String contractName, accountCode;
 	private ContractResolver contractResolver;
@@ -28,7 +29,7 @@ public class RobotState implements IContractDeterminable {
 	private Portfolio portfolio;
 	private Security security;
 	private STSeriesHandler sht0, sht1, sht2;
-	private Speculation speculation;
+	private S3Speculation speculation;
 	
 	public RobotState(S3RobotStateListener stateListener) {
 		this.stateListener = stateListener;
@@ -50,6 +51,7 @@ public class RobotState implements IContractDeterminable {
 		this.contractResolver = resolver;
 	}
 	
+	@Override
 	public synchronized void setContractParams(ContractParams contractParams) {
 		this.contractParams = contractParams;
 	}
@@ -62,6 +64,7 @@ public class RobotState implements IContractDeterminable {
 		this.portfolio = portfolio;
 	}
 	
+	@Override
 	public synchronized void setSecurity(Security security) {
 		this.security = security;
 	}
@@ -82,7 +85,8 @@ public class RobotState implements IContractDeterminable {
 		this.positionParams = params;
 	}
 	
-	public synchronized void setActiveSpeculation(Speculation speculation) {
+	@Override
+	public synchronized void setActiveSpeculation(S3Speculation speculation) {
 		this.speculation = speculation;
 	}
 	
@@ -100,6 +104,11 @@ public class RobotState implements IContractDeterminable {
 		return accountCode;
 	}
 	
+	@Override
+	public Account getAccount() {
+		return new Account(getAccountCode());
+	}
+	
 	public synchronized ContractResolver getContractResolver() {
 		if ( contractResolver == null ) {
 			throw new NullPointerException(); 
@@ -107,10 +116,16 @@ public class RobotState implements IContractDeterminable {
 		return contractResolver;
 	}
 	
+	@Override
 	public synchronized ContractParams getContractParams() {
 		if ( contractParams == null ) {
 			throw new NullPointerException();
 		}
+		return contractParams;
+	}
+	
+	@Override
+	public synchronized ContractParams getContractParamsOrNull() {
 		return contractParams;
 	}
 	
@@ -121,6 +136,7 @@ public class RobotState implements IContractDeterminable {
 		return contractStrategy;
 	}
 	
+	@Override
 	public synchronized boolean isContractParamsDefined() {
 		return contractParams != null;
 	}
@@ -132,6 +148,7 @@ public class RobotState implements IContractDeterminable {
 		return portfolio;
 	}
 	
+	@Override
 	public synchronized Security getSecurity() {
 		if ( security == null ) {
 			throw new NullPointerException();
@@ -183,7 +200,8 @@ public class RobotState implements IContractDeterminable {
 		return positionParams != null;
 	}
 	
-	public synchronized Speculation getActiveSpeculation() {
+	@Override
+	public synchronized S3Speculation getActiveSpeculation() {
 		if ( speculation == null ) {
 			throw new NullPointerException();
 		}
@@ -193,36 +211,6 @@ public class RobotState implements IContractDeterminable {
 	@Override
 	public ContractParams determineContractParams(Instant time) {
 		return getContractResolver().determineContract(time);
-	}
-
-	@Override
-	public ContractParams getCurrentContractParamsOrNull() {
-		return contractParams;
-	}
-
-	@Override
-	public ContractParams getCurrentContractParams() {
-		return getContractParams();
-	}
-
-	@Override
-	public boolean isCurrentContractParamsDefined() {
-		return isContractParamsDefined();
-	}
-
-	@Override
-	public void setCurrentContractParams(ContractParams params) {
-		setContractParams(params);
-	}
-
-	@Override
-	public void setCurrentSecurity(Security security) {
-		setSecurity(security);
-	}
-
-	@Override
-	public Security getCurrentSecurity() {
-		return getSecurity();
 	}
 	
 }

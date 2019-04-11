@@ -84,7 +84,7 @@ public class ChooseContract extends SMStateHandlerEx
 			triggers.add(new SMTriggerOnTimer(terminal, dtp.getStart(), in));
 		}
 		
-		ContractParams prevParams = state.getCurrentContractParamsOrNull();
+		ContractParams prevParams = state.getContractParamsOrNull();
 		Symbol currSymbol = currParams.getSymbol();
 		Symbol prevSymbol = prevParams == null ? null : prevParams.getSymbol();
 		logger.debug("Contract selected: {} at time {}", currSymbol, currTime);
@@ -96,7 +96,7 @@ public class ChooseContract extends SMStateHandlerEx
 			terminal.subscribe(currSymbol);
 			logger.debug("Subscribed: {}", currSymbol);
 		}
-		state.setCurrentContractParams(currParams);
+		state.setContractParams(currParams);
 		
 		return checkState();
 	}
@@ -115,8 +115,8 @@ public class ChooseContract extends SMStateHandlerEx
 		String exitID = stateCheck.checkState();
 		if ( exitID != null && E_OK.equals(exitID) ) {
 			try {
-				state.setCurrentSecurity(serviceLocator.getTerminal()
-					.getSecurity(state.getCurrentContractParams().getSymbol()));
+				state.setSecurity(serviceLocator.getTerminal()
+					.getSecurity(state.getContractParams().getSymbol()));
 			} catch ( SecurityException e ) {
 				throw new IllegalStateException("Unexpected exception", e);
 			}

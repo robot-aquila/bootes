@@ -14,7 +14,7 @@ import org.junit.Test;
 import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
 import ru.prolib.bootes.lib.robo.s3.S3RobotStateListenerComp;
 
-public class RobotStateListenerCompTest {
+public class S3RobotStateListenerCompTest {
 	private IMocksControl control;
 	private S3RobotStateListener listenerMock1, listenerMock2, listenerMock3;
 	private Set<S3RobotStateListener> listeners;

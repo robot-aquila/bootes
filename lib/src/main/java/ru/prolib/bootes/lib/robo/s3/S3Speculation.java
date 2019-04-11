@@ -1,4 +1,4 @@
-package ru.prolib.bootes.tsgr001a.mscan.sensors;
+package ru.prolib.bootes.lib.robo.s3;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
@@ -8,7 +8,7 @@ import ru.prolib.aquila.core.BusinessEntities.Tick;
 import ru.prolib.bootes.lib.data.ts.SignalType;
 import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 
-public class Speculation {
+public class S3Speculation {
 	public static final int SF_NEW				= 0x00;
 	
 	/**
@@ -38,7 +38,7 @@ public class Speculation {
 	private int flags = SF_NEW;
 	private CDecimal result, tp, sl, be;
 	
-	public Speculation(S3TradeSignal signal) {
+	public S3Speculation(S3TradeSignal signal) {
 		this.signal = signal;
 	}
 	

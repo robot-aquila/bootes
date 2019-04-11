@@ -41,7 +41,7 @@ import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 import ru.prolib.bootes.lib.data.ts.SignalType;
 import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
-import ru.prolib.bootes.tsgr001a.mscan.sensors.Speculation;
+import ru.prolib.bootes.lib.robo.s3.S3Speculation;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
 public class S3ClosePositionTest {
@@ -215,7 +215,7 @@ public class S3ClosePositionTest {
 	
 	@Test
 	public void testEnter_AlreadyClosed() throws Exception {
-		Speculation spec = new Speculation(new S3TradeSignal(
+		S3Speculation spec = new S3Speculation(new S3TradeSignal(
 				SignalType.BUY,
 				T("2019-03-06T19:13:00Z"),
 				of("120.96"),
@@ -239,7 +239,7 @@ public class S3ClosePositionTest {
 	
 	@Test
 	public void testEnter_UnknownSignalType() throws Exception {
-		Speculation spec = new Speculation(new S3TradeSignal(
+		S3Speculation spec = new S3Speculation(new S3TradeSignal(
 				SignalType.NONE,
 				T("2019-03-06T19:13:00Z"),
 				of("120.96"),
@@ -262,7 +262,7 @@ public class S3ClosePositionTest {
 	
 	@Test
 	public void testEnter_Buy_FirstTryClose() throws Exception {
-		Speculation spec = new Speculation(new S3TradeSignal(
+		S3Speculation spec = new S3Speculation(new S3TradeSignal(
 				SignalType.BUY,
 				T("2019-03-06T19:13:00Z"),
 				of("120.96"),
@@ -295,7 +295,7 @@ public class S3ClosePositionTest {
 
 	@Test
 	public void testEnter_Buy_ClosePartial() throws Exception {
-		Speculation spec = new Speculation(new S3TradeSignal(
+		S3Speculation spec = new S3Speculation(new S3TradeSignal(
 				SignalType.BUY,
 				T("2019-03-06T19:13:00Z"),
 				of("120.96"),
@@ -329,7 +329,7 @@ public class S3ClosePositionTest {
 
 	@Test
 	public void testEnter_Sell_FirstTryClose() throws Exception {
-		Speculation spec = new Speculation(new S3TradeSignal(
+		S3Speculation spec = new S3Speculation(new S3TradeSignal(
 				SignalType.SELL,
 				T("2019-03-06T19:13:00Z"),
 				of("120.96"),
@@ -362,7 +362,7 @@ public class S3ClosePositionTest {
 	
 	@Test
 	public void testEnter_Sell_ClosePartial() throws Exception {
-		Speculation spec = new Speculation(new S3TradeSignal(
+		S3Speculation spec = new S3Speculation(new S3TradeSignal(
 				SignalType.SELL,
 				T("2019-03-06T19:13:00Z"),
 				of("120.96"),
@@ -396,7 +396,7 @@ public class S3ClosePositionTest {
 	
 	@Test
 	public void testEnter_ErrorPlacingOrder() throws Exception {
-		Speculation spec = new Speculation(new S3TradeSignal(
+		S3Speculation spec = new S3Speculation(new S3TradeSignal(
 				SignalType.SELL,
 				T("2019-03-06T19:13:00Z"),
 				of("120.96"),
@@ -445,7 +445,7 @@ public class S3ClosePositionTest {
 	
 	@Test
 	public void testExit_Buy_FirstTryClose_ClosedAll() throws Exception {
-		Speculation spec = new Speculation(new S3TradeSignal(
+		S3Speculation spec = new S3Speculation(new S3TradeSignal(
 				SignalType.BUY,
 				T("2019-03-06T21:20:00Z"),
 				of("120.96"),
@@ -477,13 +477,13 @@ public class S3ClosePositionTest {
 		control.verify();
 		Tick expected_exit = Tick.of(TickType.TRADE, T("2019-03-06T21:27:01Z"), of("19.17"), of(20L), of("766.60"));
 		assertEquals(expected_exit, spec.getExitPoint());
-		assertEquals(Speculation.SF_STATUS_CLOSED, spec.getFlags());
+		assertEquals(S3Speculation.SF_STATUS_CLOSED, spec.getFlags());
 		assertEquals(of("5.40"), spec.getResult());
 	}
 	
 	@Test
 	public void testExit_Buy_FirstTryClose_ClosedPartially() throws Exception {
-		Speculation spec = new Speculation(new S3TradeSignal(
+		S3Speculation spec = new S3Speculation(new S3TradeSignal(
 				SignalType.BUY,
 				T("2019-03-06T21:20:00Z"),
 				of("120.96"),
@@ -514,13 +514,13 @@ public class S3ClosePositionTest {
 		control.verify();
 		Tick expected_exit = Tick.of(TickType.TRADE, T("2019-03-06T21:27:01Z"), of("19.16"), of(10L), of("383.20"));
 		assertEquals(expected_exit, spec.getExitPoint());
-		assertEquals(Speculation.SF_NEW, spec.getFlags());
+		assertEquals(S3Speculation.SF_NEW, spec.getFlags());
 		assertNull(spec.getResult());
 	}
 	
 	@Test
 	public void testExit_Buy_SequentialClose_ClosedAll() throws Exception {
-		Speculation spec = new Speculation(new S3TradeSignal(
+		S3Speculation spec = new S3Speculation(new S3TradeSignal(
 				SignalType.BUY,
 				T("2019-03-06T21:20:00Z"),
 				of("120.96"),
@@ -552,13 +552,13 @@ public class S3ClosePositionTest {
 		control.verify();
 		Tick expected_exit = Tick.of(TickType.TRADE, T("2019-03-06T21:27:01Z"), of("19.10"), of(20L), of("764.00"));
 		assertEquals(expected_exit, spec.getExitPoint());
-		assertEquals(Speculation.SF_STATUS_CLOSED, spec.getFlags());
+		assertEquals(S3Speculation.SF_STATUS_CLOSED, spec.getFlags());
 		assertEquals(of("2.80"), spec.getResult());
 	}
 
 	@Test
 	public void testExit_Buy_SequentialClose_ClosedPartially() throws Exception {
-		Speculation spec = new Speculation(new S3TradeSignal(
+		S3Speculation spec = new S3Speculation(new S3TradeSignal(
 				SignalType.BUY,
 				T("2019-03-06T21:20:00Z"),
 				of("120.96"),
@@ -589,13 +589,13 @@ public class S3ClosePositionTest {
 		control.verify();
 		Tick expected_exit = Tick.of(TickType.TRADE, T("2019-03-06T21:27:01Z"), of("19.04"), of(15L), of("571.20"));
 		assertEquals(expected_exit, spec.getExitPoint());
-		assertEquals(Speculation.SF_NEW, spec.getFlags());
+		assertEquals(S3Speculation.SF_NEW, spec.getFlags());
 		assertNull(spec.getResult());
 	}
 
 	@Test
 	public void testExit_Sell_FirstTryClose_ClosedAll() throws Exception {
-		Speculation spec = new Speculation(new S3TradeSignal(
+		S3Speculation spec = new S3Speculation(new S3TradeSignal(
 				SignalType.SELL,
 				T("2019-03-06T21:20:00Z"),
 				of("120.96"),
@@ -627,13 +627,13 @@ public class S3ClosePositionTest {
 		control.verify();
 		Tick expected_exit = Tick.of(TickType.TRADE, T("2019-03-06T21:27:01Z"), of("19.17"), of(20L), of("766.60"));
 		assertEquals(expected_exit, spec.getExitPoint());
-		assertEquals(Speculation.SF_STATUS_CLOSED, spec.getFlags());
+		assertEquals(S3Speculation.SF_STATUS_CLOSED, spec.getFlags());
 		assertEquals(of("-5.40"), spec.getResult());
 	}
 	
 	@Test
 	public void testExit_Sell_FirstTryClose_ClosedPartially() throws Exception {
-		Speculation spec = new Speculation(new S3TradeSignal(
+		S3Speculation spec = new S3Speculation(new S3TradeSignal(
 				SignalType.SELL,
 				T("2019-03-06T21:20:00Z"),
 				of("120.96"),
@@ -663,13 +663,13 @@ public class S3ClosePositionTest {
 		control.verify();
 		Tick expected_exit = Tick.of(TickType.TRADE, T("2019-03-06T21:27:01Z"), of("19.15"), of(5L), of("191.50"));
 		assertEquals(expected_exit, spec.getExitPoint());
-		assertEquals(Speculation.SF_NEW, spec.getFlags());
+		assertEquals(S3Speculation.SF_NEW, spec.getFlags());
 		assertNull(spec.getResult());
 	}
 	
 	@Test
 	public void testExit_Sell_SequentialClose_ClosedAll() throws Exception {
-		Speculation spec = new Speculation(new S3TradeSignal(
+		S3Speculation spec = new S3Speculation(new S3TradeSignal(
 				SignalType.SELL,
 				T("2019-03-06T21:20:00Z"),
 				of("120.96"),
@@ -701,13 +701,13 @@ public class S3ClosePositionTest {
 		control.verify();
 		Tick expected_exit = Tick.of(TickType.TRADE, T("2019-03-06T21:27:01Z"), of("19.19"), of(20L), of("767.60"));
 		assertEquals(expected_exit, spec.getExitPoint());
-		assertEquals(Speculation.SF_STATUS_CLOSED, spec.getFlags());
+		assertEquals(S3Speculation.SF_STATUS_CLOSED, spec.getFlags());
 		assertEquals(of("-6.40"), spec.getResult());
 	}
 	
 	@Test
 	public void testExit_Sell_SequentialClose_ClosedPartially() throws Exception {
-		Speculation spec = new Speculation(new S3TradeSignal(
+		S3Speculation spec = new S3Speculation(new S3TradeSignal(
 				SignalType.SELL,
 				T("2019-03-06T21:20:00Z"),
 				of("120.96"),
@@ -738,7 +738,7 @@ public class S3ClosePositionTest {
 		control.verify();
 		Tick expected_exit = Tick.of(TickType.TRADE, T("2019-03-06T21:27:01Z"), of("19.22"), of(15L), of("576.50"));
 		assertEquals(expected_exit, spec.getExitPoint());
-		assertEquals(Speculation.SF_NEW, spec.getFlags());
+		assertEquals(S3Speculation.SF_NEW, spec.getFlags());
 		assertNull(spec.getResult());
 	}
 

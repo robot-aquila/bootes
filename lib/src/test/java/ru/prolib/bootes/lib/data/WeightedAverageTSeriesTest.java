@@ -180,5 +180,41 @@ public class WeightedAverageTSeriesTest {
 		
 		control.verify();
 	}
+	
+	@Test
+	public void testGetFirstIndexBefore() {
+		expect(sourceMock.getFirstIndexBefore(T("2019-01-01T00:00:00Z"))).andReturn(2331);
+		control.replay();
+		
+		assertEquals(2331, service.getFirstIndexBefore(T("2019-01-01T00:00:00Z")));
+		
+		control.verify();
+	}
+	
+	@Test
+	public void testGetFirstBefore() throws Exception {
+		sourceMock.lock();
+		expect(sourceMock.getFirstIndexBefore(T("2981-12-01T00:00:00Z"))).andReturn(72);
+		expect(sourceMock.get(72)).andReturn(clusterMock);
+		expect(clusterMock.getWeightedAverage()).andReturn(of("12.7672"));
+		sourceMock.unlock();
+		control.replay();
+		
+		assertEquals(of("12.7672"), service.getFirstBefore(T("2981-12-01T00:00:00Z")));
+		
+		control.verify();
+	}
+	
+	@Test
+	public void testGetFirstBefore_NotFound() throws Exception {
+		sourceMock.lock();
+		expect(sourceMock.getFirstIndexBefore(T("2981-12-01T00:00:00Z"))).andReturn(-1);
+		sourceMock.unlock();
+		control.replay();
+		
+		assertNull(service.getFirstBefore(T("2981-12-01T00:00:00Z")));
+		
+		control.verify();
+	}
 
 }

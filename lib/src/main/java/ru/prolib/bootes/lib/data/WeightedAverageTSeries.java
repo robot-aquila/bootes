@@ -78,5 +78,26 @@ public class WeightedAverageTSeries implements TSeries<CDecimal> {
 	public ZTFrame getTimeFrame() {
 		return source.getTimeFrame();
 	}
+	
+	@Override
+	public int getFirstIndexBefore(Instant time) {
+		return source.getFirstIndexBefore(time);
+	}
+
+	@Override
+	public CDecimal getFirstBefore(Instant time) {
+		lock();
+		try {
+			int index = source.getFirstIndexBefore(time);
+			if ( index < 0 ) {
+				return null;
+			}
+			return source.get(index).getWeightedAverage();
+		} catch ( ValueException e ) {
+			throw new IllegalStateException("Unexpected exception: ", e);
+		} finally {
+			unlock();
+		}
+	}
 
 }

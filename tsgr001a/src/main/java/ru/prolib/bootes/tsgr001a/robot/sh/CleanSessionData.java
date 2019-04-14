@@ -5,6 +5,7 @@ import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
+@Deprecated
 public class CleanSessionData extends CommonHandler {
 	public static final String E_OK = "OK";
 	

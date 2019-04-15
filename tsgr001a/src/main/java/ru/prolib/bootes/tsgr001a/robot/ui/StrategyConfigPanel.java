@@ -106,9 +106,7 @@ public class StrategyConfigPanel extends JPanel {
 			if ( state.isSeriesHandlerT0Defined() ) {
 				security = state.getSecurity();
 			}
-			if ( state.isContractParamsDefined() ) {
-				cp = state.getContractParams();
-			}
+			cp = state.getContractParamsOrNull();
 			if ( state.isPositionParamsDefined() ) {
 				 cspp = state.getPositionParams();
 			}

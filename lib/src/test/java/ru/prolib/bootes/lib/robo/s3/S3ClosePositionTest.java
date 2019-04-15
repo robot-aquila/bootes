@@ -41,6 +41,7 @@ import ru.prolib.aquila.core.sm.SMTriggerOnTimer;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.cr.ContractParams;
+import ru.prolib.bootes.lib.cr.ContractResolver;
 import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 import ru.prolib.bootes.lib.data.ts.SignalType;
 import ru.prolib.bootes.lib.robo.s3.S3ClosePosition;
@@ -93,7 +94,7 @@ public class S3ClosePositionTest {
 		}
 
 		@Override
-		public ContractParams determineContractParams(Instant time) {
+		public ContractResolver getContractResolver() {
 			throw new IllegalStateException("Operation not supported");
 		}
 
@@ -104,11 +105,6 @@ public class S3ClosePositionTest {
 
 		@Override
 		public ContractParams getContractParams() {
-			throw new IllegalStateException("Operation not supported");
-		}
-
-		@Override
-		public boolean isContractParamsDefined() {
 			throw new IllegalStateException("Operation not supported");
 		}
 

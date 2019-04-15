@@ -70,7 +70,7 @@ public class ChooseContract extends SMStateHandlerEx
 		super.enter(triggers);
 		Terminal terminal = serviceLocator.getTerminal();
 		Instant currTime = terminal.getCurrentTime();
-		ContractParams currParams = state.determineContractParams(currTime);
+		ContractParams currParams = state.getContractResolver().determineContract(currTime);
 		Interval dtp = currParams.getDataTrackingPeriod();
 		if ( currTime.compareTo(dtp.getEnd()) >= 0 ) {
 			// This is an error! Period of the closest session must be

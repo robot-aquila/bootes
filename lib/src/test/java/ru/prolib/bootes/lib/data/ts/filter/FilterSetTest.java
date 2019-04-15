@@ -21,6 +21,7 @@ import ru.prolib.bootes.lib.data.ts.filter.IFilter;
 import ru.prolib.bootes.lib.data.ts.filter.IFilterSetState;
 import ru.prolib.bootes.lib.data.ts.filter.IFilterState;
 
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class FilterSetTest {
 	private IMocksControl control;
 	private IFilter filterMock1, filterMock2, filterMock3;

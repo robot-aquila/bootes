@@ -1,16 +1,14 @@
 package ru.prolib.bootes.lib.robo.sh.statereq;
 
-import java.time.Instant;
-
 import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.bootes.lib.cr.ContractParams;
+import ru.prolib.bootes.lib.cr.ContractResolver;
 
 public interface IContractDeterminable extends IStateObservable {
-	ContractParams determineContractParams(Instant time);
+	ContractResolver getContractResolver();
 	ContractParams getContractParamsOrNull();
 	ContractParams getContractParams();
-	boolean isContractParamsDefined();
+	Security getSecurity();
 	void setContractParams(ContractParams params);
 	void setSecurity(Security security);
-	Security getSecurity();
 }

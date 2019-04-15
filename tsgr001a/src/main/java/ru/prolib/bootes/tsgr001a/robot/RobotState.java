@@ -1,7 +1,5 @@
 package ru.prolib.bootes.tsgr001a.robot;
 
-import java.time.Instant;
-
 import ru.prolib.aquila.core.BusinessEntities.Account;
 import ru.prolib.aquila.core.BusinessEntities.Portfolio;
 import ru.prolib.aquila.core.BusinessEntities.Security;
@@ -109,6 +107,7 @@ public class RobotState implements IS3Speculative {
 		return new Account(getAccountCode());
 	}
 	
+	@Override
 	public synchronized ContractResolver getContractResolver() {
 		if ( contractResolver == null ) {
 			throw new NullPointerException(); 
@@ -134,11 +133,6 @@ public class RobotState implements IS3Speculative {
 			throw new NullPointerException();
 		}
 		return contractStrategy;
-	}
-	
-	@Override
-	public synchronized boolean isContractParamsDefined() {
-		return contractParams != null;
 	}
 	
 	public synchronized Portfolio getPortfolio() {
@@ -206,11 +200,6 @@ public class RobotState implements IS3Speculative {
 			throw new NullPointerException();
 		}
 		return speculation;
-	}
-
-	@Override
-	public ContractParams determineContractParams(Instant time) {
-		return getContractResolver().determineContract(time);
 	}
 	
 }

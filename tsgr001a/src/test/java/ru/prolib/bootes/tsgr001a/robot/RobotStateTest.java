@@ -137,16 +137,6 @@ public class RobotStateTest {
 	}
 	
 	@Test
-	public void testIsContractParamsDefined() {
-		ContractParams cpMock = control.createMock(ContractParams.class);
-		assertFalse(service.isContractParamsDefined());
-		service.setContractParams(cpMock);
-		assertTrue(service.isContractParamsDefined());
-		service.setContractParams(null);
-		assertFalse(service.isContractParamsDefined());
-	}
-	
-	@Test
 	public void testIsSeriesHandlerT0Defined() {
 		STSeriesHandler shMock = control.createMock(STSeriesHandler.class);
 		assertFalse(service.isSeriesHandlerT0Defined());

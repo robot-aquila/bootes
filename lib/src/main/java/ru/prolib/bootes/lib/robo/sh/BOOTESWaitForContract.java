@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.threeten.extra.Interval;
 
+import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.core.BusinessEntities.SecurityException;
 import ru.prolib.aquila.core.BusinessEntities.Symbol;
 import ru.prolib.aquila.core.BusinessEntities.Terminal;
@@ -22,12 +23,12 @@ import ru.prolib.bootes.lib.cr.ContractParams;
 import ru.prolib.bootes.lib.robo.sh.statereq.IContractDeterminable;
 
 /**
- * Choosing the contract. 
+ * Choose and wait for contract availability. 
  * <p>
  * The state handler to choose current contract and wait for security and data
  * tracking period. Require terminal and contract resolver to be set.
  */
-public class ChooseContract extends SMStateHandlerEx
+public class BOOTESWaitForContract extends SMStateHandlerEx
 	implements SMInputAction, SMExitAction
 {
 	public static final String E_OK = "OK";
@@ -36,17 +37,17 @@ public class ChooseContract extends SMStateHandlerEx
 	private static final Logger logger;
 	
 	static {
-		logger = LoggerFactory.getLogger(ChooseContract.class);
+		logger = LoggerFactory.getLogger(BOOTESWaitForContract.class);
 	}
 	
 	private final AppServiceLocator serviceLocator;
 	private final IContractDeterminable state;
 	private final SMInput in;
-	private final ChooseContractStateCheck stateCheck;
+	private final StateCheck stateCheck;
 
-	public ChooseContract(AppServiceLocator serviceLocator,
+	public BOOTESWaitForContract(AppServiceLocator serviceLocator,
 			IContractDeterminable state,
-			ChooseContractStateCheck stateCheck)
+			StateCheck stateCheck)
 	{
 		this.serviceLocator = serviceLocator;
 		this.state = state;
@@ -57,12 +58,12 @@ public class ChooseContract extends SMStateHandlerEx
 		in = registerInput(this);
 	}
 	
-	public ChooseContract(AppServiceLocator serviceLocator,
+	public BOOTESWaitForContract(AppServiceLocator serviceLocator,
 			IContractDeterminable state)
 	{
 		this(serviceLocator,
 			 state,
-			 new ChooseContractStateCheck(serviceLocator, state));
+			 new StateCheck(serviceLocator, state));
 	}
 
 	@Override
@@ -123,6 +124,49 @@ public class ChooseContract extends SMStateHandlerEx
 			state.getStateListener().contractSelected();
 		}
 		return getExit(exitID);
+	}
+	
+	public static class StateCheck {
+		private final AppServiceLocator serviceLocator;
+		private final IContractDeterminable state;
+		
+		public StateCheck(AppServiceLocator serviceLocator,
+				IContractDeterminable state)
+		{
+			this.serviceLocator = serviceLocator;
+			this.state = state;
+		}
+
+		public String checkState() {
+			Terminal terminal = serviceLocator.getTerminal();
+			Instant currTime = terminal.getCurrentTime();
+			ContractParams params = state.getContractParams();
+			Interval dtp = params.getDataTrackingPeriod();
+			// This check should be first
+			if ( currTime.compareTo(dtp.getEnd()) >= 0 ) {
+				return E_NEW_SESSION;
+			}
+			
+			Symbol symbol = params.getSymbol();
+			if ( ! terminal.isSecurityExists(symbol) ) {
+				return null;
+			}
+			
+			try {
+				Security security = terminal.getSecurity(symbol);
+				if ( ! security.isAvailable() ) {
+					return null;
+				}
+			} catch ( SecurityException e ) {
+				throw new IllegalStateException("Unexpected exception", e);
+			}
+			
+			if ( dtp.contains(currTime) ) {
+				return E_OK;
+			}
+			return null;
+		}
+
 	}
 
 }

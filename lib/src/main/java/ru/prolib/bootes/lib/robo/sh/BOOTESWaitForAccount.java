@@ -12,14 +12,14 @@ import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.robo.sh.statereq.IAccountDeterminable;
 
-public class WaitForAccount extends SMStateHandlerEx implements SMInputAction {
+public class BOOTESWaitForAccount extends SMStateHandlerEx implements SMInputAction {
 	public static final String E_OK = "OK";
 	
 	private final AppServiceLocator serviceLocator;
 	private final IAccountDeterminable state;
 	private final SMInput in;
 	
-	public WaitForAccount(AppServiceLocator serviceLocator,
+	public BOOTESWaitForAccount(AppServiceLocator serviceLocator,
 						  IAccountDeterminable state)
 	{
 		this.serviceLocator = serviceLocator;

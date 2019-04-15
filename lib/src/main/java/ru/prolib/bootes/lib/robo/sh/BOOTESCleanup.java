@@ -3,14 +3,14 @@ package ru.prolib.bootes.lib.robo.sh;
 import ru.prolib.aquila.core.sm.SMExit;
 import ru.prolib.aquila.core.sm.SMStateHandlerEx;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
-import ru.prolib.bootes.lib.robo.sh.statereq.ISessionDataTrackable;
+import ru.prolib.bootes.lib.app.AppServiceLocator;
+import ru.prolib.bootes.lib.robo.sh.statereq.IStateObservable;
 
-public class CleanSessionData extends SMStateHandlerEx {
+public class BOOTESCleanup extends SMStateHandlerEx {
 	public static final String E_OK = "OK";
-	
-	protected final ISessionDataTrackable state;
-	
-	public CleanSessionData(ISessionDataTrackable state) {
+	private final IStateObservable state;
+
+	public BOOTESCleanup(AppServiceLocator serviceLocator, IStateObservable state) {
 		this.state = state;
 		registerExit(E_OK);
 	}
@@ -18,8 +18,7 @@ public class CleanSessionData extends SMStateHandlerEx {
 	@Override
 	public SMExit enter(SMTriggerRegistry triggers) {
 		super.enter(triggers);
-		state.getSessionDataHandler().cleanSession();
-		state.getStateListener().sessionDataCleanup();
+		state.getStateListener().robotStopped();
 		return getExit(E_OK);
 	}
 

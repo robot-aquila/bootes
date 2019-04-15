@@ -16,12 +16,12 @@ import ru.prolib.bootes.lib.robo.ISessionDataHandler;
 import ru.prolib.bootes.lib.robo.RobotStateListener;
 import ru.prolib.bootes.lib.robo.sh.statereq.ISessionDataTrackable;
 
-public class InitSessionDataTest {
+public class BOOTESInitSessionDataTest {
 	private IMocksControl control;
 	private ISessionDataTrackable stateMock;
 	private RobotStateListener rslMock;
 	private ISessionDataHandler dhMock;
-	private InitSessionData service;
+	private BOOTESInitSessionData service;
 
 	@Before
 	public void setUp() throws Exception {
@@ -29,7 +29,7 @@ public class InitSessionDataTest {
 		stateMock = control.createMock(ISessionDataTrackable.class);
 		rslMock = control.createMock(RobotStateListener.class);
 		dhMock = control.createMock(ISessionDataHandler.class);
-		service = new InitSessionData(stateMock);
+		service = new BOOTESInitSessionData(stateMock);
 	}
 	
 	@Test

@@ -6,6 +6,7 @@ import ru.prolib.bootes.lib.robo.Robot;
 import ru.prolib.bootes.lib.robo.sh.BOOTESCleanup;
 import ru.prolib.bootes.lib.robo.sh.BOOTESWaitForAccount;
 import ru.prolib.bootes.lib.robo.sh.BOOTESWaitForContract;
+import ru.prolib.bootes.lib.robo.sh.BOOTESWaitForSessionEnd;
 import ru.prolib.bootes.lib.robo.sh.BOOTESCleanSessionData;
 import ru.prolib.bootes.lib.robo.sh.BOOTESInitSessionData;
 
@@ -39,7 +40,7 @@ public class PROTOSRobotBuilder {
 			// TODO: Open long
 			// TODO: Track long
 			// TODO: Close long
-			// TODO: Wait for session end
+			.addState(new BOOTESWaitForSessionEnd(serviceLocator, state), S_WAIT_SESSION_END)
 			.addState(new BOOTESCleanSessionData(state), S_CLEAN_SESSION)
 			.addState(new BOOTESCleanup(serviceLocator, state), S_CLEANUP)
 			.setInitialState(S_INIT)
@@ -57,9 +58,13 @@ public class PROTOSRobotBuilder {
 			.addTrans(S_WAIT_CONTRACT, BOOTESWaitForContract.E_ERROR, S_CLEANUP)
 			.addTrans(S_WAIT_CONTRACT, BOOTESWaitForContract.E_INTERRUPT, S_CLEANUP)
 		
-			.addTrans(S_INIT_SESSION, BOOTESInitSessionData.E_OK, S_CLEAN_SESSION)
+			.addTrans(S_INIT_SESSION, BOOTESInitSessionData.E_OK, S_WAIT_SESSION_END)
 			.addTrans(S_INIT_SESSION, BOOTESInitSessionData.E_ERROR, S_CLEANUP)
 			.addTrans(S_INIT_SESSION, BOOTESInitSessionData.E_INTERRUPT, S_CLEANUP)
+			
+			.addTrans(S_WAIT_SESSION_END, BOOTESWaitForSessionEnd.E_SESSION_END, S_CLEAN_SESSION)
+			.addTrans(S_WAIT_SESSION_END, BOOTESWaitForSessionEnd.E_ERROR, S_CLEANUP)
+			.addTrans(S_WAIT_SESSION_END, BOOTESWaitForSessionEnd.E_INTERRUPT, S_CLEANUP)
 			
 			//.addTrans(S_CLEAN_SESSION, BOOTESCleanSessionData.E_OK, S_WAIT_CONTRACT) // TODO: fixme later
 			.addTrans(S_CLEAN_SESSION, BOOTESCleanSessionData.E_OK, S_CLEANUP)

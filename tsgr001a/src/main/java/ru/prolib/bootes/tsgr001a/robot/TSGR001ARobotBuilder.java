@@ -133,9 +133,9 @@ public class TSGR001ARobotBuilder {
 				.addTrans(S_WAIT_MARKET_SIGNAL, WaitForMarketSignal.E_ERROR,		S_CLEANUP)
 				.addTrans(S_WAIT_MARKET_SIGNAL, WaitForMarketSignal.E_INTERRUPT,	S_CLEANUP)
 				
-				.addTrans(S_WAIT_SESSION_END, WaitForSessionEnd.E_STOP_DATA_TRACKING,	S_CLEAN_SESSION_DATA)
-				.addTrans(S_WAIT_SESSION_END, WaitForSessionEnd.E_ERROR,				S_CLEANUP)
-				.addTrans(S_WAIT_SESSION_END, WaitForSessionEnd.E_INTERRUPT,			S_CLEANUP)
+				.addTrans(S_WAIT_SESSION_END, WaitForSessionEnd.E_SESSION_END,	S_CLEAN_SESSION_DATA)
+				.addTrans(S_WAIT_SESSION_END, WaitForSessionEnd.E_ERROR,		S_CLEANUP)
+				.addTrans(S_WAIT_SESSION_END, WaitForSessionEnd.E_INTERRUPT,	S_CLEANUP)
 				
 				.addTrans(S_CLEAN_SESSION_DATA, CleanSessionData.E_OK,			S_WAIT_CONTRACT)
 				.addTrans(S_CLEAN_SESSION_DATA, CleanSessionData.E_ERROR,		S_CLEANUP)

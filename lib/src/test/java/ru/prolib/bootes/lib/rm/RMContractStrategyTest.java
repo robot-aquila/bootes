@@ -9,6 +9,7 @@ import java.time.Instant;
 import ru.prolib.aquila.core.BusinessEntities.DeltaUpdateBuilder;
 
 import org.easymock.IMocksControl;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,6 +27,8 @@ import ru.prolib.aquila.core.BusinessEntities.Symbol;
 import ru.prolib.aquila.core.data.DataProviderStub;
 import ru.prolib.aquila.core.utils.LocalTimeTable;
 import ru.prolib.bootes.lib.rm.RMContractStrategy;
+import ru.prolib.bootes.lib.rm.RMContractStrategy.ObjectLocator;
+import ru.prolib.bootes.lib.rm.RMContractStrategy.ObjectLocatorStub;
 import ru.prolib.bootes.lib.rm.RMContractStrategyParams;
 import ru.prolib.bootes.lib.rm.RMContractStrategyPositionParams;
 import ru.prolib.bootes.lib.rm.RMPriceStats;
@@ -45,6 +48,7 @@ public class RMContractStrategyTest {
 	private EditableSecurity security;
 	private EditablePortfolio portfolio;
 	private RMPriceStats psMock;
+	private LocalTimeTable ttMock;
 	private RMContractStrategyParams params;
 	private RMContractStrategy service;
 	
@@ -96,7 +100,9 @@ public class RMContractStrategyTest {
 				.buildUpdate());
 	}
 	
-	private RMContractStrategyParams commonParamsWithSlippage(int slippageStp, CDecimal strategy_cap_share) {
+	private RMContractStrategyParams
+		commonParamsWithSlippage(int slippageStp, CDecimal strategy_cap_share)
+	{
 		return params = new RMContractStrategyParams(
 				CDecimalBD.of("0.075"),
 				CDecimalBD.of("0.012"),
@@ -109,6 +115,17 @@ public class RMContractStrategyTest {
 	
 	private RMContractStrategyParams commonParamsWithSlippage(int slippage_stp) {
 		return commonParamsWithSlippage(slippage_stp, of("1"));
+	}
+	
+	private void createService(RMContractStrategyParams params) {
+		ObjectLocatorStub locator = new ObjectLocatorStub();
+		locator.setSecurity(security);
+		locator.setPortfolio(portfolio);
+		service = new RMContractStrategy(params, locator, psMock, ttMock);
+	}
+	
+	private void createService() {
+		createService(commonParamsWithSlippage(3));
 	}
 
 	@Before
@@ -123,23 +140,29 @@ public class RMContractStrategyTest {
 		portfolio.consume(new DeltaUpdateBuilder()
 				.withToken(PortfolioField.FREE_MARGIN, ofRUB2("1044780.17"))
 				.buildUpdate());
-		service = new RMContractStrategy();
-		service.setStrategyParams(commonParamsWithSlippage(3));
-		service.setPortfolio(portfolio);
-		service.setSecurity(security);
-		service.setPriceStats(psMock);
+		ttMock = control.createMock(LocalTimeTable.class);
+		service = null;
+	}
+	
+	@After
+	public void tearDown() throws Exception {
+		service = null;
 	}
 	
 	@Test
 	public void testCtor() {
+		createService();
 		assertSame(params, service.getStrategyParams());
-		assertSame(portfolio, service.getPortfolio());
-		assertSame(security, service.getSecurity());
 		assertSame(psMock, service.getPriceStats());
+		assertSame(ttMock, service.getTradingTimetable());
+		ObjectLocator ol = service.getObjectLocator();
+		assertSame(security, ol.getSecurity());
+		assertSame(portfolio, ol.getPortfolio());
 	}
 	
 	@Test
 	public void testPriceToMoney() {
+		createService();
 		setupRTS_2(); // tick size = 10, tick value = 13.23588
 		assertEquals(ofRUB2("198922.04"), service.priceToMoney(of("150290")));
 		assertEquals(ofRUB2("198922.04"), service.priceToMoney(of("150294")));
@@ -162,6 +185,7 @@ public class RMContractStrategyTest {
 	
 	@Test
 	public void testPriceToMoney_ZeroTickSize() {
+		createService();
 		setupRTS_2();
 		security.consume(new DeltaUpdateBuilder()
 				.withToken(SecurityField.TICK_SIZE, of("0.00000"))
@@ -172,6 +196,7 @@ public class RMContractStrategyTest {
 	
 	@Test
 	public void testMoneyToPrice() {
+		createService();
 		setupRTS_2();
 		assertEquals(of("76145770"), service.moneyToPrice(ofRUB5("100785632.62345")));
 		assertEquals(of("58822620"), service.moneyToPrice(ofRUB2("77856912.12")));
@@ -194,6 +219,7 @@ public class RMContractStrategyTest {
 	
 	@Test
 	public void testMoneyToPrice_ZeroTickValue() {
+		createService();
 		setupRTS_2();
 		security.consume(new DeltaUpdateBuilder()
 				.withToken(SecurityField.TICK_VALUE, ofRUB5("0"))
@@ -204,7 +230,7 @@ public class RMContractStrategyTest {
 	
 	@Test
 	public void testGetPositionParams_RTS_1() {
-		service.setStrategyParams(commonParamsWithSlippage(3));
+		createService(commonParamsWithSlippage(3));
 		setupRTS_1();
 		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("3659.02861"));
 		expect(psMock.getLocalPriceMove(TIME)).andReturn(of("115.47992"));
@@ -228,7 +254,7 @@ public class RMContractStrategyTest {
 
 	@Test
 	public void testGetPositionParams_RTS_2() {
-		service.setStrategyParams(commonParamsWithSlippage(3));
+		createService(commonParamsWithSlippage(3));
 		setupRTS_2();
 		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("3300.01726"));
 		expect(psMock.getLocalPriceMove(TIME)).andReturn(of("130.50992"));
@@ -252,7 +278,7 @@ public class RMContractStrategyTest {
 
 	@Test
 	public void testGetPositionParams_Si_1() {
-		service.setStrategyParams(commonParamsWithSlippage(5));
+		createService(commonParamsWithSlippage(5));
 		setupSi();
 		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("289.02761"));
 		expect(psMock.getLocalPriceMove(TIME)).andReturn(of("52.40061"));
@@ -276,7 +302,7 @@ public class RMContractStrategyTest {
 	
 	@Test
 	public void testGetPositionParams_Si_2() {
-		service.setStrategyParams(commonParamsWithSlippage(5));
+		createService(commonParamsWithSlippage(5));
 		setupSi();
 		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("879.71002"));
 		expect(psMock.getLocalPriceMove(TIME)).andReturn(of("76.11972"));
@@ -300,7 +326,7 @@ public class RMContractStrategyTest {
 	
 	@Test
 	public void testGetPositionParams_BR_1() {
-		service.setStrategyParams(commonParamsWithSlippage(1));
+		createService(commonParamsWithSlippage(1));
 		setupBR();
 		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("2.9801562"));
 		expect(psMock.getLocalPriceMove(TIME)).andReturn(of("0.136678"));
@@ -324,7 +350,7 @@ public class RMContractStrategyTest {
 	
 	@Test
 	public void testGetPositionParams_Eu_1() {
-		service.setStrategyParams(commonParamsWithSlippage(2));
+		createService(commonParamsWithSlippage(2));
 		setupEu();
 		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("895.40182"));
 		expect(psMock.getLocalPriceMove(TIME)).andReturn(of("49.76512"));
@@ -348,7 +374,7 @@ public class RMContractStrategyTest {
 	
 	@Test
 	public void testGetPositionParams_GOLD_1() {
-		service.setStrategyParams(commonParamsWithSlippage(3));
+		createService(commonParamsWithSlippage(3));
 		setupGOLD();
 		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("10.801772"));
 		expect(psMock.getLocalPriceMove(TIME)).andReturn(of("3.99012"));
@@ -372,7 +398,7 @@ public class RMContractStrategyTest {
 	
 	@Test
 	public void testGetPositionParams_SpecialCase_ZeroFreeMargin() {
-		service.setStrategyParams(commonParamsWithSlippage(5));
+		createService(commonParamsWithSlippage(5));
 		setupRTS_2();
 		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("3300.01726"));
 		expect(psMock.getLocalPriceMove(TIME)).andReturn(of("250.86612"));
@@ -399,7 +425,7 @@ public class RMContractStrategyTest {
 	
 	@Test
 	public void testGetPositionParams_SpecialCase_ZeroTradeGoalCapPer() {
-		service.setStrategyParams(new RMContractStrategyParams(
+		createService(new RMContractStrategyParams(
 				CDecimalBD.of("0.000"),
 				CDecimalBD.of("0.012"),
 				CDecimalBD.of("0.60"),
@@ -430,7 +456,7 @@ public class RMContractStrategyTest {
 	
 	@Test
 	public void testGetPositionParams_SpecialCase_ZeroLossGoalCapPer() {
-		service.setStrategyParams(new RMContractStrategyParams(
+		createService(new RMContractStrategyParams(
 				CDecimalBD.of("0.075"),
 				CDecimalBD.of("0.000"),
 				CDecimalBD.of("0.60"),
@@ -462,7 +488,7 @@ public class RMContractStrategyTest {
 	@Test
 	public void testGetPositionParams_SpecialCase_ZeroPriceTickSize() {
 		// Normally this never should happen because tick size shall not be zero
-		service.setStrategyParams(commonParamsWithSlippage(5));
+		createService(commonParamsWithSlippage(5));
 		setupRTS_2();
 		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("3300.01726"));
 		expect(psMock.getLocalPriceMove(TIME)).andReturn(of("450.88210"));
@@ -490,7 +516,7 @@ public class RMContractStrategyTest {
 	@Test
 	public void testGetPositionParams_SpecialCase_ZeroPriceTickValue() {
 		// Normally this never should happen because tick value shall not be zero
-		service.setStrategyParams(commonParamsWithSlippage(5));
+		createService(commonParamsWithSlippage(5));
 		setupRTS_2();
 		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("3300.01726"));
 		expect(psMock.getLocalPriceMove(TIME)).andReturn(of("450.88210"));
@@ -517,7 +543,7 @@ public class RMContractStrategyTest {
 	
 	@Test
 	public void testGetPositionParams_SpecialCase_ExpDailyPriceMovePer() {
-		service.setStrategyParams(new RMContractStrategyParams(
+		createService(new RMContractStrategyParams(
 				CDecimalBD.of("0.075"),
 				CDecimalBD.of("0.012"),
 				CDecimalBD.of("0.00"),
@@ -548,7 +574,7 @@ public class RMContractStrategyTest {
 	
 	@Test
 	public void testGetPositionParams_SpecialCase_ExpLocalPriceMovePer() {
-		service.setStrategyParams(new RMContractStrategyParams(
+		createService(new RMContractStrategyParams(
 				CDecimalBD.of("0.075"),
 				CDecimalBD.of("0.012"),
 				CDecimalBD.of("0.60"),
@@ -589,7 +615,7 @@ public class RMContractStrategyTest {
 	
 	@Test
 	public void testGetPositionParams_StrategyCapitalShare() {
-		service.setStrategyParams(commonParamsWithSlippage(3, of("0.4")));
+		createService(commonParamsWithSlippage(3, of("0.4")));
 		setupRTS_2();
 		expect(psMock.getDailyPriceMove(TIME)).andReturn(of("3300.01726"));
 		expect(psMock.getLocalPriceMove(TIME)).andReturn(of("130.50992"));
@@ -615,7 +641,7 @@ public class RMContractStrategyTest {
 	
 	@Test
 	public void testGetPositionParams_MaxContractsLimit() {
-		service.setStrategyParams(commonParamsWithSlippage(3, of("0.4")));
+		createService(commonParamsWithSlippage(3, of("0.4")));
 		setupRTS_2();
 		security.consume(new L1UpdateBuilder(symbol)
 				.withTrade()
@@ -643,19 +669,6 @@ public class RMContractStrategyTest {
 				ofRUB2("417912.07")
 			);
 		assertEquals(expected, actual);
-	}
-
-	@Test (expected=NullPointerException.class)
-	public void testGetTradingTimetable_ThrowsIfNotDefined() {
-		service.getTradingTimetable();
-	}
-
-	@Test
-	public void testGetTradingTimetable() {
-		LocalTimeTable ttMock = control.createMock(LocalTimeTable.class);
-		service.setTradingTimetable(ttMock);
-		
-		assertSame(ttMock, service.getTradingTimetable());
 	}
 
 }

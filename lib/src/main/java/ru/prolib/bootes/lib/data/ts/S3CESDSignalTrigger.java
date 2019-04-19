@@ -11,14 +11,34 @@ import ru.prolib.aquila.core.data.ValueException;
  * lesser than next.
  */
 public class S3CESDSignalTrigger implements SignalTrigger {
-	private TSeries<CDecimal> source;
 	
-	public synchronized void setSource(TSeries<CDecimal> source) {
-		this.source = source;
+	public interface ObjectLocator {
+		TSeries<CDecimal> getSource();
+	}
+	
+	public static class ObjectLocatorStub implements ObjectLocator {
+		private final TSeries<CDecimal> source;
+		
+		public ObjectLocatorStub(TSeries<CDecimal> source) {
+			this.source = source;
+		}
+
+		@Override
+		public TSeries<CDecimal> getSource() {
+			return source;
+		}
+		
+	}
+	
+	private final ObjectLocator locator;
+	
+	public S3CESDSignalTrigger(ObjectLocator locator) {
+		this.locator = locator;
 	}
 
 	@Override
 	public synchronized SignalType getSignal(Instant currentTime) {
+		TSeries<CDecimal> source = locator.getSource();
 		int index = source.toIndex(currentTime);
 		if ( index < 3 ) {
 			return SignalType.NONE;

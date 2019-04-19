@@ -2,6 +2,7 @@ package ru.prolib.bootes.lib.data.ts;
 
 import static org.junit.Assert.*;
 import static ru.prolib.aquila.core.BusinessEntities.CDecimalBD.*;
+import static ru.prolib.bootes.lib.data.ts.S3CESDSignalTrigger.ObjectLocatorStub;
 
 import java.time.Instant;
 
@@ -25,8 +26,7 @@ public class S3CESDSignalTriggerTest {
 	@Before
 	public void setUp() throws Exception {
 		source = new TSeriesImpl<>(ZTFrame.M5);
-		service = new S3CESDSignalTrigger();
-		service.setSource(source);
+		service = new S3CESDSignalTrigger(new ObjectLocatorStub(source));
 	}
 	
 	@Test

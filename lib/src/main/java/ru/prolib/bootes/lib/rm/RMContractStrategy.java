@@ -15,29 +15,49 @@ import ru.prolib.aquila.core.utils.LocalTimeTable;
  * Strategy risk management of separate contract.
  */
 public class RMContractStrategy {
-	private RMContractStrategyParams params;
-	private Portfolio portfolio;
-	private Security security;
-	private RMPriceStats priceStats;
-	private LocalTimeTable timetable;
+	
+	public interface ObjectLocator {
+		Security getSecurity();
+		Portfolio getPortfolio();
+	}
+	
+	public static class ObjectLocatorStub implements ObjectLocator {
+		private Security security;
+		private Portfolio portfolio;
 
-	public void setStrategyParams(RMContractStrategyParams params) {
+		@Override
+		public Security getSecurity() {
+			return security;
+		}
+
+		@Override
+		public Portfolio getPortfolio() {
+			return portfolio;
+		}
+		
+		public void setSecurity(Security security) {
+			this.security = security;
+		}
+		
+		public void setPortfolio(Portfolio portfolio) {
+			this.portfolio = portfolio;
+		}
+		
+	}
+	
+	private final RMContractStrategyParams params;
+	private final RMPriceStats priceStats;
+	private final LocalTimeTable timetable;
+	private final ObjectLocator locator;
+	
+	public RMContractStrategy(RMContractStrategyParams params,
+							  ObjectLocator locator,
+							  RMPriceStats priceStats,
+							  LocalTimeTable timetable)
+	{
 		this.params = params;
-	}
-	
-	public void setPortfolio(Portfolio portfolio) {
-		this.portfolio = portfolio;
-	}
-
-	public void setSecurity(Security security) {
-		this.security = security;
-	}
-	
-	public void setPriceStats(RMPriceStats stats) {
-		this.priceStats = stats;
-	}
-	
-	public void setTradingTimetable(LocalTimeTable timetable) {
+		this.locator = locator;
+		this.priceStats = priceStats;
 		this.timetable = timetable;
 	}
 
@@ -52,19 +72,16 @@ public class RMContractStrategy {
 		return timetable;
 	}
 	
-	public Portfolio getPortfolio() {
-		return portfolio;
-	}
-	
-	public Security getSecurity() {
-		return security;
-	}
-	
 	public RMPriceStats getPriceStats() {
 		return priceStats;
 	}
 	
+	public ObjectLocator getObjectLocator() {
+		return locator;
+	}
+	
 	public CDecimal priceToMoney(CDecimal price) {
+		Security security = locator.getSecurity();
 		CDecimal d_step_size = security.getTickSize();
 		if ( d_step_size.compareTo(ZERO) == 0 ) {
 			return CDecimalBD.ofRUB2("0");
@@ -74,6 +91,7 @@ public class RMContractStrategy {
 	}
 	
 	public CDecimal moneyToPrice(CDecimal money) {
+		Security security = locator.getSecurity();
 		CDecimal d_step_cost = security.getTickValue().toAbstract();
 		if ( d_step_cost.compareTo(ZERO) == 0 ) {
 			return ZERO;
@@ -83,6 +101,7 @@ public class RMContractStrategy {
 	}
 	
 	private CDecimal stepsToPrice(long steps) {
+		Security security = locator.getSecurity();
 		return security.getTickSize().multiply(steps);
 	}
 	
@@ -107,6 +126,8 @@ public class RMContractStrategy {
 	 * @return position parameters
 	 */
 	public RMContractStrategyPositionParams getPositionParams(Instant time) {
+		Security security = locator.getSecurity();
+		Portfolio portfolio = locator.getPortfolio();
 		CDecimal d_trade_loss_cap_per = params.getTradeLossCapPer();
 		CDecimal d_trade_goal_cap_per = params.getTradeGoalCapPer();
 		CDecimal d_price_step_size = security.getTickSize();

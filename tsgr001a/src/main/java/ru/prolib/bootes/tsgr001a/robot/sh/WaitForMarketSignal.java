@@ -28,7 +28,7 @@ import ru.prolib.bootes.lib.rm.RMContractStrategyPositionParams;
 import ru.prolib.bootes.lib.robo.s3.S3Speculation;
 import ru.prolib.bootes.tsgr001a.robot.RoboServiceLocator;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
-import ru.prolib.bootes.tsgr001a.robot.SetupT0;
+import ru.prolib.bootes.tsgr001a.robot.TSGR001ASigTriggerObjectLocator;
 import ru.prolib.bootes.tsgr001a.robot.filter.ByTrendT1;
 import ru.prolib.bootes.tsgr001a.robot.filter.FilterFCSD;
 import ru.prolib.bootes.tsgr001a.robot.filter.MADevLimit;
@@ -64,7 +64,7 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 		registerExit(E_BUY);
 		registerExit(E_SELL);
 		in = registerInput(this);
-		trigger = new S3CESDSignalTrigger();
+		trigger = new S3CESDSignalTrigger(new TSGR001ASigTriggerObjectLocator(state));
 		filters = new FilterSet<S3TradeSignal>()
 			.addFilter(new CooldownFilter(new S3RLastSpeculationEndTime(
 					roboServices.getTradesReport()),
@@ -96,46 +96,23 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 			return null;
 		}
 		
-		S3TradeSignal signal = null;
-		RMContractStrategyPositionParams cspp = null;
-		switch ( trigger.getSignal(curr_time) ) {
-		case BUY:
-			synchronized ( state ) {
-				cspp = state.getPositionParams();
-				signal = new S3TradeSignal(
-						SignalType.BUY,
-						curr_time,
-						getLastPrice(),
-						CDecimalBD.of((long) cspp.getNumberOfContracts()),
-						cspp.getTakeProfitPts(),
-						cspp.getStopLossPts(),
-						cspp.getSlippagePts(),
-						cspp.getTradeGoalCap(),
-						cspp.getTradeLossCap(),
-						cspp.getBaseCap()
-					);
-			}
-			break;
-		case SELL:
-			synchronized ( state ) {
-				cspp = state.getPositionParams();
-				signal = new S3TradeSignal(
-						SignalType.SELL,
-						curr_time,
-						getLastPrice(),
-						CDecimalBD.of((long) cspp.getNumberOfContracts()),
-						cspp.getTakeProfitPts(),
-						cspp.getStopLossPts(),
-						cspp.getSlippagePts(),
-						cspp.getTradeGoalCap(),
-						cspp.getTradeLossCap(),
-						cspp.getBaseCap()
-					);
-			}
-			break;
-		default:
+		SignalType sig_type = trigger.getSignal(curr_time);
+		if ( sig_type == null || sig_type == SignalType.NONE ) {
 			return null;
 		}
+		RMContractStrategyPositionParams cspp = state.getPositionParams();
+		S3TradeSignal signal = new S3TradeSignal(
+				sig_type,
+				curr_time,
+				getLastPrice(),
+				CDecimalBD.of((long) cspp.getNumberOfContracts()),
+				cspp.getTakeProfitPts(),
+				cspp.getStopLossPts(),
+				cspp.getSlippagePts(),
+				cspp.getTradeGoalCap(),
+				cspp.getTradeLossCap(),
+				cspp.getBaseCap()
+			);
 
 		IFilterSetState result = filters.approve(signal);
 		if ( result.hasDeclined() ) {
@@ -167,7 +144,6 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 			}
 			triggers.add(newExitOnTimer(terminal, trackingPeriod.getEnd(), E_STOP_TRADING));
 			triggers.add(newTriggerOnEvent(state.getSeriesHandlerT0().getSeries().onLengthUpdate(), in));
-			trigger.setSource(state.getSeriesHandlerT0().getSeries().getSeries(SetupT0.SID_PVC_WAVG));
 		}
 		return null;
 	}

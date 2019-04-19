@@ -7,8 +7,6 @@ import ru.prolib.aquila.core.BusinessEntities.Symbol;
 import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
 import ru.prolib.aquila.core.data.tseries.SecurityChartDataHandler;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
-import ru.prolib.bootes.lib.rm.RMContractStrategy;
-import ru.prolib.bootes.lib.rm.RMPriceStatsSB;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 import ru.prolib.bootes.tsgr001a.robot.SetupT0;
 import ru.prolib.bootes.tsgr001a.robot.SetupT1;
@@ -73,17 +71,8 @@ public class CommonActions {
 	}
 	
 	public void updatePositionParams(AppServiceLocator serviceLocator, RobotState state) {
-		RMContractStrategy cs = state.getContractStrategy();
-		RMPriceStatsSB ps = (RMPriceStatsSB) cs.getPriceStats();
-		if ( ps == null ) {
-			ps = new RMPriceStatsSB();
-			cs.setPriceStats(ps);
-		}
-		ps.setDailyMoveSeries(state.getSeriesHandlerT2().getSeries().getSeries(SetupT2.SID_ATR));
-		ps.setLocalMoveSeries(state.getSeriesHandlerT0().getSeries().getSeries(SetupT0.SID_ATR));
-		cs.setPortfolio(state.getPortfolio());
-		cs.setSecurity(state.getSecurity());
-		state.setPositionParams(cs.getPositionParams(serviceLocator.getTerminal().getCurrentTime()));
+		state.setPositionParams(state.getContractStrategy()
+			.getPositionParams(serviceLocator.getTerminal().getCurrentTime()));
 		state.getStateListener().riskManagementUpdate();
 	}
 

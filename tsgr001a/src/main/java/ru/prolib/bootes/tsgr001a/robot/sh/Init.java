@@ -12,7 +12,10 @@ import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.cr.MOEXContractResolverRegistry;
 import ru.prolib.bootes.lib.rm.RMContractStrategy;
 import ru.prolib.bootes.lib.rm.RMContractStrategyParams;
+import ru.prolib.bootes.lib.rm.RMPriceStats;
+import ru.prolib.bootes.tsgr001a.robot.TSGR001APriceStats;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
+import ru.prolib.bootes.tsgr001a.robot.TSGR001AStrategyObjectLocator;
 
 public class Init extends CommonHandler {
 	public static final String E_OK = "OK";
@@ -30,20 +33,20 @@ public class Init extends CommonHandler {
 		state.setContractResolver(new MOEXContractResolverRegistry().getResolver(cn));
 		state.setAccountCode(an);
 		
-		RMContractStrategy cs = new RMContractStrategy();
-		cs.setStrategyParams(new RMContractStrategyParams(
+		RMContractStrategyParams csp = new RMContractStrategyParams(
 				of("0.075"),
 				of("0.012"),
 				of("0.600"),
 				of("1.050"),
 				3,
 				of(1L)
-			));
-		cs.setTradingTimetable(new LocalTimeTable(ZoneId.of("Europe/Moscow"))
-				.addPeriod(LocalTime.of(10, 30), LocalTime.of(13, 50))
-				.addPeriod(LocalTime.of(14, 10), LocalTime.of(18, 30))
 			);
-		state.setContractStrategy(cs);
+		LocalTimeTable ltt = new LocalTimeTable(ZoneId.of("Europe/Moscow"))
+				.addPeriod(LocalTime.of(10, 30), LocalTime.of(13, 50))
+				.addPeriod(LocalTime.of(14, 10), LocalTime.of(18, 30));
+		TSGR001AStrategyObjectLocator ol = new TSGR001AStrategyObjectLocator(state);
+		RMPriceStats ps = new TSGR001APriceStats(state);
+		state.setContractStrategy(new RMContractStrategy(csp, ol, ps, ltt));
 		
 		state.getStateListener().robotStarted();
 		return getExit(E_OK);

@@ -1,6 +1,5 @@
 package ru.prolib.bootes.tsgr001a.robot.sh;
 
-import java.time.Duration;
 import java.time.Instant;
 
 import org.slf4j.Logger;
@@ -16,23 +15,13 @@ import ru.prolib.aquila.core.sm.SMInputAction;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.aquila.core.utils.LocalTimeTable;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
-import ru.prolib.bootes.lib.data.ts.S3CESDSignalTrigger;
 import ru.prolib.bootes.lib.data.ts.SignalType;
 import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
-import ru.prolib.bootes.lib.data.ts.filter.FilterSet;
-import ru.prolib.bootes.lib.data.ts.filter.IFilterSet;
 import ru.prolib.bootes.lib.data.ts.filter.IFilterSetState;
-import ru.prolib.bootes.lib.data.ts.filter.impl.CooldownFilter;
-import ru.prolib.bootes.lib.report.s3rep.utils.S3RLastSpeculationEndTime;
 import ru.prolib.bootes.lib.rm.RMContractStrategyPositionParams;
 import ru.prolib.bootes.lib.robo.s3.S3Speculation;
 import ru.prolib.bootes.tsgr001a.robot.RoboServiceLocator;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
-import ru.prolib.bootes.tsgr001a.robot.TSGR001ASigTriggerObjectLocator;
-import ru.prolib.bootes.tsgr001a.robot.filter.ByTrendT1;
-import ru.prolib.bootes.tsgr001a.robot.filter.FilterFCSD;
-import ru.prolib.bootes.tsgr001a.robot.filter.MADevLimit;
-import ru.prolib.bootes.tsgr001a.robot.filter.StopLossGtATR;
 
 public class WaitForMarketSignal extends CommonHandler implements SMInputAction {
 	public static final String E_STOP_TRADING = "STOP_TRADING";
@@ -47,9 +36,7 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 	}
 	
 	private final CommonActions ca;
-	private final S3CESDSignalTrigger trigger;
 	private final SMInput in;
-	private final IFilterSet<S3TradeSignal> filters;
 	private Interval tradingPeriod, trackingPeriod;
 	private LocalTimeTable timetable;
 
@@ -64,16 +51,6 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 		registerExit(E_BUY);
 		registerExit(E_SELL);
 		in = registerInput(this);
-		trigger = new S3CESDSignalTrigger(new TSGR001ASigTriggerObjectLocator(state));
-		filters = new FilterSet<S3TradeSignal>()
-			.addFilter(new CooldownFilter(new S3RLastSpeculationEndTime(
-					roboServices.getTradesReport()),
-					Duration.ofMinutes(30)
-				))
-			.addFilter(new StopLossGtATR(state))
-			.addFilter(new MADevLimit(state))
-			.addFilter(new ByTrendT1(state)) // filtered too much, not so effective, check it
-			.addFilter(new FilterFCSD(state));
 	}
 	
 	private CDecimal getLastPrice() {
@@ -96,7 +73,7 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 			return null;
 		}
 		
-		SignalType sig_type = trigger.getSignal(curr_time);
+		SignalType sig_type = state.getSignalTrigger().getSignal(curr_time);
 		if ( sig_type == null || sig_type == SignalType.NONE ) {
 			return null;
 		}
@@ -114,7 +91,7 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 				cspp.getBaseCap()
 			);
 
-		IFilterSetState result = filters.approve(signal);
+		IFilterSetState result = state.getSignalFilter().approve(signal);
 		if ( result.hasDeclined() ) {
 			//logger.debug("Signal declined: {}", toString(result));
 			return null;

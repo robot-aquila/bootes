@@ -5,7 +5,6 @@ import ru.prolib.aquila.core.sm.SMStateMachine;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.robo.s3.S3ClosePosition;
 import ru.prolib.bootes.lib.robo.s3.S3OpenPosition;
-import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
 import ru.prolib.bootes.lib.robo.sh.BOOTESWaitForContract;
 import ru.prolib.bootes.lib.robo.sh.BOOTESCleanup;
 import ru.prolib.bootes.lib.robo.sh.BOOTESWaitForAccount;
@@ -48,7 +47,7 @@ public class TSGR001ARobotBuilder {
 		CommonActions ca = new CommonActions();
 		RobotState state = new RobotState();
 		SMBuilder builder = new SMBuilder()
-				.addState(new Init(serviceLocator, state), S_INIT)
+				.addState(new Init(serviceLocator, roboServices, state), S_INIT)
 				.addState(new BOOTESWaitForAccount(serviceLocator, state), S_WAIT_ACCOUNT)
 				.addState(new BOOTESWaitForContract(serviceLocator, state), S_WAIT_CONTRACT)
 				.addState(new InitSessionData(serviceLocator, state, ca), S_INIT_SESSION_DATA)

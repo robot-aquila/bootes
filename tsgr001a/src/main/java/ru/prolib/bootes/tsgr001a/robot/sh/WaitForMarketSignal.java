@@ -35,18 +35,15 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 		logger = LoggerFactory.getLogger(WaitForMarketSignal.class);
 	}
 	
-	private final CommonActions ca;
 	private final SMInput in;
 	private Interval tradingPeriod, trackingPeriod;
 	private LocalTimeTable timetable;
 
 	public WaitForMarketSignal(AppServiceLocator serviceLocator,
-			RoboServiceLocator roboServices,
-			RobotState state,
-			CommonActions ca)
+							   RoboServiceLocator roboServices,
+							   RobotState state)
 	{
 		super(serviceLocator, state);
-		this.ca = ca;
 		registerExit(E_STOP_TRADING);
 		registerExit(E_BUY);
 		registerExit(E_SELL);
@@ -59,8 +56,10 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 	
 	@Override
 	public SMExit input(Object data) {
-		ca.updatePositionParams(serviceLocator, state);
 		Instant curr_time = serviceLocator.getTerminal().getCurrentTime();
+		RMContractStrategyPositionParams cspp = state.getContractStrategy().getPositionParams(curr_time);
+		state.setPositionParams(cspp);
+		state.getStateListener().riskManagementUpdate();
 		if ( isAfterTrackingPeriod(curr_time) ) {
 			return onTrackingPeriodEnd();
 		}
@@ -77,7 +76,6 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 		if ( sig_type == null || sig_type == SignalType.NONE ) {
 			return null;
 		}
-		RMContractStrategyPositionParams cspp = state.getPositionParams();
 		S3TradeSignal signal = new S3TradeSignal(
 				sig_type,
 				curr_time,
@@ -120,6 +118,8 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 				return onTrackingPeriodEnd();
 			}
 			triggers.add(newExitOnTimer(terminal, trackingPeriod.getEnd(), E_STOP_TRADING));
+			// Нельзя!!! Периодов может быть несколько!
+			//triggers.add(newExitOnTimer(terminal, tradingPeriod.getEnd(), E_STOP_TRADING));
 			triggers.add(newTriggerOnEvent(state.getSessionDataHandler()
 					.getSeriesHandlerT0()
 					.getSeries()

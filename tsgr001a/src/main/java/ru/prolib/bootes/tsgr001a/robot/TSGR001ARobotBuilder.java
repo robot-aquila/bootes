@@ -11,7 +11,6 @@ import ru.prolib.bootes.lib.robo.sh.BOOTESCleanSessionData;
 import ru.prolib.bootes.lib.robo.sh.BOOTESCleanup;
 import ru.prolib.bootes.lib.robo.sh.BOOTESInitSessionData;
 import ru.prolib.bootes.lib.robo.sh.BOOTESWaitForAccount;
-import ru.prolib.bootes.tsgr001a.robot.sh.CommonActions;
 import ru.prolib.bootes.tsgr001a.robot.sh.TSGR001AInit;
 import ru.prolib.bootes.tsgr001a.robot.sh.SimClosePosition;
 import ru.prolib.bootes.tsgr001a.robot.sh.SimOpenPosition;
@@ -43,14 +42,13 @@ public class TSGR001ARobotBuilder {
 	}
 
 	public Robot build(boolean no_orders) {
-		CommonActions ca = new CommonActions();
 		RobotState state = new RobotState();
 		SMBuilder builder = new SMBuilder()
 				.addState(new TSGR001AInit(serviceLocator, roboServices, state), S_INIT)
 				.addState(new BOOTESWaitForAccount(serviceLocator, state), S_WAIT_ACCOUNT)
 				.addState(new BOOTESWaitForContract(serviceLocator, state), S_WAIT_CONTRACT)
 				.addState(new BOOTESInitSessionData(state), S_INIT_SESSION_DATA)
-				.addState(new WaitForMarketSignal(serviceLocator, roboServices, state, ca), S_WAIT_MARKET_SIGNAL)
+				.addState(new WaitForMarketSignal(serviceLocator, roboServices, state), S_WAIT_MARKET_SIGNAL)
 				.addState(new SimTrackPosition(serviceLocator, state), S_TRACK_LONG)
 				.addState(new SimTrackPosition(serviceLocator, state), S_TRACK_SHORT)
 				.addState(new BOOTESWaitForSessionEnd(serviceLocator, state), S_WAIT_SESSION_END)

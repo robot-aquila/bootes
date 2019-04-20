@@ -1,10 +1,12 @@
 package ru.prolib.bootes.tsgr001a.robot.filter;
 
 import static org.junit.Assert.*;
+import static org.easymock.EasyMock.*;
 import static ru.prolib.aquila.core.BusinessEntities.CDecimalBD.*;
 
 import java.time.Instant;
 
+import org.easymock.IMocksControl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,7 +24,7 @@ import ru.prolib.aquila.core.data.tseries.SCDHSetupStub;
 import ru.prolib.aquila.core.data.tseries.SecurityChartDataHandler;
 import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 import ru.prolib.bootes.lib.data.ts.SignalType;
-import ru.prolib.bootes.tsgr001a.robot.RobotState;
+import ru.prolib.bootes.tsgr001a.robot.TSGR001ADataHandler;
 
 public class FilterFCSDTest {
 	private static Symbol SYMBOL = new Symbol("AQLA");
@@ -71,15 +73,19 @@ public class FilterFCSDTest {
 		return Instant.parse(timeString);
 	}
 	
+	private IMocksControl control;
+	private TSGR001ADataHandler dhMock;
 	private EditableTerminal terminal;
 	private SecurityChartDataHandler dh;
-	private RobotState state;
 	private EditableTSeries<Candle> ohlc;
 	private FilterFCSD service;
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Before
 	public void setUp() throws Exception {
+		control = createStrictControl();
+		dhMock = control.createMock(TSGR001ADataHandler.class);
+		
 		terminal = new BasicTerminalBuilder()
 				.withDataProvider(new DataProviderStub())
 				.buildTerminal();
@@ -88,10 +94,7 @@ public class FilterFCSDTest {
 		dh.startDataHandling();
 		EditableTSeries x = (EditableTSeries) dh.getSeries().getSeries(SCDHSetupStub.SID_OHLC_MUTATOR);
 		ohlc = (EditableTSeries<Candle>) x;
-		state = new RobotState();
-		state.setSeriesHandlerT0(dh);
-
-		service = new FilterFCSD(state);
+		service = new FilterFCSD(dhMock);
 	}
 	
 	@After
@@ -124,75 +127,102 @@ public class FilterFCSDTest {
 	
 	@Test
 	public void testCtor2() {
-		service = new FilterFCSD(state, 5);
+		service = new FilterFCSD(dhMock, 5);
 		assertEquals("FCSD", service.getID());
 		assertEquals(5, service.getNumberOfCandles());
 	}
 	
 	@Test
 	public void testApprove_HandlerNotDefined() throws Exception {
-		state.setSeriesHandlerT0(null);
+		expect(dhMock.getSeriesHandlerT0()).andStubReturn(null);
+		control.replay();
 		
 		assertFalse(service.approve(ofTypeBuy()));
+		
+		control.verify();
 	}
 	
 	@Test
 	public void testApprove_NoIndexForSignalTime() throws Exception {
+		expect(dhMock.getSeriesHandlerT0()).andStubReturn(dh);
+		control.replay();
 		addOHLC("2019-03-08T08:45:00Z", "56.19", "57.25");
 		addOHLC("2019-03-08T08:50:00Z", "57.26", "58.80");
 		addOHLC("2019-03-08T08:55:00Z", "58.80", "59.95");
 		//addOHLC("2019-03-08T09:00:00Z", "59.94", "59.99");
 		
 		assertFalse(service.approve(ofTypeBuy("2019-03-08T09:00:00Z")));
+		
+		control.verify();
 	}
 	
 	@Test
 	public void testApprove_NotEnoughElements() throws Exception {
+		expect(dhMock.getSeriesHandlerT0()).andStubReturn(dh);
+		control.replay();
 		addOHLC("2019-03-08T08:50:00Z", "57.26", "58.80");
 		addOHLC("2019-03-08T08:55:00Z", "58.80", "59.95");
 		addOHLC("2019-03-08T09:00:00Z", "59.94", "59.99");
 		
 		assertFalse(service.approve(ofTypeBuy("2019-03-08T09:00:00Z")));
+		
+		control.verify();
 	}
 	
 	@Test
 	public void testApprove_Buy_NotAllCandlesAreBullish() throws Exception {
+		expect(dhMock.getSeriesHandlerT0()).andStubReturn(dh);
+		control.replay();
 		addOHLC("2019-03-08T08:45:00Z", "56.19", "57.25");
 		addOHLC("2019-03-08T08:50:00Z", "57.26", "51.80");
 		addOHLC("2019-03-08T08:55:00Z", "51.80", "59.95");
 		addOHLC("2019-03-08T09:00:00Z", "59.94", "59.99");
 		
 		assertFalse(service.approve(ofTypeBuy("2019-03-08T09:00:00Z")));
+		
+		control.verify();
 	}
 	
 	@Test
 	public void testApprove_Buy_AllCandlesAreBullish() throws Exception {
+		expect(dhMock.getSeriesHandlerT0()).andStubReturn(dh);
+		control.replay();
 		addOHLC("2019-03-08T08:45:00Z", "56.19", "57.25");
 		addOHLC("2019-03-08T08:50:00Z", "57.26", "58.80");
 		addOHLC("2019-03-08T08:55:00Z", "58.80", "59.95");
 		addOHLC("2019-03-08T09:00:00Z", "59.94", "59.99");
 		
 		assertTrue(service.approve(ofTypeBuy("2019-03-08T09:00:00Z")));
+		
+		control.verify();
 	}
 	
 	@Test
 	public void testApprove_Sell_NotCandlesAreBearish() throws Exception {
+		expect(dhMock.getSeriesHandlerT0()).andStubReturn(dh);
+		control.replay();
 		addOHLC("2019-03-08T08:45:00Z", "56.19", "55.25");
 		addOHLC("2019-03-08T08:50:00Z", "55.25", "58.80");
 		addOHLC("2019-03-08T08:55:00Z", "58.80", "51.95");
 		addOHLC("2019-03-08T09:00:00Z", "51.94", "50.99");
 		
 		assertFalse(service.approve(ofTypeSell("2019-03-08T09:00:00Z")));
+		
+		control.verify();
 	}
 
 	@Test
 	public void testApprove_Sell_AllCandlesAreBearish() throws Exception {
+		expect(dhMock.getSeriesHandlerT0()).andStubReturn(dh);
+		control.replay();
 		addOHLC("2019-03-08T08:45:00Z", "56.19", "55.25");
 		addOHLC("2019-03-08T08:50:00Z", "55.25", "53.80");
 		addOHLC("2019-03-08T08:55:00Z", "53.80", "51.95");
 		addOHLC("2019-03-08T09:00:00Z", "51.94", "50.99");
 		
 		assertTrue(service.approve(ofTypeSell("2019-03-08T09:00:00Z")));
+		
+		control.verify();
 	}
 
 }

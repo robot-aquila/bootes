@@ -13,7 +13,8 @@ public class TSGR001ASigTriggerObjectLocator implements ObjectLocator {
 
 	@Override
 	public TSeries<CDecimal> getSource() {
-		return state.getSeriesHandlerT0()
+		return state.getSessionDataHandler()
+				.getSeriesHandlerT0()
 				.getSeries()
 				.getSeries(SetupT0.SID_PVC_WAVG);
 	}

@@ -8,6 +8,7 @@ import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 import ru.prolib.bootes.lib.data.ts.filter.impl.AbstractFilter;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 import ru.prolib.bootes.tsgr001a.robot.SetupT0;
+import ru.prolib.bootes.tsgr001a.robot.TSGR001ADataHandler;
 
 public class MADevLimit extends AbstractFilter<S3TradeSignal> {
 	public static final CDecimal DEFAULT_MAX_DEVIATION = CDecimalBD.of("0.30000"); // 30%
@@ -32,12 +33,13 @@ public class MADevLimit extends AbstractFilter<S3TradeSignal> {
 	public boolean approve(S3TradeSignal signal) {
 		CDecimal daily_range, price, ma;
 		synchronized ( state ) {
-			if ( ! state.isSeriesHandlerT0Defined() ) {
+			TSGR001ADataHandler dh = state.getSessionDataHandler();
+			if ( dh.getSeriesHandlerT0() == null ) {
 				return false;
 			}
 			daily_range = state.getPositionParams().getAvgDailyPriceMove();
 			price = signal.getExpectedPrice();
-			TSeries<CDecimal> ma_s = state.getSeriesHandlerT0().getSeries().getSeries(SetupT0.SID_EMA);
+			TSeries<CDecimal> ma_s = dh.getSeriesHandlerT0().getSeries().getSeries(SetupT0.SID_EMA);
 			if ( ma_s.getLength() < 2 ) {
 				return false;
 			}

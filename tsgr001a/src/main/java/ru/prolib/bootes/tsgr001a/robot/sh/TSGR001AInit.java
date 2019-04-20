@@ -24,18 +24,19 @@ import ru.prolib.bootes.tsgr001a.robot.TSGR001APriceStats;
 import ru.prolib.bootes.tsgr001a.robot.TSGR001ASigTriggerObjectLocator;
 import ru.prolib.bootes.tsgr001a.robot.RoboServiceLocator;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
+import ru.prolib.bootes.tsgr001a.robot.TSGR001ADataHandler;
 import ru.prolib.bootes.tsgr001a.robot.TSGR001AStrategyObjectLocator;
 import ru.prolib.bootes.tsgr001a.robot.filter.ByTrendT1;
 import ru.prolib.bootes.tsgr001a.robot.filter.FilterFCSD;
 import ru.prolib.bootes.tsgr001a.robot.filter.MADevLimit;
 import ru.prolib.bootes.tsgr001a.robot.filter.StopLossGtATR;
 
-public class Init extends CommonHandler {
+public class TSGR001AInit extends CommonHandler {
 	public static final String E_OK = "OK";
 	
 	private final RoboServiceLocator roboServices;
 	
-	public Init(AppServiceLocator serviceLocator,
+	public TSGR001AInit(AppServiceLocator serviceLocator,
 				RoboServiceLocator roboServices,
 				RobotState state)
 	{
@@ -52,6 +53,7 @@ public class Init extends CommonHandler {
 		state.setContractResolver(new MOEXContractResolverRegistry().getResolver(cn));
 		state.setAccount(new Account(an));
 		
+		TSGR001ADataHandler data_handler = new TSGR001ADataHandler(serviceLocator, state);
 		RMContractStrategyParams csp = new RMContractStrategyParams(
 				of("0.075"),
 				of("0.012"),
@@ -74,10 +76,12 @@ public class Init extends CommonHandler {
 						roboServices.getTradesReport()),
 						Duration.ofMinutes(30)
 					))
-				.addFilter(new StopLossGtATR(state))
+				.addFilter(new StopLossGtATR(data_handler))
 				.addFilter(new MADevLimit(state))
 				.addFilter(new ByTrendT1(state)) // filtered too much, not so effective, check it
-				.addFilter(new FilterFCSD(state)));
+				.addFilter(new FilterFCSD(data_handler)));
+		
+		state.setSessionDataHandler(data_handler);
 		
 		state.getStateListener().robotStarted();
 		return getExit(E_OK);

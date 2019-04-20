@@ -5,6 +5,7 @@ import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.core.BusinessEntities.Tick;
 import ru.prolib.aquila.core.data.TSeries;
 import ru.prolib.aquila.core.data.ValueException;
+import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
 import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 import ru.prolib.bootes.lib.data.ts.filter.impl.AbstractFilter;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
@@ -23,10 +24,11 @@ public class ByTrendT1 extends AbstractFilter<S3TradeSignal> {
 		TSeries<CDecimal> ma_s;
 		Security security;
 		synchronized ( state ) {
-			if ( ! state.isSeriesHandlerT1Defined() ) {
+			STSeriesHandler h = state.getSessionDataHandler().getSeriesHandlerT1();
+			if ( h == null ) {
 				return false;
 			}
-			ma_s = state.getSeriesHandlerT1().getSeries().getSeries(SetupT1.SID_EMA);
+			ma_s = h.getSeries().getSeries(SetupT1.SID_EMA);
 			security = state.getSecurity();
 		}
 		CDecimal ma_val;

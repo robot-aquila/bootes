@@ -19,6 +19,7 @@ public class CommonActions {
 		logger = LoggerFactory.getLogger(CommonActions.class);
 	}
 	
+	/*
 	public void cleanupCurrentDataHandlers(RobotState state) {
 		STSeriesHandler sh = null;
 		if ( state.isSeriesHandlerT0Defined() ) {
@@ -69,6 +70,7 @@ public class CommonActions {
 		state.getStateListener().sessionDataAvailable();
 		return true;
 	}
+	*/
 	
 	public void updatePositionParams(AppServiceLocator serviceLocator, RobotState state) {
 		state.setPositionParams(state.getContractStrategy()

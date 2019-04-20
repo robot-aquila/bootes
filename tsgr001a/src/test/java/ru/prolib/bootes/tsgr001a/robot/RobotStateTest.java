@@ -11,7 +11,6 @@ import org.junit.Test;
 import ru.prolib.aquila.core.BusinessEntities.Account;
 import ru.prolib.aquila.core.BusinessEntities.Portfolio;
 import ru.prolib.aquila.core.BusinessEntities.Security;
-import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
 import ru.prolib.bootes.lib.cr.ContractParams;
 import ru.prolib.bootes.lib.cr.ContractResolver;
 import ru.prolib.bootes.lib.rm.RMContractStrategy;
@@ -41,9 +40,6 @@ public class RobotStateTest {
 		RMContractStrategy csMock = control.createMock(RMContractStrategy.class);
 		Portfolio portfolioMock = control.createMock(Portfolio.class);
 		Security securityMock = control.createMock(Security.class);
-		STSeriesHandler sht0Mock = control.createMock(STSeriesHandler.class);
-		STSeriesHandler sht1Mock = control.createMock(STSeriesHandler.class);
-		STSeriesHandler sht2Mock = control.createMock(STSeriesHandler.class);
 		RMContractStrategyPositionParams ppMock = control.createMock(RMContractStrategyPositionParams.class);
 		S3Speculation specMock = control.createMock(S3Speculation.class);
 		RMContractStrategyParams cspMock = control.createMock(RMContractStrategyParams.class);
@@ -55,9 +51,6 @@ public class RobotStateTest {
 		service.setContractStrategy(csMock);
 		service.setPortfolio(portfolioMock);
 		service.setSecurity(securityMock);
-		service.setSeriesHandlerT0(sht0Mock);
-		service.setSeriesHandlerT1(sht1Mock);
-		service.setSeriesHandlerT2(sht2Mock);
 		service.setPositionParams(ppMock);
 		service.setActiveSpeculation(specMock);
 		service.setContractStrategyParams(cspMock);
@@ -69,9 +62,6 @@ public class RobotStateTest {
 		assertSame(csMock, service.getContractStrategy());
 		assertSame(portfolioMock, service.getPortfolio());
 		assertSame(securityMock, service.getSecurity());
-		assertSame(sht0Mock, service.getSeriesHandlerT0());
-		assertSame(sht1Mock, service.getSeriesHandlerT1());
-		assertSame(sht2Mock, service.getSeriesHandlerT2());
 		assertSame(ppMock, service.getPositionParams());
 		assertSame(specMock, service.getActiveSpeculation());
 		assertSame(cspMock, service.getContractStrategyParams());
@@ -113,21 +103,6 @@ public class RobotStateTest {
 	}
 	
 	@Test (expected=NullPointerException.class)
-	public void testGetSeriesHandlerT0_ThrowsIfNotDefined() {
-		service.getSeriesHandlerT0();
-	}
-	
-	@Test (expected=NullPointerException.class)
-	public void testGetSeriesHandlerT1_ThrowsIfNotDefined() {
-		service.getSeriesHandlerT1();
-	}
-	
-	@Test (expected=NullPointerException.class)
-	public void testGetSeriesHandlerT2_ThrowsIfNotDefined() {
-		service.getSeriesHandlerT0();
-	}
-	
-	@Test (expected=NullPointerException.class)
 	public void testGetPositionParams_ThrowsIfNotDefined() {
 		service.getPositionParams();
 	}
@@ -140,36 +115,6 @@ public class RobotStateTest {
 	@Test (expected=NullPointerException.class)
 	public void testGetContractStrategyParams_ThrowsIfNotDefined() {
 		service.getContractStrategyParams();
-	}
-	
-	@Test
-	public void testIsSeriesHandlerT0Defined() {
-		STSeriesHandler shMock = control.createMock(STSeriesHandler.class);
-		assertFalse(service.isSeriesHandlerT0Defined());
-		service.setSeriesHandlerT0(shMock);
-		assertTrue(service.isSeriesHandlerT0Defined());
-		service.setSeriesHandlerT0(null);
-		assertFalse(service.isSeriesHandlerT0Defined());
-	}
-	
-	@Test
-	public void testIsSeriesHandlerT1Defined() {
-		STSeriesHandler shMock = control.createMock(STSeriesHandler.class);
-		assertFalse(service.isSeriesHandlerT1Defined());
-		service.setSeriesHandlerT1(shMock);
-		assertTrue(service.isSeriesHandlerT1Defined());
-		service.setSeriesHandlerT1(null);
-		assertFalse(service.isSeriesHandlerT1Defined());
-	}
-	
-	@Test
-	public void testIsSeriesHandlerT2Defined() {
-		STSeriesHandler shMock = control.createMock(STSeriesHandler.class);
-		assertFalse(service.isSeriesHandlerT2Defined());
-		service.setSeriesHandlerT2(shMock);
-		assertTrue(service.isSeriesHandlerT2Defined());
-		service.setSeriesHandlerT2(null);
-		assertFalse(service.isSeriesHandlerT2Defined());
 	}
 	
 	@Test

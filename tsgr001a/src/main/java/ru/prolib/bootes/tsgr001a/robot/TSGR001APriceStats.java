@@ -15,7 +15,8 @@ public class TSGR001APriceStats implements RMPriceStats {
 
 	@Override
 	public CDecimal getDailyPriceMove(Instant time) {
-		TSeries<CDecimal> x = state.getSeriesHandlerT2()
+		TSeries<CDecimal> x = state.getSessionDataHandler()
+				.getSeriesHandlerT2()
 				.getSeries()
 				.getSeries(SetupT2.SID_ATR);
 		return x.getFirstBefore(time);
@@ -23,7 +24,8 @@ public class TSGR001APriceStats implements RMPriceStats {
 
 	@Override
 	public CDecimal getLocalPriceMove(Instant time) {
-		TSeries<CDecimal> x = state.getSeriesHandlerT0()
+		TSeries<CDecimal> x = state.getSessionDataHandler()
+				.getSeriesHandlerT0()
 				.getSeries()
 				.getSeries(SetupT0.SID_ATR);
 		return x.getFirstBefore(time);

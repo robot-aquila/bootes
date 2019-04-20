@@ -8,11 +8,13 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
 import ru.prolib.aquila.core.data.tseries.STSeries;
+import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.service.UIService;
 import ru.prolib.bootes.lib.ui.SecurityChartPanel;
 import ru.prolib.bootes.tsgr001a.robot.RoboServiceLocator;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
+import ru.prolib.bootes.tsgr001a.robot.TSGR001ADataHandler;
 
 public class ChartsView extends JPanel {
 	private static final long serialVersionUID = 1L;
@@ -80,10 +82,15 @@ public class ChartsView extends JPanel {
 		cfg.updateView();
 	}
 	
+	private STSeries gs(STSeriesHandler h) {
+		return h == null ? null : h.getSeries();
+	}
+	
 	public void updateChartViews() {
-		updateChartView(t0, state.isSeriesHandlerT0Defined() ? state.getSeriesHandlerT0().getSeries() : null);
-		updateChartView(t1, state.isSeriesHandlerT1Defined() ? state.getSeriesHandlerT1().getSeries() : null);
-		updateChartView(t2, state.isSeriesHandlerT2Defined() ? state.getSeriesHandlerT2().getSeries() : null);
+		TSGR001ADataHandler dh = state.getSessionDataHandler();
+		updateChartView(t0, gs(dh.getSeriesHandlerT0()));
+		updateChartView(t1, gs(dh.getSeriesHandlerT1()));
+		updateChartView(t2, gs(dh.getSeriesHandlerT2()));
 	}
 	
 	public void updateView() {

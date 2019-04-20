@@ -1,36 +1,29 @@
 package ru.prolib.bootes.tsgr001a.robot.filter;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 import ru.prolib.aquila.core.data.TSeries;
 import ru.prolib.aquila.core.data.ValueException;
 import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 import ru.prolib.bootes.lib.data.ts.filter.impl.AbstractFilter;
-import ru.prolib.bootes.tsgr001a.robot.RobotState;
 import ru.prolib.bootes.tsgr001a.robot.SetupT0;
+import ru.prolib.bootes.tsgr001a.robot.TSGR001ADataHandler;
 
 public class StopLossGtATR extends AbstractFilter<S3TradeSignal> {
-	private static final Logger logger;
+	private final TSGR001ADataHandler dataHandler;
 	
-	static {
-		logger = LoggerFactory.getLogger(StopLossGtATR.class);
-	}
-	
-	private final RobotState state;
-	
-	public StopLossGtATR(RobotState state) {
+	public StopLossGtATR(TSGR001ADataHandler dataHandler) {
 		super("SL_gt_ATR");
-		this.state = state;
+		this.dataHandler = dataHandler;
 	}
 
 	@Override
 	public boolean approve(S3TradeSignal signal) {
 		CDecimal sl = signal.getStopLossPts(), atr = null;
-		synchronized ( state ) {
-			if ( state.isSeriesHandlerT0Defined() ) {
-				TSeries<CDecimal> atr_s = state.getSeriesHandlerT0().getSeries().getSeries(SetupT0.SID_ATR); 
+		synchronized ( dataHandler ) {
+			if ( dataHandler.getSeriesHandlerT0() != null ) {
+				TSeries<CDecimal> atr_s = dataHandler.getSeriesHandlerT0()
+						.getSeries()
+						.getSeries(SetupT0.SID_ATR); 
 				if ( atr_s.getLength() < 2 ) {
 					return false;
 				}

@@ -120,7 +120,10 @@ public class WaitForMarketSignal extends CommonHandler implements SMInputAction 
 				return onTrackingPeriodEnd();
 			}
 			triggers.add(newExitOnTimer(terminal, trackingPeriod.getEnd(), E_STOP_TRADING));
-			triggers.add(newTriggerOnEvent(state.getSeriesHandlerT0().getSeries().onLengthUpdate(), in));
+			triggers.add(newTriggerOnEvent(state.getSessionDataHandler()
+					.getSeriesHandlerT0()
+					.getSeries()
+					.onLengthUpdate(), in));
 		}
 		return null;
 	}

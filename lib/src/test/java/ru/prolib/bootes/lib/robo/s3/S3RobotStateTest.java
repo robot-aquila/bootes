@@ -12,6 +12,10 @@ import ru.prolib.aquila.core.BusinessEntities.Portfolio;
 import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.bootes.lib.cr.ContractParams;
 import ru.prolib.bootes.lib.cr.ContractResolver;
+import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
+import ru.prolib.bootes.lib.data.ts.SignalTrigger;
+import ru.prolib.bootes.lib.data.ts.filter.IFilterSet;
+import ru.prolib.bootes.lib.rm.IRMContractStrategy;
 import ru.prolib.bootes.lib.robo.ISessionDataHandler;
 
 public class S3RobotStateTest {
@@ -139,6 +143,43 @@ public class S3RobotStateTest {
 		ISessionDataHandler expected = control.createMock(ISessionDataHandler.class);
 		service.setSessionDataHandler(expected);
 		assertSame(expected, service.getSessionDataHandler());
+	}
+	
+	@Test (expected=NullPointerException.class)
+	public void testGetSignalTrigger_ThrowsIfNotDefined() {
+		service.getSignalTrigger();
+	}
+	
+	@Test
+	public void testgetSignalTrigger() {
+		SignalTrigger expected = control.createMock(SignalTrigger.class);
+		service.setSignalTrigger(expected);
+		assertSame(expected, service.getSignalTrigger());
+	}
+	
+	@Test (expected=NullPointerException.class)
+	public void testGetSignalFilter_ThrowsIfNotDefined() {
+		service.getSignalFilter();
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testGetSignalFilter() {
+		IFilterSet<S3TradeSignal> expected = control.createMock(IFilterSet.class);
+		service.setSignalFilter(expected);
+		assertSame(expected, service.getSignalFilter());
+	}
+	
+	@Test (expected=NullPointerException.class)
+	public void testGetContractStrategy_ThrowsIfNotDefined() {
+		service.getContractStrategy();
+	}
+	
+	@Test
+	public void testGetContractStrategy() {
+		IRMContractStrategy expected = control.createMock(IRMContractStrategy.class);
+		service.setContractStrategy(expected);
+		assertSame(expected, service.getContractStrategy());
 	}
 
 }

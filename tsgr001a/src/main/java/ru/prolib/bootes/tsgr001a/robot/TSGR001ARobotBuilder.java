@@ -44,9 +44,9 @@ public class TSGR001ARobotBuilder {
 		this.roboServices = roboServices;
 	}
 
-	public Robot build(S3RobotStateListener stateListener, boolean no_orders) {
+	public Robot build(boolean no_orders) {
 		CommonActions ca = new CommonActions();
-		RobotState state = new RobotState(stateListener);
+		RobotState state = new RobotState();
 		SMBuilder builder = new SMBuilder()
 				.addState(new Init(serviceLocator, state), S_INIT)
 				.addState(new BOOTESWaitForAccount(serviceLocator, state), S_WAIT_ACCOUNT)

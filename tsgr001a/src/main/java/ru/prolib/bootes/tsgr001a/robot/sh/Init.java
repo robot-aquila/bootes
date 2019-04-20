@@ -5,6 +5,7 @@ import static ru.prolib.aquila.core.BusinessEntities.CDecimalBD.*;
 import java.time.LocalTime;
 import java.time.ZoneId;
 
+import ru.prolib.aquila.core.BusinessEntities.Account;
 import ru.prolib.aquila.core.sm.SMExit;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.aquila.core.utils.LocalTimeTable;
@@ -31,7 +32,7 @@ public class Init extends CommonHandler {
 		final String cn = "RTS", an = "QFORTS-TEST";
 		state.setContractName(cn);
 		state.setContractResolver(new MOEXContractResolverRegistry().getResolver(cn));
-		state.setAccountCode(an);
+		state.setAccount(new Account(an));
 		
 		RMContractStrategyParams csp = new RMContractStrategyParams(
 				of("0.075"),
@@ -47,6 +48,7 @@ public class Init extends CommonHandler {
 		TSGR001AStrategyObjectLocator ol = new TSGR001AStrategyObjectLocator(state);
 		RMPriceStats ps = new TSGR001APriceStats(state);
 		state.setContractStrategy(new RMContractStrategy(csp, ol, ps, ltt));
+		state.setContractStrategyParams(csp);
 		
 		state.getStateListener().robotStarted();
 		return getExit(E_OK);

@@ -1,70 +1,27 @@
 package ru.prolib.bootes.tsgr001a.robot;
 
-import ru.prolib.aquila.core.BusinessEntities.Account;
-import ru.prolib.aquila.core.BusinessEntities.Portfolio;
-import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
-import ru.prolib.bootes.lib.cr.ContractParams;
-import ru.prolib.bootes.lib.cr.ContractResolver;
-import ru.prolib.bootes.lib.rm.RMContractStrategy;
+import ru.prolib.bootes.lib.rm.RMContractStrategyParams;
 import ru.prolib.bootes.lib.rm.RMContractStrategyPositionParams;
-import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
-import ru.prolib.bootes.lib.robo.s3.S3Speculation;
-import ru.prolib.bootes.lib.robo.s3.statereq.IS3Speculative;
+import ru.prolib.bootes.lib.robo.s3.S3RobotState;
 
 /**
  * Robot state.
  * <p>
  * This class is intended to be accessible outside. Thus, all methods must be synchronized.
  */
-public class RobotState implements IS3Speculative {
-	private final S3RobotStateListener stateListener;
-	private String contractName, accountCode;
-	private ContractResolver contractResolver;
-	private ContractParams contractParams;
-	private RMContractStrategy contractStrategy;
+public class RobotState extends S3RobotState /*implements IS3Speculative*/ {
+	private String contractName;//, accountCode;
 	private RMContractStrategyPositionParams positionParams;
-	private Portfolio portfolio;
-	private Security security;
 	private STSeriesHandler sht0, sht1, sht2;
-	private S3Speculation speculation;
+	private RMContractStrategyParams strategyParams;
 	
-	public RobotState(S3RobotStateListener stateListener) {
-		this.stateListener = stateListener;
-	}
-	
-	public S3RobotStateListener getStateListener() {
-		return stateListener;
+	public synchronized void setContractStrategyParams(RMContractStrategyParams params) {
+		this.strategyParams = params;
 	}
 	
 	public synchronized void setContractName(String contractName) {
 		this.contractName = contractName;
-	}
-	
-	public synchronized void setAccountCode(String accountCode) {
-		this.accountCode = accountCode;
-	}
-	
-	public synchronized void setContractResolver(ContractResolver resolver) {
-		this.contractResolver = resolver;
-	}
-	
-	@Override
-	public synchronized void setContractParams(ContractParams contractParams) {
-		this.contractParams = contractParams;
-	}
-	
-	public synchronized void setContractStrategy(RMContractStrategy contractStrategy) {
-		this.contractStrategy = contractStrategy;
-	}
-	
-	public synchronized void setPortfolio(Portfolio portfolio) {
-		this.portfolio = portfolio;
-	}
-	
-	@Override
-	public synchronized void setSecurity(Security security) {
-		this.security = security;
 	}
 	
 	public synchronized void setSeriesHandlerT0(STSeriesHandler handler) {
@@ -83,73 +40,13 @@ public class RobotState implements IS3Speculative {
 		this.positionParams = params;
 	}
 	
-	@Override
-	public synchronized void setActiveSpeculation(S3Speculation speculation) {
-		this.speculation = speculation;
-	}
-	
 	public synchronized String getContractName() {
 		if ( contractName == null ) {
 			throw new NullPointerException();
 		}
 		return contractName;
 	}
-	
-	public synchronized String getAccountCode() {
-		if ( accountCode == null ) {
-			throw new NullPointerException();
-		}
-		return accountCode;
-	}
-	
-	@Override
-	public Account getAccount() {
-		return new Account(getAccountCode());
-	}
-	
-	@Override
-	public synchronized ContractResolver getContractResolver() {
-		if ( contractResolver == null ) {
-			throw new NullPointerException(); 
-		}
-		return contractResolver;
-	}
-	
-	@Override
-	public synchronized ContractParams getContractParams() {
-		if ( contractParams == null ) {
-			throw new NullPointerException();
-		}
-		return contractParams;
-	}
-	
-	@Override
-	public synchronized ContractParams getContractParamsOrNull() {
-		return contractParams;
-	}
-	
-	public synchronized RMContractStrategy getContractStrategy() {
-		if ( contractStrategy == null ) {
-			throw new NullPointerException();
-		}
-		return contractStrategy;
-	}
-	
-	public synchronized Portfolio getPortfolio() {
-		if ( portfolio == null ) {
-			throw new NullPointerException();
-		}
-		return portfolio;
-	}
-	
-	@Override
-	public synchronized Security getSecurity() {
-		if ( security == null ) {
-			throw new NullPointerException();
-		}
-		return security;
-	}
-	
+
 	public synchronized STSeriesHandler getSeriesHandlerT0() {
 		if ( sht0 == null ) {
 			throw new NullPointerException();
@@ -194,12 +91,11 @@ public class RobotState implements IS3Speculative {
 		return positionParams != null;
 	}
 	
-	@Override
-	public synchronized S3Speculation getActiveSpeculation() {
-		if ( speculation == null ) {
+	public synchronized RMContractStrategyParams getContractStrategyParams() {
+		if ( strategyParams == null ) {
 			throw new NullPointerException();
 		}
-		return speculation;
+		return strategyParams;
 	}
 	
 }

@@ -8,32 +8,30 @@ import org.easymock.IMocksControl;
 import org.junit.Before;
 import org.junit.Test;
 
+import ru.prolib.aquila.core.BusinessEntities.Account;
 import ru.prolib.aquila.core.BusinessEntities.Portfolio;
 import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
 import ru.prolib.bootes.lib.cr.ContractParams;
 import ru.prolib.bootes.lib.cr.ContractResolver;
 import ru.prolib.bootes.lib.rm.RMContractStrategy;
+import ru.prolib.bootes.lib.rm.RMContractStrategyParams;
 import ru.prolib.bootes.lib.rm.RMContractStrategyPositionParams;
-import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
-import ru.prolib.bootes.lib.robo.s3.S3RobotStateListenerStub;
 import ru.prolib.bootes.lib.robo.s3.S3Speculation;
 
 public class RobotStateTest {
 	private IMocksControl control;
-	private S3RobotStateListener stateListenerStub;
 	private RobotState service;
 
 	@Before
 	public void setUp() throws Exception {
 		control = createStrictControl();
-		stateListenerStub = new S3RobotStateListenerStub();
-		service = new RobotState(stateListenerStub);
+		service = new RobotState();
 	}
 	
 	@Test
 	public void testCtor() {
-		assertSame(stateListenerStub, service.getStateListener());
+		assertNotNull(service.getStateListener());
 	}
 
 	@Test
@@ -48,9 +46,10 @@ public class RobotStateTest {
 		STSeriesHandler sht2Mock = control.createMock(STSeriesHandler.class);
 		RMContractStrategyPositionParams ppMock = control.createMock(RMContractStrategyPositionParams.class);
 		S3Speculation specMock = control.createMock(S3Speculation.class);
+		RMContractStrategyParams cspMock = control.createMock(RMContractStrategyParams.class);
 		
 		service.setContractName("RTS");
-		service.setAccountCode("ZX-48");
+		service.setAccount(new Account("ZX-48"));
 		service.setContractResolver(crMock);
 		service.setContractParams(cpMock);
 		service.setContractStrategy(csMock);
@@ -61,9 +60,10 @@ public class RobotStateTest {
 		service.setSeriesHandlerT2(sht2Mock);
 		service.setPositionParams(ppMock);
 		service.setActiveSpeculation(specMock);
+		service.setContractStrategyParams(cspMock);
 		
 		assertEquals("RTS", service.getContractName());
-		assertEquals("ZX-48", service.getAccountCode());
+		assertEquals(new Account("ZX-48"), service.getAccount());
 		assertSame(crMock, service.getContractResolver());
 		assertSame(cpMock, service.getContractParams());
 		assertSame(csMock, service.getContractStrategy());
@@ -74,6 +74,7 @@ public class RobotStateTest {
 		assertSame(sht2Mock, service.getSeriesHandlerT2());
 		assertSame(ppMock, service.getPositionParams());
 		assertSame(specMock, service.getActiveSpeculation());
+		assertSame(cspMock, service.getContractStrategyParams());
 	}
 	
 	@Test (expected=NullPointerException.class)
@@ -82,8 +83,8 @@ public class RobotStateTest {
 	}
 	
 	@Test (expected=NullPointerException.class)
-	public void testGetAccountCode_ThrowsIfNotDefined() {
-		service.getAccountCode();
+	public void testGetAccount_ThrowsIfNotDefined() {
+		service.getAccount();
 	}
 	
 	@Test (expected=NullPointerException.class)
@@ -134,6 +135,11 @@ public class RobotStateTest {
 	@Test (expected=NullPointerException.class)
 	public void testGetActiveSpeculation_ThrowsIfNotDefined() {
 		service.getActiveSpeculation();
+	}
+	
+	@Test (expected=NullPointerException.class)
+	public void testGetContractStrategyParams_ThrowsIfNotDefined() {
+		service.getContractStrategyParams();
 	}
 	
 	@Test

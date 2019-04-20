@@ -5,14 +5,23 @@ import ru.prolib.aquila.core.BusinessEntities.Portfolio;
 import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.bootes.lib.cr.ContractParams;
 import ru.prolib.bootes.lib.cr.ContractResolver;
+import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
+import ru.prolib.bootes.lib.data.ts.SignalTrigger;
+import ru.prolib.bootes.lib.data.ts.filter.IFilterSet;
+import ru.prolib.bootes.lib.rm.IRMContractStrategy;
 import ru.prolib.bootes.lib.robo.ISessionDataHandler;
+import ru.prolib.bootes.lib.robo.s3.statereq.IS3SignalDeterminable;
 import ru.prolib.bootes.lib.robo.s3.statereq.IS3Speculative;
 import ru.prolib.bootes.lib.robo.sh.statereq.ISessionDataTrackable;
 
 /**
  * Comon S3 robot state.
  */
-public class S3RobotState implements IS3Speculative, ISessionDataTrackable {
+public class S3RobotState implements
+	IS3Speculative,
+	ISessionDataTrackable,
+	IS3SignalDeterminable
+{
 	private final S3RobotStateListenerComp stateListener;
 	private Account account;
 	private Portfolio portfolio;
@@ -22,6 +31,9 @@ public class S3RobotState implements IS3Speculative, ISessionDataTrackable {
 	private S3Speculation activeSpeculation;
 	private String robotTitle;
 	private ISessionDataHandler sessionDataHandler;
+	private SignalTrigger signalTrigger;
+	private IFilterSet<S3TradeSignal> signalFilter;
+	private IRMContractStrategy contractStrategy;
 	
 	public S3RobotState(S3RobotStateListenerComp listener) {
 		this.stateListener = listener;
@@ -138,6 +150,42 @@ public class S3RobotState implements IS3Speculative, ISessionDataTrackable {
 
 	public synchronized void setSessionDataHandler(ISessionDataHandler handler) {
 		this.sessionDataHandler = handler;
+	}
+
+	@Override
+	public synchronized SignalTrigger getSignalTrigger() {
+		if ( signalTrigger == null ) {
+			throw new NullPointerException();
+		}
+		return signalTrigger;
+	}
+	
+	public synchronized void setSignalTrigger(SignalTrigger trigger) {
+		this.signalTrigger = trigger;
+	}
+
+	@Override
+	public synchronized IFilterSet<S3TradeSignal> getSignalFilter() {
+		if ( signalFilter == null ) {
+			throw new NullPointerException();
+		}
+		return signalFilter;
+	}
+	
+	public synchronized void setSignalFilter(IFilterSet<S3TradeSignal> filter) {
+		this.signalFilter = filter;
+	}
+
+	@Override
+	public synchronized IRMContractStrategy getContractStrategy() {
+		if ( contractStrategy == null ) {
+			throw new NullPointerException();
+		}
+		return contractStrategy;
+	}
+	
+	public synchronized void setContractStrategy(IRMContractStrategy strategy) {
+		this.contractStrategy = strategy;
 	}
 
 }

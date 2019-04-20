@@ -14,7 +14,7 @@ import ru.prolib.aquila.core.utils.LocalTimeTable;
 /**
  * Strategy risk management of separate contract.
  */
-public class RMContractStrategy {
+public class RMContractStrategy implements IRMContractStrategy {
 	
 	public interface ObjectLocator {
 		Security getSecurity();
@@ -65,6 +65,10 @@ public class RMContractStrategy {
 		return params;
 	}
 	
+	/* (non-Javadoc)
+	 * @see ru.prolib.bootes.lib.rm.IContractStrategy#getTradingTimetable()
+	 */
+	@Override
 	public LocalTimeTable getTradingTimetable() {
 		if ( timetable == null ) {
 			throw new NullPointerException("Timetable not defined");
@@ -119,12 +123,10 @@ public class RMContractStrategy {
 			);
 	}
 	
-	/**
-	 * Get position parameters for time.
-	 * <p>
-	 * @param time - time to determine parameters for 
-	 * @return position parameters
+	/* (non-Javadoc)
+	 * @see ru.prolib.bootes.lib.rm.IContractStrategy#getPositionParams(java.time.Instant)
 	 */
+	@Override
 	public RMContractStrategyPositionParams getPositionParams(Instant time) {
 		Security security = locator.getSecurity();
 		Portfolio portfolio = locator.getPortfolio();

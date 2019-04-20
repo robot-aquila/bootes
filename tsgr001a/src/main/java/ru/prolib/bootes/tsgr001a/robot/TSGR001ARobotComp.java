@@ -32,10 +32,10 @@ public class TSGR001ARobotComp implements AppComponent {
 	@Override
 	public void init() throws Throwable {
 		roboServices = new RoboServiceLocator(serviceLocator);
-		S3RobotStateListenerComp stateListener = new S3RobotStateListenerComp();
 		robot = new TSGR001ARobotBuilder(serviceLocator, roboServices)
-				.build(stateListener, appConfig.getBasicConfig().isNoOrders());
+				.build(appConfig.getBasicConfig().isNoOrders());
 		RobotState state = robot.getState();
+		S3RobotStateListenerComp stateListener = state.getStateListener();
 		stateListener.addListener(new SummaryReportHandler(state, roboServices.getSummaryReportTracker()));
 		stateListener.addListener(new SummaryReportDumpAtShutdown(roboServices.getSummaryReportTracker()));
 		stateListener.addListener(new S3ReportHandler(state, roboServices.getTradesReport(), true));

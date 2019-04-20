@@ -13,7 +13,7 @@ import ru.prolib.aquila.core.BusinessEntities.Terminal;
 import ru.prolib.aquila.core.text.IMessages;
 import ru.prolib.aquila.core.text.MsgID;
 import ru.prolib.bootes.lib.cr.ContractParams;
-import ru.prolib.bootes.lib.rm.RMContractStrategy;
+import ru.prolib.bootes.lib.rm.IRMContractStrategy;
 import ru.prolib.bootes.lib.rm.RMContractStrategyParams;
 import ru.prolib.bootes.lib.rm.RMContractStrategyPositionParams;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
@@ -95,14 +95,14 @@ public class StrategyConfigPanel extends JPanel {
 	}
 	
 	public void updateView() {
-		RMContractStrategy cs;
+		IRMContractStrategy cs;
 		RMContractStrategyParams csp;
 		ContractParams cp = null;
 		Security security = null;
 		RMContractStrategyPositionParams cspp = null;
 		synchronized ( state ) {
 			cs = state.getContractStrategy();
-			csp = cs.getStrategyParams();
+			csp = state.getContractStrategyParams();
 			if ( state.isSeriesHandlerT0Defined() ) {
 				security = state.getSecurity();
 			}
@@ -110,7 +110,7 @@ public class StrategyConfigPanel extends JPanel {
 			if ( state.isPositionParamsDefined() ) {
 				 cspp = state.getPositionParams();
 			}
-			jlAccount.setText(state.getAccountCode());
+			jlAccount.setText(state.getAccount().toString());
 			jlContractName.setText(state.getContractName());
 		}
 		jlExpDailyPriceMove.setText(percents(csp.getExpDailyPriceMovePer()));

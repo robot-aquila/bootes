@@ -88,7 +88,7 @@ public class FilterFCSDTest {
 		dh.startDataHandling();
 		EditableTSeries x = (EditableTSeries) dh.getSeries().getSeries(SCDHSetupStub.SID_OHLC_MUTATOR);
 		ohlc = (EditableTSeries<Candle>) x;
-		state = new RobotState(null);
+		state = new RobotState();
 		state.setSeriesHandlerT0(dh);
 
 		service = new FilterFCSD(state);

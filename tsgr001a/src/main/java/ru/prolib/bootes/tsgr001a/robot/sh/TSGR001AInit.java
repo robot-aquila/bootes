@@ -20,12 +20,12 @@ import ru.prolib.bootes.lib.report.s3rep.utils.S3RLastSpeculationEndTime;
 import ru.prolib.bootes.lib.rm.RMContractStrategy;
 import ru.prolib.bootes.lib.rm.RMContractStrategyParams;
 import ru.prolib.bootes.lib.rm.RMPriceStats;
+import ru.prolib.bootes.lib.robo.s3.S3RMCSObjectLocator;
 import ru.prolib.bootes.tsgr001a.robot.TSGR001APriceStats;
 import ru.prolib.bootes.tsgr001a.robot.TSGR001ASigTriggerObjectLocator;
 import ru.prolib.bootes.tsgr001a.robot.RoboServiceLocator;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 import ru.prolib.bootes.tsgr001a.robot.TSGR001ADataHandler;
-import ru.prolib.bootes.tsgr001a.robot.TSGR001AStrategyObjectLocator;
 import ru.prolib.bootes.tsgr001a.robot.filter.ByTrendT1;
 import ru.prolib.bootes.tsgr001a.robot.filter.FilterFCSD;
 import ru.prolib.bootes.tsgr001a.robot.filter.MADevLimit;
@@ -65,7 +65,7 @@ public class TSGR001AInit extends CommonHandler {
 		LocalTimeTable ltt = new LocalTimeTable(ZoneId.of("Europe/Moscow"))
 				.addPeriod(LocalTime.of(10, 30), LocalTime.of(13, 50))
 				.addPeriod(LocalTime.of(14, 10), LocalTime.of(18, 30));
-		TSGR001AStrategyObjectLocator ol = new TSGR001AStrategyObjectLocator(state);
+		S3RMCSObjectLocator ol = new S3RMCSObjectLocator(state);
 		RMPriceStats ps = new TSGR001APriceStats(state);
 		state.setContractStrategy(new RMContractStrategy(csp, ol, ps, ltt));
 		state.setContractStrategyParams(csp);

@@ -8,8 +8,9 @@ import ru.prolib.aquila.core.data.tseries.QEMATSeriesFast;
 import ru.prolib.aquila.core.data.tseries.STSeries;
 import ru.prolib.aquila.core.data.tseries.TSeriesCacheController;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
+import ru.prolib.bootes.lib.data.SecurityChartSetupTX;
 
-public class SetupT1 extends SetupTX {
+public class SetupT1 extends SecurityChartSetupTX {
 	public static final ZTFrame CONF_TFRAME = ZTFrame.H1MSK;
 	public static final int CONF_EMA_PERIOD = 70;
 	public static final int CONF_LOAD_HISTORY_DEPTH = CONF_EMA_PERIOD * 2;

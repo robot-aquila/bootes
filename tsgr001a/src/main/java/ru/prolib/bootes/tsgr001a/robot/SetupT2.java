@@ -9,8 +9,9 @@ import ru.prolib.aquila.core.data.tseries.QEMATSeriesFast;
 import ru.prolib.aquila.core.data.tseries.STSeries;
 import ru.prolib.aquila.core.data.tseries.TSeriesCacheController;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
+import ru.prolib.bootes.lib.data.SecurityChartSetupTX;
 
-public class SetupT2 extends SetupTX {
+public class SetupT2 extends SecurityChartSetupTX {
 	public static final ZTFrame CONF_TFRAME = ZTFrame.D1MSK;
 	public static final int CONF_ATR_PERIOD = 10;
 	public static final int CONF_EMA_PERIOD = 90;

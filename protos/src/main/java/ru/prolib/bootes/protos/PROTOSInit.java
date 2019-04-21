@@ -1,20 +1,32 @@
 package ru.prolib.bootes.protos;
 
+import static ru.prolib.aquila.core.BusinessEntities.CDecimalBD.of;
+
+import java.time.LocalTime;
+import java.time.ZoneId;
+
 import ru.prolib.aquila.core.BusinessEntities.Account;
 import ru.prolib.aquila.core.sm.SMExit;
 import ru.prolib.aquila.core.sm.SMStateHandlerEx;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
+import ru.prolib.aquila.core.utils.LocalTimeTable;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.cr.MOEXContractResolverRegistry;
-import ru.prolib.bootes.lib.robo.s3.S3RobotState;
+import ru.prolib.bootes.lib.data.ts.CMASignalTrigger;
+import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
+import ru.prolib.bootes.lib.data.ts.filter.FilterSet;
+import ru.prolib.bootes.lib.rm.RMContractStrategy;
+import ru.prolib.bootes.lib.rm.RMContractStrategyParams;
+import ru.prolib.bootes.lib.rm.RMPriceStats;
+import ru.prolib.bootes.lib.robo.s3.S3RMCSObjectLocator;
 
 public class PROTOSInit extends SMStateHandlerEx {
 	public static final String E_OK = "OK";
 	
 	protected final AppServiceLocator serviceLocator;
-	protected final S3RobotState state;
+	protected final PROTOSRobotState state;
 	
-	public PROTOSInit(AppServiceLocator serviceLocator, S3RobotState state) {
+	public PROTOSInit(AppServiceLocator serviceLocator, PROTOSRobotState state) {
 		this.serviceLocator = serviceLocator;
 		this.state = state;
 		registerExit(E_OK);
@@ -27,7 +39,26 @@ public class PROTOSInit extends SMStateHandlerEx {
 		state.setRobotTitle("PROTOS-" + contract_name);
 		state.setContractResolver(new MOEXContractResolverRegistry().getResolver(contract_name));
 		state.setAccount(new Account(account_name));
-		state.setSessionDataHandler(new PROTOSDataHandler(serviceLocator, state));
+		
+		PROTOSDataHandler data_handler = new PROTOSDataHandler(serviceLocator, state);
+		RMContractStrategyParams csp = new RMContractStrategyParams(
+				of("0.075"),
+				of("0.012"),
+				of("0.600"),
+				of("1.050"),
+				3,
+				of(1L)
+			);
+		LocalTimeTable ltt = new LocalTimeTable(ZoneId.of("Europe/Moscow"))
+				.addPeriod(LocalTime.of(10, 30), LocalTime.of(13, 50))
+				.addPeriod(LocalTime.of(14, 10), LocalTime.of(18, 30));
+		S3RMCSObjectLocator ol = new S3RMCSObjectLocator(state);
+		RMPriceStats ps = new PROTOSPriceStats(state);
+		state.setContractStrategy(new RMContractStrategy(csp, ol, ps, ltt));
+		state.setSignalTrigger(new CMASignalTrigger(new PROTOSSigTrigObjectLocator(state)));
+		state.setSignalFilter(new FilterSet<S3TradeSignal>());
+		state.setSessionDataHandler(data_handler);
+		
 		state.getStateListener().robotStarted();
 		return getExit(E_OK);
 	}

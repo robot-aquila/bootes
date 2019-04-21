@@ -12,12 +12,13 @@ import ru.prolib.aquila.core.data.tseries.TSeriesCacheController;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.data.PVCluster;
 import ru.prolib.bootes.lib.data.PVClusterSeriesByLastTrade;
+import ru.prolib.bootes.lib.data.SecurityChartSetupTX;
 import ru.prolib.bootes.lib.data.WeightedAverageTSeries;
 
 /**
  * Setup of data handler of primary timeframe (T=T0=TZ).
  */
-public class SetupT0 extends SetupTX {
+public class SetupT0 extends SecurityChartSetupTX {
 	public static final ZTFrame CONF_TFRAME = ZTFrame.M5MSK;
 	public static final int CONF_ATR_PERIOD = 10;
 	public static final int CONF_EMA_PERIOD = 252; // 252 is number of M5 bars of 1.5 trading day

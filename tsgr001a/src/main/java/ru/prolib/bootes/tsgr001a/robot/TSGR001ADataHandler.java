@@ -4,6 +4,7 @@ import ru.prolib.aquila.core.BusinessEntities.Symbol;
 import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
 import ru.prolib.aquila.core.data.tseries.SecurityChartDataHandler;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
+import ru.prolib.bootes.lib.data.SecurityChartSetupTX;
 import ru.prolib.bootes.lib.robo.ISessionDataHandler;
 import ru.prolib.bootes.lib.robo.sh.statereq.IContractDeterminable;
 
@@ -50,7 +51,7 @@ public class TSGR001ADataHandler implements ISessionDataHandler {
 		return t2;
 	}
 	
-	private STSeriesHandler create(SetupTX setup) {
+	private STSeriesHandler create(SecurityChartSetupTX setup) {
 		STSeriesHandler h = new SecurityChartDataHandler(setup);
 		try {
 			h.initialize();

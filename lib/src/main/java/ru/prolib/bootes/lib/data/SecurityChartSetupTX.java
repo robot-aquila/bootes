@@ -1,4 +1,4 @@
-package ru.prolib.bootes.tsgr001a.robot;
+package ru.prolib.bootes.lib.data;
 
 import ru.prolib.aquila.core.EventQueue;
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
@@ -17,7 +17,10 @@ import ru.prolib.aquila.core.data.tseries.TSeriesCacheController;
 import ru.prolib.aquila.data.storage.MDStorage;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 
-public abstract class SetupTX implements SecurityChartDataHandler.HandlerSetup {
+/**
+ * Common class for chart data handler setup based on app service locator and symbol.
+ */
+public abstract class SecurityChartSetupTX implements SecurityChartDataHandler.HandlerSetup {
 	public static final int CONF_SCALE = 8;
 	
 	public static final String SID_OHLC = "OHLC";
@@ -29,7 +32,7 @@ public abstract class SetupTX implements SecurityChartDataHandler.HandlerSetup {
 	protected final Symbol symbol;
 	protected TSeries<CDecimal> close, volume;
 	
-	public SetupTX(AppServiceLocator serviceLocator, Symbol symbol) {
+	public SecurityChartSetupTX(AppServiceLocator serviceLocator, Symbol symbol) {
 		this.serviceLocator = serviceLocator;
 		this.symbol = symbol;
 	}

@@ -16,6 +16,7 @@ import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 import ru.prolib.bootes.lib.data.ts.SignalTrigger;
 import ru.prolib.bootes.lib.data.ts.filter.IFilterSet;
 import ru.prolib.bootes.lib.rm.IRMContractStrategy;
+import ru.prolib.bootes.lib.rm.RMContractStrategyPositionParams;
 import ru.prolib.bootes.lib.robo.ISessionDataHandler;
 
 public class S3RobotStateTest {
@@ -180,6 +181,26 @@ public class S3RobotStateTest {
 		IRMContractStrategy expected = control.createMock(IRMContractStrategy.class);
 		service.setContractStrategy(expected);
 		assertSame(expected, service.getContractStrategy());
+	}
+	
+	@Test
+	public void testGetPositionParamsOrNull() {
+		RMContractStrategyPositionParams expected = control.createMock(RMContractStrategyPositionParams.class);
+		assertNull(service.getPositionParamsOrNull());
+		service.setPositionParams(expected);
+		assertSame(expected, service.getPositionParamsOrNull());
+	}
+	
+	@Test (expected=NullPointerException.class)
+	public void testGetPositionParams_ThrowsIfNotDefined() {
+		service.getPositionParams();
+	}
+	
+	@Test
+	public void testGetPositionParams() {
+		RMContractStrategyPositionParams expected = control.createMock(RMContractStrategyPositionParams.class);
+		service.setPositionParams(expected);
+		assertSame(expected, service.getPositionParams());
 	}
 
 }

@@ -1,7 +1,6 @@
 package ru.prolib.bootes.tsgr001a.robot;
 
 import ru.prolib.bootes.lib.rm.RMContractStrategyParams;
-import ru.prolib.bootes.lib.rm.RMContractStrategyPositionParams;
 import ru.prolib.bootes.lib.robo.s3.S3RobotState;
 
 /**
@@ -11,7 +10,6 @@ import ru.prolib.bootes.lib.robo.s3.S3RobotState;
  */
 public class RobotState extends S3RobotState {
 	private String contractName;
-	private RMContractStrategyPositionParams positionParams;
 	private RMContractStrategyParams strategyParams;
 	
 	@Override
@@ -27,26 +25,11 @@ public class RobotState extends S3RobotState {
 		this.contractName = contractName;
 	}
 	
-	public synchronized void setPositionParams(RMContractStrategyPositionParams params) {
-		this.positionParams = params;
-	}
-	
 	public synchronized String getContractName() {
 		if ( contractName == null ) {
 			throw new NullPointerException();
 		}
 		return contractName;
-	}
-	
-	public synchronized RMContractStrategyPositionParams getPositionParams() {
-		if ( positionParams == null ) {
-			throw new NullPointerException();
-		}
-		return positionParams;
-	}
-	
-	public synchronized boolean isPositionParamsDefined() {
-		return positionParams != null;
 	}
 	
 	public synchronized RMContractStrategyParams getContractStrategyParams() {

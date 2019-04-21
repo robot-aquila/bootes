@@ -44,6 +44,7 @@ import ru.prolib.bootes.lib.cr.ContractParams;
 import ru.prolib.bootes.lib.cr.ContractResolver;
 import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 import ru.prolib.bootes.lib.data.ts.SignalType;
+import ru.prolib.bootes.lib.rm.IRMContractStrategy;
 import ru.prolib.bootes.lib.robo.s3.S3ClosePosition;
 import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
 import ru.prolib.bootes.lib.robo.s3.S3Speculation;
@@ -131,6 +132,11 @@ public class S3ClosePositionTest {
 		@Override
 		public void setActiveSpeculation(S3Speculation spec) {
 			this.speculation = spec;
+		}
+
+		@Override
+		public IRMContractStrategy getContractStrategy() {
+			throw new IllegalStateException("Operation not supported");
 		}
 		
 	}

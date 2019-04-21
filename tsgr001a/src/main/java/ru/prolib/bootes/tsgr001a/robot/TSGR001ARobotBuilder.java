@@ -5,8 +5,8 @@ import ru.prolib.aquila.core.sm.SMStateMachine;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.robo.s3.S3ClosePosition;
 import ru.prolib.bootes.lib.robo.s3.S3OpenPosition;
+import ru.prolib.bootes.lib.robo.s3.S3WaitForMarketSignal;
 import ru.prolib.bootes.lib.robo.sh.BOOTESWaitForContract;
-import ru.prolib.bootes.lib.robo.sh.BOOTESWaitForSessionEnd;
 import ru.prolib.bootes.lib.robo.sh.BOOTESCleanSessionData;
 import ru.prolib.bootes.lib.robo.sh.BOOTESCleanup;
 import ru.prolib.bootes.lib.robo.sh.BOOTESInitSessionData;
@@ -15,7 +15,7 @@ import ru.prolib.bootes.tsgr001a.robot.sh.TSGR001AInit;
 import ru.prolib.bootes.tsgr001a.robot.sh.SimClosePosition;
 import ru.prolib.bootes.tsgr001a.robot.sh.SimOpenPosition;
 import ru.prolib.bootes.tsgr001a.robot.sh.SimTrackPosition;
-import ru.prolib.bootes.tsgr001a.robot.sh.WaitForMarketSignal;
+import ru.prolib.bootes.tsgr001a.robot.sh.TSGR001AWaitForMarketSignal;
 
 public class TSGR001ARobotBuilder {
 	public static final String S_INIT = "INIT";
@@ -48,10 +48,9 @@ public class TSGR001ARobotBuilder {
 				.addState(new BOOTESWaitForAccount(serviceLocator, state), S_WAIT_ACCOUNT)
 				.addState(new BOOTESWaitForContract(serviceLocator, state), S_WAIT_CONTRACT)
 				.addState(new BOOTESInitSessionData(state), S_INIT_SESSION_DATA)
-				.addState(new WaitForMarketSignal(serviceLocator, roboServices, state), S_WAIT_MARKET_SIGNAL)
+				.addState(new TSGR001AWaitForMarketSignal(serviceLocator, state), S_WAIT_MARKET_SIGNAL)
 				.addState(new SimTrackPosition(serviceLocator, state), S_TRACK_LONG)
 				.addState(new SimTrackPosition(serviceLocator, state), S_TRACK_SHORT)
-				.addState(new BOOTESWaitForSessionEnd(serviceLocator, state), S_WAIT_SESSION_END)
 				.addState(new BOOTESCleanSessionData(state), S_CLEAN_SESSION_DATA)
 				.addState(new BOOTESCleanup(serviceLocator, state), S_CLEANUP)
 				.setInitialState(S_INIT);
@@ -123,15 +122,12 @@ public class TSGR001ARobotBuilder {
 				.addTrans(S_INIT_SESSION_DATA, BOOTESInitSessionData.E_ERROR,		S_CLEANUP)
 				.addTrans(S_INIT_SESSION_DATA, BOOTESInitSessionData.E_INTERRUPT,	S_CLEANUP)
 				
-				.addTrans(S_WAIT_MARKET_SIGNAL, WaitForMarketSignal.E_STOP_TRADING,	S_WAIT_SESSION_END)
-				.addTrans(S_WAIT_MARKET_SIGNAL, WaitForMarketSignal.E_BUY,			S_OPEN_LONG)
-				.addTrans(S_WAIT_MARKET_SIGNAL, WaitForMarketSignal.E_SELL,			S_OPEN_SHORT)
-				.addTrans(S_WAIT_MARKET_SIGNAL, WaitForMarketSignal.E_ERROR,		S_CLEANUP)
-				.addTrans(S_WAIT_MARKET_SIGNAL, WaitForMarketSignal.E_INTERRUPT,	S_CLEANUP)
-				
-				.addTrans(S_WAIT_SESSION_END, BOOTESWaitForSessionEnd.E_SESSION_END,	S_CLEAN_SESSION_DATA)
-				.addTrans(S_WAIT_SESSION_END, BOOTESWaitForSessionEnd.E_ERROR,			S_CLEANUP)
-				.addTrans(S_WAIT_SESSION_END, BOOTESWaitForSessionEnd.E_INTERRUPT,		S_CLEANUP)
+				.addTrans(S_WAIT_MARKET_SIGNAL, S3WaitForMarketSignal.E_SESSION_END,	S_CLEAN_SESSION_DATA)
+				.addTrans(S_WAIT_MARKET_SIGNAL, S3WaitForMarketSignal.E_TRADING_END,  S_WAIT_MARKET_SIGNAL)
+				.addTrans(S_WAIT_MARKET_SIGNAL, S3WaitForMarketSignal.E_BUY,			S_OPEN_LONG)
+				.addTrans(S_WAIT_MARKET_SIGNAL, S3WaitForMarketSignal.E_SELL,			S_OPEN_SHORT)
+				.addTrans(S_WAIT_MARKET_SIGNAL, S3WaitForMarketSignal.E_ERROR,		S_CLEANUP)
+				.addTrans(S_WAIT_MARKET_SIGNAL, S3WaitForMarketSignal.E_INTERRUPT,	S_CLEANUP)
 				
 				.addTrans(S_CLEAN_SESSION_DATA, BOOTESCleanSessionData.E_OK,		S_WAIT_CONTRACT)
 				.addTrans(S_CLEAN_SESSION_DATA, BOOTESCleanSessionData.E_ERROR,		S_CLEANUP)

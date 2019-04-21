@@ -116,15 +116,5 @@ public class RobotStateTest {
 	public void testGetContractStrategyParams_ThrowsIfNotDefined() {
 		service.getContractStrategyParams();
 	}
-	
-	@Test
-	public void testIsPositionParamsDefined() {
-		RMContractStrategyPositionParams ppMock = control.createMock(RMContractStrategyPositionParams.class);
-		assertFalse(service.isPositionParamsDefined());
-		service.setPositionParams(ppMock);
-		assertTrue(service.isPositionParamsDefined());
-		service.setPositionParams(null);
-		assertFalse(service.isPositionParamsDefined());
-	}
 
 }

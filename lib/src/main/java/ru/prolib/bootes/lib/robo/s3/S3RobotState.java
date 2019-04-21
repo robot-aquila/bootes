@@ -9,6 +9,7 @@ import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 import ru.prolib.bootes.lib.data.ts.SignalTrigger;
 import ru.prolib.bootes.lib.data.ts.filter.IFilterSet;
 import ru.prolib.bootes.lib.rm.IRMContractStrategy;
+import ru.prolib.bootes.lib.rm.RMContractStrategyPositionParams;
 import ru.prolib.bootes.lib.robo.ISessionDataHandler;
 import ru.prolib.bootes.lib.robo.s3.statereq.IS3SignalDeterminable;
 import ru.prolib.bootes.lib.robo.s3.statereq.IS3Speculative;
@@ -34,6 +35,7 @@ public class S3RobotState implements
 	private SignalTrigger signalTrigger;
 	private IFilterSet<S3TradeSignal> signalFilter;
 	private IRMContractStrategy contractStrategy;
+	private RMContractStrategyPositionParams positionParams;
 	
 	public S3RobotState(S3RobotStateListenerComp listener) {
 		this.stateListener = listener;
@@ -186,6 +188,24 @@ public class S3RobotState implements
 	
 	public synchronized void setContractStrategy(IRMContractStrategy strategy) {
 		this.contractStrategy = strategy;
+	}
+	
+	@Override
+	public synchronized RMContractStrategyPositionParams getPositionParams() {
+		if ( positionParams == null ) {
+			throw new NullPointerException();
+		}
+		return positionParams;
+	}
+	
+	@Override
+	public synchronized RMContractStrategyPositionParams getPositionParamsOrNull() {
+		return positionParams;
+	}
+	
+	@Override
+	public synchronized void setPositionParams(RMContractStrategyPositionParams params) {
+		this.positionParams = params;
 	}
 
 }

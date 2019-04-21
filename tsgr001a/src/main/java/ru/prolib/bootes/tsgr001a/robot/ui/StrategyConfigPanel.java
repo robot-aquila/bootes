@@ -107,9 +107,7 @@ public class StrategyConfigPanel extends JPanel {
 				security = state.getSecurity();
 			} catch ( NullPointerException e ) { }
 			cp = state.getContractParamsOrNull();
-			if ( state.isPositionParamsDefined() ) {
-				 cspp = state.getPositionParams();
-			}
+			cspp = state.getPositionParamsOrNull();
 			jlAccount.setText(state.getAccount().toString());
 			jlContractName.setText(state.getContractName());
 		}

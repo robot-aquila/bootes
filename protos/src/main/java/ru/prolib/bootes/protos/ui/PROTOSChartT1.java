@@ -1,11 +1,15 @@
 package ru.prolib.bootes.protos.ui;
 
+import static ru.prolib.bootes.protos.PROTOSSetupT1.*;
+
 import java.awt.Color;
 import java.time.ZoneId;
 
 import javax.swing.JPanel;
 
+import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 import ru.prolib.aquila.core.BusinessEntities.Security;
+import ru.prolib.aquila.core.data.TSeries;
 import ru.prolib.aquila.utils.experimental.chart.BarChart;
 import ru.prolib.aquila.utils.experimental.chart.BarChartLayer;
 import ru.prolib.aquila.utils.experimental.chart.ChartSpaceManager;
@@ -35,24 +39,28 @@ public class PROTOSChartT1 extends SecurityChartPanel {
 		return PROTOSSetupT1.SID_VOLUME;
 	}
 	
+	private TSeries<CDecimal> gs(String seriesID) {
+		return source.getSeries(seriesID);
+	}
+	
 	@Override
 	protected void createLayers() {
 		super.createLayers();
 		
 		if ( atrChart != null ) {
 			lyrAtrCursorCat = atrChart.addLayer(new SWBarHighlighter(chartPanel.getCategoryTracker()));
-			lyrAtr = atrChart.addHistogram(source.getSeries(PROTOSSetupT1.SID_ATR)).setColor(new Color(127, 64, 127));
+			lyrAtr = atrChart.addHistogram(gs(SID_ATR)).setColor(new Color(127, 64, 127));
 		}
 	}
 	
 	@Override
 	protected void dropLayers() {
 		if ( lyrAtr != null ) {
-			atrChart.dropLayer(lyrAtr.getId());
+			atrChart.dropLayer(lyrAtr);
 			lyrAtr = null;
 		}
 		if ( lyrAtrCursorCat != null ) {
-			atrChart.dropLayer(lyrAtrCursorCat.getId());
+			atrChart.dropLayer(lyrAtrCursorCat);
 			lyrAtrCursorCat = null;
 		}
 		
@@ -95,7 +103,7 @@ public class PROTOSChartT1 extends SecurityChartPanel {
 	@Override
 	public JPanel create() {
 		JPanel panel = super.create();
-		chartPanel.setPreferredNumberOfBars(30);
+		chartPanel.setPreferredNumberOfBars(45);
 		return panel;
 	}
 

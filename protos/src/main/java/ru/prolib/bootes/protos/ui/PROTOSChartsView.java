@@ -10,6 +10,9 @@ import javax.swing.JSplitPane;
 import ru.prolib.aquila.core.data.tseries.STSeries;
 import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
+import ru.prolib.bootes.lib.report.blockrep.BlockReportStorage;
+import ru.prolib.bootes.lib.report.blockrep.IBlockReportStorage;
+import ru.prolib.bootes.lib.robo.s3.S3BlockReportHandler;
 import ru.prolib.bootes.lib.service.UIService;
 import ru.prolib.bootes.lib.ui.SecurityChartPanel;
 import ru.prolib.bootes.protos.PROTOSDataHandler;
@@ -21,17 +24,22 @@ public class PROTOSChartsView extends JPanel {
 	private final JPanel t0Panel, t1Panel;
 	private final JSplitPane splitPanel;
 	private final SecurityChartPanel t0, t1;
+	private final IBlockReportStorage blockReport;
 	
-	public PROTOSChartsView(AppServiceLocator serviceLocator, PROTOSRobotState state) {
+	public PROTOSChartsView(AppServiceLocator serviceLocator,
+							PROTOSRobotState state)
+	{
 		super(new GridLayout(1, 1));
 		this.state = state;
 		UIService uis = serviceLocator.getUIService();
 		ZoneId zoneID = uis.getZoneID();
+		blockReport = new BlockReportStorage();
+		state.getStateListener().addListener(new S3BlockReportHandler(state, blockReport));
 		
-		t0 = new PROTOSChartT0(zoneID);
+		t0 = new PROTOSChartT0(zoneID, blockReport);
 		t1 = new PROTOSChartT1(zoneID);
 		
-		double left_weight = 0.6;
+		double left_weight = 0.8;
 		
 		splitPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		splitPanel.setLeftComponent(t0Panel = t0.create());

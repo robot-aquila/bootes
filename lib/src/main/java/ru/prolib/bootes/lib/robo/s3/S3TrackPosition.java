@@ -1,45 +1,48 @@
-package ru.prolib.bootes.tsgr001a.robot.sh;
+package ru.prolib.bootes.lib.robo.s3;
 
 import java.time.Instant;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.threeten.extra.Interval;
 
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
-import ru.prolib.aquila.core.BusinessEntities.Security;
+import ru.prolib.aquila.core.BusinessEntities.Scheduler;
 import ru.prolib.aquila.core.BusinessEntities.TStampedVal;
-import ru.prolib.aquila.core.BusinessEntities.Terminal;
 import ru.prolib.aquila.core.sm.SMExit;
 import ru.prolib.aquila.core.sm.SMExitAction;
 import ru.prolib.aquila.core.sm.SMInput;
 import ru.prolib.aquila.core.sm.SMInputAction;
+import ru.prolib.aquila.core.sm.SMStateHandlerEx;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
-import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
-import ru.prolib.bootes.lib.robo.s3.S3Speculation;
-import ru.prolib.bootes.tsgr001a.robot.RobotState;
+import ru.prolib.bootes.lib.robo.s3.statereq.IS3Speculative;
 
-public class SimTrackPosition extends CommonHandler implements SMInputAction, SMExitAction {
+public class S3TrackPosition extends SMStateHandlerEx implements
+	SMInputAction,
+	SMExitAction
+{
 	private static final Logger logger;
 	
 	static {
-		logger = LoggerFactory.getLogger(SimTrackPosition.class);
+		logger = LoggerFactory.getLogger(S3TrackPosition.class);
 	}
 	
 	public static final String E_CLOSE_POSITION = "CLOSE_POSITION";
 	
+	protected final AppServiceLocator serviceLocator;
+	protected final IS3Speculative state;
 	private final SMInput in;
 	private S3Speculation spec;
 	private S3TradeSignal sig;
 	private CDecimal stopLoss, takeProfit, breakEven;
 	private TStampedVal<CDecimal> low, high;
 
-	public SimTrackPosition(AppServiceLocator serviceLocator,
-			RobotState state)
+	public S3TrackPosition(AppServiceLocator serviceLocator,
+							IS3Speculative state)
 	{
-		super(serviceLocator, state);
+		this.serviceLocator = serviceLocator;
+		this.state = state;
 		setExitAction(this);
 		registerExit(E_CLOSE_POSITION);
 		in = registerInput(this);
@@ -48,11 +51,13 @@ public class SimTrackPosition extends CommonHandler implements SMInputAction, SM
 	@Override
 	public SMExit enter(SMTriggerRegistry triggers) {
 		super.enter(triggers);
-		Terminal terminal = serviceLocator.getTerminal();
-		Instant curr_time = terminal.getCurrentTime();
+		Scheduler scheduler = serviceLocator.getScheduler();
+		Instant curr_time = scheduler.getCurrentTime();
 		synchronized ( state ) {
-			Interval tp = state.getContractStrategy().getTradingTimetable().getActiveOrComing(curr_time); 
-			triggers.add(newExitOnTimer(terminal, tp.getEnd(), in));
+			triggers.add(newExitOnTimer(scheduler, state.getContractStrategy()
+					.getTradingTimetable()
+					.getActiveOrComing(curr_time)
+					.getEnd(), in));
 			triggers.add(newTriggerOnEvent(state.getSecurity().onLastTrade(), in));
 			spec = state.getActiveSpeculation();
 		}
@@ -60,9 +65,7 @@ public class SimTrackPosition extends CommonHandler implements SMInputAction, SM
 		high = null;
 		low = null;
 		
-		S3RobotStateListener listener;
 		synchronized ( spec ) {
-			listener = state.getStateListener();
 			sig = spec.getTradeSignal();
 			CDecimal price = spec.getEntryPoint().getPrice();
 			switch ( sig.getType() ) {
@@ -86,21 +89,16 @@ public class SimTrackPosition extends CommonHandler implements SMInputAction, SM
 				throw new IllegalStateException("Unsupported signal type: " + sig.getType());
 			}
 		}
-		listener.speculationUpdate();
+		state.getStateListener().speculationUpdate();
 		return null;
 	}
 
 	@Override
 	public SMExit input(Object data) {
-		Instant curr_time = serviceLocator.getTerminal().getCurrentTime();
-		Security security = null;
-		S3Speculation spec = null;
-		synchronized ( state ) {
-			security = state.getSecurity();
-			spec = state.getActiveSpeculation();
-		}
+		Instant curr_time = serviceLocator.getScheduler().getCurrentTime();
+		CDecimal last_price = state.getSecurity().getLastTrade().getPrice();
+		S3Speculation spec = state.getActiveSpeculation();
 		synchronized ( spec ) {
-			CDecimal last_price = security.getLastTrade().getPrice();
 			if ( data instanceof Instant ) {
 				spec.setFlags(spec.getFlags() | S3Speculation.SF_TIMEOUT);
 				return getExit(E_CLOSE_POSITION);

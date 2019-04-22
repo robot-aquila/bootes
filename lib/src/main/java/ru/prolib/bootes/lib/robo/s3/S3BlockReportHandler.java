@@ -1,33 +1,39 @@
-package ru.prolib.bootes.tsgr001a.robot.report;
+package ru.prolib.bootes.lib.robo.s3;
 
 import ru.prolib.aquila.core.BusinessEntities.Tick;
 import ru.prolib.bootes.lib.report.blockrep.Block;
 import ru.prolib.bootes.lib.report.blockrep.BlockReport;
 import ru.prolib.bootes.lib.report.blockrep.IBlockReport;
 import ru.prolib.bootes.lib.report.blockrep.IBlockReportStorage;
-import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
-import ru.prolib.bootes.lib.robo.s3.S3Speculation;
-import ru.prolib.bootes.tsgr001a.robot.RobotState;
+import ru.prolib.bootes.lib.robo.s3.statereq.IS3Speculative;
 
-public class BlockReportHandler implements S3RobotStateListener {
+public class S3BlockReportHandler implements S3RobotStateListener {
 	private static final String ID_OPEN = "OPEN";
 	private static final String ID_CLOSE = "CLOSE";
 	private static final String ID_TAKE_PROFIT = "TAKE_PROFIT";
 	private static final String ID_STOP_LOSS = "STOP_LOSS";
 	private static final String ID_BREAK_EVEN = "BREAK_EVEN";
-	private final RobotState state;
-	private final IBlockReportStorage storage;
+	private final IS3Speculative state;
+	private final IBlockReportStorage reportStorage;
 	private IBlockReport currSpecReport;
 	
-	public BlockReportHandler(RobotState state, IBlockReportStorage storage) {
+	public S3BlockReportHandler(IS3Speculative state,
+								IBlockReportStorage reportStorage)
+	{
 		this.state = state;
-		this.storage = storage;
+		this.reportStorage = reportStorage;
+	}
+	
+	void setCurrReport(IBlockReport report) {
+		currSpecReport = report;
+	}
+	
+	IBlockReport getCurrReport() {
+		return currSpecReport;
 	}
 	
 	private S3Speculation getSpeculation() {
-		synchronized ( state ) {
-			return state.getActiveSpeculation();
-		}
+		return state.getActiveSpeculation();
 	}
 
 	@Override
@@ -62,7 +68,7 @@ public class BlockReportHandler implements S3RobotStateListener {
 			Tick en_p = spec.getEntryPoint(); 
 			currSpecReport = new BlockReport(new Block(ID_OPEN, en_p.getPrice(), en_p.getTime()));
 		}
-		storage.addReport(currSpecReport);
+		reportStorage.addReport(currSpecReport);
 	}
 
 	@Override

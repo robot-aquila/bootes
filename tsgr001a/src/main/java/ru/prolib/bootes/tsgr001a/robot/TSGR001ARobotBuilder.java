@@ -6,6 +6,7 @@ import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.robo.s3.S3ClosePosition;
 import ru.prolib.bootes.lib.robo.s3.S3OpenPosition;
 import ru.prolib.bootes.lib.robo.s3.S3WaitForMarketSignal;
+import ru.prolib.bootes.lib.robo.s3.S3TrackPosition;
 import ru.prolib.bootes.lib.robo.sh.BOOTESWaitForContract;
 import ru.prolib.bootes.lib.robo.sh.BOOTESCleanSessionData;
 import ru.prolib.bootes.lib.robo.sh.BOOTESCleanup;
@@ -14,7 +15,6 @@ import ru.prolib.bootes.lib.robo.sh.BOOTESWaitForAccount;
 import ru.prolib.bootes.tsgr001a.robot.sh.TSGR001AInit;
 import ru.prolib.bootes.tsgr001a.robot.sh.SimClosePosition;
 import ru.prolib.bootes.tsgr001a.robot.sh.SimOpenPosition;
-import ru.prolib.bootes.tsgr001a.robot.sh.SimTrackPosition;
 import ru.prolib.bootes.tsgr001a.robot.sh.TSGR001AWaitForMarketSignal;
 
 public class TSGR001ARobotBuilder {
@@ -49,8 +49,8 @@ public class TSGR001ARobotBuilder {
 				.addState(new BOOTESWaitForContract(serviceLocator, state), S_WAIT_CONTRACT)
 				.addState(new BOOTESInitSessionData(state), S_INIT_SESSION_DATA)
 				.addState(new TSGR001AWaitForMarketSignal(serviceLocator, state), S_WAIT_MARKET_SIGNAL)
-				.addState(new SimTrackPosition(serviceLocator, state), S_TRACK_LONG)
-				.addState(new SimTrackPosition(serviceLocator, state), S_TRACK_SHORT)
+				.addState(new S3TrackPosition(serviceLocator, state), S_TRACK_LONG)
+				.addState(new S3TrackPosition(serviceLocator, state), S_TRACK_SHORT)
 				.addState(new BOOTESCleanSessionData(state), S_CLEAN_SESSION_DATA)
 				.addState(new BOOTESCleanup(serviceLocator, state), S_CLEANUP)
 				.setInitialState(S_INIT);
@@ -137,13 +137,13 @@ public class TSGR001ARobotBuilder {
 				.addFinal(S_CLEANUP, BOOTESCleanup.E_ERROR)
 				.addFinal(S_CLEANUP, BOOTESCleanup.E_INTERRUPT)
 				
-				.addTrans(S_TRACK_LONG, SimTrackPosition.E_CLOSE_POSITION,	S_CLOSE_LONG)
-				.addTrans(S_TRACK_LONG, SimTrackPosition.E_ERROR,			S_CLEANUP)
-				.addTrans(S_TRACK_LONG, SimTrackPosition.E_INTERRUPT,		S_CLEANUP)
+				.addTrans(S_TRACK_LONG, S3TrackPosition.E_CLOSE_POSITION,	S_CLOSE_LONG)
+				.addTrans(S_TRACK_LONG, S3TrackPosition.E_ERROR,			S_CLEANUP)
+				.addTrans(S_TRACK_LONG, S3TrackPosition.E_INTERRUPT,		S_CLEANUP)
 		
-				.addTrans(S_TRACK_SHORT, SimTrackPosition.E_CLOSE_POSITION, S_CLOSE_SHORT)
-				.addTrans(S_TRACK_SHORT, SimTrackPosition.E_ERROR,			S_CLEANUP)
-				.addTrans(S_TRACK_SHORT, SimTrackPosition.E_INTERRUPT,		S_CLEANUP);
+				.addTrans(S_TRACK_SHORT, S3TrackPosition.E_CLOSE_POSITION, S_CLOSE_SHORT)
+				.addTrans(S_TRACK_SHORT, S3TrackPosition.E_ERROR,			S_CLEANUP)
+				.addTrans(S_TRACK_SHORT, S3TrackPosition.E_INTERRUPT,		S_CLEANUP);
 				
 		SMStateMachine automat = builder.build();
 		automat.setDebug(true);

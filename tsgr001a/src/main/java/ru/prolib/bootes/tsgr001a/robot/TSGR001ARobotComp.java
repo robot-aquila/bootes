@@ -10,8 +10,8 @@ import ru.prolib.bootes.lib.app.AppComponent;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.config.AppConfig;
 import ru.prolib.bootes.lib.report.ReportPrinter;
+import ru.prolib.bootes.lib.robo.s3.S3BlockReportHandler;
 import ru.prolib.bootes.lib.robo.s3.S3RobotStateListenerComp;
-import ru.prolib.bootes.tsgr001a.robot.report.BlockReportHandler;
 import ru.prolib.bootes.tsgr001a.robot.report.EquityCurveReportHandler;
 import ru.prolib.bootes.tsgr001a.robot.report.S3ReportHandler;
 import ru.prolib.bootes.tsgr001a.robot.report.SummaryReportDumpAtShutdown;
@@ -44,7 +44,7 @@ public class TSGR001ARobotComp implements AppComponent {
 		stateListener.addListener(new EquityCurveReportHandler(state, roboServices.getEquityCurveReportS(), true));
 		stateListener.addListener(new EquityCurveReportHandler(state, roboServices.getEquityCurveReportL()));
 		if ( ! appConfig.getBasicConfig().isHeadless() ) {
-			stateListener.addListener(new BlockReportHandler(state, roboServices.getBlockReportStorage()));
+			stateListener.addListener(new S3BlockReportHandler(state, roboServices.getBlockReportStorage()));
 			stateListener.addListener(new RobotUIService(serviceLocator, roboServices, state));
 		}
 		robot.getAutomat().start();

@@ -16,7 +16,7 @@ public class PROTOSSetupT0 extends SecurityChartSetupTX {
 	public static final int CONF_ATR_PERIOD = 10;
 	public static final int CONF_MA_SLOW_PERIOD = 14;
 	public static final int CONF_MA_FAST_PERIOD = 7;
-	public static final int CONF_LOAD_HISTORY_DEPTH = CONF_MA_SLOW_PERIOD * 2;
+	public static final int CONF_LOAD_HISTORY_DEPTH = 100;
 	
 	public static final String SID_SHARED = "T0";
 	public static final String SID_ATR = "ATR";

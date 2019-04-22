@@ -66,8 +66,7 @@ public class PROTOSRobotBuilder {
 			.addTrans(S_WAIT_SIGNAL, PROTOSWaitForMarketSignal.E_ERROR, S_CLEANUP)
 			.addTrans(S_WAIT_SIGNAL, PROTOSWaitForMarketSignal.E_INTERRUPT, S_CLEANUP)
 			
-			//.addTrans(S_CLEAN_SESSION, BOOTESCleanSessionData.E_OK, S_WAIT_CONTRACT) // TODO: fixme
-			.addTrans(S_CLEAN_SESSION, BOOTESCleanSessionData.E_OK, S_CLEANUP)
+			.addTrans(S_CLEAN_SESSION, BOOTESCleanSessionData.E_OK, S_WAIT_CONTRACT)
 			.addTrans(S_CLEAN_SESSION, BOOTESCleanSessionData.E_ERROR, S_CLEANUP)
 			.addTrans(S_CLEAN_SESSION, BOOTESCleanSessionData.E_INTERRUPT, S_CLEANUP)
 			

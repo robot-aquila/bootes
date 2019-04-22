@@ -6,6 +6,8 @@ import ru.prolib.bootes.lib.app.AppComponent;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.config.AppConfig;
 import ru.prolib.bootes.lib.robo.Robot;
+import ru.prolib.bootes.lib.robo.s3.S3RobotStateListenerComp;
+import ru.prolib.bootes.protos.ui.PROTOSRobotUI;
 
 public class PROTOSRobotComp implements AppComponent {
 	protected final AppConfig appConfig;
@@ -22,6 +24,11 @@ public class PROTOSRobotComp implements AppComponent {
 		robot = new PROTOSRobotBuilder(serviceLocator).build();
 		robot.getAutomat().setId("PROTOS");
 		robot.getAutomat().setDebug(true);
+		PROTOSRobotState state = robot.getState();
+		S3RobotStateListenerComp stateListener = state.getStateListener();
+		if ( ! appConfig.getBasicConfig().isHeadless() ) {
+			stateListener.addListener(new PROTOSRobotUI(serviceLocator, state));
+		}
 		robot.getAutomat().start();
 	}
 

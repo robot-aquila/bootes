@@ -11,7 +11,7 @@ import ru.prolib.bootes.lib.robo.s3.S3RobotState;
 public class PROTOSDataHandler implements ISessionDataHandler {
 	private final AppServiceLocator serviceLocator;
 	private final S3RobotState state;
-	private STSeriesHandler t0, d1;
+	private STSeriesHandler t0, t1;
 	
 	public PROTOSDataHandler(AppServiceLocator serviceLocator,
 							 S3RobotState state)
@@ -28,7 +28,7 @@ public class PROTOSDataHandler implements ISessionDataHandler {
 		Symbol symbol = state.getContractParams().getSymbol();
 		try {
 			t0 = create(new PROTOSSetupT0(serviceLocator, symbol));
-			d1 = create(new PROTOSSetupD1(serviceLocator, symbol));
+			t1 = create(new PROTOSSetupT1(serviceLocator, symbol));
 			return true;
 		} catch ( Throwable t ) {
 			cleanSession();
@@ -42,15 +42,15 @@ public class PROTOSDataHandler implements ISessionDataHandler {
 			throw new IllegalStateException();
 		}
 		t0 = close(t0);
-		d1 = close(d1);
+		t1 = close(t1);
 	}
 	
 	public synchronized STSeriesHandler getSeriesHandlerT0() {
 		return t0;
 	}
 	
-	public synchronized STSeriesHandler getSeriesHandlerD1() {
-		return d1;
+	public synchronized STSeriesHandler getSeriesHandlerT1() {
+		return t1;
 	}
 	
 	private STSeriesHandler create(SecurityChartSetupTX setup) {

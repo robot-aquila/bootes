@@ -16,9 +16,9 @@ public class PROTOSPriceStats implements RMPriceStats {
 	@Override
 	public CDecimal getDailyPriceMove(Instant time) {
 		TSeries<CDecimal> x = state.getSessionDataHandler()
-				.getSeriesHandlerD1()
+				.getSeriesHandlerT1()
 				.getSeries()
-				.getSeries(PROTOSSetupD1.SID_ATR);
+				.getSeries(PROTOSSetupT1.SID_ATR);
 		return x.getFirstBefore(time);
 	}
 

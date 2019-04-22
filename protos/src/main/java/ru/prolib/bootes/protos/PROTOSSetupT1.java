@@ -10,15 +10,15 @@ import ru.prolib.aquila.core.data.tseries.TSeriesCacheController;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.data.SecurityChartSetupTX;
 
-public class PROTOSSetupD1 extends SecurityChartSetupTX {
+public class PROTOSSetupT1 extends SecurityChartSetupTX {
 	public static final ZTFrame CONF_TFRAME = ZTFrame.D1MSK;
 	public static final int CONF_ATR_PERIOD = 10;
 	public static final int CONF_LOAD_HISTORY_DEPTH = CONF_ATR_PERIOD * 2;
 	
-	public static final String SID_SHARED = "D1";
+	public static final String SID_SHARED = "T1";
 	public static final String SID_ATR = "ATR";
 
-	public PROTOSSetupD1(AppServiceLocator serviceLocator, Symbol symbol) {
+	public PROTOSSetupT1(AppServiceLocator serviceLocator, Symbol symbol) {
 		super(serviceLocator, symbol);
 	}
 

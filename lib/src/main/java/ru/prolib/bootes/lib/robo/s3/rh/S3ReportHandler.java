@@ -1,4 +1,4 @@
-package ru.prolib.bootes.tsgr001a.robot.report;
+package ru.prolib.bootes.lib.robo.s3.rh;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +12,7 @@ import ru.prolib.bootes.lib.report.s3rep.S3RRecordUpdateLast;
 import ru.prolib.bootes.lib.report.s3rep.S3RType;
 import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
 import ru.prolib.bootes.lib.robo.s3.S3Speculation;
-import ru.prolib.bootes.tsgr001a.robot.RobotState;
+import ru.prolib.bootes.lib.robo.s3.statereq.IS3Speculative;
 
 public class S3ReportHandler implements S3RobotStateListener {
 	private static final Logger logger;
@@ -21,24 +21,27 @@ public class S3ReportHandler implements S3RobotStateListener {
 		logger = LoggerFactory.getLogger(S3ReportHandler.class);
 	}
 	
-	private final RobotState state;
+	private final IS3Speculative state;
 	private final IS3Report report;
 	private final boolean dumpResult;
 	
-	public S3ReportHandler(RobotState state, IS3Report report, boolean dumpResult) {
+	public S3ReportHandler(IS3Speculative state,
+						   IS3Report report,
+						   boolean dumpResult)
+	{
 		this.state = state;
 		this.report = report;
 		this.dumpResult = dumpResult;
 	}
 	
-	public S3ReportHandler(RobotState state, IS3Report report) {
+	public S3ReportHandler(IS3Speculative state,
+						   IS3Report report)
+	{
 		this(state, report, false);
 	}
 	
 	private S3Speculation getSpeculation() {
-		synchronized ( state ) {
-			return state.getActiveSpeculation();
-		}
+		return state.getActiveSpeculation();
 	}
 
 	@Override

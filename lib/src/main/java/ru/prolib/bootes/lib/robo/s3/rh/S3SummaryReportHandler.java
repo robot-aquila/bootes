@@ -1,17 +1,19 @@
-package ru.prolib.bootes.tsgr001a.robot.report;
+package ru.prolib.bootes.lib.robo.s3.rh;
 
 import ru.prolib.bootes.lib.data.ts.SignalType;
 import ru.prolib.bootes.lib.report.summarep.ISummaryReportTracker;
 import ru.prolib.bootes.lib.report.summarep.SREntry;
 import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
 import ru.prolib.bootes.lib.robo.s3.S3Speculation;
-import ru.prolib.bootes.tsgr001a.robot.RobotState;
+import ru.prolib.bootes.lib.robo.s3.statereq.IS3Speculative;
 
-public class SummaryReportHandler implements S3RobotStateListener {
-	private final RobotState state;
+public class S3SummaryReportHandler implements S3RobotStateListener {
+	private final IS3Speculative state;
 	private final ISummaryReportTracker tracker;
 	
-	public SummaryReportHandler(RobotState state, ISummaryReportTracker tracker) {
+	public S3SummaryReportHandler(IS3Speculative state,
+								ISummaryReportTracker tracker)
+	{
 		this.state = state;
 		this.tracker = tracker;
 	}

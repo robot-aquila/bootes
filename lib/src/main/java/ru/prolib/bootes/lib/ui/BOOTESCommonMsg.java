@@ -1,14 +1,14 @@
-package ru.prolib.bootes.tsgr001a.robot.ui;
+package ru.prolib.bootes.lib.ui;
 
 import ru.prolib.aquila.core.text.Messages;
 import ru.prolib.aquila.core.text.MsgID;
 
-public class RobotCommonMsg {
-	static final String SECTION_ID = "RobotCommon";
+public class BOOTESCommonMsg {
+	static final String SECTION_ID = "BootesCommon";
 	
 	static {
-		Messages.registerLoader(SECTION_ID, RobotCommonMsg.class.getClassLoader());
-		Messages.setDefaultMsgIDs(SECTION_ID, RobotCommonMsg.class);
+		Messages.registerLoader(SECTION_ID, BOOTESCommonMsg.class.getClassLoader());
+		Messages.setDefaultMsgIDs(SECTION_ID, BOOTESCommonMsg.class);
 	}
 	
 	public static MsgID

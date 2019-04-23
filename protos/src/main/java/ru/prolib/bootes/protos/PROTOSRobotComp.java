@@ -6,6 +6,7 @@ import ru.prolib.bootes.lib.app.AppComponent;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.config.AppConfig;
 import ru.prolib.bootes.lib.robo.Robot;
+import ru.prolib.bootes.lib.robo.s3.S3CommonReports;
 import ru.prolib.bootes.lib.robo.s3.S3RobotStateListenerComp;
 import ru.prolib.bootes.protos.ui.PROTOSRobotUI;
 
@@ -13,6 +14,7 @@ public class PROTOSRobotComp implements AppComponent {
 	protected final AppConfig appConfig;
 	protected final AppServiceLocator serviceLocator;
 	private Robot<PROTOSRobotState> robot;
+	private S3CommonReports reports;
 
 	public PROTOSRobotComp(AppConfig appConfig, AppServiceLocator serviceLocator) {
 		this.appConfig = appConfig;
@@ -21,13 +23,15 @@ public class PROTOSRobotComp implements AppComponent {
 	
 	@Override
 	public void init() throws Throwable {
+		reports = new S3CommonReports(serviceLocator);
 		robot = new PROTOSRobotBuilder(serviceLocator).build();
 		robot.getAutomat().setId("PROTOS");
 		robot.getAutomat().setDebug(true);
 		PROTOSRobotState state = robot.getState();
 		S3RobotStateListenerComp stateListener = state.getStateListener();
+		reports.registerHandlers(state);
 		if ( ! appConfig.getBasicConfig().isHeadless() ) {
-			stateListener.addListener(new PROTOSRobotUI(serviceLocator, state));
+			stateListener.addListener(new PROTOSRobotUI(serviceLocator, state, reports));
 		}
 		robot.getAutomat().start();
 	}

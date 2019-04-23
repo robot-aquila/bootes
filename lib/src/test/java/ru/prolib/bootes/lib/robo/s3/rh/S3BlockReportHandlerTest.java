@@ -1,4 +1,4 @@
-package ru.prolib.bootes.lib.robo.s3;
+package ru.prolib.bootes.lib.robo.s3.rh;
 
 import static org.junit.Assert.*;
 import static org.easymock.EasyMock.*;
@@ -14,6 +14,8 @@ import ru.prolib.aquila.core.BusinessEntities.Tick;
 import ru.prolib.bootes.lib.report.blockrep.Block;
 import ru.prolib.bootes.lib.report.blockrep.BlockReport;
 import ru.prolib.bootes.lib.report.blockrep.IBlockReportStorage;
+import ru.prolib.bootes.lib.robo.s3.S3RobotState;
+import ru.prolib.bootes.lib.robo.s3.S3Speculation;
 
 public class S3BlockReportHandlerTest {
 	

@@ -1,4 +1,4 @@
-package ru.prolib.bootes.tsgr001a.robot.report;
+package ru.prolib.bootes.lib.robo.rh;
 
 import java.time.Instant;
 import java.util.concurrent.locks.Lock;
@@ -16,7 +16,7 @@ import ru.prolib.aquila.core.BusinessEntities.TaskHandler;
 import ru.prolib.aquila.core.data.OHLCScalableSeries;
 import ru.prolib.aquila.core.data.ValueException;
 import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
-import ru.prolib.bootes.tsgr001a.robot.RobotState;
+import ru.prolib.bootes.lib.robo.sh.statereq.IAccountDeterminable;
 
 public class EquityCurveReportHandler implements S3RobotStateListener, EventListener, SPRunnable {
 	private static final Logger logger;
@@ -25,14 +25,14 @@ public class EquityCurveReportHandler implements S3RobotStateListener, EventList
 		logger = LoggerFactory.getLogger(EquityCurveReportHandler.class);
 	}
 
-	private final RobotState state;
+	private final IAccountDeterminable state;
 	private final OHLCScalableSeries report;
 	private final boolean dumpAtShutdown;
 	private final Lock lock;
 	private Portfolio portfolio;
 	private TaskHandler taskHandler;
 	
-	public EquityCurveReportHandler(RobotState state,
+	public EquityCurveReportHandler(IAccountDeterminable state,
 									OHLCScalableSeries report,
 									boolean dumpAtShutdown) {
 		this.state = state;
@@ -41,7 +41,7 @@ public class EquityCurveReportHandler implements S3RobotStateListener, EventList
 		this.lock = new ReentrantLock();
 	}
 	
-	public EquityCurveReportHandler(RobotState state,
+	public EquityCurveReportHandler(IAccountDeterminable state,
 									OHLCScalableSeries report)
 	{
 		this(state, report, false);

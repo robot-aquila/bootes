@@ -10,12 +10,12 @@ import ru.prolib.bootes.lib.app.AppComponent;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.config.AppConfig;
 import ru.prolib.bootes.lib.report.ReportPrinter;
-import ru.prolib.bootes.lib.robo.s3.S3BlockReportHandler;
+import ru.prolib.bootes.lib.robo.rh.EquityCurveReportHandler;
 import ru.prolib.bootes.lib.robo.s3.S3RobotStateListenerComp;
-import ru.prolib.bootes.tsgr001a.robot.report.EquityCurveReportHandler;
-import ru.prolib.bootes.tsgr001a.robot.report.S3ReportHandler;
+import ru.prolib.bootes.lib.robo.s3.rh.S3BlockReportHandler;
+import ru.prolib.bootes.lib.robo.s3.rh.S3ReportHandler;
+import ru.prolib.bootes.lib.robo.s3.rh.S3SummaryReportHandler;
 import ru.prolib.bootes.tsgr001a.robot.report.SummaryReportDumpAtShutdown;
-import ru.prolib.bootes.tsgr001a.robot.report.SummaryReportHandler;
 import ru.prolib.bootes.tsgr001a.robot.ui.RobotUIService;
 
 public class TSGR001ARobotComp implements AppComponent {
@@ -36,7 +36,7 @@ public class TSGR001ARobotComp implements AppComponent {
 				.build(appConfig.getBasicConfig().isNoOrders());
 		RobotState state = robot.getState();
 		S3RobotStateListenerComp stateListener = state.getStateListener();
-		stateListener.addListener(new SummaryReportHandler(state, roboServices.getSummaryReportTracker()));
+		stateListener.addListener(new S3SummaryReportHandler(state, roboServices.getSummaryReportTracker()));
 		stateListener.addListener(new SummaryReportDumpAtShutdown(roboServices.getSummaryReportTracker()));
 		stateListener.addListener(new S3ReportHandler(state, roboServices.getTradesReport(), true));
 		stateListener.addListener(new S3ReportHandler(state, roboServices.getShortDurationTradesReport()));

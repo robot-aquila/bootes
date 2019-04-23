@@ -19,6 +19,7 @@ import ru.prolib.bootes.lib.report.s3rep.ui.S3ReportCounterView;
 import ru.prolib.bootes.lib.report.s3rep.ui.S3ReportTableModel;
 import ru.prolib.bootes.lib.report.summarep.ui.SummaryReportView;
 import ru.prolib.bootes.lib.service.UIService;
+import ru.prolib.bootes.lib.ui.BOOTESCommonMsg;
 import ru.prolib.bootes.tsgr001a.robot.RoboServiceLocator;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
@@ -47,7 +48,7 @@ public class ReportsView extends JPanel {
 		JPanel panel = new JPanel(new GridLayout(1, 1));
 		panel.add(new JScrollPane(table));
 		new TableModelController(rtm, main_frame);
-		reportsTabPanel.addTab(messages.get(RobotCommonMsg.REPORT_ALL_TRADES), panel);
+		reportsTabPanel.addTab(messages.get(BOOTESCommonMsg.REPORT_ALL_TRADES), panel);
 		
 		rtm = new S3ReportTableModel(messages, zone_id, roboServices.getShortDurationTradesReport());
 		table = new JTable(rtm);
@@ -57,7 +58,7 @@ public class ReportsView extends JPanel {
 		panel.add(new JScrollPane(table), BorderLayout.CENTER);
 		panel.add(new S3ReportCounterView(messages, roboServices.getShortDurationTradesReport()), BorderLayout.PAGE_END);
 		new TableModelController(rtm, main_frame);
-		reportsTabPanel.addTab(messages.get(RobotCommonMsg.REPORT_SHORT_DURATION_TRADES), panel);
+		reportsTabPanel.addTab(messages.get(BOOTESCommonMsg.REPORT_SHORT_DURATION_TRADES), panel);
 		
 		rtm = new S3ReportTableModel(messages, zone_id, roboServices.getMidDayClearingTradesReport());
 		table = new JTable(rtm);
@@ -67,7 +68,7 @@ public class ReportsView extends JPanel {
 		panel.add(new JScrollPane(table), BorderLayout.CENTER);
 		panel.add(new S3ReportCounterView(messages, roboServices.getMidDayClearingTradesReport()), BorderLayout.PAGE_END);
 		new TableModelController(rtm, main_frame);
-		reportsTabPanel.addTab(messages.get(RobotCommonMsg.REPORT_CROSS_MIDCLEARING_TRADES), panel);
+		reportsTabPanel.addTab(messages.get(BOOTESCommonMsg.REPORT_CROSS_MIDCLEARING_TRADES), panel);
 		
 		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 		splitPane.setLeftComponent(statsPanel);

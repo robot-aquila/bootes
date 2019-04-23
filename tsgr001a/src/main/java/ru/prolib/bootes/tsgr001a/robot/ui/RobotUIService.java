@@ -12,6 +12,8 @@ import ru.prolib.aquila.core.utils.RunnableStub;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
 import ru.prolib.bootes.lib.service.UIService;
+import ru.prolib.bootes.lib.ui.BOOTESCommonMsg;
+import ru.prolib.bootes.lib.ui.EquityCurveView;
 import ru.prolib.bootes.tsgr001a.robot.RoboServiceLocator;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
@@ -45,18 +47,18 @@ public class RobotUIService implements S3RobotStateListener {
 		reportsViewUpdateAll = new Runnable() { public void run() { reportsView.updateView(); } };
 		reportsView.updateView();
 		
-		equityView = new EquityCurveView(roboServices);
+		equityView = new EquityCurveView(roboServices.getEquityCurveReportL());
 		
 		JTabbedPane tabs = new JTabbedPane();
-		tabs.addTab(messages.get(RobotCommonMsg.CHARTS), chartsView);
-		tabs.addTab(messages.get(RobotCommonMsg.REPORTS), reportsView);
-		tabs.addTab(messages.get(RobotCommonMsg.EQUITY_CURVE), equityView);
+		tabs.addTab(messages.get(BOOTESCommonMsg.CHARTS), chartsView);
+		tabs.addTab(messages.get(BOOTESCommonMsg.REPORTS), reportsView);
+		tabs.addTab(messages.get(BOOTESCommonMsg.EQUITY_CURVE), equityView);
 		
 		JPanel root = new JPanel();
 		root.setLayout(new BoxLayout(root, BoxLayout.X_AXIS));
 		root.add(tabs, BorderLayout.CENTER);
 		
-		uis.getTabPanel().addTab(messages.get(RobotCommonMsg.TEST_STRATEGY), root);
+		uis.getTabPanel().addTab(messages.get(BOOTESCommonMsg.TEST_STRATEGY), root);
 	}
 
 	@Override

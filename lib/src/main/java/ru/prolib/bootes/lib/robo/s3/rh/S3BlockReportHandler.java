@@ -1,10 +1,12 @@
-package ru.prolib.bootes.lib.robo.s3;
+package ru.prolib.bootes.lib.robo.s3.rh;
 
 import ru.prolib.aquila.core.BusinessEntities.Tick;
 import ru.prolib.bootes.lib.report.blockrep.Block;
 import ru.prolib.bootes.lib.report.blockrep.BlockReport;
 import ru.prolib.bootes.lib.report.blockrep.IBlockReport;
 import ru.prolib.bootes.lib.report.blockrep.IBlockReportStorage;
+import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
+import ru.prolib.bootes.lib.robo.s3.S3Speculation;
 import ru.prolib.bootes.lib.robo.s3.statereq.IS3Speculative;
 
 public class S3BlockReportHandler implements S3RobotStateListener {

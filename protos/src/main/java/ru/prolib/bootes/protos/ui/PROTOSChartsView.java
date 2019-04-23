@@ -12,7 +12,7 @@ import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.report.blockrep.BlockReportStorage;
 import ru.prolib.bootes.lib.report.blockrep.IBlockReportStorage;
-import ru.prolib.bootes.lib.robo.s3.S3BlockReportHandler;
+import ru.prolib.bootes.lib.robo.s3.rh.S3BlockReportHandler;
 import ru.prolib.bootes.lib.service.UIService;
 import ru.prolib.bootes.lib.ui.SecurityChartPanel;
 import ru.prolib.bootes.protos.PROTOSDataHandler;

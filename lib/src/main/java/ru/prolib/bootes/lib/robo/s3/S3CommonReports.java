@@ -1,10 +1,15 @@
 package ru.prolib.bootes.lib.robo.s3;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.ZoneId;
+
+import org.apache.commons.io.FileUtils;
 
 import ru.prolib.aquila.core.EventQueue;
 import ru.prolib.aquila.core.data.OHLCScalableSeries;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
+import ru.prolib.bootes.lib.report.ReportPrinter;
 import ru.prolib.bootes.lib.report.s3rep.IS3Report;
 import ru.prolib.bootes.lib.report.s3rep.S3Report;
 import ru.prolib.bootes.lib.report.summarep.ISummaryReportTracker;
@@ -17,11 +22,13 @@ import ru.prolib.bootes.lib.robo.s3.rh.S3SummaryReportHandler;
  * Service provides set of reports of typical  speculative strategy.
  */
 public class S3CommonReports {
+	private final AppServiceLocator serviceLocator;
 	private final ISummaryReportTracker srt;
 	private final IS3Report atr;
 	private final OHLCScalableSeries erc, erf;
 	
 	public S3CommonReports(AppServiceLocator serviceLocator) {
+		this.serviceLocator = serviceLocator;
 		ZoneId zone_id = serviceLocator.getZoneID();
 		EventQueue queue = serviceLocator.getEventQueue();
 		srt = new SummaryReportTracker();
@@ -52,6 +59,16 @@ public class S3CommonReports {
 		stateListener.addListener(new S3ReportHandler(state, atr));
 		stateListener.addListener(new EquityCurveReportHandler(state, erf));
 		stateListener.addListener(new EquityCurveReportHandler(state, erc));
+	}
+	
+	public void save(File report_dir, String filename) throws IOException {
+		FileUtils.forceMkdir(report_dir);
+		File report_file = new File(report_dir, filename);
+		new ReportPrinter(serviceLocator.getZoneID())
+			.add(srt.getCurrentStats(), "Summary")
+			.add(atr, "Trades")
+			.add(erc, "Equity")
+			.save(report_file);
 	}
 	
 }

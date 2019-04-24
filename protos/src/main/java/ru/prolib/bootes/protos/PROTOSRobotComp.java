@@ -5,6 +5,7 @@ import ru.prolib.aquila.core.sm.SMStateMachine;
 import ru.prolib.bootes.lib.app.AppComponent;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.config.AppConfig;
+import ru.prolib.bootes.lib.config.BasicConfig;
 import ru.prolib.bootes.lib.robo.Robot;
 import ru.prolib.bootes.lib.robo.s3.S3CommonReports;
 import ru.prolib.bootes.lib.robo.s3.S3RobotStateListenerComp;
@@ -12,12 +13,16 @@ import ru.prolib.bootes.protos.ui.PROTOSRobotUI;
 
 public class PROTOSRobotComp implements AppComponent {
 	protected final AppConfig appConfig;
+	protected final BasicConfig basicConf;
 	protected final AppServiceLocator serviceLocator;
 	private Robot<PROTOSRobotState> robot;
 	private S3CommonReports reports;
 
-	public PROTOSRobotComp(AppConfig appConfig, AppServiceLocator serviceLocator) {
+	public PROTOSRobotComp(AppConfig appConfig,
+						   AppServiceLocator serviceLocator)
+	{
 		this.appConfig = appConfig;
+		this.basicConf = appConfig.getBasicConfig();
 		this.serviceLocator = serviceLocator;
 	}
 	
@@ -30,7 +35,7 @@ public class PROTOSRobotComp implements AppComponent {
 		PROTOSRobotState state = robot.getState();
 		S3RobotStateListenerComp stateListener = state.getStateListener();
 		reports.registerHandlers(state);
-		if ( ! appConfig.getBasicConfig().isHeadless() ) {
+		if ( ! basicConf.isHeadless() ) {
 			stateListener.addListener(new PROTOSRobotUI(serviceLocator, state, reports));
 		}
 		robot.getAutomat().start();
@@ -52,6 +57,7 @@ public class PROTOSRobotComp implements AppComponent {
 			}
 		}
 		// TODO: Here! Wait for automat finished work.
+		reports.save(basicConf.getReportsDirectory(), "protos.report");
 	}
 
 }

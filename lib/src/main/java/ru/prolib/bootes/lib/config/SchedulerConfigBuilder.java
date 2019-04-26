@@ -2,7 +2,16 @@ package ru.prolib.bootes.lib.config;
 
 import java.time.Instant;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class SchedulerConfigBuilder {
+	private static final Logger logger;
+	
+	static {
+		logger = LoggerFactory.getLogger(SchedulerConfigBuilder.class);
+	}
+	
 	private boolean probeAutoStart, probeAutoShutdown;
 	private Instant probeInitialTime, probeStopTime;
 	
@@ -30,21 +39,25 @@ public class SchedulerConfigBuilder {
 	}
 	
 	public SchedulerConfigBuilder withProbeAutoStart(boolean autoStart) {
+		logger.debug("withProbeAutoStart={}", autoStart);
 		this.probeAutoStart = autoStart;
 		return this;
 	}
 	
 	public SchedulerConfigBuilder withProbeAutoShutdown(boolean autoShutdown) {
+		logger.debug("withProbeAutoShutdown={}", autoShutdown);
 		this.probeAutoShutdown = autoShutdown;
 		return this;
 	}
 	
 	public SchedulerConfigBuilder withProbeInitialTime(Instant initialTime) {
+		logger.debug("withProbeInitialTime={}", initialTime);
 		this.probeInitialTime = initialTime;
 		return this;
 	}
 	
 	public SchedulerConfigBuilder withProbeStopTime(Instant stopTime) {
+		logger.debug("withProbeStopTime={}", stopTime);
 		this.probeStopTime = stopTime;
 		return this;
 	}

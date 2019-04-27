@@ -61,7 +61,7 @@ public class PROTOS_IT {
 		};
 		new PROTOS().run(args_pass2);
 		
-		File expected = new File("fixture", "expected-protos.report");
+		File expected = new File("fixture", "expected-protos.rep");
 		assertTrue(FileUtils.contentEqualsIgnoreEOL(expected, new File(rd_pass1, "protos.report"), "UTF-8"));
 		assertTrue(FileUtils.contentEqualsIgnoreEOL(expected, new File(rd_pass2, "protos.report"), "UTF-8"));
 	}

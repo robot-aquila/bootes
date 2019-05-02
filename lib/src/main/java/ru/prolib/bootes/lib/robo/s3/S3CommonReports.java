@@ -19,7 +19,7 @@ import ru.prolib.bootes.lib.robo.s3.rh.S3ReportHandler;
 import ru.prolib.bootes.lib.robo.s3.rh.S3SummaryReportHandler;
 
 /**
- * Service provides set of reports of typical  speculative strategy.
+ * Service provides set of reports of typical speculative strategy.
  */
 public class S3CommonReports {
 	private final AppServiceLocator serviceLocator;
@@ -54,7 +54,7 @@ public class S3CommonReports {
 	}
 	
 	public void registerHandlers(S3RobotState state) {
-		 S3RobotStateListenerComp stateListener = state.getStateListener();
+		S3RobotStateListenerComp stateListener = state.getStateListener();
 		stateListener.addListener(new S3SummaryReportHandler(state, srt));
 		stateListener.addListener(new S3ReportHandler(state, atr));
 		stateListener.addListener(new EquityCurveReportHandler(state, erf));

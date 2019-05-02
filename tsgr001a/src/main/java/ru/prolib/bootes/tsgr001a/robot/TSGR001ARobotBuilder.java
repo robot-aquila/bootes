@@ -34,9 +34,9 @@ public class TSGR001ARobotBuilder {
 	public static final String S_CLEANUP = "CLEANUP";
 	
 	private final AppServiceLocator serviceLocator;
-	private final RoboServiceLocator roboServices;
+	private final TSGR001AReports roboServices;
 
-	public TSGR001ARobotBuilder(AppServiceLocator serviceLocator, RoboServiceLocator roboServices) {
+	public TSGR001ARobotBuilder(AppServiceLocator serviceLocator, TSGR001AReports roboServices) {
 		this.serviceLocator = serviceLocator;
 		this.roboServices = roboServices;
 	}
@@ -122,12 +122,12 @@ public class TSGR001ARobotBuilder {
 				.addTrans(S_INIT_SESSION_DATA, BOOTESInitSessionData.E_ERROR,		S_CLEANUP)
 				.addTrans(S_INIT_SESSION_DATA, BOOTESInitSessionData.E_INTERRUPT,	S_CLEANUP)
 				
-				.addTrans(S_WAIT_MARKET_SIGNAL, S3WaitForMarketSignal.E_SESSION_END,	S_CLEAN_SESSION_DATA)
-				.addTrans(S_WAIT_MARKET_SIGNAL, S3WaitForMarketSignal.E_TRADING_END,  S_WAIT_MARKET_SIGNAL)
-				.addTrans(S_WAIT_MARKET_SIGNAL, S3WaitForMarketSignal.E_BUY,			S_OPEN_LONG)
-				.addTrans(S_WAIT_MARKET_SIGNAL, S3WaitForMarketSignal.E_SELL,			S_OPEN_SHORT)
-				.addTrans(S_WAIT_MARKET_SIGNAL, S3WaitForMarketSignal.E_ERROR,		S_CLEANUP)
-				.addTrans(S_WAIT_MARKET_SIGNAL, S3WaitForMarketSignal.E_INTERRUPT,	S_CLEANUP)
+				.addTrans(S_WAIT_MARKET_SIGNAL, S3WaitForMarketSignal.E_SESSION_END, S_CLEAN_SESSION_DATA)
+				.addTrans(S_WAIT_MARKET_SIGNAL, S3WaitForMarketSignal.E_TRADING_END, S_WAIT_MARKET_SIGNAL)
+				.addTrans(S_WAIT_MARKET_SIGNAL, S3WaitForMarketSignal.E_BUY,		 S_OPEN_LONG)
+				.addTrans(S_WAIT_MARKET_SIGNAL, S3WaitForMarketSignal.E_SELL,		 S_OPEN_SHORT)
+				.addTrans(S_WAIT_MARKET_SIGNAL, S3WaitForMarketSignal.E_ERROR,		 S_CLEANUP)
+				.addTrans(S_WAIT_MARKET_SIGNAL, S3WaitForMarketSignal.E_INTERRUPT,	 S_CLEANUP)
 				
 				.addTrans(S_CLEAN_SESSION_DATA, BOOTESCleanSessionData.E_OK,		S_WAIT_CONTRACT)
 				.addTrans(S_CLEAN_SESSION_DATA, BOOTESCleanSessionData.E_ERROR,		S_CLEANUP)
@@ -141,7 +141,7 @@ public class TSGR001ARobotBuilder {
 				.addTrans(S_TRACK_LONG, S3TrackPosition.E_ERROR,			S_CLEANUP)
 				.addTrans(S_TRACK_LONG, S3TrackPosition.E_INTERRUPT,		S_CLEANUP)
 		
-				.addTrans(S_TRACK_SHORT, S3TrackPosition.E_CLOSE_POSITION, S_CLOSE_SHORT)
+				.addTrans(S_TRACK_SHORT, S3TrackPosition.E_CLOSE_POSITION,	S_CLOSE_SHORT)
 				.addTrans(S_TRACK_SHORT, S3TrackPosition.E_ERROR,			S_CLEANUP)
 				.addTrans(S_TRACK_SHORT, S3TrackPosition.E_INTERRUPT,		S_CLEANUP);
 				

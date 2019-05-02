@@ -1,11 +1,14 @@
 package ru.prolib.bootes.lib.app;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import ru.prolib.bootes.lib.app.comp.UIComp;
+import ru.prolib.bootes.lib.AccountInfo;
 import ru.prolib.bootes.lib.app.comp.EventQueueComp;
 import ru.prolib.bootes.lib.app.comp.MessagesComp;
 import ru.prolib.bootes.lib.app.comp.OHLCHistoryStorageComp;
@@ -15,6 +18,7 @@ import ru.prolib.bootes.lib.app.comp.QFortsTerminalComp;
 import ru.prolib.bootes.lib.app.comp.TerminalUIComp;
 import ru.prolib.bootes.lib.config.AppConfig;
 import ru.prolib.bootes.lib.config.ConfigException;
+import ru.prolib.bootes.lib.config.TerminalConfig;
 import ru.prolib.bootes.lib.service.ars.AppRuntimeServiceImpl;
 
 public abstract class App {
@@ -113,11 +117,26 @@ public abstract class App {
 		ars.addService(new UIComp(appConfig, serviceLocator));
 		ars.addService(new EventQueueComp(appConfig, serviceLocator));
 		ars.addService(new ProbeSchedulerComp(appConfig, serviceLocator));
-		ars.addService(new QFortsTerminalComp(appConfig, serviceLocator));
+		ars.addService(new QFortsTerminalComp(appConfig, serviceLocator, getExpectedAccounts()));
 		ars.addService(new TerminalUIComp(appConfig, serviceLocator));
 		ars.addService(new OHLCHistoryStorageComp(appConfig, serviceLocator));
 	}
 	
 	abstract protected void registerApplications(AppRuntimeService ars);
+	
+	/**
+	 * Produce list of accounts expected to be exist.
+	 * <p>
+	 * By default this method return 
+	 * Usage of the list depends on terminal implementation. 
+	 * <p> 
+	 * @return
+	 */
+	protected List<AccountInfo> getExpectedAccounts() {
+		TerminalConfig bc = appConfig.getTerminalConfig();
+		List<AccountInfo> r = new ArrayList<>();
+		r.add(new AccountInfo(bc.getQForstTestAccount(), bc.getQForstTestBalance()));
+		return r;
+	}
 
 }

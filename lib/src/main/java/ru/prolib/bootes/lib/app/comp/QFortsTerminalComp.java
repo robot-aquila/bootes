@@ -1,9 +1,13 @@
 package ru.prolib.bootes.lib.app.comp;
 
+import java.util.List;
+
 import ru.prolib.aquila.core.BusinessEntities.BasicTerminalBuilder;
 import ru.prolib.aquila.core.BusinessEntities.EditableTerminal;
 import ru.prolib.aquila.qforts.impl.QFBuilder;
+import ru.prolib.aquila.qforts.impl.QFortsEnv;
 import ru.prolib.aquila.web.utils.WUDataFactory;
+import ru.prolib.bootes.lib.AccountInfo;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.config.AppConfig;
 import ru.prolib.bootes.lib.config.TerminalConfig;
@@ -14,14 +18,23 @@ import ru.prolib.bootes.lib.service.task.StopTerminal;
 
 public class QFortsTerminalComp extends CommonComp {
 	private static final String DEFAULT_ID = "BOOTES-TERMINAL";
+	private final List<AccountInfo> expectedAccounts;
 	private ARSHandler handler;
 
-	public QFortsTerminalComp(AppConfig appConfig, AppServiceLocator serviceLocator, String serviceID) {
+	public QFortsTerminalComp(AppConfig appConfig,
+							  AppServiceLocator serviceLocator,
+							  String serviceID,
+							  List<AccountInfo> expected_accounts)
+	{
 		super(appConfig, serviceLocator, serviceID);
+		this.expectedAccounts = expected_accounts;
 	}
 	
-	public QFortsTerminalComp(AppConfig appConfig, AppServiceLocator serviceLocator) {
-		this(appConfig, serviceLocator, DEFAULT_ID);
+	public QFortsTerminalComp(AppConfig appConfig,
+							  AppServiceLocator serviceLocator,
+							  List<AccountInfo> expected_accounts)
+	{
+		this(appConfig, serviceLocator, DEFAULT_ID, expected_accounts);
 	}
 
 	@Override
@@ -40,8 +53,11 @@ public class QFortsTerminalComp extends CommonComp {
 			.buildTerminal();
 		serviceLocator.setTerminal(terminal);
 		
-		qf.buildEnvironment(terminal)
-				.createPortfolio(conf.getQForstTestAccount(), conf.getQForstTestBalance());
+		QFortsEnv env = qf.buildEnvironment(terminal);
+		for ( AccountInfo ai : expectedAccounts ) {
+			env.createPortfolio(ai.getAccount(), ai.getBalance());			
+		}
+		
 		handler = new ARSHandlerBuilder()
 				.withID(serviceID)
 				.addStartupAction(new StartTerminal(terminal))

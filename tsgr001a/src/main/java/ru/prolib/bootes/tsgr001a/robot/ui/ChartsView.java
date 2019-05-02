@@ -10,9 +10,12 @@ import javax.swing.JSplitPane;
 import ru.prolib.aquila.core.data.tseries.STSeries;
 import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
+import ru.prolib.bootes.lib.report.blockrep.BlockReportStorage;
+import ru.prolib.bootes.lib.report.blockrep.IBlockReportStorage;
+import ru.prolib.bootes.lib.robo.s3.rh.S3BlockReportHandler;
 import ru.prolib.bootes.lib.service.UIService;
 import ru.prolib.bootes.lib.ui.SecurityChartPanel;
-import ru.prolib.bootes.tsgr001a.robot.RoboServiceLocator;
+import ru.prolib.bootes.tsgr001a.robot.TSGR001AReports;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 import ru.prolib.bootes.tsgr001a.robot.TSGR001ADataHandler;
 
@@ -23,14 +26,20 @@ public class ChartsView extends JPanel {
 	private final JSplitPane extSplitPanel, extBotSplitPanel, intBotSplitPanel;
 	private final SecurityChartPanel t0,t1,t2;
 	private final StrategyConfigPanel cfg;
+	private final IBlockReportStorage blockReport;
 
-	public ChartsView(AppServiceLocator serviceLocator, RoboServiceLocator roboServices, RobotState state) {
+	public ChartsView(AppServiceLocator serviceLocator,
+					  TSGR001AReports roboServices,
+					  RobotState state)
+	{
 		super(new GridLayout(1, 1));
 		this.state = state;
 		UIService uis = serviceLocator.getUIService();
 		ZoneId zoneID = uis.getZoneID();
+		blockReport = new BlockReportStorage();
+		state.getStateListener().addListener(new S3BlockReportHandler(state, blockReport));
 		
-		t0 = new ChartT0(zoneID, roboServices.getBlockReportStorage());
+		t0 = new ChartT0(zoneID, blockReport);
 		t1 = new ChartT1(zoneID);
 		t2 = new ChartT2(zoneID);
 		cfg = new StrategyConfigPanel(serviceLocator.getMessages(), state, zoneID, serviceLocator.getTerminal());

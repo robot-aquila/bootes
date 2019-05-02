@@ -23,7 +23,7 @@ import ru.prolib.bootes.lib.rm.RMPriceStats;
 import ru.prolib.bootes.lib.robo.s3.S3RMCSObjectLocator;
 import ru.prolib.bootes.tsgr001a.robot.TSGR001APriceStats;
 import ru.prolib.bootes.tsgr001a.robot.TSGR001ASigTriggerObjectLocator;
-import ru.prolib.bootes.tsgr001a.robot.RoboServiceLocator;
+import ru.prolib.bootes.tsgr001a.robot.TSGR001AReports;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 import ru.prolib.bootes.tsgr001a.robot.TSGR001ADataHandler;
 import ru.prolib.bootes.tsgr001a.robot.filter.ByTrendT1;
@@ -34,10 +34,10 @@ import ru.prolib.bootes.tsgr001a.robot.filter.StopLossGtATR;
 public class TSGR001AInit extends CommonHandler {
 	public static final String E_OK = "OK";
 	
-	private final RoboServiceLocator roboServices;
+	private final TSGR001AReports roboServices;
 	
 	public TSGR001AInit(AppServiceLocator serviceLocator,
-				RoboServiceLocator roboServices,
+				TSGR001AReports roboServices,
 				RobotState state)
 	{
 		super(serviceLocator, state);

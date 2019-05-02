@@ -14,19 +14,19 @@ import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
 import ru.prolib.bootes.lib.service.UIService;
 import ru.prolib.bootes.lib.ui.BOOTESCommonMsg;
 import ru.prolib.bootes.lib.ui.EquityCurveView;
-import ru.prolib.bootes.tsgr001a.robot.RoboServiceLocator;
+import ru.prolib.bootes.tsgr001a.robot.TSGR001AReports;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
 public class RobotUIService implements S3RobotStateListener {
 	private final AppServiceLocator serviceLocator;
-	private final RoboServiceLocator roboServices;
+	private final TSGR001AReports roboServices;
 	private final RobotState state;
 	private Runnable chartsViewUpdateConfig, chartsViewUpdateAll, reportsViewUpdateAll;
 	private ChartsView chartsView;
 	private ReportsView reportsView;
 	private EquityCurveView equityView;
 	
-	public RobotUIService(AppServiceLocator serviceLocator, RoboServiceLocator roboServices, RobotState state) {
+	public RobotUIService(AppServiceLocator serviceLocator, TSGR001AReports roboServices, RobotState state) {
 		this.serviceLocator = serviceLocator;
 		this.roboServices = roboServices;
 		this.state = state;
@@ -47,7 +47,7 @@ public class RobotUIService implements S3RobotStateListener {
 		reportsViewUpdateAll = new Runnable() { public void run() { reportsView.updateView(); } };
 		reportsView.updateView();
 		
-		equityView = new EquityCurveView(roboServices.getEquityCurveReportL());
+		equityView = new EquityCurveView(roboServices.getEquityReport());
 		
 		JTabbedPane tabs = new JTabbedPane();
 		tabs.addTab(messages.get(BOOTESCommonMsg.CHARTS), chartsView);

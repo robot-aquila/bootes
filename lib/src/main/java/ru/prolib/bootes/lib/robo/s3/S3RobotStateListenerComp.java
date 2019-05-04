@@ -16,82 +16,90 @@ public class S3RobotStateListenerComp implements S3RobotStateListener {
 		this(new LinkedHashSet<>());
 	}
 	
-	public S3RobotStateListenerComp addListener(S3RobotStateListener listener) {
+	public synchronized S3RobotStateListenerComp
+		addListener(S3RobotStateListener listener)
+	{
 		listeners.add(listener);
 		return this;
 	}
 	
-	public S3RobotStateListenerComp removeListener(RobotStateListener listener) {
+	public synchronized S3RobotStateListenerComp
+		removeListener(RobotStateListener listener)
+	{
 		listeners.remove(listener);
 		return this;
+	}
+	
+	private synchronized Set<S3RobotStateListener> _getListeners() {
+		return new LinkedHashSet<>(listeners);
 	}
 
 	@Override
 	public void robotStarted() {
-		for ( RobotStateListener listener : listeners ) {
+		for ( RobotStateListener listener : _getListeners() ) {
 			listener.robotStarted();
 		}
 	}
 
 	@Override
 	public void accountSelected() {
-		for ( RobotStateListener listener : listeners ) {
+		for ( RobotStateListener listener : _getListeners() ) {
 			listener.accountSelected();
 		}
 	}
 
 	@Override
 	public void contractSelected() {
-		for ( RobotStateListener listener : listeners ) {
+		for ( RobotStateListener listener : _getListeners() ) {
 			listener.contractSelected();
 		}
 	}
 
 	@Override
 	public void sessionDataAvailable() {
-		for ( RobotStateListener listener : listeners ) {
+		for ( RobotStateListener listener : _getListeners() ) {
 			listener.sessionDataAvailable();
 		}
 	}
 
 	@Override
 	public void riskManagementUpdate() {
-		for ( RobotStateListener listener : listeners ) {
+		for ( RobotStateListener listener : _getListeners() ) {
 			listener.riskManagementUpdate();
 		}
 	}
 
 	@Override
 	public void speculationOpened() {
-		for ( S3RobotStateListener listener : listeners ) {
+		for ( S3RobotStateListener listener : _getListeners() ) {
 			listener.speculationOpened();
 		}
 	}
 	
 	@Override
 	public void speculationUpdate() {
-		for ( S3RobotStateListener listener : listeners ) {
+		for ( S3RobotStateListener listener : _getListeners() ) {
 			listener.speculationUpdate();
 		}
 	}
 
 	@Override
 	public void speculationClosed() {
-		for ( S3RobotStateListener listener : listeners ) {
+		for ( S3RobotStateListener listener : _getListeners() ) {
 			listener.speculationClosed();
 		}
 	}
 
 	@Override
 	public void sessionDataCleanup() {
-		for ( RobotStateListener listener : listeners ) {
+		for ( RobotStateListener listener : _getListeners() ) {
 			listener.sessionDataCleanup();
 		}
 	}
 
 	@Override
 	public void robotStopped() {
-		for ( RobotStateListener listener : listeners ) {
+		for ( RobotStateListener listener : _getListeners() ) {
 			listener.robotStopped();
 		}
 	}

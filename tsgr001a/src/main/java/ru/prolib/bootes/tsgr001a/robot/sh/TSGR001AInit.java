@@ -2,7 +2,6 @@ package ru.prolib.bootes.tsgr001a.robot.sh;
 
 import static ru.prolib.aquila.core.BusinessEntities.CDecimalBD.*;
 
-import java.time.Duration;
 import java.time.LocalTime;
 import java.time.ZoneId;
 
@@ -15,8 +14,6 @@ import ru.prolib.bootes.lib.cr.MOEXContractResolverRegistry;
 import ru.prolib.bootes.lib.data.ts.S3CESDSignalTrigger;
 import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 import ru.prolib.bootes.lib.data.ts.filter.FilterSet;
-import ru.prolib.bootes.lib.data.ts.filter.impl.CooldownFilter;
-import ru.prolib.bootes.lib.report.s3rep.utils.S3RLastSpeculationEndTime;
 import ru.prolib.bootes.lib.rm.RMContractStrategy;
 import ru.prolib.bootes.lib.rm.RMContractStrategyParams;
 import ru.prolib.bootes.lib.rm.RMPriceStats;
@@ -26,22 +23,19 @@ import ru.prolib.bootes.tsgr001a.robot.TSGR001ASigTriggerObjectLocator;
 import ru.prolib.bootes.tsgr001a.robot.TSGR001AReports;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 import ru.prolib.bootes.tsgr001a.robot.TSGR001ADataHandler;
-import ru.prolib.bootes.tsgr001a.robot.filter.ByTrendT1;
-import ru.prolib.bootes.tsgr001a.robot.filter.FilterFCSD;
-import ru.prolib.bootes.tsgr001a.robot.filter.MADevLimit;
-import ru.prolib.bootes.tsgr001a.robot.filter.StopLossGtATR;
+import ru.prolib.bootes.tsgr001a.robot.filter.S3TSFilterFactory;
 
 public class TSGR001AInit extends CommonHandler {
 	public static final String E_OK = "OK";
 	
-	private final TSGR001AReports roboServices;
+	private final TSGR001AReports reports;
 	
 	public TSGR001AInit(AppServiceLocator serviceLocator,
-				TSGR001AReports roboServices,
-				RobotState state)
+						TSGR001AReports reports,
+						RobotState state)
 	{
 		super(serviceLocator, state);
-		this.roboServices = roboServices;
+		this.reports = reports;
 		registerExit(E_OK);
 	}
 	
@@ -54,6 +48,8 @@ public class TSGR001AInit extends CommonHandler {
 		state.setAccount(new Account(an));
 		
 		TSGR001ADataHandler data_handler = new TSGR001ADataHandler(serviceLocator, state);
+		state.setSessionDataHandler(data_handler);
+		
 		RMContractStrategyParams csp = new RMContractStrategyParams(
 				of("0.075"),
 				of("0.012"),
@@ -71,17 +67,14 @@ public class TSGR001AInit extends CommonHandler {
 		state.setContractStrategyParams(csp);
 		
 		state.setSignalTrigger(new S3CESDSignalTrigger(new TSGR001ASigTriggerObjectLocator(state)));
-		state.setSignalFilter(new FilterSet<S3TradeSignal>()
-				.addFilter(new CooldownFilter(new S3RLastSpeculationEndTime(
-						roboServices.getTradesReport()),
-						Duration.ofMinutes(30)
-					))
-				.addFilter(new StopLossGtATR(data_handler))
-				.addFilter(new MADevLimit(state))
-				.addFilter(new ByTrendT1(state)) // filtered too much, not so effective, check it
-				.addFilter(new FilterFCSD(data_handler)));
-		
-		state.setSessionDataHandler(data_handler);
+		S3TSFilterFactory filter_factory = new S3TSFilterFactory(reports, state);
+		FilterSet<S3TradeSignal> filters = new FilterSet<>();
+		filters.addFilter(filter_factory.produce("CoolDown30"));
+		filters.addFilter(filter_factory.produce("SLgtATR"));
+		filters.addFilter(filter_factory.produce("MADevLim"));
+		filters.addFilter(filter_factory.produce("ByTrendT1"));
+		filters.addFilter(filter_factory.produce("FCSD"));
+		state.setSignalFilter(filters);
 		
 		state.getStateListener().robotStarted();
 		return getExit(E_OK);

@@ -13,6 +13,7 @@ import ru.prolib.bootes.lib.robo.sh.BOOTESCleanup;
 import ru.prolib.bootes.lib.robo.sh.BOOTESInitSessionData;
 import ru.prolib.bootes.lib.robo.sh.BOOTESWaitForAccount;
 import ru.prolib.bootes.tsgr001a.robot.sh.TSGR001AInit;
+import ru.prolib.bootes.tsgr001a.TSGR001AConfig;
 import ru.prolib.bootes.tsgr001a.robot.sh.SimClosePosition;
 import ru.prolib.bootes.tsgr001a.robot.sh.SimOpenPosition;
 import ru.prolib.bootes.tsgr001a.robot.sh.TSGR001AWaitForMarketSignal;
@@ -34,17 +35,22 @@ public class TSGR001ARobotBuilder {
 	public static final String S_CLEANUP = "CLEANUP";
 	
 	private final AppServiceLocator serviceLocator;
-	private final TSGR001AReports roboServices;
+	private final TSGR001AReports reports;
+	private final TSGR001AConfig config;
 
-	public TSGR001ARobotBuilder(AppServiceLocator serviceLocator, TSGR001AReports roboServices) {
+	public TSGR001ARobotBuilder(AppServiceLocator serviceLocator,
+								TSGR001AReports reports,
+								TSGR001AConfig config)
+	{
 		this.serviceLocator = serviceLocator;
-		this.roboServices = roboServices;
+		this.reports = reports;
+		this.config = config;
 	}
 
 	public Robot build(boolean no_orders) {
 		RobotState state = new RobotState();
 		SMBuilder builder = new SMBuilder()
-				.addState(new TSGR001AInit(serviceLocator, roboServices, state), S_INIT)
+				.addState(new TSGR001AInit(serviceLocator, reports, state, config), S_INIT)
 				.addState(new BOOTESWaitForAccount(serviceLocator, state), S_WAIT_ACCOUNT)
 				.addState(new BOOTESWaitForContract(serviceLocator, state), S_WAIT_CONTRACT)
 				.addState(new BOOTESInitSessionData(state), S_INIT_SESSION_DATA)
@@ -147,7 +153,7 @@ public class TSGR001ARobotBuilder {
 				
 		SMStateMachine automat = builder.build();
 		automat.setDebug(true);
-		automat.setId("TSGR001A"); // TODO: custom ID
+		automat.setId(config.getTitle());
 		return new Robot(state, automat);
 	}
 }

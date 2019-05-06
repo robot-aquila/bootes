@@ -9,7 +9,7 @@ import ru.prolib.bootes.lib.report.s3rep.utils.S3RLastSpeculationEndTime;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 import ru.prolib.bootes.tsgr001a.robot.TSGR001AReports;
 
-public class S3TSFilterFactory {
+public class S3TSFilterFactory implements IS3TSFilterFactory {
 	private final RobotState state;
 	private final TSGR001AReports reports;
 	
@@ -18,6 +18,10 @@ public class S3TSFilterFactory {
 		this.reports = reports;
 	}
 
+	/* (non-Javadoc)
+	 * @see ru.prolib.bootes.tsgr001a.robot.filter.IS3TSFilterFactory#produce(java.lang.String)
+	 */
+	@Override
 	public IFilter<S3TradeSignal> produce(String code) {
 		switch ( code ) {
 		case "CoolDown30":

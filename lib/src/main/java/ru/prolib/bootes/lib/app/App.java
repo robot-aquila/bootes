@@ -130,7 +130,7 @@ public abstract class App {
 	 * By default this method return 
 	 * Usage of the list depends on terminal implementation. 
 	 * <p> 
-	 * @return
+	 * @return list of accounts with balances
 	 */
 	protected List<AccountInfo> getExpectedAccounts() {
 		TerminalConfig bc = appConfig.getTerminalConfig();

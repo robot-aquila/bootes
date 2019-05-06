@@ -8,6 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.easymock.IMocksControl;
 import org.junit.Before;
 import org.junit.Test;
@@ -98,6 +99,37 @@ public class FilterSetTest {
 		expected_states.add(new FilterState("buz", true));
 		IFilterSetState expected = new FilterSetState(expected_states);
 		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void testEquals_SpecialCases() {
+		assertTrue(service.equals(service));
+		assertFalse(service.equals(this));
+		assertFalse(service.equals(null));
+	}
+
+	@Test
+	public void testEquals() {
+		filters.put("bar", filterMock2);
+		filters.put("buz", filterMock3);
+		Map<String, IFilter> fl1 = new LinkedHashMap<>(filters);
+		Map<String, IFilter> fl2 = new LinkedHashMap<>();
+		fl2.put("foo", filterMock1);
+		fl2.put("bar", filterMock2);
+		
+		assertTrue(service.equals(new FilterSet(fl1)));
+		assertFalse(service.equals(new FilterSet(fl2)));
+	}
+	
+	@Test
+	public void testHashCode() {
+		filters.put("bar", filterMock2);
+		filters.put("buz", filterMock3);
+		int expected = new HashCodeBuilder(78127, 915)
+				.append(filters)
+				.build();
+		
+		assertEquals(expected, service.hashCode());
 	}
 
 }

@@ -21,15 +21,21 @@ public class RobotUIService implements S3RobotStateListener {
 	private final AppServiceLocator serviceLocator;
 	private final TSGR001AReports roboServices;
 	private final RobotState state;
+	private final String title;
 	private Runnable chartsViewUpdateConfig, chartsViewUpdateAll, reportsViewUpdateAll;
 	private ChartsView chartsView;
 	private ReportsView reportsView;
 	private EquityCurveView equityView;
 	
-	public RobotUIService(AppServiceLocator serviceLocator, TSGR001AReports roboServices, RobotState state) {
+	public RobotUIService(AppServiceLocator serviceLocator,
+						  TSGR001AReports reports,
+						  RobotState state,
+						  String title)
+	{
 		this.serviceLocator = serviceLocator;
-		this.roboServices = roboServices;
+		this.roboServices = reports;
 		this.state = state;
+		this.title = title;
 		this.chartsViewUpdateConfig = RunnableStub.getInstance();
 		this.chartsViewUpdateAll = RunnableStub.getInstance();
 		this.reportsViewUpdateAll = RunnableStub.getInstance();
@@ -58,7 +64,7 @@ public class RobotUIService implements S3RobotStateListener {
 		root.setLayout(new BoxLayout(root, BoxLayout.X_AXIS));
 		root.add(tabs, BorderLayout.CENTER);
 		
-		uis.getTabPanel().addTab(messages.get(BOOTESCommonMsg.TEST_STRATEGY), root);
+		uis.getTabPanel().addTab(title, root);
 	}
 
 	@Override

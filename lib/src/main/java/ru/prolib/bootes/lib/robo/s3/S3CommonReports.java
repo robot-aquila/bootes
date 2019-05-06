@@ -26,6 +26,7 @@ public class S3CommonReports {
 	private final ISummaryReportTracker srt;
 	private final IS3Report atr;
 	private final OHLCScalableSeries erc, erf;
+	private String header;
 	
 	public S3CommonReports(AppServiceLocator serviceLocator) {
 		this.serviceLocator = serviceLocator;
@@ -53,6 +54,10 @@ public class S3CommonReports {
 		return erf;
 	}
 	
+	public synchronized void setHeader(String text) {
+		this.header = text;
+	}
+	
 	public void registerHandlers(S3RobotState state) {
 		S3RobotStateListenerComp stateListener = state.getStateListener();
 		stateListener.addListener(new S3SummaryReportHandler(state, srt));
@@ -62,10 +67,17 @@ public class S3CommonReports {
 	}
 	
 	public void save(File report_dir, String filename) throws IOException {
+		String hello = null;
+		synchronized ( this ) {
+			hello = header;
+		}
 		FileUtils.forceMkdir(report_dir);
 		File report_file = new File(report_dir, filename);
-		new ReportPrinter(serviceLocator.getZoneID())
-			.add(srt.getCurrentStats(), "Summary")
+		ReportPrinter printer = new ReportPrinter(serviceLocator.getZoneID());
+		if ( hello != null ) {
+			printer.addHello(hello);
+		}
+		printer.add(srt.getCurrentStats(), "Summary")
 			.add(atr, "Trades")
 			.add(erc, "Equity")
 			.save(report_file);

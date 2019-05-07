@@ -2,14 +2,16 @@ package ru.prolib.bootes.tsgr001a;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import ru.prolib.aquila.core.BusinessEntities.Account;
 
-public class TSGR001AConfig {
+public class TSGR001AInstConfig {
 	private final Account account;
 	private final String title, filterDefs, reportHeader;
 	
-	public TSGR001AConfig(Account account,
+	public TSGR001AInstConfig(Account account,
 						  String title,
 						  String filterDefs,
 						  String reportHeader)
@@ -41,10 +43,10 @@ public class TSGR001AConfig {
 		if ( other == this ) {
 			return true;
 		}
-		if ( other == null || other.getClass() != TSGR001AConfig.class ) {
+		if ( other == null || other.getClass() != TSGR001AInstConfig.class ) {
 			return false;
 		}
-		TSGR001AConfig o = (TSGR001AConfig) other;
+		TSGR001AInstConfig o = (TSGR001AInstConfig) other;
 		return new EqualsBuilder()
 				.append(o.account, account)
 				.append(o.title, title)
@@ -61,6 +63,11 @@ public class TSGR001AConfig {
 				.append(filterDefs)
 				.append(reportHeader)
 				.build();
+	}
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
 	}
 
 }

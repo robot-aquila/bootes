@@ -26,7 +26,10 @@ public class AppConfigLoader {
 			 new TerminalConfigLoader());
 	}
 	
-	public void load(AppConfigBuilder builder, OptionProvider optionProvider) throws ConfigException {
+	public void load(AppConfigBuilder builder,
+					 OptionProvider optionProvider)
+			throws ConfigException
+	{
 		basicConfigLoader.load(builder.getBasicConfigBuilder(), optionProvider);
 		BasicConfig basicConfig = builder.getBasicConfigBuilder().build();
 		if ( ! basicConfig.isShowHelp() ) {
@@ -34,7 +37,9 @@ public class AppConfigLoader {
 		}
 	}
 	
-	protected void loadSubsystemsConfig(AppConfigBuilder builder, OptionProvider optionProvider, BasicConfig basicConfig)
+	protected void loadSubsystemsConfig(AppConfigBuilder builder,
+										OptionProvider optionProvider,
+										BasicConfig basicConfig)
 			throws ConfigException
 	{
 		schedulerConfigLoader.load(builder.getSchedulerConfigBuilder(), optionProvider, basicConfig);

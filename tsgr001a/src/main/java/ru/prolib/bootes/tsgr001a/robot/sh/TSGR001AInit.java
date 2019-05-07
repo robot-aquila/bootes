@@ -17,7 +17,7 @@ import ru.prolib.bootes.lib.robo.s3.S3RMCSObjectLocator;
 import ru.prolib.bootes.tsgr001a.robot.TSGR001APriceStats;
 import ru.prolib.bootes.tsgr001a.robot.TSGR001ASigTriggerObjectLocator;
 import ru.prolib.bootes.tsgr001a.robot.TSGR001AReports;
-import ru.prolib.bootes.tsgr001a.TSGR001AConfig;
+import ru.prolib.bootes.tsgr001a.TSGR001AInstConfig;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 import ru.prolib.bootes.tsgr001a.robot.TSGR001ADataHandler;
 import ru.prolib.bootes.tsgr001a.robot.filter.S3TSFilterFactory;
@@ -27,12 +27,12 @@ public class TSGR001AInit extends CommonHandler {
 	public static final String E_OK = "OK";
 	
 	private final TSGR001AReports reports;
-	private final TSGR001AConfig config;
+	private final TSGR001AInstConfig config;
 	
 	public TSGR001AInit(AppServiceLocator serviceLocator,
 						TSGR001AReports reports,
 						RobotState state,
-						TSGR001AConfig config)
+						TSGR001AInstConfig config)
 	{
 		super(serviceLocator, state);
 		this.reports = reports;

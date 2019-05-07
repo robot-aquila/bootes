@@ -12,11 +12,11 @@ import ru.prolib.aquila.core.utils.Variant;
 public class TSGR001AConfigTest {
 	private static Account ACC1 = new Account("foo");
 	private static Account ACC2 = new Account("bar");
-	private TSGR001AConfig service;
+	private TSGR001AInstConfig service;
 
 	@Before
 	public void setUp() throws Exception {
-		service = new TSGR001AConfig(ACC1, "zulu", "charlie", "barbie");
+		service = new TSGR001AInstConfig(ACC1, "zulu", "charlie", "barbie");
 	}
 
 	@Test
@@ -43,9 +43,9 @@ public class TSGR001AConfigTest {
 			vHDR = new Variant<>(vFLD, "barbie", "ken");
 		Variant<?> iterator = vHDR;
 		int foundCnt = 0;
-		TSGR001AConfig x, found = null;
+		TSGR001AInstConfig x, found = null;
 		do {
-			x = new TSGR001AConfig(vACC.get(), vTTL.get(), vFLD.get(), vHDR.get());
+			x = new TSGR001AInstConfig(vACC.get(), vTTL.get(), vFLD.get(), vHDR.get());
 			if ( service.equals(x) ) {
 				foundCnt ++;
 				found = x;

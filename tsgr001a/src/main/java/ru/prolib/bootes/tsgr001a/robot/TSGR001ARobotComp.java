@@ -5,19 +5,19 @@ import ru.prolib.aquila.core.sm.SMStateMachine;
 import ru.prolib.bootes.lib.app.AppComponent;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.config.AppConfig;
-import ru.prolib.bootes.tsgr001a.TSGR001AConfig;
+import ru.prolib.bootes.tsgr001a.TSGR001AInstConfig;
 import ru.prolib.bootes.tsgr001a.robot.ui.RobotUIService;
 
 public class TSGR001ARobotComp implements AppComponent {
 	private final AppConfig appConfig;
 	private final AppServiceLocator serviceLocator;
-	private final TSGR001AConfig config;
+	private final TSGR001AInstConfig config;
 	private TSGR001AReports reports;
 	private Robot robot;
 	
 	public TSGR001ARobotComp(AppConfig appConfig,
 							 AppServiceLocator serviceLocator,
-							 TSGR001AConfig config)
+							 TSGR001AInstConfig config)
 	{
 		this.appConfig = appConfig;
 		this.serviceLocator = serviceLocator;

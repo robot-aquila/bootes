@@ -13,7 +13,7 @@ import ru.prolib.bootes.lib.robo.sh.BOOTESCleanup;
 import ru.prolib.bootes.lib.robo.sh.BOOTESInitSessionData;
 import ru.prolib.bootes.lib.robo.sh.BOOTESWaitForAccount;
 import ru.prolib.bootes.tsgr001a.robot.sh.TSGR001AInit;
-import ru.prolib.bootes.tsgr001a.TSGR001AConfig;
+import ru.prolib.bootes.tsgr001a.TSGR001AInstConfig;
 import ru.prolib.bootes.tsgr001a.robot.sh.SimClosePosition;
 import ru.prolib.bootes.tsgr001a.robot.sh.SimOpenPosition;
 import ru.prolib.bootes.tsgr001a.robot.sh.TSGR001AWaitForMarketSignal;
@@ -36,11 +36,11 @@ public class TSGR001ARobotBuilder {
 	
 	private final AppServiceLocator serviceLocator;
 	private final TSGR001AReports reports;
-	private final TSGR001AConfig config;
+	private final TSGR001AInstConfig config;
 
 	public TSGR001ARobotBuilder(AppServiceLocator serviceLocator,
 								TSGR001AReports reports,
-								TSGR001AConfig config)
+								TSGR001AInstConfig config)
 	{
 		this.serviceLocator = serviceLocator;
 		this.reports = reports;

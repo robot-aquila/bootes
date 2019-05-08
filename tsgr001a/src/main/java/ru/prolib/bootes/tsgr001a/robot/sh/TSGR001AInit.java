@@ -17,7 +17,7 @@ import ru.prolib.bootes.lib.robo.s3.S3RMCSObjectLocator;
 import ru.prolib.bootes.tsgr001a.robot.TSGR001APriceStats;
 import ru.prolib.bootes.tsgr001a.robot.TSGR001ASigTriggerObjectLocator;
 import ru.prolib.bootes.tsgr001a.robot.TSGR001AReports;
-import ru.prolib.bootes.tsgr001a.TSGR001AInstConfig;
+import ru.prolib.bootes.tsgr001a.config.TSGR001AInstConfig;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 import ru.prolib.bootes.tsgr001a.robot.TSGR001ADataHandler;
 import ru.prolib.bootes.tsgr001a.robot.filter.S3TSFilterFactory;

@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ru.prolib.aquila.core.BusinessEntities.Account;
-import ru.prolib.bootes.tsgr001a.TSGR001AInstConfig;
 
 public class TSGR001AConfigBuilderTest {
 	private TSGR001AConfigBuilder service;
@@ -22,7 +21,7 @@ public class TSGR001AConfigBuilderTest {
 
 	@Test
 	public void testBuild() throws Exception {
-		assertSame(service, service.withInstancesConfig(new File("fixture/test-inst-conf.ini")));
+		assertSame(service, service.withInstancesConfig(new File("fixture/test-inst-conf1.ini")));
 		
 		TSGR001AConfig actual = service.build();
 		

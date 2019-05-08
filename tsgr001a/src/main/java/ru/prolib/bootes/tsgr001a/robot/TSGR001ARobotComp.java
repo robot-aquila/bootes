@@ -5,7 +5,7 @@ import ru.prolib.aquila.core.sm.SMStateMachine;
 import ru.prolib.bootes.lib.app.AppComponent;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.config.AppConfig;
-import ru.prolib.bootes.tsgr001a.TSGR001AInstConfig;
+import ru.prolib.bootes.tsgr001a.config.TSGR001AInstConfig;
 import ru.prolib.bootes.tsgr001a.robot.ui.RobotUIService;
 
 public class TSGR001ARobotComp implements AppComponent {

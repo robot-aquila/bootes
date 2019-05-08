@@ -1,12 +1,12 @@
 package ru.prolib.bootes.lib.config;
 
 public class AppConfigBuilder {
-	private final BasicConfigBuilder basicConfigBuilder;
-	private final SchedulerConfigBuilder schedulerConfigBuilder;
-	private final OHLCHistoryConfigBuilder ohlcHistoryConfigBuilder;
-	private final TerminalConfigBuilder terminalConfigBuilder;
+	protected final BasicConfigBuilder basicConfigBuilder;
+	protected final SchedulerConfigBuilder schedulerConfigBuilder;
+	protected final OHLCHistoryConfigBuilder ohlcHistoryConfigBuilder;
+	protected final TerminalConfigBuilder terminalConfigBuilder;
 	
-	AppConfigBuilder(BasicConfigBuilder basicConfigBuilder,
+	public AppConfigBuilder(BasicConfigBuilder basicConfigBuilder,
 			SchedulerConfigBuilder schedulerConfigBuilder,
 			OHLCHistoryConfigBuilder ohlcHistoryConfigBuilder,
 			TerminalConfigBuilder terminalConfigBuilder)

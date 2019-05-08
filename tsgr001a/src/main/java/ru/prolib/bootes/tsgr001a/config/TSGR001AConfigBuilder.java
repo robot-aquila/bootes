@@ -10,7 +10,6 @@ import org.ini4j.Wini;
 
 import ru.prolib.aquila.core.BusinessEntities.Account;
 import ru.prolib.bootes.lib.config.ConfigException;
-import ru.prolib.bootes.tsgr001a.TSGR001AInstConfig;
 
 public class TSGR001AConfigBuilder {
 	private static final String KEY_ENABLED = "enabled";

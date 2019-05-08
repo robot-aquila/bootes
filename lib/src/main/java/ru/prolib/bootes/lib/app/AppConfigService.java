@@ -72,7 +72,7 @@ public class AppConfigService {
 	
 	private final Factory factory;
 	
-	AppConfigService(Factory factory) {
+	protected AppConfigService(Factory factory) {
 		this.factory = factory;
 	}
 	

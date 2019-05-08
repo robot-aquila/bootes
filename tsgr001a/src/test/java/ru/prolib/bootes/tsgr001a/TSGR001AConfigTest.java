@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import ru.prolib.aquila.core.BusinessEntities.Account;
 import ru.prolib.aquila.core.utils.Variant;
+import ru.prolib.bootes.tsgr001a.config.TSGR001AInstConfig;
 
 public class TSGR001AConfigTest {
 	private static Account ACC1 = new Account("foo");

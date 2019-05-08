@@ -13,7 +13,7 @@ import ru.prolib.bootes.lib.robo.sh.BOOTESCleanup;
 import ru.prolib.bootes.lib.robo.sh.BOOTESInitSessionData;
 import ru.prolib.bootes.lib.robo.sh.BOOTESWaitForAccount;
 import ru.prolib.bootes.tsgr001a.robot.sh.TSGR001AInit;
-import ru.prolib.bootes.tsgr001a.TSGR001AInstConfig;
+import ru.prolib.bootes.tsgr001a.config.TSGR001AInstConfig;
 import ru.prolib.bootes.tsgr001a.robot.sh.SimClosePosition;
 import ru.prolib.bootes.tsgr001a.robot.sh.SimOpenPosition;
 import ru.prolib.bootes.tsgr001a.robot.sh.TSGR001AWaitForMarketSignal;

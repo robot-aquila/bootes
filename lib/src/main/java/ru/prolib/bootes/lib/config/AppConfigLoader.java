@@ -3,12 +3,12 @@ package ru.prolib.bootes.lib.config;
 import org.apache.commons.cli.Options;
 
 public class AppConfigLoader {
-	private final BasicConfigLoader basicConfigLoader;
-	private final SchedulerConfigLoader schedulerConfigLoader;
-	private final OHLCHistoryConfigLoader ohlcHistoryConfigLoader;
-	private final TerminalConfigLoader terminalConfigLoader;
+	protected final BasicConfigLoader basicConfigLoader;
+	protected final SchedulerConfigLoader schedulerConfigLoader;
+	protected final OHLCHistoryConfigLoader ohlcHistoryConfigLoader;
+	protected final TerminalConfigLoader terminalConfigLoader;
 	
-	AppConfigLoader(BasicConfigLoader basicConfigLoader,
+	public AppConfigLoader(BasicConfigLoader basicConfigLoader,
 			SchedulerConfigLoader schedulerConfigLoader,
 			OHLCHistoryConfigLoader ohlcHistoryConfigLoader,
 			TerminalConfigLoader terminalConfigLoader)

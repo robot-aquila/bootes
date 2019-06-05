@@ -14,6 +14,7 @@
 		<module>lib</module>
 		<module>protos</module>
 		<module>tsgr001a</module>
+		<module>kinako</module>
     </modules>
 
     <properties>

@@ -1,5 +1,6 @@
 package xx.mix.bootes.kinako.service;
 
+import java.util.Date;
 import java.util.Properties;
 
 import javax.mail.Address;
@@ -10,6 +11,7 @@ import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.event.MessageCountAdapter;
 import javax.mail.event.MessageCountEvent;
+import javax.mail.event.MessageCountListener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,23 +19,33 @@ import org.slf4j.LoggerFactory;
 import com.sun.mail.imap.IMAPFolder;
 import com.sun.mail.imap.IMAPStore;
 
+import ru.prolib.aquila.core.EventQueue;
+import ru.prolib.aquila.core.EventType;
+import ru.prolib.aquila.core.EventTypeImpl;
 import ru.prolib.bootes.lib.config.OptionProvider;
 
-public class ImapMessageService {
+public class ImapMessageService implements MessageCountListener {
 	private static final Logger logger;
 	
 	static {
 		logger = LoggerFactory.getLogger(ImapMessageService.class);
 	}
 	
+	private final EventQueue queue;
 	private final OptionProvider options;
+	private final EventType onSignalDetected;
 	private IMAPStore store;
 	private IMAPFolder inbox;
-	private MessageListener listener;
 	private Worker worker;
 	
-	public ImapMessageService(OptionProvider options) {
+	public ImapMessageService(EventQueue queue, OptionProvider options) {
+		this.queue = queue;
 		this.options = options;
+		this.onSignalDetected = new EventTypeImpl("SIGNAL_DETECTED");
+	}
+	
+	public EventType onSignalDetected() {
+		return onSignalDetected;
 	}
 	
 	public void startup() throws Throwable {
@@ -54,7 +66,7 @@ public class ImapMessageService {
 			throw new RuntimeException("IDLE not supported");
 		}
 		inbox = (IMAPFolder) store.getFolder(folder_name);
-		inbox.addMessageCountListener(listener = new MessageListener());
+		inbox.addMessageCountListener(this);
 		inbox.open(Folder.READ_ONLY);
 		worker = new Worker(inbox, login, password);
 		worker.setName(worker_name);
@@ -133,35 +145,6 @@ public class ImapMessageService {
 		
 	}
 	
-	public static class MessageListener extends MessageCountAdapter {
-		
-		@Override
-		public void messagesAdded(MessageCountEvent event) {
-			System.out.println("INCOMING EVENT: MESSAGES ADDED");
-			try {
-				for ( Message msg : event.getMessages() ) {
-					System.out.println("-------------------------------------");
-					Address[] from_list = msg.getFrom();
-					if ( from_list != null ) {
-						for ( Address address : from_list ) {
-							System.out.println("From: " + address.toString());
-						}
-					} else {
-						System.out.println("From: N/A");
-					}
-					
-					System.out.println(" Subject: " + msg.getSubject());
-					System.out.println("    Sent: " + msg.getSentDate());
-					System.out.println("Received: " + msg.getReceivedDate());
-				}
-			} catch ( Exception e ) {
-				System.out.println("Unexpected exception: " + e.getMessage());
-				e.printStackTrace(System.out);
-			}
-		}
-		
-	}
-	
 	public static void close(Folder folder) {
 		try {
 			if ( folder != null && folder.isOpen() ) {
@@ -181,5 +164,46 @@ public class ImapMessageService {
 			logger.warn("Unexpected exception: ", e);
 		}
     }
+
+	@Override
+	public void messagesAdded(MessageCountEvent event) {
+		long curr = System.currentTimeMillis();
+		logger.debug("INCOMING EVENT: MESSAGES ADDED");
+		try {
+			for ( Message msg : event.getMessages() ) {
+				logger.debug("-------------------------------------");
+				Address[] from_list = msg.getFrom();
+				if ( from_list != null ) {
+					for ( Address address : from_list ) {
+						logger.debug("From: " + address.toString());
+					}
+				} else {
+					logger.debug("From: N/A");
+				}
+				
+				String subj = msg.getSubject();
+				Date sent = msg.getSentDate(), recv = msg.getReceivedDate(); 
+				logger.debug(" Subject: {}", subj);
+				logger.debug("    Sent: {}", sent);
+				logger.debug("Received: {}", recv);
+				if ( subj.startsWith("Cicero says") ) {
+					long smtp_time = recv.getTime() - sent.getTime();
+					long imap_time = curr - recv.getTime();
+					queue.enqueue(onSignalDetected, new KinakoEventFactory(
+							smtp_time,
+							imap_time,
+							"Cicero said: " + subj.substring(12)
+						));
+				}
+			}
+		} catch ( Exception e ) {
+			logger.error("Unexpected exception: ", e);
+		}
+	}
+
+	@Override
+	public void messagesRemoved(MessageCountEvent e) {
+		
+	}
 
 }

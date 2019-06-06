@@ -7,6 +7,8 @@ import java.time.Instant;
 import org.junit.Before;
 import org.junit.Test;
 
+import ru.prolib.aquila.core.config.ConfigException;
+
 public class SchedulerConfigBuilderTest {
 	
 	static Instant T(String timeString) {

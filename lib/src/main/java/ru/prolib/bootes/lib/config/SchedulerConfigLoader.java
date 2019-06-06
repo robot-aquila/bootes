@@ -3,6 +3,9 @@ package ru.prolib.bootes.lib.config;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
+import ru.prolib.aquila.core.config.ConfigException;
+import ru.prolib.aquila.core.config.OptionProvider;
+
 public class SchedulerConfigLoader {
 	
 	public void load(SchedulerConfigBuilder builder, OptionProvider optionProvider, BasicConfig basicConfig)

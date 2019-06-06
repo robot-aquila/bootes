@@ -2,6 +2,8 @@ package ru.prolib.bootes.lib.config;
 
 import java.io.File;
 
+import ru.prolib.aquila.core.config.ConfigException;
+
 public class OHLCHistoryConfigBuilder {
 	private File dataDir, cacheDir;
 	

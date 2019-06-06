@@ -20,13 +20,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import ru.prolib.aquila.core.config.ConfigException;
+import ru.prolib.aquila.core.config.OptionProvider;
 import ru.prolib.bootes.lib.app.AppConfigService;
 import ru.prolib.bootes.lib.config.AppConfig;
 import ru.prolib.bootes.lib.config.AppConfigBuilder;
 import ru.prolib.bootes.lib.config.AppConfigLoader;
 import ru.prolib.bootes.lib.config.BasicConfigBuilder;
-import ru.prolib.bootes.lib.config.ConfigException;
-import ru.prolib.bootes.lib.config.OptionProvider;
 
 public class AppConfigServiceTest {
 	private IMocksControl control;

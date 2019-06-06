@@ -1,9 +1,9 @@
 package ru.prolib.bootes.tsgr001a.config;
 
+import ru.prolib.aquila.core.config.ConfigException;
 import ru.prolib.bootes.lib.config.AppConfigBuilder;
 import ru.prolib.bootes.lib.config.BasicConfig;
 import ru.prolib.bootes.lib.config.BasicConfigBuilder;
-import ru.prolib.bootes.lib.config.ConfigException;
 import ru.prolib.bootes.lib.config.OHLCHistoryConfigBuilder;
 import ru.prolib.bootes.lib.config.SchedulerConfigBuilder;
 import ru.prolib.bootes.lib.config.TerminalConfigBuilder;

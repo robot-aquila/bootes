@@ -2,13 +2,13 @@ package ru.prolib.bootes.tsgr001a.config;
 
 import org.apache.commons.cli.Options;
 
+import ru.prolib.aquila.core.config.ConfigException;
+import ru.prolib.aquila.core.config.OptionProvider;
 import ru.prolib.bootes.lib.config.AppConfigBuilder;
 import ru.prolib.bootes.lib.config.AppConfigLoader;
 import ru.prolib.bootes.lib.config.BasicConfig;
 import ru.prolib.bootes.lib.config.BasicConfigLoader;
-import ru.prolib.bootes.lib.config.ConfigException;
 import ru.prolib.bootes.lib.config.OHLCHistoryConfigLoader;
-import ru.prolib.bootes.lib.config.OptionProvider;
 import ru.prolib.bootes.lib.config.SchedulerConfigLoader;
 import ru.prolib.bootes.lib.config.TerminalConfigLoader;
 

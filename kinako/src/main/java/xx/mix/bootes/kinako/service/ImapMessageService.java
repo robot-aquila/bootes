@@ -22,7 +22,7 @@ import com.sun.mail.imap.IMAPStore;
 import ru.prolib.aquila.core.EventQueue;
 import ru.prolib.aquila.core.EventType;
 import ru.prolib.aquila.core.EventTypeImpl;
-import ru.prolib.bootes.lib.config.OptionProvider;
+import ru.prolib.aquila.core.config.OptionProvider;
 
 public class ImapMessageService implements MessageCountListener {
 	private static final Logger logger;
@@ -114,7 +114,7 @@ public class ImapMessageService implements MessageCountListener {
 					ensureOpen();
 					folder.idle();
 				} catch ( Exception e ) {
-                	logger.error("Unexxpected exception: ", e);
+                	logger.error("Unexpected exception: ", e);
                     try {
 						Thread.sleep(100);
 					} catch ( InterruptedException e1 ) {

@@ -13,7 +13,9 @@ import org.easymock.IMocksControl;
 import org.junit.Before;
 import org.junit.Test;
 
-import ru.prolib.bootes.lib.config.kvstore.KVStoreHash;
+import ru.prolib.aquila.core.config.KVStoreHash;
+import ru.prolib.aquila.core.config.OptionProvider;
+import ru.prolib.aquila.core.config.OptionProviderKvs;
 
 public class SchedulerConfigLoaderTest {
 	

@@ -8,6 +8,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import ru.prolib.bootes.lib.app.comp.UIComp;
+import ru.prolib.aquila.core.config.ConfigException;
 import ru.prolib.bootes.lib.AccountInfo;
 import ru.prolib.bootes.lib.app.comp.EventQueueComp;
 import ru.prolib.bootes.lib.app.comp.MessagesComp;
@@ -17,7 +18,6 @@ import ru.prolib.bootes.lib.app.comp.ProbeSchedulerComp;
 import ru.prolib.bootes.lib.app.comp.QFortsTerminalComp;
 import ru.prolib.bootes.lib.app.comp.TerminalUIComp;
 import ru.prolib.bootes.lib.config.AppConfig;
-import ru.prolib.bootes.lib.config.ConfigException;
 import ru.prolib.bootes.lib.config.TerminalConfig;
 import ru.prolib.bootes.lib.service.ars.AppRuntimeServiceImpl;
 

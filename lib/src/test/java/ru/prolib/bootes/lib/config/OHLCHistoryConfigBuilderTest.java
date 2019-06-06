@@ -7,6 +7,8 @@ import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
 
+import ru.prolib.aquila.core.config.ConfigException;
+
 public class OHLCHistoryConfigBuilderTest {
 	private OHLCHistoryConfigBuilder service;
 	private BasicConfig basicConfig;

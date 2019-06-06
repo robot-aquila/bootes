@@ -7,6 +7,8 @@ import org.easymock.IMocksControl;
 import org.junit.Before;
 import org.junit.Test;
 
+import ru.prolib.aquila.core.config.OptionProvider;
+
 public class AppConfigLoaderTest {
 	private IMocksControl control;
 	private BasicConfigLoader basicConfigLoaderMock;

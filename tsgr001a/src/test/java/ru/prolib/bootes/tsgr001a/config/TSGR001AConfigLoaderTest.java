@@ -11,9 +11,9 @@ import org.easymock.IMocksControl;
 import org.junit.Before;
 import org.junit.Test;
 
+import ru.prolib.aquila.core.config.OptionProvider;
 import ru.prolib.bootes.lib.config.BasicConfig;
 import ru.prolib.bootes.lib.config.BasicConfigBuilder;
-import ru.prolib.bootes.lib.config.OptionProvider;
 
 public class TSGR001AConfigLoaderTest {
 	private IMocksControl control;

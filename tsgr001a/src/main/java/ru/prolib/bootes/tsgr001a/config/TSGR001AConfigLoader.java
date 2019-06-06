@@ -3,8 +3,8 @@ package ru.prolib.bootes.tsgr001a.config;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
+import ru.prolib.aquila.core.config.OptionProvider;
 import ru.prolib.bootes.lib.config.BasicConfig;
-import ru.prolib.bootes.lib.config.OptionProvider;
 
 public class TSGR001AConfigLoader {
 	private static final String OPT_INST_CONF = "tsgr001a-inst-config";

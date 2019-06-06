@@ -15,7 +15,9 @@ import org.junit.Test;
 
 import ru.prolib.aquila.core.BusinessEntities.Account;
 import ru.prolib.aquila.core.BusinessEntities.CDecimalBD;
-import ru.prolib.bootes.lib.config.kvstore.KVStoreHash;
+import ru.prolib.aquila.core.config.KVStoreHash;
+import ru.prolib.aquila.core.config.OptionProvider;
+import ru.prolib.aquila.core.config.OptionProviderKvs;
 
 public class TerminalConfigLoaderTest {
 	private IMocksControl control;

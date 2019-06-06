@@ -5,6 +5,9 @@ import java.io.File;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 
+import ru.prolib.aquila.core.config.ConfigException;
+import ru.prolib.aquila.core.config.OptionProvider;
+
 public class OHLCHistoryConfigLoader {
 	private static final String DEFAULT_CACHE_DIRNAME = "aquila-ohlcv-cache";
 	

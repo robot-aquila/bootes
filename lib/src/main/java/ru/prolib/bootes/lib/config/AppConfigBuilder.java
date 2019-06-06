@@ -1,5 +1,7 @@
 package ru.prolib.bootes.lib.config;
 
+import ru.prolib.aquila.core.config.ConfigException;
+
 public class AppConfigBuilder {
 	protected final BasicConfigBuilder basicConfigBuilder;
 	protected final SchedulerConfigBuilder schedulerConfigBuilder;

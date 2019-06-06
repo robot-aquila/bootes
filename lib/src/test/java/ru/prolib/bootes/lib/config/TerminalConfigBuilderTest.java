@@ -9,6 +9,7 @@ import org.junit.Test;
 
 import ru.prolib.aquila.core.BusinessEntities.Account;
 import ru.prolib.aquila.core.BusinessEntities.CDecimalBD;
+import ru.prolib.aquila.core.config.ConfigException;
 
 public class TerminalConfigBuilderTest {
 	private TerminalConfigBuilder service;

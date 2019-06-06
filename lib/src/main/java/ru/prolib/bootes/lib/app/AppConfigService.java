@@ -12,15 +12,15 @@ import org.apache.commons.cli.ParseException;
 import org.ini4j.Ini;
 import org.ini4j.Profile.Section;
 
+import ru.prolib.aquila.core.config.ConfigException;
+import ru.prolib.aquila.core.config.KVStoreCli;
+import ru.prolib.aquila.core.config.KVStoreIni;
+import ru.prolib.aquila.core.config.OptionProvider;
+import ru.prolib.aquila.core.config.OptionProviderKvs;
 import ru.prolib.bootes.lib.config.AppConfig;
 import ru.prolib.bootes.lib.config.AppConfigBuilder;
 import ru.prolib.bootes.lib.config.AppConfigLoader;
 import ru.prolib.bootes.lib.config.BasicConfig;
-import ru.prolib.bootes.lib.config.ConfigException;
-import ru.prolib.bootes.lib.config.OptionProvider;
-import ru.prolib.bootes.lib.config.OptionProviderKvs;
-import ru.prolib.bootes.lib.config.kvstore.KVStoreCli;
-import ru.prolib.bootes.lib.config.kvstore.KVStoreIni;
 
 public class AppConfigService {
 	

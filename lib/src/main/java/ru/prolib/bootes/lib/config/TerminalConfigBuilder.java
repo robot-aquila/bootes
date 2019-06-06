@@ -5,6 +5,7 @@ import java.io.File;
 import ru.prolib.aquila.core.BusinessEntities.Account;
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 import ru.prolib.aquila.core.BusinessEntities.CDecimalBD;
+import ru.prolib.aquila.core.config.ConfigException;
 
 public class TerminalConfigBuilder {
 	private Account qfTestAccount = new Account("TEST-ACCOUNT");

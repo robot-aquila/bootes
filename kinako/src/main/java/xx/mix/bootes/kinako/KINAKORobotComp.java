@@ -8,11 +8,11 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 
 import ru.prolib.aquila.core.Event;
 import ru.prolib.aquila.core.EventListener;
+import ru.prolib.aquila.core.config.KVStoreIni;
+import ru.prolib.aquila.core.config.OptionProvider;
+import ru.prolib.aquila.core.config.OptionProviderKvs;
 import ru.prolib.bootes.lib.app.AppComponent;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
-import ru.prolib.bootes.lib.config.OptionProvider;
-import ru.prolib.bootes.lib.config.OptionProviderKvs;
-import ru.prolib.bootes.lib.config.kvstore.KVStoreIni;
 import xx.mix.bootes.kinako.service.ImapMessageService;
 import xx.mix.bootes.kinako.service.KinakoBotService;
 import xx.mix.bootes.kinako.service.KinakoEvent;

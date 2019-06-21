@@ -44,7 +44,7 @@ public abstract class App {
 	 * @throws Throwable unhandled exception
 	 */
 	public int run(String[] args) throws Throwable {
-		Logger.getRootLogger().setLevel(Level.DEBUG);
+		//Logger.getRootLogger().setLevel(Level.DEBUG);
 		logger.debug("APP: Is starting...");
 		try {
 			AppConfigService acs = createConfigService();

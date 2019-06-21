@@ -1,17 +1,19 @@
 package xx.mix.bootes.kinako.service;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.Properties;
 
 import javax.mail.Address;
+import javax.mail.BodyPart;
 import javax.mail.Folder;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Store;
-import javax.mail.event.MessageCountAdapter;
 import javax.mail.event.MessageCountEvent;
 import javax.mail.event.MessageCountListener;
+import javax.mail.internet.MimeMultipart;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -186,15 +188,13 @@ public class ImapMessageService implements MessageCountListener {
 				logger.debug(" Subject: {}", subj);
 				logger.debug("    Sent: {}", sent);
 				logger.debug("Received: {}", recv);
-				if ( subj.startsWith("Cicero says") ) {
-					long smtp_time = recv.getTime() - sent.getTime();
-					long imap_time = curr - recv.getTime();
-					queue.enqueue(onSignalDetected, new KinakoEventFactory(
-							smtp_time,
-							imap_time,
-							"Cicero said: " + subj.substring(12)
-						));
-				}
+				long smtp_time = recv.getTime() - sent.getTime();
+				long imap_time = curr - recv.getTime();
+				queue.enqueue(onSignalDetected, new KinakoEventFactory(
+						smtp_time,
+						imap_time,
+						"Event: " + subj + System.lineSeparator() + getTextFromMessage(msg)
+					));
 			}
 		} catch ( Exception e ) {
 			logger.error("Unexpected exception: ", e);
@@ -204,6 +204,37 @@ public class ImapMessageService implements MessageCountListener {
 	@Override
 	public void messagesRemoved(MessageCountEvent e) {
 		
+	}
+	
+	private String getTextFromMessage(Message message) throws MessagingException, IOException {
+		String result = "";
+		if (message.isMimeType("text/plain")) {
+			result = message.getContent().toString();
+		} else if (message.isMimeType("multipart/*")) {
+			MimeMultipart mimeMultipart = (MimeMultipart) message.getContent();
+			result = getTextFromMimeMultipart(mimeMultipart);
+		}
+		return result;
+	}
+
+	private String getTextFromMimeMultipart(MimeMultipart mimeMultipart)
+			throws MessagingException, IOException
+	{
+		String result = "";
+		int count = mimeMultipart.getCount();
+		for (int i = 0; i < count; i++) {
+			BodyPart bodyPart = mimeMultipart.getBodyPart(i);
+			if (bodyPart.isMimeType("text/plain")) {
+				result = result + "\n" + bodyPart.getContent();
+				break; // without break same text appears twice in my tests
+			} else if (bodyPart.isMimeType("text/html")) {
+				String html = (String) bodyPart.getContent();
+				result = result + "\n" + org.jsoup.Jsoup.parse(html).text();
+			} else if (bodyPart.getContent() instanceof MimeMultipart){
+				result = result + getTextFromMimeMultipart((MimeMultipart)bodyPart.getContent());
+			}
+		}
+		return result;
 	}
 
 }

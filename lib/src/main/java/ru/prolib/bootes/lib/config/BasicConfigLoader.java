@@ -9,6 +9,7 @@ import org.apache.commons.cli.Options;
 import ru.prolib.aquila.core.config.ConfigException;
 import ru.prolib.aquila.core.config.OptionProvider;
 
+@Deprecated
 public class BasicConfigLoader {
 	
 	private File defaultReportsDir() {

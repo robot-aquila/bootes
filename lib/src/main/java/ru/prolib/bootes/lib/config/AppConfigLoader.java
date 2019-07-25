@@ -5,6 +5,7 @@ import org.apache.commons.cli.Options;
 import ru.prolib.aquila.core.config.ConfigException;
 import ru.prolib.aquila.core.config.OptionProvider;
 
+@Deprecated
 public class AppConfigLoader {
 	protected final BasicConfigLoader basicConfigLoader;
 	protected final SchedulerConfigLoader schedulerConfigLoader;

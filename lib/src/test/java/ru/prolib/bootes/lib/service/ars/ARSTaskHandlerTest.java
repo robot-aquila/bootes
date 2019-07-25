@@ -791,6 +791,13 @@ public class ARSTaskHandlerTest {
 	public void testWaitForStateChange1_FromPendingToExecuting() throws Throwable {
 		CountDownLatch started = new CountDownLatch(1), finished = new CountDownLatch(1);
 		actionMock.run();
+		expectLastCall().andAnswer(new IAnswer<Void>() {
+			@Override
+			public Void answer() throws Throwable {
+				finished.await(1, TimeUnit.SECONDS);
+				return null;
+			}
+		});
 		control.replay();
 		Thread t = new Thread(new Runnable() {
 			@Override

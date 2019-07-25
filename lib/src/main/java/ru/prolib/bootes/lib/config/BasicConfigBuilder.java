@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import ru.prolib.aquila.core.config.ConfigException;
 
+@Deprecated
 public class BasicConfigBuilder {
 	private static final Logger logger;
 	

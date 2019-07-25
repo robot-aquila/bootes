@@ -10,6 +10,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 /**
  * Note: This shouldn't contains any mandatory options.
  */
+@Deprecated
 public class BasicConfig {
 	private final boolean showHelp, headless, noOrders;
 	private final File dataDir, configFile, reportsDir;

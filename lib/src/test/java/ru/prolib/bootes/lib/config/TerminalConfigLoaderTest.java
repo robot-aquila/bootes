@@ -72,7 +72,7 @@ public class TerminalConfigLoaderTest {
 
 	@Test
 	public void testLoad_OnMocks() throws Exception {
-		expect(opMock.getFileNotNull("qforts-data-dir", new File("/my/data"))).andReturn(new File("/path/data"));
+		expect(opMock.getFile("qforts-data-dir", new File("/my/data"))).andReturn(new File("/path/data"));
 		expect(opMock.getStringNotNull("qforts-test-account", "QFORTS-TEST")).andReturn("ZULU24");
 		expect(opMock.getStringNotNull("qforts-test-balance", "1000000")).andReturn("28000");
 		expect(opMock.getStringNotNull("driver", "default")).andReturn("qforts");

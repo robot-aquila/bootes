@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import ru.prolib.bootes.lib.app.comp.UIComp;
@@ -44,7 +43,6 @@ public abstract class App {
 	 * @throws Throwable unhandled exception
 	 */
 	public int run(String[] args) throws Throwable {
-		//Logger.getRootLogger().setLevel(Level.DEBUG);
 		logger.debug("APP: Is starting...");
 		try {
 			AppConfigService acs = createConfigService();
@@ -117,9 +115,13 @@ public abstract class App {
 		ars.addService(new UIComp(appConfig, serviceLocator));
 		ars.addService(new EventQueueComp(appConfig, serviceLocator));
 		ars.addService(new ProbeSchedulerComp(appConfig, serviceLocator));
-		ars.addService(new QFortsTerminalComp(appConfig, serviceLocator, getExpectedAccounts()));
+		registerTerminalServices(ars);
 		ars.addService(new TerminalUIComp(appConfig, serviceLocator));
 		ars.addService(new OHLCHistoryStorageComp(appConfig, serviceLocator));
+	}
+	
+	protected void registerTerminalServices(AppRuntimeService ars) {
+		ars.addService(new QFortsTerminalComp(appConfig, serviceLocator, getExpectedAccounts()));
 	}
 	
 	abstract protected void registerApplications(AppRuntimeService ars);

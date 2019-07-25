@@ -40,6 +40,10 @@ public class QFortsTerminalComp extends CommonComp {
 	@Override
 	public void init() throws Throwable {
 		TerminalConfig conf = appConfig.getTerminalConfig();
+		String driver_id = conf.getDriverID();
+		if ( !driver_id.equals("default") && !driver_id.equals("qforts") ) {
+			return;
+		}
 		QFBuilder qf = new QFBuilder();
 		EditableTerminal terminal = new BasicTerminalBuilder()
 			.withEventQueue(serviceLocator.getEventQueue())
@@ -67,12 +71,16 @@ public class QFortsTerminalComp extends CommonComp {
 
 	@Override
 	public void startup() throws Throwable {
-		handler.startup();
+		if ( handler != null ) {
+			handler.startup();
+		}
 	}
 
 	@Override
 	public void shutdown() throws Throwable {
-		handler.shutdown();
+		if ( handler != null ) {
+			handler.shutdown();
+		}
 	}
 
 }

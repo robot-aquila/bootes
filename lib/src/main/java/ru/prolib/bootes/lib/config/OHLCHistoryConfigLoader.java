@@ -14,8 +14,8 @@ public class OHLCHistoryConfigLoader {
 	public void load(OHLCHistoryConfigBuilder builder, OptionProvider optionProvider, BasicConfig basicConfig)
 			throws ConfigException
 	{
-		builder.withDataDirectory(optionProvider.getFileNotNull("ohlc-data-dir", basicConfig.getDataDirectory()))
-			.withCacheDirectory(optionProvider.getFileNotNull("ohlc-cache-dir", getDefaultCacheDirectory()));
+		builder.withDataDirectory(optionProvider.getFile("ohlc-data-dir", basicConfig.getDataDirectory()))
+			.withCacheDirectory(optionProvider.getFile("ohlc-cache-dir", getDefaultCacheDirectory()));
 	}
 	
 	private File getDefaultCacheDirectory() {

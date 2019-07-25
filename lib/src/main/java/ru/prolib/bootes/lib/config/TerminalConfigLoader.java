@@ -14,7 +14,7 @@ public class TerminalConfigLoader {
 	public void load(TerminalConfigBuilder builder, OptionProvider op, BasicConfig basicConfig)
 		throws ConfigException
 	{
-		builder.withQFortsDataDirectory(op.getFileNotNull("qforts-data-dir", basicConfig.getDataDirectory()))
+		builder.withQFortsDataDirectory(op.getFile("qforts-data-dir", basicConfig.getDataDirectory()))
 			.withQFortsTestAccount(new Account(op.getStringNotNull("qforts-test-account", "QFORTS-TEST")))
 			.withQFortsTestBalance(ofRUB2(op.getStringNotNull("qforts-test-balance", "1000000")))
 			.withDriverID(op.getStringNotNull("driver", "default"))

@@ -20,6 +20,12 @@ public class TSGR001A extends App {
 	public static void main(String[] args) throws Throwable {
 		System.exit(new TSGR001A().run(args));
 	}
+	
+	@Override
+	protected void registerTerminalServices(AppRuntimeService ars) {
+		super.registerTerminalServices(ars);
+		ars.addService(new TSGR001ATransaqTerminalComp(appConfig, serviceLocator));
+	}
 
 	@Override
 	protected void registerApplications(AppRuntimeService ars) {

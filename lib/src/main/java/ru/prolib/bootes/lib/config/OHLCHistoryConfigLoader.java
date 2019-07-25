@@ -8,6 +8,7 @@ import org.apache.commons.cli.Options;
 import ru.prolib.aquila.core.config.ConfigException;
 import ru.prolib.aquila.core.config.OptionProvider;
 
+@Deprecated
 public class OHLCHistoryConfigLoader {
 	private static final String DEFAULT_CACHE_DIRNAME = "aquila-ohlcv-cache";
 	

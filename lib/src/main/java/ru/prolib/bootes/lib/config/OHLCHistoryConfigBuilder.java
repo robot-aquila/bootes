@@ -4,6 +4,7 @@ import java.io.File;
 
 import ru.prolib.aquila.core.config.ConfigException;
 
+@Deprecated
 public class OHLCHistoryConfigBuilder {
 	private File dataDir, cacheDir;
 	

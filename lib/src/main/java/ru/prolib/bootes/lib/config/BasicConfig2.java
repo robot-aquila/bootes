@@ -40,6 +40,10 @@ public class BasicConfig2 {
 		return options.getFile(LOPT_REPORT_DIR);
 	}
 	
+	public String getDriver() throws ConfigException {
+		return options.getStringNotNull(LOPT_DRIVER_ID, BasicConfig2Section.DEFAULT_DRIVER_ID);
+	}
+	
 	@Override
 	public boolean equals(Object other) {
 		if ( other == this ) {

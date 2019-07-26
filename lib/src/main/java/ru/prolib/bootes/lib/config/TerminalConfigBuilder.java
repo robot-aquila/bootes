@@ -7,6 +7,7 @@ import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 import ru.prolib.aquila.core.BusinessEntities.CDecimalBD;
 import ru.prolib.aquila.core.config.ConfigException;
 
+@Deprecated
 public class TerminalConfigBuilder {
 	private String driverID = "default";
 	private Account qfTestAccount = new Account("TEST-ACCOUNT");

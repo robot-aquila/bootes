@@ -13,6 +13,7 @@ import ru.prolib.aquila.core.config.ConfigException;
 import ru.prolib.aquila.core.config.KVWritableStore;
 import ru.prolib.aquila.core.config.OptionProvider;
 import ru.prolib.bootes.lib.config.AppConfig2;
+import ru.prolib.bootes.lib.config.BasicConfig2;
 import ru.prolib.bootes.lib.config.ConfigSection;
 
 public class AppConfigService2Test {
@@ -118,8 +119,12 @@ public class AppConfigService2Test {
 		String[] args = {
 				"--kappa=zuzumba",
 				"--config-file=fixture/app-test-config.ini",
+				"--driver=hello"
 		};
 		AppConfig2 config = service.loadConfig(args);
+		
+		BasicConfig2 conf0 = config.getBasicConfig();
+		assertEquals("hello", conf0.getDriver());
 		
 		ConfigSection1Data conf1 = config.getSection("section1");
 		assertEquals("zuzumba", conf1.getKappa());

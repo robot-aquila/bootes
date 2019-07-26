@@ -100,6 +100,15 @@ public class BasicConfig2Test {
 	}
 	
 	@Test
+	public void testGetDriver() throws Exception {
+		assertEquals("default", service1.getDriver());
+		
+		options1.put("driver", "bee");
+		
+		assertEquals("bee", service1.getDriver());
+	}
+	
+	@Test
 	public void testEquals() {
 		OptionProvider opMock = control.createMock(OptionProvider.class);
 		BasicConfig2 service = new BasicConfig2(opMock);

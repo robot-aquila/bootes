@@ -9,6 +9,7 @@ import ru.prolib.aquila.core.BusinessEntities.Account;
 import ru.prolib.aquila.core.config.ConfigException;
 import ru.prolib.aquila.core.config.OptionProvider;
 
+@Deprecated
 public class TerminalConfigLoader {
 
 	public void load(TerminalConfigBuilder builder, OptionProvider op, BasicConfig basicConfig)

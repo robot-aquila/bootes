@@ -17,6 +17,8 @@ public class BasicConfig2Section implements ConfigSection {
 	public static final String LOPT_DATA_DIR = "data-dir";
 	public static final String LOPT_CONFIG_FILE = "config-file";
 	public static final String LOPT_REPORT_DIR = "report-dir";
+	public static final String LOPT_DRIVER_ID = "driver";
+	public static final String DEFAULT_DRIVER_ID = "default";
 
 	private File defaultReportDir() {
 		LocalDateTime ldt = LocalDateTime.now();
@@ -36,6 +38,7 @@ public class BasicConfig2Section implements ConfigSection {
 		defaults.add(LOPT_HEADLESS, "0");
 		defaults.add(LOPT_NO_ORDERS, "0");
 		defaults.add(LOPT_REPORT_DIR, defaultReportDir().getAbsolutePath());
+		defaults.add(LOPT_DRIVER_ID, DEFAULT_DRIVER_ID);
 	}
 
 	@Override
@@ -70,6 +73,12 @@ public class BasicConfig2Section implements ConfigSection {
 			.desc("Directory to store reports. If omitted then default path "
 				+ "will be used. Following template is used to build default path: "
 				+ "reports/YYYTMMDDhhmmSS")
+			.build());
+		options.addOption(Option.builder()
+			.longOpt(LOPT_DRIVER_ID)
+			.hasArg()
+			.argName("driverID")
+			.desc("Terminal driver ID.")
 			.build());
 	}
 

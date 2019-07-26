@@ -10,6 +10,7 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import ru.prolib.aquila.core.BusinessEntities.Account;
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 
+@Deprecated
 public class TerminalConfig {
 	private final String driverID;
 	private final Account qfTestAccount;

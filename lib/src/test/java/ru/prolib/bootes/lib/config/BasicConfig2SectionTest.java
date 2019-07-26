@@ -49,6 +49,7 @@ public class BasicConfig2SectionTest {
 				ldt.getMinute(),
 				ldt.getSecond()
 			)).getAbsolutePath());
+		expected.put("driver", "default");
 		assertEquals(expected, defaults_data);
 	}
 	
@@ -58,7 +59,7 @@ public class BasicConfig2SectionTest {
 		
 		service.configureOptions(options);
 		
-		assertEquals(6, options.getOptions().size());
+		assertEquals(7, options.getOptions().size());
 		
 		Option actual = options.getOption("help");
 		assertEquals(Option.builder()
@@ -107,6 +108,15 @@ public class BasicConfig2SectionTest {
 				+ "will be used. Following template is used to build default path: "
 				+ "reports/YYYTMMDDhhmmSS")
 			.build(), actual);
+		assertTrue(actual.hasArg());
+		
+		actual = options.getOption("driver");
+		assertEquals(Option.builder()
+				.longOpt("driver")
+				.hasArg()
+				.argName("driverID")
+				.desc("Terminal driver ID.")
+				.build(), actual);
 		assertTrue(actual.hasArg());
 	}
 

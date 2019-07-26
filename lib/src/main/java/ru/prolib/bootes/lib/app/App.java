@@ -101,7 +101,6 @@ public abstract class App {
 	 * Create service locator.
 	 * <p>
 	 * Override this method to produce specific instance of service locator.
-	 * Use {@link #appConfig} property to get an access to configuration.
 	 * <p>
 	 * @return service locator
 	 */

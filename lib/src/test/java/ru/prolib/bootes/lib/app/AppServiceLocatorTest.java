@@ -18,6 +18,7 @@ import ru.prolib.aquila.core.data.TFSymbol;
 import ru.prolib.aquila.core.text.IMessages;
 import ru.prolib.aquila.core.utils.PriceScaleDB;
 import ru.prolib.aquila.data.storage.MDStorage;
+import ru.prolib.bootes.lib.config.AppConfig2;
 import ru.prolib.bootes.lib.service.UIService;
 
 public class AppServiceLocatorTest {
@@ -37,6 +38,24 @@ public class AppServiceLocatorTest {
 		arsMock = control.createMock(AppRuntimeService.class);
 		schedulerMock = control.createMock(Scheduler.class);
 		service = new AppServiceLocator(arsMock);
+	}
+	
+	@Test (expected=NullPointerException.class)
+	public void testGetConfig_ThrowsIfNotDefined() throws Exception {
+		service.getConfig();
+	}
+	
+	@Test
+	public void testGetConfig() throws Exception {
+		AppConfig2 confMock = control.createMock(AppConfig2.class);
+		service.setConfig(confMock);
+		control.replay();
+		
+		AppConfig2 actual = service.getConfig();
+		
+		control.verify();
+		assertSame(confMock, actual);
+		assertSame(confMock, service.getConfig());
 	}
 	
 	@Test (expected=NullPointerException.class)

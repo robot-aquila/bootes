@@ -10,10 +10,12 @@ import ru.prolib.aquila.core.data.TFSymbol;
 import ru.prolib.aquila.core.text.IMessages;
 import ru.prolib.aquila.core.utils.PriceScaleDB;
 import ru.prolib.aquila.data.storage.MDStorage;
+import ru.prolib.bootes.lib.config.AppConfig2;
 import ru.prolib.bootes.lib.service.UIService;
 
 public class AppServiceLocator {
 	private final AppRuntimeService ars;
+	private AppConfig2 config;
 	private PriceScaleDB scaleDB;
 	private EventQueue eventQueue;
 	private Scheduler scheduler;
@@ -26,6 +28,17 @@ public class AppServiceLocator {
 	public AppServiceLocator(AppRuntimeService ars) {
 		this.ars = ars;
 		zoneID = ZoneId.systemDefault();
+	}
+	
+	public synchronized void setConfig(AppConfig2 config) {
+		this.config = config;
+	}
+	
+	public synchronized AppConfig2 getConfig() {
+		if ( config == null ) {
+			throw new NullPointerException();
+		}
+		return config;
 	}
 	
 	public synchronized void setPriceScaleDB(PriceScaleDB scaleDB) {

@@ -8,6 +8,6 @@ import ru.prolib.aquila.core.config.OptionProvider;
 
 public interface ConfigSection {
 	void configureDefaults(KVWritableStore defaults, OptionProvider op) throws ConfigException;
-	void configureOptions(Options options) throws ConfigException;
+	void configureOptions(Options options);
 	Object configure(OptionProvider op) throws ConfigException;
 }

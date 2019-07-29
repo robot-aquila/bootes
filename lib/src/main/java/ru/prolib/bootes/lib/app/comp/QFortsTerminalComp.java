@@ -1,16 +1,15 @@
 package ru.prolib.bootes.lib.app.comp;
 
-import java.util.List;
-
 import ru.prolib.aquila.core.BusinessEntities.BasicTerminalBuilder;
 import ru.prolib.aquila.core.BusinessEntities.EditableTerminal;
+import ru.prolib.aquila.data.DataSource;
 import ru.prolib.aquila.qforts.impl.QFBuilder;
-import ru.prolib.aquila.qforts.impl.QFortsEnv;
 import ru.prolib.aquila.web.utils.WUDataFactory;
-import ru.prolib.bootes.lib.AccountInfo;
+import ru.prolib.bootes.lib.app.AppConfigService2;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
-import ru.prolib.bootes.lib.config.AppConfig;
-import ru.prolib.bootes.lib.config.TerminalConfig;
+import ru.prolib.bootes.lib.config.AppConfig2;
+import ru.prolib.bootes.lib.config.QFTerminalConfig;
+import ru.prolib.bootes.lib.config.QFTerminalConfigSection;
 import ru.prolib.bootes.lib.service.ars.ARSHandler;
 import ru.prolib.bootes.lib.service.ars.ARSHandlerBuilder;
 import ru.prolib.bootes.lib.service.task.StartTerminal;
@@ -18,49 +17,39 @@ import ru.prolib.bootes.lib.service.task.StopTerminal;
 
 public class QFortsTerminalComp extends CommonComp {
 	private static final String DEFAULT_ID = "BOOTES-TERMINAL";
-	private final List<AccountInfo> expectedAccounts;
+	private static final String CONFIG_SECTION_ID = "qforts-terminal";
 	private ARSHandler handler;
 
-	public QFortsTerminalComp(AppConfig appConfig,
-							  AppServiceLocator serviceLocator,
-							  String serviceID,
-							  List<AccountInfo> expected_accounts)
-	{
-		super(appConfig, serviceLocator, serviceID);
-		this.expectedAccounts = expected_accounts;
+	public QFortsTerminalComp(AppServiceLocator serviceLocator, String serviceID) {
+		super(serviceLocator, serviceID);
 	}
 	
-	public QFortsTerminalComp(AppConfig appConfig,
-							  AppServiceLocator serviceLocator,
-							  List<AccountInfo> expected_accounts)
-	{
-		this(appConfig, serviceLocator, DEFAULT_ID, expected_accounts);
+	public QFortsTerminalComp(AppServiceLocator serviceLocator) {
+		this(serviceLocator, DEFAULT_ID);
 	}
 
 	@Override
 	public void init() throws Throwable {
-		TerminalConfig conf = appConfig.getTerminalConfig();
-		String driver_id = conf.getDriverID();
+		AppConfig2 conf = serviceLocator.getConfig();
+		QFTerminalConfig term_conf = conf.getSection(CONFIG_SECTION_ID);
+		String driver_id = conf.getBasicConfig().getDriver();
 		if ( !driver_id.equals("default") && !driver_id.equals("qforts") ) {
 			return;
 		}
 		QFBuilder qf = new QFBuilder();
+		DataSource data_source = new WUDataFactory()
+				.createForSymbolAndL1DataReplayFM(
+						serviceLocator.getScheduler(),
+						term_conf.getDataDirectory(),
+						serviceLocator.getPriceScaleDB()
+					);
 		EditableTerminal terminal = new BasicTerminalBuilder()
 			.withEventQueue(serviceLocator.getEventQueue())
 			.withScheduler(serviceLocator.getScheduler())
 			.withTerminalID(serviceID)
-			.withDataProvider(new WUDataFactory()
-					.decorateForSymbolAndL1DataReplayFM(qf.buildDataProvider(),
-							serviceLocator.getScheduler(),
-							conf.getQFortsDataDirectory(),
-							serviceLocator.getPriceScaleDB()))
+			.withDataProvider(qf.withDataSource(data_source).buildDataProvider())
 			.buildTerminal();
 		serviceLocator.setTerminal(terminal);
-		
-		QFortsEnv env = qf.buildEnvironment(terminal);
-		for ( AccountInfo ai : expectedAccounts ) {
-			env.createPortfolio(ai.getAccount(), ai.getBalance());			
-		}
 		
 		handler = new ARSHandlerBuilder()
 				.withID(serviceID)
@@ -81,6 +70,11 @@ public class QFortsTerminalComp extends CommonComp {
 		if ( handler != null ) {
 			handler.shutdown();
 		}
+	}
+
+	@Override
+	public void registerConfig(AppConfigService2 config_service) {
+		config_service.addSection(CONFIG_SECTION_ID, new QFTerminalConfigSection());
 	}
 
 }

@@ -1,9 +1,10 @@
 package ru.prolib.bootes.protos;
 
 import java.time.ZoneId;
+import java.util.List;
 
 import ru.prolib.bootes.lib.app.App;
-import ru.prolib.bootes.lib.app.AppRuntimeService;
+import ru.prolib.bootes.lib.app.AppComponent;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 
 public class PROTOS extends App {
@@ -13,8 +14,8 @@ public class PROTOS extends App {
 	}
 
 	@Override
-	protected void registerApplications(AppRuntimeService ars) {
-		ars.addApplication(new PROTOSRobotComp(appConfig, serviceLocator));
+	protected void registerApplications(List<AppComponent> list) {
+		list.add(new PROTOSRobotComp(getServiceLocator()));
 	}
 	
 	@Override

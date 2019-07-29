@@ -5,8 +5,9 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.SwingUtilities;
 
+import ru.prolib.bootes.lib.app.AppConfigService2;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
-import ru.prolib.bootes.lib.config.AppConfig;
+import ru.prolib.bootes.lib.config.AppConfig2;
 import ru.prolib.bootes.lib.service.UIService;
 
 public class UIComp extends CommonComp {
@@ -15,17 +16,18 @@ public class UIComp extends CommonComp {
 	protected boolean headless;
 	protected UIService uis;
 
-	public UIComp(AppConfig appConfig, AppServiceLocator serviceLocator, String serviceID) {
-		super(appConfig, serviceLocator, serviceID);
+	public UIComp(AppServiceLocator serviceLocator, String serviceID) {
+		super(serviceLocator, serviceID);
 	}
 	
-	public UIComp(AppConfig appConfig, AppServiceLocator serviceLocator) {
-		this(appConfig, serviceLocator, DEFAULT_ID);
+	public UIComp(AppServiceLocator serviceLocator) {
+		this(serviceLocator, DEFAULT_ID);
 	}
 
 	@Override
 	public void init() throws Throwable {
-		headless = appConfig.getBasicConfig().isHeadless();
+		AppConfig2 app_conf = serviceLocator.getConfig();
+		headless = app_conf.getBasicConfig().isHeadless();
 		if ( headless ) {
 			return;
 		}
@@ -64,6 +66,11 @@ public class UIComp extends CommonComp {
 				uis.getFrame().dispose();
 			}
 		});
+	}
+
+	@Override
+	public void registerConfig(AppConfigService2 config_service) {
+		
 	}
 
 }

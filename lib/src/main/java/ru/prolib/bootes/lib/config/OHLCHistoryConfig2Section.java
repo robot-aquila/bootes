@@ -25,7 +25,7 @@ public class OHLCHistoryConfig2Section implements ConfigSection {
 	}
 
 	@Override
-	public void configureOptions(Options options) throws ConfigException {
+	public void configureOptions(Options options) {
 		options.addOption(Option.builder()
 				.longOpt(LOPT_DATA_DIR)
 				.hasArg()

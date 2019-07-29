@@ -21,7 +21,7 @@ public class SchedulerConfig2Section implements ConfigSection {
 	}
 
 	@Override
-	public void configureOptions(Options options) throws ConfigException {
+	public void configureOptions(Options options) {
 		options.addOption(Option.builder()
 				.longOpt(LOPT_AUTO_START)
 				.desc("If specified then PROBE scheduler will be started immediately after program initialization.")

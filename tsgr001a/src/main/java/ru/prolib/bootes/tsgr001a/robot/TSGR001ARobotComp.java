@@ -3,23 +3,21 @@ package ru.prolib.bootes.tsgr001a.robot;
 import ru.prolib.aquila.core.sm.SMStateHandlerEx;
 import ru.prolib.aquila.core.sm.SMStateMachine;
 import ru.prolib.bootes.lib.app.AppComponent;
+import ru.prolib.bootes.lib.app.AppConfigService2;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
-import ru.prolib.bootes.lib.config.AppConfig;
+import ru.prolib.bootes.lib.config.BasicConfig2;
 import ru.prolib.bootes.tsgr001a.config.TSGR001AInstConfig;
 import ru.prolib.bootes.tsgr001a.robot.ui.RobotUIService;
 
 public class TSGR001ARobotComp implements AppComponent {
-	private final AppConfig appConfig;
 	private final AppServiceLocator serviceLocator;
 	private final TSGR001AInstConfig config;
 	private TSGR001AReports reports;
 	private Robot robot;
 	
-	public TSGR001ARobotComp(AppConfig appConfig,
-							 AppServiceLocator serviceLocator,
+	public TSGR001ARobotComp(AppServiceLocator serviceLocator,
 							 TSGR001AInstConfig config)
 	{
-		this.appConfig = appConfig;
 		this.serviceLocator = serviceLocator;
 		this.config = config;
 	}
@@ -27,11 +25,12 @@ public class TSGR001ARobotComp implements AppComponent {
 	@Override
 	public void init() throws Throwable {
 		reports = new TSGR001AReports(serviceLocator);
+		BasicConfig2 base_conf = serviceLocator.getConfig().getBasicConfig();
 		robot = new TSGR001ARobotBuilder(serviceLocator, reports, config)
-				.build(appConfig.getBasicConfig().isNoOrders());
+				.build(base_conf.isNoOrders());
 		RobotState state = robot.getState();
 		reports.registerHandlers(state);
-		if ( ! appConfig.getBasicConfig().isHeadless() ) {
+		if ( ! base_conf.isHeadless() ) {
 			state.getStateListener().addListener(new RobotUIService(
 					serviceLocator,
 					reports,
@@ -62,9 +61,14 @@ public class TSGR001ARobotComp implements AppComponent {
 		// TODO: Move to better place
 		// TODO: Safe title in filename
 		reports.save(
-				appConfig.getBasicConfig().getReportsDirectory(),
+				serviceLocator.getConfig().getBasicConfig().getReportDirectory(),
 				config.getTitle() + ".report"
 			);
+	}
+
+	@Override
+	public void registerConfig(AppConfigService2 config_service) {
+		
 	}
 
 }

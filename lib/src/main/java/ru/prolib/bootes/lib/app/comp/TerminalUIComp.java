@@ -15,24 +15,26 @@ import ru.prolib.aquila.ui.form.OrderListTableModel;
 import ru.prolib.aquila.ui.form.PortfolioListTableModel;
 import ru.prolib.aquila.ui.form.PositionListTableModel;
 import ru.prolib.aquila.ui.form.SecurityListTableModel;
+import ru.prolib.bootes.lib.app.AppConfigService2;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
-import ru.prolib.bootes.lib.config.AppConfig;
+import ru.prolib.bootes.lib.config.AppConfig2;
 import ru.prolib.bootes.lib.service.UIService;
 
 public class TerminalUIComp extends CommonComp {
 	private static final String DEFAULT_ID = "TERMINAL-UI";
 
-	public TerminalUIComp(AppConfig appConfig, AppServiceLocator serviceLocator, String serviceID) {
-		super(appConfig, serviceLocator, serviceID);
+	public TerminalUIComp(AppServiceLocator serviceLocator, String serviceID) {
+		super(serviceLocator, serviceID);
 	}
 	
-	public TerminalUIComp(AppConfig appConfig, AppServiceLocator serviceLocator) {
-		this(appConfig, serviceLocator, DEFAULT_ID);
+	public TerminalUIComp(AppServiceLocator serviceLocator) {
+		this(serviceLocator, DEFAULT_ID);
 	}
 
 	@Override
 	public void init() throws Throwable {
-		if ( appConfig.getBasicConfig().isHeadless() ) {
+		AppConfig2 app_config = serviceLocator.getConfig();
+		if ( app_config.getBasicConfig().isHeadless() ) {
 			return;
 		}
 		UIService uis = serviceLocator.getUIService();
@@ -81,6 +83,11 @@ public class TerminalUIComp extends CommonComp {
 
 	@Override
 	public void shutdown() throws Throwable {
+		
+	}
+
+	@Override
+	public void registerConfig(AppConfigService2 config_service) {
 		
 	}
 

@@ -1,23 +1,18 @@
 package ru.prolib.bootes.lib.app.comp;
 
 import ru.prolib.aquila.core.text.Messages;
+import ru.prolib.bootes.lib.app.AppConfigService2;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
-import ru.prolib.bootes.lib.config.AppConfig;
 
 public class MessagesComp extends CommonComp {
 	private static final String DEFAULT_ID = "MESSAGES";
 
-	public MessagesComp(AppConfig appConfig,
-			AppServiceLocator serviceLocator,
-			String serviceID)
-	{
-		super(appConfig, serviceLocator, serviceID);
+	public MessagesComp(AppServiceLocator serviceLocator, String serviceID) {
+		super(serviceLocator, serviceID);
 	}
 	
-	public MessagesComp(AppConfig appConfig,
-			AppServiceLocator serviceLocator)
-	{
-		this(appConfig, serviceLocator, DEFAULT_ID);
+	public MessagesComp(AppServiceLocator serviceLocator) {
+		this(serviceLocator, DEFAULT_ID);
 	}
 
 	@Override
@@ -32,6 +27,11 @@ public class MessagesComp extends CommonComp {
 
 	@Override
 	public void shutdown() throws Throwable {
+		
+	}
+
+	@Override
+	public void registerConfig(AppConfigService2 config_service) {
 		
 	}
 

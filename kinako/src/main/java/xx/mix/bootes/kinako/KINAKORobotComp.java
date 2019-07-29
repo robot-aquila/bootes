@@ -12,6 +12,7 @@ import ru.prolib.aquila.core.config.KVStoreIni;
 import ru.prolib.aquila.core.config.OptionProvider;
 import ru.prolib.aquila.core.config.OptionProviderKvs;
 import ru.prolib.bootes.lib.app.AppComponent;
+import ru.prolib.bootes.lib.app.AppConfigService2;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import xx.mix.bootes.kinako.service.ImapMessageService;
 import xx.mix.bootes.kinako.service.KinakoBotService;
@@ -61,6 +62,11 @@ public class KINAKORobotComp implements AppComponent {
 	@Override
 	public void shutdown() throws Throwable {
 		messageService.close();
+	}
+
+	@Override
+	public void registerConfig(AppConfigService2 config_service) {
+		
 	}
 
 }

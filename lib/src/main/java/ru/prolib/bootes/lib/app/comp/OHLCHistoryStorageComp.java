@@ -4,29 +4,29 @@ import ru.prolib.aquila.core.data.Candle;
 import ru.prolib.aquila.core.data.TFSymbol;
 import ru.prolib.aquila.data.storage.MDStorage;
 import ru.prolib.aquila.web.utils.finam.data.FinamData;
+import ru.prolib.bootes.lib.app.AppConfigService2;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
-import ru.prolib.bootes.lib.config.AppConfig;
-import ru.prolib.bootes.lib.config.OHLCHistoryConfig;
+import ru.prolib.bootes.lib.config.AppConfig2;
+import ru.prolib.bootes.lib.config.OHLCHistoryConfig2;
+import ru.prolib.bootes.lib.config.OHLCHistoryConfig2Section;
 
 public class OHLCHistoryStorageComp extends CommonComp {
+	private static final String CONFIG_SECTION_ID = "ohlc-history";
 	private static final String DEFAULT_ID = "OHLC-HISTORY";
 	
-	public OHLCHistoryStorageComp(AppConfig appConfig,
-			AppServiceLocator serviceLocator,
-			String serviceID)
-	{
-		super(appConfig, serviceLocator, serviceID);
+	public OHLCHistoryStorageComp(AppServiceLocator serviceLocator, String serviceID) {
+		super(serviceLocator, serviceID);
 	}
 	
-	public OHLCHistoryStorageComp(AppConfig appConfig,
-			AppServiceLocator serviceLocator)
+	public OHLCHistoryStorageComp(AppServiceLocator serviceLocator)
 	{
-		this(appConfig, serviceLocator, DEFAULT_ID);
+		this(serviceLocator, DEFAULT_ID);
 	}
 
 	@Override
 	public void init() throws Throwable {
-		OHLCHistoryConfig conf = appConfig.getOHLCHistoryConfig();
+		AppConfig2 app_conf = serviceLocator.getConfig();
+		OHLCHistoryConfig2 conf = app_conf.getSection(CONFIG_SECTION_ID);
 		MDStorage<TFSymbol, Candle> storage = new FinamData()
 			.createCachingOHLCV(
 				conf.getDataDirectory(),
@@ -44,6 +44,11 @@ public class OHLCHistoryStorageComp extends CommonComp {
 	@Override
 	public void shutdown() throws Throwable {
 		
+	}
+
+	@Override
+	public void registerConfig(AppConfigService2 config_service) {
+		config_service.addSection(CONFIG_SECTION_ID, new OHLCHistoryConfig2Section());
 	}
 
 }

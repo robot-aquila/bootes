@@ -2,11 +2,13 @@ package ru.prolib.bootes.lib.app;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.ini4j.Ini;
@@ -96,6 +98,22 @@ public class AppConfigService2 {
 	public AppConfigService2 addSection(String section_id, ConfigSection section) {
 		sections.put(section_id, section);
 		return this;
+	}
+	
+	public void showHelp(PrintWriter writer, int width, String cmdLineSyntax, String header, String footer) {
+		int leftPad = 0, descPad = 1;
+		Options options = new Options();
+		for ( ConfigSection section : sections.values() ) {
+			section.configureOptions(options);
+		}
+		new HelpFormatter()
+			.printHelp(writer, width, cmdLineSyntax, header, options, leftPad, descPad, footer);
+	}
+	
+	public void showHelp(int width, String cmdLineSyntax, String header, String footer) {
+		PrintWriter writer = new PrintWriter(System.out);
+		showHelp(writer, width, cmdLineSyntax, header, footer);
+		writer.close();
 	}
 
 }

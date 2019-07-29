@@ -12,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ru.prolib.bootes.lib.app.AppComponent;
+import ru.prolib.bootes.lib.app.AppConfigService2;
 
 public class AppRuntimeServiceImplTest {
 	
@@ -50,6 +51,11 @@ public class AppRuntimeServiceImplTest {
 		@Override
 		public void init() throws Throwable {
 			log.add("!" + id);
+		}
+
+		@Override
+		public void registerConfig(AppConfigService2 config_service) {
+			
 		}
 		
 	}

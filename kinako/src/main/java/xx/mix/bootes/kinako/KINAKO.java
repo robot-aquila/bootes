@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import ru.prolib.bootes.lib.app.App;
-import ru.prolib.bootes.lib.app.AppRuntimeService;
+import ru.prolib.bootes.lib.app.AppComponent;
 
 public class KINAKO extends App {
 
@@ -29,8 +29,8 @@ public class KINAKO extends App {
 	}
 
 	@Override
-	protected void registerApplications(AppRuntimeService ars) {
-		ars.addApplication(new KINAKORobotComp(serviceLocator));
+	protected void registerApplications(List<AppComponent> list) {
+		list.add(new KINAKORobotComp(getServiceLocator()));
 	}
 
 }

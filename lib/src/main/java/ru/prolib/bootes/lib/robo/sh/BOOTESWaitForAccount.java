@@ -32,6 +32,7 @@ public class BOOTESWaitForAccount extends SMStateHandlerEx implements SMInputAct
 	public SMExit enter(SMTriggerRegistry triggers) {
 		super.enter(triggers);
 		triggers.add(new SMTriggerOnEvent(serviceLocator.getTerminal().onPortfolioAvailable(), in));
+		serviceLocator.getTerminal().subscribe(state.getAccount());
 		return objectsAvailable();
 	}
 

@@ -22,7 +22,7 @@ public class TQTerminalConfigSection implements ConfigSection {
 	}
 
 	@Override
-	public void configureOptions(Options options) throws ConfigException {
+	public void configureOptions(Options options) {
 		options.addOption(Option.builder()
 				.longOpt(LOPT_LOG_PATH)
 				.hasArg()

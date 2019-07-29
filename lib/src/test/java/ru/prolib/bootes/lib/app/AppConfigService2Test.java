@@ -87,7 +87,7 @@ public class AppConfigService2Test {
 		}
 
 		@Override
-		public void configureOptions(Options options) throws ConfigException {
+		public void configureOptions(Options options) {
 			options.addOption(Option.builder()
 					.longOpt("foo")
 					.hasArg()

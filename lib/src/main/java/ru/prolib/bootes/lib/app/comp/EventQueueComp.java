@@ -6,8 +6,9 @@ import org.slf4j.LoggerFactory;
 import ru.prolib.aquila.core.EventQueueImpl;
 import ru.prolib.aquila.core.eque.EventQueueStats;
 import ru.prolib.aquila.ui.form.EventQueueStatePanel;
+import ru.prolib.bootes.lib.app.AppConfigService2;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
-import ru.prolib.bootes.lib.config.AppConfig;
+import ru.prolib.bootes.lib.config.AppConfig2;
 import ru.prolib.bootes.lib.service.UIService;
 
 public class EventQueueComp extends CommonComp {
@@ -20,18 +21,19 @@ public class EventQueueComp extends CommonComp {
 	private static final String DEFAULT_ID = "BOOTES-QUEUE";
 	private EventQueueImpl queue;
 
-	public EventQueueComp(AppConfig appConfig, AppServiceLocator serviceLocator, String serviceID) {
-		super(appConfig, serviceLocator, serviceID);
+	public EventQueueComp(AppServiceLocator serviceLocator, String serviceID) {
+		super(serviceLocator, serviceID);
 	}
 	
-	public EventQueueComp(AppConfig appConfig, AppServiceLocator serviceLocator) {
-		this(appConfig, serviceLocator, DEFAULT_ID);
+	public EventQueueComp(AppServiceLocator serviceLocator) {
+		this(serviceLocator, DEFAULT_ID);
 	}
 
 	@Override
 	public void init() throws Throwable {
+		AppConfig2 app_conf = serviceLocator.getConfig();
 		serviceLocator.setEventQueue(queue = new EventQueueImpl(serviceID));
-		if ( ! appConfig.getBasicConfig().isHeadless() ) {
+		if ( ! app_conf.getBasicConfig().isHeadless() ) {
 			UIService uis = serviceLocator.getUIService();
 			uis.getTopPanel().add(new EventQueueStatePanel(uis.getMessages(), queue));
 		}
@@ -53,6 +55,11 @@ public class EventQueueComp extends CommonComp {
 			logger.debug("        Delivering time: {} ns", stats.getDeliveryTime());
 			stats.dumpSecondaryStats();
 		}
+	}
+
+	@Override
+	public void registerConfig(AppConfigService2 config_service) {
+		
 	}
 
 }

@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 
 import ru.prolib.bootes.lib.app.comp.UIComp;
 import ru.prolib.aquila.core.config.ConfigException;
-import ru.prolib.bootes.lib.AccountInfo;
 import ru.prolib.bootes.lib.app.comp.EventQueueComp;
 import ru.prolib.bootes.lib.app.comp.MessagesComp;
 import ru.prolib.bootes.lib.app.comp.OHLCHistoryStorageComp;
@@ -16,8 +15,7 @@ import ru.prolib.bootes.lib.app.comp.PriceScaleDBComp;
 import ru.prolib.bootes.lib.app.comp.ProbeSchedulerComp;
 import ru.prolib.bootes.lib.app.comp.QFortsTerminalComp;
 import ru.prolib.bootes.lib.app.comp.TerminalUIComp;
-import ru.prolib.bootes.lib.config.AppConfig;
-import ru.prolib.bootes.lib.config.TerminalConfig;
+import ru.prolib.bootes.lib.config.AppConfig2;
 import ru.prolib.bootes.lib.service.ars.AppRuntimeServiceImpl;
 
 public abstract class App {
@@ -30,8 +28,11 @@ public abstract class App {
 	public static final int STATUS_OK = 0;
 	public static final int STATUS_ERR_INIT_FAILED = 1;
 
-	protected AppServiceLocator serviceLocator = null;
-	protected AppConfig appConfig = null;
+	private AppServiceLocator serviceLocator = null;
+	
+	protected AppServiceLocator getServiceLocator() {
+		return serviceLocator;
+	}
 	
 	/**
 	 * Run application.
@@ -44,14 +45,26 @@ public abstract class App {
 	 */
 	public int run(String[] args) throws Throwable {
 		logger.debug("APP: Is starting...");
+		List<AppComponent> srv_comps = new ArrayList<>(), app_comps = new ArrayList<>();
 		try {
-			AppConfigService acs = createConfigService();
-			appConfig = acs.loadConfig(args);
-			if ( appConfig.getBasicConfig().isShowHelp() ) {
+			serviceLocator = createServiceLocator();
+			AppConfigService2 acs = createConfigService();
+			registerServices(srv_comps);
+			registerApplications(app_comps);
+			for ( AppComponent comp : srv_comps ) {
+				comp.registerConfig(acs);
+			}
+			for ( AppComponent comp : app_comps ) {
+				comp.registerConfig(acs);
+			}
+			
+			AppConfig2 app_conf = acs.loadConfig(args);
+			if ( app_conf.getBasicConfig().isShowHelp() ) {
 				acs.showHelp(80, "todo", "", "");
 				return 0;
 			}
-			serviceLocator = createServiceLocator();
+			serviceLocator.setConfig(app_conf);
+			
 		} catch ( ConfigException e ) {
 			logger.error("Configuration error: ", e);
 			return STATUS_ERR_INIT_FAILED;
@@ -70,8 +83,13 @@ public abstract class App {
 			}
 		});
 		try {
-			registerServices(ars);
-			registerApplications(ars);
+			for ( AppComponent comp : srv_comps ) {
+				ars.addService(comp);
+			}
+			for ( AppComponent comp : app_comps ) {
+				ars.addApplication(comp);
+			}
+			
 			ars.init();
 			ars.startup();
 			logger.debug("APP: Is waiting for shutdown");
@@ -93,8 +111,8 @@ public abstract class App {
 	 * <p>
 	 * @return configuration service
 	 */
-	protected AppConfigService createConfigService() {
-		return new AppConfigService();
+	protected AppConfigService2 createConfigService() {
+		return new AppConfigService2();
 	}
 	
 	/**
@@ -108,36 +126,21 @@ public abstract class App {
 		return new AppServiceLocator(new AppRuntimeServiceImpl("BOOTES-ARS"));
 	}
 	
-	protected void registerServices(AppRuntimeService ars) {
-		ars.addService(new MessagesComp(appConfig, serviceLocator));
-		ars.addService(new PriceScaleDBComp(appConfig, serviceLocator));
-		ars.addService(new UIComp(appConfig, serviceLocator));
-		ars.addService(new EventQueueComp(appConfig, serviceLocator));
-		ars.addService(new ProbeSchedulerComp(appConfig, serviceLocator));
-		registerTerminalServices(ars);
-		ars.addService(new TerminalUIComp(appConfig, serviceLocator));
-		ars.addService(new OHLCHistoryStorageComp(appConfig, serviceLocator));
+	protected void registerServices(List<AppComponent> list) {
+		list.add(new MessagesComp(getServiceLocator()));
+		list.add(new PriceScaleDBComp(getServiceLocator()));
+		list.add(new UIComp(getServiceLocator()));
+		list.add(new EventQueueComp(getServiceLocator()));
+		list.add(new ProbeSchedulerComp(getServiceLocator()));
+		registerTerminalServices(list);
+		list.add(new TerminalUIComp(getServiceLocator()));
+		list.add(new OHLCHistoryStorageComp(getServiceLocator()));
 	}
 	
-	protected void registerTerminalServices(AppRuntimeService ars) {
-		ars.addService(new QFortsTerminalComp(appConfig, serviceLocator, getExpectedAccounts()));
+	protected void registerTerminalServices(List<AppComponent> list) {
+		list.add(new QFortsTerminalComp(serviceLocator));
 	}
 	
-	abstract protected void registerApplications(AppRuntimeService ars);
-	
-	/**
-	 * Produce list of accounts expected to be exist.
-	 * <p>
-	 * By default this method return 
-	 * Usage of the list depends on terminal implementation. 
-	 * <p> 
-	 * @return list of accounts with balances
-	 */
-	protected List<AccountInfo> getExpectedAccounts() {
-		TerminalConfig bc = appConfig.getTerminalConfig();
-		List<AccountInfo> r = new ArrayList<>();
-		r.add(new AccountInfo(bc.getQForstTestAccount(), bc.getQForstTestBalance()));
-		return r;
-	}
+	abstract protected void registerApplications(List<AppComponent> list);
 
 }

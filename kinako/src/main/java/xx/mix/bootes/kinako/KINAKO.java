@@ -6,6 +6,7 @@ import java.util.List;
 
 import ru.prolib.bootes.lib.app.App;
 import ru.prolib.bootes.lib.app.AppComponent;
+import xx.mix.bootes.kinako.exante.XTerminalComp;
 
 public class KINAKO extends App {
 
@@ -31,6 +32,12 @@ public class KINAKO extends App {
 	@Override
 	protected void registerApplications(List<AppComponent> list) {
 		list.add(new KINAKORobotComp(getServiceLocator()));
+	}
+	
+	@Override
+	protected void registerTerminalServices(List<AppComponent> list) {
+		super.registerTerminalServices(list);
+		list.add(new XTerminalComp(getServiceLocator()));
 	}
 
 }

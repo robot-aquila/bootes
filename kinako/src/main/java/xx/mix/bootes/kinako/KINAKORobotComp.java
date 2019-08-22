@@ -33,35 +33,35 @@ public class KINAKORobotComp implements AppComponent {
 		OptionProvider options = new OptionProviderKvs(
 				new KVStoreIni(new Wini(new File("kinako.ini")).get("kinako"))
 			);
-		ApiContextInitializer.init();
-		bots = new TelegramBotsApi();
-		bots.registerBot(kinakoService = new KinakoBotService(
-				options.getStringNotNull("tg.bot_username", null),
-				options.getStringNotNull("tg.bot_token", null),
-				options.getStringNotNull("tg.bot_chat_id", null)
-			));
-		messageService = new ImapMessageService(
-				serviceLocator.getEventQueue(),
-				options
-			);
-		messageService.onSignalDetected().addListener(new EventListener() {
+		//ApiContextInitializer.init();
+		//bots = new TelegramBotsApi();
+		//bots.registerBot(kinakoService = new KinakoBotService(
+		//		options.getStringNotNull("tg.bot_username", null),
+		//		options.getStringNotNull("tg.bot_token", null),
+		//		options.getStringNotNull("tg.bot_chat_id", null)
+		//	));
+		//messageService = new ImapMessageService(
+		//		serviceLocator.getEventQueue(),
+		//		options
+		//	);
+		//messageService.onSignalDetected().addListener(new EventListener() {
 
-			@Override
-			public void onEvent(Event event) {
-				kinakoService.sendNotification((KinakoEvent) event);
-			}
+		//	@Override
+		//	public void onEvent(Event event) {
+				//kinakoService.sendNotification((KinakoEvent) event);
+		//	}
 			
-		});
+		//});
 	}
 
 	@Override
 	public void startup() throws Throwable {
-		messageService.startup();
+		//messageService.startup();
 	}
 
 	@Override
 	public void shutdown() throws Throwable {
-		messageService.close();
+		//messageService.close();
 	}
 
 	@Override

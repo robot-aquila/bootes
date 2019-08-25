@@ -32,15 +32,10 @@ public class ProbeSchedulerComp extends CommonComp {
 	}
 	
 	private static final String CONFIG_SECTION_ID = "probe-scheduler";
-	private static final String DEFAULT_ID = "PROBE-SCHEDULER";
 	private ARSHandler handler;
 
 	public ProbeSchedulerComp(AppServiceLocator serviceLocator, String serviceID) {
 		super(serviceLocator, serviceID);
-	}
-	
-	public ProbeSchedulerComp(AppServiceLocator serviceLocator) {
-		this(serviceLocator, DEFAULT_ID);
 	}
 
 	@Override

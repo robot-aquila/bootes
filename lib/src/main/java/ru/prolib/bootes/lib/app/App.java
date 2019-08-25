@@ -12,9 +12,8 @@ import ru.prolib.bootes.lib.app.comp.EventQueueComp;
 import ru.prolib.bootes.lib.app.comp.MessagesComp;
 import ru.prolib.bootes.lib.app.comp.OHLCHistoryStorageComp;
 import ru.prolib.bootes.lib.app.comp.PriceScaleDBComp;
-import ru.prolib.bootes.lib.app.comp.ProbeSchedulerComp;
-import ru.prolib.bootes.lib.app.comp.QFortsTerminalComp;
-import ru.prolib.bootes.lib.app.comp.TerminalUIComp;
+import ru.prolib.bootes.lib.app.comp.QFTerminalComp;
+import ru.prolib.bootes.lib.app.comp.TerminalBuilderComp;
 import ru.prolib.bootes.lib.config.AppConfig2;
 import ru.prolib.bootes.lib.service.ars.AppRuntimeServiceImpl;
 
@@ -131,14 +130,16 @@ public abstract class App {
 		list.add(new PriceScaleDBComp(getServiceLocator()));
 		list.add(new UIComp(getServiceLocator()));
 		list.add(new EventQueueComp(getServiceLocator()));
-		list.add(new ProbeSchedulerComp(getServiceLocator()));
-		registerTerminalServices(list);
-		list.add(new TerminalUIComp(getServiceLocator()));
+		TerminalBuilderComp registry = new TerminalBuilderComp(getServiceLocator());
+		registerTerminalServices(registry);
+		list.add(registry);
 		list.add(new OHLCHistoryStorageComp(getServiceLocator()));
 	}
 	
-	protected void registerTerminalServices(List<AppComponent> list) {
-		list.add(new QFortsTerminalComp(serviceLocator));
+	protected void registerTerminalServices(DriverRegistry registry) {
+		QFTerminalComp default_driver = new QFTerminalComp(serviceLocator);
+		registry.registerDriver("default", default_driver);
+		registry.registerDriver("qforts", default_driver);
 	}
 	
 	abstract protected void registerApplications(List<AppComponent> list);

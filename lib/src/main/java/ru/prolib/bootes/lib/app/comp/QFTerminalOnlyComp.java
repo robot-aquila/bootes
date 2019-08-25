@@ -15,17 +15,12 @@ import ru.prolib.bootes.lib.service.ars.ARSHandlerBuilder;
 import ru.prolib.bootes.lib.service.task.StartTerminal;
 import ru.prolib.bootes.lib.service.task.StopTerminal;
 
-public class QFortsTerminalComp extends CommonComp {
-	private static final String DEFAULT_ID = "BOOTES-TERMINAL";
+public class QFTerminalOnlyComp extends CommonComp {
 	private static final String CONFIG_SECTION_ID = "qforts-terminal";
 	private ARSHandler handler;
 
-	public QFortsTerminalComp(AppServiceLocator serviceLocator, String serviceID) {
+	public QFTerminalOnlyComp(AppServiceLocator serviceLocator, String serviceID) {
 		super(serviceLocator, serviceID);
-	}
-	
-	public QFortsTerminalComp(AppServiceLocator serviceLocator) {
-		this(serviceLocator, DEFAULT_ID);
 	}
 
 	@Override

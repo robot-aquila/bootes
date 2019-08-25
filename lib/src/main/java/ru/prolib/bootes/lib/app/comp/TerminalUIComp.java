@@ -21,14 +21,9 @@ import ru.prolib.bootes.lib.config.AppConfig2;
 import ru.prolib.bootes.lib.service.UIService;
 
 public class TerminalUIComp extends CommonComp {
-	private static final String DEFAULT_ID = "TERMINAL-UI";
 
 	public TerminalUIComp(AppServiceLocator serviceLocator, String serviceID) {
 		super(serviceLocator, serviceID);
-	}
-	
-	public TerminalUIComp(AppServiceLocator serviceLocator) {
-		this(serviceLocator, DEFAULT_ID);
 	}
 
 	@Override

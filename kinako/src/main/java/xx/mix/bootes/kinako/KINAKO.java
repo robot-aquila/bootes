@@ -6,6 +6,7 @@ import java.util.List;
 
 import ru.prolib.bootes.lib.app.App;
 import ru.prolib.bootes.lib.app.AppComponent;
+import ru.prolib.bootes.lib.app.DriverRegistry;
 import xx.mix.bootes.kinako.exante.XTerminalComp;
 
 public class KINAKO extends App {
@@ -35,9 +36,9 @@ public class KINAKO extends App {
 	}
 	
 	@Override
-	protected void registerTerminalServices(List<AppComponent> list) {
-		super.registerTerminalServices(list);
-		list.add(new XTerminalComp(getServiceLocator()));
+	protected void registerTerminalServices(DriverRegistry registry) {
+		super.registerTerminalServices(registry);
+		registry.registerDriver("exante", new XTerminalComp(getServiceLocator()));
 	}
 
 }

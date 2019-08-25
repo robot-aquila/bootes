@@ -1,54 +1,36 @@
-package ru.prolib.bootes.tsgr001a;
-
-import org.ini4j.Profile.Section;
-import org.ini4j.Wini;
+package xx.mix.bootes.kinako.exante;
 
 import ru.prolib.aquila.core.BusinessEntities.BasicTerminalBuilder;
 import ru.prolib.aquila.core.BusinessEntities.EditableTerminal;
-import ru.prolib.aquila.transaq.impl.TQDataProviderImpl;
+import ru.prolib.aquila.exante.XDataProviderFactory;
 import ru.prolib.bootes.lib.app.AppConfigService2;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.app.comp.CommonComp;
-import ru.prolib.bootes.lib.config.TQTerminalConfig;
-import ru.prolib.bootes.lib.config.TQTerminalConfigSection;
 import ru.prolib.bootes.lib.service.ars.ARSHandler;
 import ru.prolib.bootes.lib.service.ars.ARSHandlerBuilder;
 import ru.prolib.bootes.lib.service.task.StartTerminal;
 import ru.prolib.bootes.lib.service.task.StopTerminal;
 
-public class TSGR001ATransaqTerminalComp extends CommonComp {
-	private static final String DEFAULT_ID = "BOOTES-TERMINAL-TRANSAQ";
-	private static final String CONFIG_SECTION_ID = "transaq-terminal";
-
+public class XTerminalOnlyComp extends CommonComp {
+	private static final String CONFIG_SECTION_ID = "exante-terminal";
+	
 	private ARSHandler handler;
 
-	public TSGR001ATransaqTerminalComp(AppServiceLocator serviceLocator, String serviceID) {
+	public XTerminalOnlyComp(AppServiceLocator serviceLocator, String serviceID) {
 		super(serviceLocator, serviceID);
-	}
-	
-	public TSGR001ATransaqTerminalComp(AppServiceLocator serviceLocator) {
-		this(serviceLocator, DEFAULT_ID);
 	}
 
 	@Override
 	public void init() throws Throwable {
-		if ( "transaq".equals(serviceLocator.getConfig().getBasicConfig().getDriver()) == false ) {
+		if ( "exante".equals(serviceLocator.getConfig().getBasicConfig().getDriver()) == false ) {
 			return;
 		}
-		TQTerminalConfig term_conf = serviceLocator.getConfig().getSection(CONFIG_SECTION_ID);
-		Section tq_conf = new Wini().add("dummy_section");
-		tq_conf.put("log_path", term_conf.getLogPath().getAbsolutePath());
-		tq_conf.put("log_level", Integer.toString(term_conf.getLogLevel()));
-		tq_conf.put("login", term_conf.getLogin());
-		tq_conf.put("password", term_conf.getPassword());
-		tq_conf.put("host", term_conf.getHost());
-		tq_conf.put("port", Integer.toString(term_conf.getPort()));
-		
+		XTerminalConfig term_conf = serviceLocator.getConfig().getSection(CONFIG_SECTION_ID);
 		EditableTerminal terminal = new BasicTerminalBuilder()
 				.withEventQueue(serviceLocator.getEventQueue())
 				.withScheduler(serviceLocator.getScheduler())
 				.withTerminalID(serviceID)
-				.withDataProvider(new TQDataProviderImpl(tq_conf))
+				.withDataProvider(new XDataProviderFactory().build(term_conf.getSettingFilename().getAbsolutePath()))
 				.buildTerminal();
 		serviceLocator.setTerminal(terminal);
 		handler = new ARSHandlerBuilder()
@@ -74,7 +56,7 @@ public class TSGR001ATransaqTerminalComp extends CommonComp {
 
 	@Override
 	public void registerConfig(AppConfigService2 config_service) {
-		config_service.addSection(CONFIG_SECTION_ID, new TQTerminalConfigSection());
+		config_service.addSection(CONFIG_SECTION_ID, new XTerminalConfigSection());
 	}
 
 }

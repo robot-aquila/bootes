@@ -1,22 +1,22 @@
-package xx.mix.bootes.kinako.exante;
+package ru.prolib.bootes.tsgr001a;
 
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.app.comp.CombinedComp;
 import ru.prolib.bootes.lib.app.comp.RTSchedulerComp;
 import ru.prolib.bootes.lib.app.comp.TerminalUIComp;
 
-public class XTerminalComp extends CombinedComp {
+public class TQTerminalComp extends CombinedComp {
 
-	public XTerminalComp(AppServiceLocator serviceLocator, String serviceID) {
+	public TQTerminalComp(AppServiceLocator serviceLocator, String serviceID) {
 		super(toList(
 				new RTSchedulerComp(serviceLocator, serviceID + "-SCHEDULER"),
-				new XTerminalOnlyComp(serviceLocator, serviceID + "-TERMINAL"),
+				new TQTerminalOnlyComp(serviceLocator, serviceID + "-TERMINAL"),
 				new TerminalUIComp(serviceLocator, serviceID + "-UI")
 			));
 	}
 	
-	public XTerminalComp(AppServiceLocator serviceLocator) {
-		this(serviceLocator, "EXANTE");
+	public TQTerminalComp(AppServiceLocator serviceLocator) {
+		this(serviceLocator, "TRANSAQ");
 	}
 
 }

@@ -13,6 +13,8 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.ini4j.Ini;
 import org.ini4j.Profile.Section;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ru.prolib.aquila.core.config.ConfigException;
 import ru.prolib.aquila.core.config.KVStoreCli;
@@ -26,6 +28,12 @@ import ru.prolib.bootes.lib.config.BasicConfig2Section;
 import ru.prolib.bootes.lib.config.ConfigSection;
 
 public class AppConfigService2 {
+	private static final Logger logger;
+	
+	static {
+		logger = LoggerFactory.getLogger(AppConfigService2.class);
+	}
+	
 	public static final String DEFAULT_INI_SECTION_ID = "aquila";
 	public static final String DEFAULT_CONFIG_FILE_OPTION_NAME = "config-file";
 	
@@ -97,6 +105,7 @@ public class AppConfigService2 {
 	
 	public AppConfigService2 addSection(String section_id, ConfigSection section) {
 		sections.put(section_id, section);
+		logger.debug("Section registered: {}", section_id);
 		return this;
 	}
 	

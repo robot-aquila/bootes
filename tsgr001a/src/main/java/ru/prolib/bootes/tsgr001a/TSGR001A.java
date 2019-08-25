@@ -6,6 +6,7 @@ import java.util.List;
 import ru.prolib.bootes.lib.app.App;
 import ru.prolib.bootes.lib.app.AppComponent;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
+import ru.prolib.bootes.lib.app.DriverRegistry;
 
 public class TSGR001A extends App {
 
@@ -14,9 +15,9 @@ public class TSGR001A extends App {
 	}
 	
 	@Override
-	protected void registerTerminalServices(List<AppComponent> list) {
-		super.registerTerminalServices(list);
-		list.add(new TSGR001ATransaqTerminalComp(getServiceLocator()));
+	protected void registerTerminalServices(DriverRegistry registry) {
+		super.registerTerminalServices(registry);
+		registry.registerDriver("transaq", new TQTerminalComp(getServiceLocator()));
 	}
 
 	@Override

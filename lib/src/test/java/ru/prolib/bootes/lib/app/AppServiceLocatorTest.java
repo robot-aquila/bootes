@@ -3,6 +3,7 @@ package ru.prolib.bootes.lib.app;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 
+import java.sql.Connection;
 import java.time.Instant;
 import java.time.ZoneId;
 
@@ -197,6 +198,23 @@ public class AppServiceLocatorTest {
 		assertEquals(ZoneId.systemDefault(), service.getZoneID());
 		service.setZoneID(x);
 		assertEquals(x, service.getZoneID());
+	}
+	
+	@Test
+	public void testGetSqlDBConn() {
+		Connection dbhMock = control.createMock(Connection.class);
+		service.setSqlDBConn(dbhMock);
+		
+		Connection actual = service.getSqlDBConn();
+		
+		assertNotNull(actual);
+		assertSame(dbhMock, actual);
+		assertSame(actual, service.getSqlDBConn());
+	}
+	
+	@Test (expected=NullPointerException.class)
+	public void testGetSqlDBConn_ThrowsIfNotDefined() {
+		service.getSqlDBConn();
 	}
 
 }

@@ -1,5 +1,6 @@
 package ru.prolib.bootes.lib.app;
 
+import java.sql.Connection;
 import java.time.ZoneId;
 
 import ru.prolib.aquila.core.EventQueue;
@@ -24,6 +25,7 @@ public class AppServiceLocator {
 	private MDStorage<TFSymbol, Candle> ohlcHistoryStorage;
 	private IMessages messages;
 	private ZoneId zoneID;
+	private Connection sqlDBConn;
 	
 	public AppServiceLocator(AppRuntimeService ars) {
 		this.ars = ars;
@@ -128,6 +130,17 @@ public class AppServiceLocator {
 	
 	public synchronized void setZoneID(ZoneId zoneID) {
 		this.zoneID = zoneID;
+	}
+	
+	public synchronized Connection getSqlDBConn() {
+		if ( sqlDBConn == null ) {
+			throw new NullPointerException();
+		}
+		return sqlDBConn;
+	}
+	
+	public synchronized void setSqlDBConn(Connection connection) {
+		this.sqlDBConn = connection;
 	}
 
 }

@@ -28,7 +28,7 @@ public class SqlDBComp extends CommonComp {
 		if ( url.startsWith("jdbc:hsqldb:") ) {
 			Class.forName("org.hsqldb.jdbcDriver");			
 		}
-		dbh = DriverManager.getConnection(url, conf.getUser(), conf.getPass());
+		serviceLocator.setSqlDBConn(dbh = DriverManager.getConnection(url, conf.getUser(), conf.getPass()));
 	}
 
 	@Override

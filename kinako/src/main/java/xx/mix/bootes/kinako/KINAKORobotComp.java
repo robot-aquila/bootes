@@ -11,6 +11,7 @@ import ru.prolib.aquila.core.EventListener;
 import ru.prolib.aquila.core.config.KVStoreIni;
 import ru.prolib.aquila.core.config.OptionProvider;
 import ru.prolib.aquila.core.config.OptionProviderKvs;
+import ru.prolib.aquila.ui.FastOrder.FastOrderPanel;
 import ru.prolib.bootes.lib.app.AppComponent;
 import ru.prolib.bootes.lib.app.AppConfigService2;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
@@ -23,6 +24,7 @@ public class KINAKORobotComp implements AppComponent {
 	private ImapMessageService messageService;
 	private KinakoBotService kinakoService;
 	private TelegramBotsApi bots;
+	private FastOrderPanel orderPanel;
 	
 	public KINAKORobotComp(AppServiceLocator serviceLocator) {
 		this.serviceLocator = serviceLocator;
@@ -52,15 +54,27 @@ public class KINAKORobotComp implements AppComponent {
 		//	}
 			
 		//});
+		
+		if ( ! serviceLocator.getConfig().getBasicConfig().isHeadless() ) {
+			orderPanel = new FastOrderPanel(serviceLocator.getTerminal());
+			serviceLocator.getUIService().getTopPanel().add(orderPanel);
+		}
 	}
 
 	@Override
 	public void startup() throws Throwable {
 		//messageService.startup();
+		if  ( orderPanel != null ) {
+			orderPanel.start();
+		}
 	}
 
 	@Override
 	public void shutdown() throws Throwable {
+		if ( orderPanel != null ) {
+			orderPanel.stop();
+			orderPanel = null;
+		}
 		//messageService.close();
 	}
 

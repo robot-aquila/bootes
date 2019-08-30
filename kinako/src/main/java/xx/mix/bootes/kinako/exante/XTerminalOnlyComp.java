@@ -2,7 +2,9 @@ package xx.mix.bootes.kinako.exante;
 
 import ru.prolib.aquila.core.BusinessEntities.BasicTerminalBuilder;
 import ru.prolib.aquila.core.BusinessEntities.EditableTerminal;
+import ru.prolib.aquila.data.storage.hsql.HSQLSequenceRegistry;
 import ru.prolib.aquila.exante.XDataProviderFactory;
+import ru.prolib.aquila.exante.XParams;
 import ru.prolib.bootes.lib.app.AppConfigService2;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.app.comp.CommonComp;
@@ -26,11 +28,15 @@ public class XTerminalOnlyComp extends CommonComp {
 			return;
 		}
 		XTerminalConfig term_conf = serviceLocator.getConfig().getSection(CONFIG_SECTION_ID);
+		XParams params = new XParams(
+				term_conf.getSettingFilename(),
+				new HSQLSequenceRegistry(serviceLocator.getSqlDBConn(), "kinako.").get("exante_order_id")
+			);
 		EditableTerminal terminal = new BasicTerminalBuilder()
 				.withEventQueue(serviceLocator.getEventQueue())
 				.withScheduler(serviceLocator.getScheduler())
 				.withTerminalID(serviceID)
-				.withDataProvider(new XDataProviderFactory().build(term_conf.getSettingFilename().getAbsolutePath()))
+				.withDataProvider(new XDataProviderFactory().build(params))
 				.buildTerminal();
 		serviceLocator.setTerminal(terminal);
 		handler = new ARSHandlerBuilder()

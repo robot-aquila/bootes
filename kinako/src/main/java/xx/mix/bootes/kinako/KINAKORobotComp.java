@@ -12,9 +12,11 @@ import ru.prolib.aquila.core.config.KVStoreIni;
 import ru.prolib.aquila.core.config.OptionProvider;
 import ru.prolib.aquila.core.config.OptionProviderKvs;
 import ru.prolib.aquila.ui.FastOrder.FastOrderPanel;
+import ru.prolib.aquila.ui.form.SecurityListDialog;
 import ru.prolib.bootes.lib.app.AppComponent;
 import ru.prolib.bootes.lib.app.AppConfigService2;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
+import ru.prolib.bootes.lib.service.UIService;
 import xx.mix.bootes.kinako.service.ImapMessageService;
 import xx.mix.bootes.kinako.service.KinakoBotService;
 import xx.mix.bootes.kinako.service.KinakoEvent;
@@ -56,8 +58,12 @@ public class KINAKORobotComp implements AppComponent {
 		//});
 		
 		if ( ! serviceLocator.getConfig().getBasicConfig().isHeadless() ) {
-			orderPanel = new FastOrderPanel(serviceLocator.getTerminal());
-			serviceLocator.getUIService().getTopPanel().add(orderPanel);
+			UIService uis = serviceLocator.getUIService();
+			orderPanel = new FastOrderPanel(
+					serviceLocator.getTerminal(),
+					new SecurityListDialog(uis.getFrame(), SecurityListDialog.TYPE_SELECT, uis.getMessages())
+				);
+			uis.getTopPanel().add(orderPanel);
 		}
 	}
 

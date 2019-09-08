@@ -11,6 +11,7 @@ import ru.prolib.aquila.core.text.IMessages;
 import ru.prolib.aquila.qforts.ui.QFPortfolioListTableModel;
 import ru.prolib.aquila.qforts.ui.QFPositionListTableModel;
 import ru.prolib.aquila.ui.TableModelController;
+import ru.prolib.aquila.ui.form.MenuFactory;
 import ru.prolib.aquila.ui.form.OrderListTableModel;
 import ru.prolib.aquila.ui.form.PortfolioListTableModel;
 import ru.prolib.aquila.ui.form.PositionListTableModel;
@@ -37,6 +38,7 @@ public class TerminalUIComp extends CommonComp {
 		IMessages messages = uis.getMessages();
 		JFrame frame = uis.getFrame();
 		Terminal terminal = serviceLocator.getTerminal();
+		MenuFactory menu_factory = new MenuFactory(messages);
 		
 		SecurityListTableModel securityTableModel = new SecurityListTableModel(messages);
 		securityTableModel.add(terminal);
@@ -53,6 +55,7 @@ public class TerminalUIComp extends CommonComp {
 		table.setRowSorter(new TableRowSorter<>(orderTableModel));
 		tabPanel.add("Orders", new JScrollPane(table));
 		new TableModelController(orderTableModel, frame);
+		menu_factory.createOrderTablePopupMenu(table);
 		
 		QFPortfolioListTableModel portfolioTableModel = new QFPortfolioListTableModel(messages);
 		portfolioTableModel.add(terminal);

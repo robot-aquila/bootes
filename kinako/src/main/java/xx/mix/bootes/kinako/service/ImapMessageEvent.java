@@ -3,19 +3,19 @@ package xx.mix.bootes.kinako.service;
 import ru.prolib.aquila.core.EventImpl;
 import ru.prolib.aquila.core.EventType;
 
-public class KinakoEvent extends EventImpl {
+public class ImapMessageEvent extends EventImpl {
 	private final long smtpTime, imapTime;
-	private final String eventText;
+	private final ImapMessage message;
 	
-	public KinakoEvent(EventType type,
+	public ImapMessageEvent(EventType type,
 					   long smtp_time,
 					   long imap_time,
-					   String event_text)
+					   ImapMessage message)
 	{
 		super(type);
 		this.smtpTime = smtp_time;
 		this.imapTime = imap_time;
-		this.eventText = event_text;
+		this.message = message;
 	}
 	
 	public long getSmtpTime() {
@@ -26,8 +26,8 @@ public class KinakoEvent extends EventImpl {
 		return imapTime;
 	}
 	
-	public String getEventText() {
-		return eventText;
+	public ImapMessage getMessage() {
+		return message;
 	}
 
 }

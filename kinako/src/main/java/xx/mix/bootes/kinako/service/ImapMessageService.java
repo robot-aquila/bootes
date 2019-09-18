@@ -1,6 +1,7 @@
 package xx.mix.bootes.kinako.service;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Date;
 import java.util.Properties;
 
@@ -26,7 +27,7 @@ import ru.prolib.aquila.core.EventType;
 import ru.prolib.aquila.core.EventTypeImpl;
 import ru.prolib.aquila.core.config.OptionProvider;
 
-public class ImapMessageService implements MessageCountListener {
+public class ImapMessageService {
 	private static final Logger logger;
 	
 	static {
@@ -35,22 +36,33 @@ public class ImapMessageService implements MessageCountListener {
 	
 	private final EventQueue queue;
 	private final OptionProvider options;
-	private final EventType onSignalDetected;
+	private final EventType onMessage;
+	private final ImapMessageChecker messageChecker;
 	private IMAPStore store;
 	private IMAPFolder inbox;
 	private Worker worker;
 	
-	public ImapMessageService(EventQueue queue, OptionProvider options) {
+	public ImapMessageService(
+			EventQueue queue,
+			OptionProvider options,
+			ImapMessageChecker message_checker)
+	{
 		this.queue = queue;
 		this.options = options;
-		this.onSignalDetected = new EventTypeImpl("SIGNAL_DETECTED");
+		this.messageChecker = message_checker;
+		this.onMessage = new EventTypeImpl("MESSAGE");
 	}
 	
-	public EventType onSignalDetected() {
-		return onSignalDetected;
+	public ImapMessageService(EventQueue queue, OptionProvider options) {
+		this(queue, options, null);
+	}
+	
+	public EventType onMessage() {
+		return onMessage;
 	}
 	
 	public void startup() throws Throwable {
+		logger.debug("Service starting...");
 		Properties props = new Properties();
 		props.setProperty("mail.store.protocol", "imaps");
 		props.put("mail.imaps.host", options.getStringNotNull("imap.host", null));
@@ -60,6 +72,14 @@ public class ImapMessageService implements MessageCountListener {
 		final String password = options.getStringNotNull("imap.password", null);
 		final String folder_name = options.getString("imap.folder_name", "INBOX");
 		final String worker_name = options.getString("imap.worker_name", "IMAP-SIGNAL_SRC");
+		ImapMessageChecker msg_check = messageChecker;
+		if ( msg_check == null ) {
+			msg_check = new ImapMessageCheckByPattern(
+					options.getString("imap.msg_sender_pattern"),
+					options.getString("imap.msg_subject_pattern"),
+					options.getString("imap.msg_body_pattern")
+				);
+		}
 		
 		Session session = Session.getInstance(props, null);
 		store = (IMAPStore) session.getStore("imaps");
@@ -68,23 +88,23 @@ public class ImapMessageService implements MessageCountListener {
 			throw new RuntimeException("IDLE not supported");
 		}
 		inbox = (IMAPFolder) store.getFolder(folder_name);
-		inbox.addMessageCountListener(this);
+		inbox.addMessageCountListener(new MessageProcessor(msg_check, queue, onMessage));
 		inbox.open(Folder.READ_ONLY);
 		worker = new Worker(inbox, login, password);
 		worker.setName(worker_name);
 		worker.start();
-		logger.debug("MailService started");
+		logger.debug("Service started");
 	}
 	
 	public void close() throws Throwable {
-		logger.debug("MailService stopping...");
+		logger.debug("Service stopping...");
 		if ( worker != null ) {
 			worker.kill();
 			worker = null;
 		}
 		close(inbox);
 		close(store);
-		logger.debug("MailService stopped");
+		logger.debug("Service stopped");
 	}
 	
 	public static class Worker extends Thread {
@@ -110,7 +130,7 @@ public class ImapMessageService implements MessageCountListener {
 		
 		@Override
 		public void run() {
-			logger.debug("MailService worker started");
+			logger.debug("Worker started");
 			while ( running ) {
 				try {
 					ensureOpen();
@@ -125,7 +145,7 @@ public class ImapMessageService implements MessageCountListener {
 					}
 				}
 			}
-			logger.debug("MailService worker ended");
+			logger.debug("Worker ended");
         }
 		
 		public void ensureOpen() throws MessagingException {
@@ -147,7 +167,49 @@ public class ImapMessageService implements MessageCountListener {
 		
 	}
 	
-	public static void close(Folder folder) {
+	public static class MessageProcessor implements MessageCountListener {
+		private final ImapMessageChecker messageChecker;
+		private final EventQueue queue;
+		private final EventType onMessage;
+		
+		public MessageProcessor(
+				ImapMessageChecker message_checker,
+				EventQueue queue,
+				EventType on_message)
+		{
+			this.messageChecker = message_checker;
+			this.queue = queue;
+			this.onMessage = on_message;
+		}
+		
+		@Override
+		public void messagesAdded(MessageCountEvent event) {
+			Instant curr_time = Instant.now();
+			long curr = curr_time.toEpochMilli();
+			try {
+				for ( Message msg : event.getMessages() ) {
+					String sender = getSender(msg), subj = msg.getSubject(), body = getTextFromMessage(msg);
+					Date sent = msg.getSentDate(), recv = msg.getReceivedDate();
+					long smtp_time = recv.getTime() - sent.getTime();
+					long imap_time = curr - recv.getTime();
+					ImapMessage imap_msg = new ImapMessage(curr_time, sender, subj, body);
+					if ( messageChecker.approve(imap_msg) ) {
+						queue.enqueue(onMessage, new ImapMessageEventFactory(smtp_time, imap_time, imap_msg));
+					}
+				}
+			} catch ( Exception e ) {
+				logger.error("Unexpected exception: ", e);
+			}
+		}
+
+		@Override
+		public void messagesRemoved(MessageCountEvent e) {
+			
+		}
+
+	}
+	
+	private static void close(Folder folder) {
 		try {
 			if ( folder != null && folder.isOpen() ) {
 				folder.close(false);
@@ -157,7 +219,7 @@ public class ImapMessageService implements MessageCountListener {
 		}
     }
 
-    public static void close(Store store) {
+    private static void close(Store store) {
 		try {
 			if ( store != null && store.isConnected() ) {
 				store.close();
@@ -166,71 +228,39 @@ public class ImapMessageService implements MessageCountListener {
 			logger.warn("Unexpected exception: ", e);
 		}
     }
-
-	@Override
-	public void messagesAdded(MessageCountEvent event) {
-		long curr = System.currentTimeMillis();
-		logger.debug("INCOMING EVENT: MESSAGES ADDED");
-		try {
-			for ( Message msg : event.getMessages() ) {
-				logger.debug("-------------------------------------");
-				Address[] from_list = msg.getFrom();
-				if ( from_list != null ) {
-					for ( Address address : from_list ) {
-						logger.debug("From: " + address.toString());
-					}
-				} else {
-					logger.debug("From: N/A");
-				}
-				
-				String subj = msg.getSubject();
-				Date sent = msg.getSentDate(), recv = msg.getReceivedDate(); 
-				logger.debug(" Subject: {}", subj);
-				logger.debug("    Sent: {}", sent);
-				logger.debug("Received: {}", recv);
-				long smtp_time = recv.getTime() - sent.getTime();
-				long imap_time = curr - recv.getTime();
-				queue.enqueue(onSignalDetected, new KinakoEventFactory(
-						smtp_time,
-						imap_time,
-						"Event: " + subj + System.lineSeparator() + getTextFromMessage(msg)
-					));
-			}
-		} catch ( Exception e ) {
-			logger.error("Unexpected exception: ", e);
-		}
-	}
-
-	@Override
-	public void messagesRemoved(MessageCountEvent e) {
-		
+	
+	private static String getSender(Message msg) throws MessagingException {
+		Address[] from_list = msg.getFrom();
+		return from_list != null && from_list.length > 0 ? from_list[0].toString() : ""; 
 	}
 	
-	private String getTextFromMessage(Message message) throws MessagingException, IOException {
+	private static String getTextFromMessage(Message message)
+			throws MessagingException, IOException
+	{
 		String result = "";
-		if (message.isMimeType("text/plain")) {
+		if ( message.isMimeType("text/plain") ) {
 			result = message.getContent().toString();
-		} else if (message.isMimeType("multipart/*")) {
+		} else if ( message.isMimeType("multipart/*") ) {
 			MimeMultipart mimeMultipart = (MimeMultipart) message.getContent();
 			result = getTextFromMimeMultipart(mimeMultipart);
 		}
 		return result;
 	}
 
-	private String getTextFromMimeMultipart(MimeMultipart mimeMultipart)
+	private static String getTextFromMimeMultipart(MimeMultipart mimeMultipart)
 			throws MessagingException, IOException
 	{
 		String result = "";
 		int count = mimeMultipart.getCount();
-		for (int i = 0; i < count; i++) {
+		for ( int i = 0; i < count; i++ ) {
 			BodyPart bodyPart = mimeMultipart.getBodyPart(i);
-			if (bodyPart.isMimeType("text/plain")) {
+			if ( bodyPart.isMimeType("text/plain") ) {
 				result = result + "\n" + bodyPart.getContent();
 				break; // without break same text appears twice in my tests
-			} else if (bodyPart.isMimeType("text/html")) {
+			} else if ( bodyPart.isMimeType("text/html") ) {
 				String html = (String) bodyPart.getContent();
 				result = result + "\n" + org.jsoup.Jsoup.parse(html).text();
-			} else if (bodyPart.getContent() instanceof MimeMultipart){
+			} else if ( bodyPart.getContent() instanceof MimeMultipart ) {
 				result = result + getTextFromMimeMultipart((MimeMultipart)bodyPart.getContent());
 			}
 		}

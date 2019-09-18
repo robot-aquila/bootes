@@ -55,11 +55,18 @@ public class KinakoBotService extends TelegramLongPollingBot {
 		return botToken;
 	}
 	
-	public void sendNotification(KinakoEvent event) {
+	public void sendNotification(ImapMessageEvent event) {
 		long curr = System.currentTimeMillis();
+		ImapMessage imap_msg = event.getMessage();
 		SendMessage msg = new SendMessage()
 				.setChatId(botChatId)
-				.setText(event.getEventText());
+				.setText(new StringBuilder()
+						.append("Time: ").append(imap_msg.getReceived()).append(System.lineSeparator())
+						.append("From: ").append(imap_msg.getSender()).append(System.lineSeparator())
+						.append("Subj: ").append(imap_msg.getSubject()).append(System.lineSeparator())
+						.append("Body: ").append(imap_msg.getBody())
+						.toString()
+					);
 		try {
 			execute(msg);
 		} catch ( TelegramApiException e ) {

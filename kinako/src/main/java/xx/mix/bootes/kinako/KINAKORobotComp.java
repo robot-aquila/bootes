@@ -19,7 +19,7 @@ import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.service.UIService;
 import xx.mix.bootes.kinako.service.ImapMessageService;
 import xx.mix.bootes.kinako.service.KinakoBotService;
-import xx.mix.bootes.kinako.service.KinakoEvent;
+import xx.mix.bootes.kinako.service.ImapMessageEvent;
 
 public class KINAKORobotComp implements AppComponent {
 	private final AppServiceLocator serviceLocator;
@@ -37,25 +37,25 @@ public class KINAKORobotComp implements AppComponent {
 		OptionProvider options = new OptionProviderKvs(
 				new KVStoreIni(new Wini(new File("kinako.ini")).get("kinako"))
 			);
-		//ApiContextInitializer.init();
-		//bots = new TelegramBotsApi();
-		//bots.registerBot(kinakoService = new KinakoBotService(
-		//		options.getStringNotNull("tg.bot_username", null),
-		//		options.getStringNotNull("tg.bot_token", null),
-		//		options.getStringNotNull("tg.bot_chat_id", null)
-		//	));
-		//messageService = new ImapMessageService(
-		//		serviceLocator.getEventQueue(),
-		//		options
-		//	);
-		//messageService.onSignalDetected().addListener(new EventListener() {
+		ApiContextInitializer.init();
+		bots = new TelegramBotsApi();
+		bots.registerBot(kinakoService = new KinakoBotService(
+				options.getStringNotNull("tg.bot_username", null),
+				options.getStringNotNull("tg.bot_token", null),
+				options.getStringNotNull("tg.bot_chat_id", null)
+			));
+		messageService = new ImapMessageService(
+				serviceLocator.getEventQueue(),
+				options
+			);
+		messageService.onMessage().addListener(new EventListener() {
 
-		//	@Override
-		//	public void onEvent(Event event) {
-				//kinakoService.sendNotification((KinakoEvent) event);
-		//	}
+			@Override
+			public void onEvent(Event event) {
+				kinakoService.sendNotification((ImapMessageEvent) event);
+			}
 			
-		//});
+		});
 		
 		if ( ! serviceLocator.getConfig().getBasicConfig().isHeadless() ) {
 			UIService uis = serviceLocator.getUIService();
@@ -69,7 +69,7 @@ public class KINAKORobotComp implements AppComponent {
 
 	@Override
 	public void startup() throws Throwable {
-		//messageService.startup();
+		messageService.startup();
 		if  ( orderPanel != null ) {
 			orderPanel.start();
 		}
@@ -81,7 +81,7 @@ public class KINAKORobotComp implements AppComponent {
 			orderPanel.stop();
 			orderPanel = null;
 		}
-		//messageService.close();
+		messageService.close();
 	}
 
 	@Override

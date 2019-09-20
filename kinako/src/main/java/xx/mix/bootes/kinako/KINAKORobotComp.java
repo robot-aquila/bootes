@@ -70,7 +70,7 @@ public class KINAKORobotComp implements AppComponent {
 	@Override
 	public void startup() throws Throwable {
 		messageService.startup();
-		if  ( orderPanel != null ) {
+		if ( orderPanel != null ) {
 			orderPanel.start();
 		}
 	}

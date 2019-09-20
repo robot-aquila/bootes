@@ -1,53 +1,50 @@
 package xx.mix.bootes.kinako.service;
 
+import java.time.Instant;
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import ru.prolib.aquila.core.BusinessEntities.CDecimal;
-
 public class VVSignal {
-	private final VVSignalType type;
-	private final CDecimal volume;
-	private final String symbol;
+	private final Instant time;
+	private final List<VVOrderRecom> recommendations;
 	
-	public VVSignal(VVSignalType type, CDecimal volume, String symbol) {
-		this.type = type;
-		this.volume = volume;
-		this.symbol = symbol;
+	public VVSignal(Instant time, List<VVOrderRecom> recommendations) {
+		this.time = time;
+		this.recommendations = recommendations;
 	}
 	
-	public VVSignalType getType() {
-		return type;
+	public Instant getTime() {
+		return time;
 	}
 	
-	public CDecimal getVolume() {
-		return volume;
+	public List<VVOrderRecom> getRecommendations() {
+		return Collections.unmodifiableList(recommendations);
 	}
 	
-	public String getSymbol() {
-		return symbol;
+	public VVOrderRecom getRecommendation(String symbol) {
+		for ( VVOrderRecom signal : recommendations ) {
+			if ( symbol.equals(signal.getSymbol()) ) {
+				return signal;
+			}
+		}
+		throw new IllegalArgumentException("Symbol not found: " + symbol);
 	}
 	
 	@Override
 	public String toString() {
-		return new StringBuilder()
-				.append(getClass().getSimpleName())
-				.append("[")
-				.append(type)
-				.append(" ")
-				.append(volume)
-				.append(" of ")
-				.append(symbol)
-				.append("]")
-				.toString();
+		return ToStringBuilder.reflectionToString(this, ToStringStyle.SHORT_PREFIX_STYLE);
 	}
 	
 	@Override
 	public int hashCode() {
-		return new HashCodeBuilder(716721, 8990115)
-				.append(type)
-				.append(volume)
-				.append(symbol)
+		return new HashCodeBuilder(917265413, 99127)
+				.append(time)
+				.append(recommendations)
 				.build();
 	}
 	
@@ -61,9 +58,8 @@ public class VVSignal {
 		}
 		VVSignal o = (VVSignal) other;
 		return new EqualsBuilder()
-				.append(o.type, type)
-				.append(o.volume, volume)
-				.append(o.symbol, symbol)
+				.append(o.time, time)
+				.append(o.recommendations, recommendations)
 				.build();
 	}
 

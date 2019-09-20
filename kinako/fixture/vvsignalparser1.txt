@@ -1,0 +1,11 @@
+
+The following order recommendations have been generated for the VectorVest =
+Account named demo 1:
+
+- sell long 58 shares of MKTX
+- sell short 54 shares of ULTA
+- buy long 10 shares of AAPL
+- cover short 2 shares of MSFT
+
+Please log into VectorVest7 in order to reconcile these recommendations wit=
+h your account.

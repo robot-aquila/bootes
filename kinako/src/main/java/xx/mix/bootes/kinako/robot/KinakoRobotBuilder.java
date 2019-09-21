@@ -7,6 +7,7 @@ import ru.prolib.bootes.lib.robo.Robot;
 
 public class KinakoRobotBuilder {
 	public static final String S_WAIT_SIGNAL = "WAIT_SIGNAL";
+	public static final String S_EXEC_SIGNAL = "EXEC_SIGNAL";
 	
 	private final AppServiceLocator serviceLocator;
 	private final KinakoRobotServiceLocator kinakoServiceLocator;
@@ -24,11 +25,17 @@ public class KinakoRobotBuilder {
 		KinakoRobotData data = new KinakoRobotData();
 		SMBuilder builder = new SMBuilder()
 				.addState(new KinakoWaitForSignal(kinakoServiceLocator, data), S_WAIT_SIGNAL)
+				.addState(new KinakoExecuteSignal(serviceLocator, kinakoServiceLocator, data), S_EXEC_SIGNAL)
 				.setInitialState(S_WAIT_SIGNAL)
-				.addTrans(S_WAIT_SIGNAL, KinakoWaitForSignal.E_SIGNAL_DETECTED, S_WAIT_SIGNAL)
+				
+				.addTrans(S_WAIT_SIGNAL, KinakoWaitForSignal.E_SIGNAL_DETECTED, S_EXEC_SIGNAL)
 				.addTrans(S_WAIT_SIGNAL, KinakoWaitForSignal.E_SIGNAL_REJECTED, S_WAIT_SIGNAL)
 				.addFinal(S_WAIT_SIGNAL, KinakoWaitForSignal.E_ERROR)
-				.addFinal(S_WAIT_SIGNAL, KinakoWaitForSignal.E_INTERRUPT);
+				.addFinal(S_WAIT_SIGNAL, KinakoWaitForSignal.E_INTERRUPT)
+				
+				.addTrans(S_EXEC_SIGNAL, KinakoExecuteSignal.E_OK, S_WAIT_SIGNAL)
+				.addFinal(S_EXEC_SIGNAL, KinakoWaitForSignal.E_ERROR)
+				.addFinal(S_EXEC_SIGNAL, KinakoWaitForSignal.E_INTERRUPT);
 		
 		SMStateMachine automat = builder.build();
 		automat.setDebug(true);

@@ -5,14 +5,14 @@ import xx.mix.bootes.kinako.service.VVSignal;
 public class KinakoRobotData {
 	private VVSignal currentSignal;
 	
-	public VVSignal getCurrentSignal() {
+	public synchronized VVSignal getCurrentSignal() {
 		if ( currentSignal == null ) {
 			throw new NullPointerException("Current signal was not defined");
 		}
 		return currentSignal;
 	}
 	
-	public KinakoRobotData setCurrentSignal(VVSignal signal) {
+	public synchronized KinakoRobotData setCurrentSignal(VVSignal signal) {
 		this.currentSignal = signal;
 		return this;
 	}

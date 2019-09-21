@@ -9,36 +9,36 @@ public class KinakoRobotServiceLocator {
 	private KinakoBotService botService;
 	private VVSignalParser signalParser;
 	
-	public ImapMessageService getMessageService() {
+	public synchronized ImapMessageService getMessageService() {
 		if ( messageService == null ) {
 			throw new NullPointerException();
 		}
 		return messageService;
 	}
 	
-	public KinakoBotService getBotService() {
+	public synchronized KinakoBotService getBotService() {
 		if ( botService == null ) {
 			throw new NullPointerException();
 		}
 		return botService;
 	}
 	
-	public VVSignalParser getSignalParser() {
+	public synchronized VVSignalParser getSignalParser() {
 		if ( signalParser == null ) {
 			throw new NullPointerException();
 		}
 		return signalParser;
 	}
 	
-	public void setMessageService(ImapMessageService service) {
+	public synchronized void setMessageService(ImapMessageService service) {
 		this.messageService = service;
 	}
 	
-	public void setBotService(KinakoBotService service) {
+	public synchronized void setBotService(KinakoBotService service) {
 		this.botService = service;
 	}
 	
-	public void setSignalParser(VVSignalParser service) {
+	public synchronized void setSignalParser(VVSignalParser service) {
 		this.signalParser = service;
 	}
 

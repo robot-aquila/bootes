@@ -2,6 +2,7 @@ package ru.prolib.bootes.lib.app.comp;
 
 import ru.prolib.aquila.core.BusinessEntities.BasicTerminalBuilder;
 import ru.prolib.aquila.core.BusinessEntities.EditableTerminal;
+//import ru.prolib.aquila.core.BusinessEntities.Symbol;
 import ru.prolib.aquila.data.DataSource;
 import ru.prolib.aquila.qforts.impl.QFBuilder;
 import ru.prolib.aquila.web.utils.WUDataFactory;
@@ -31,19 +32,31 @@ public class QFTerminalOnlyComp extends CommonComp {
 		if ( !driver_id.equals("default") && !driver_id.equals("qforts") ) {
 			return;
 		}
-		QFBuilder qf = new QFBuilder();
-		DataSource data_source = new WUDataFactory()
-				.createForSymbolAndL1DataReplayFM(
+		WUDataFactory wu_factory = new WUDataFactory();
+		DataSource data_source = wu_factory.createForSymbolAndL1DataReplayFM(
 						serviceLocator.getScheduler(),
 						term_conf.getDataDirectory(),
 						serviceLocator.getPriceScaleDB()
 					);
+		QFBuilder qfb = new QFBuilder();
 		EditableTerminal terminal = new BasicTerminalBuilder()
 			.withEventQueue(serviceLocator.getEventQueue())
 			.withScheduler(serviceLocator.getScheduler())
 			.withTerminalID(serviceID)
-			.withDataProvider(qf.withDataSource(data_source).buildDataProvider())
+			.withDataProvider(qfb.withDataSource(data_source).buildDataProvider())
 			.buildTerminal();
+		qfb.buildEnvironment(terminal).createPortfolio(term_conf.getTestAccount(), term_conf.getTestBalance());
+		
+		// TODO: In that form this does not make big sense because it will not give securities in AVAILABLE state.
+		// If we'll add subscription on symbol data here it will give huge overhead on reading and dispatching lot data.
+		// So, the best solution is - subscribe on symbol when you actually need it.
+		//
+		//System.out.println("Scanning for symbols: " + term_conf.getDataDirectory());
+		//for ( Symbol symbol : wu_factory.createContractDataStorage(term_conf.getDataDirectory()).getSymbols() ) {
+		//	System.out.println("found symbol: " + symbol);
+		//	terminal.getEditableSecurity(symbol);
+		//}
+		
 		serviceLocator.setTerminal(terminal);
 		
 		handler = new ARSHandlerBuilder()

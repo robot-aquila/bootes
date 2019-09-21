@@ -13,7 +13,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import ru.prolib.aquila.core.config.ConfigException;
 import ru.prolib.aquila.core.config.KVStoreHash;
 import ru.prolib.aquila.core.config.OptionProvider;
 import ru.prolib.aquila.core.config.OptionProviderKvs;
@@ -44,11 +43,8 @@ public class OHLCHistoryConfig2Test {
 	}
 	
 	@Test
-	public void testGetDataDirectory_ThrowsIfNotDefined() throws Exception {
-		eex.expect(ConfigException.class);
-		eex.expectMessage("ohlc-data-dir option expected to be not null");
-		
-		service1.getDataDirectory();
+	public void testGetDataDirectory_NotThrowsIfNotDefined() throws Exception {
+		assertNull(service1.getDataDirectory());
 	}
 	
 	@Test
@@ -61,11 +57,8 @@ public class OHLCHistoryConfig2Test {
 	}
 	
 	@Test
-	public void testGetCacheDirectory_ThrowsIfNotDefined() throws Exception {
-		eex.expect(ConfigException.class);
-		eex.expectMessage("ohlc-cache-dir option expected to be not null");
-		
-		service2.getCacheDirectory();
+	public void testGetCacheDirectory_NotThrowsIfNotDefined() throws Exception {
+		assertNull(service2.getCacheDirectory());
 	}
 
 	@Test

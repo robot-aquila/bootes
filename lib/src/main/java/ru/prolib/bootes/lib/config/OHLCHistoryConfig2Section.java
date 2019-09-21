@@ -20,7 +20,10 @@ public class OHLCHistoryConfig2Section implements ConfigSection {
 	
 	@Override
 	public void configureDefaults(KVWritableStore defaults, OptionProvider op) throws ConfigException {
-		defaults.add(LOPT_DATA_DIR, op.getFile(BasicConfig2Section.LOPT_DATA_DIR).getAbsolutePath());
+		File x = op.getFile(BasicConfig2Section.LOPT_DATA_DIR);
+		if ( x != null ) {
+			defaults.add(LOPT_DATA_DIR, x.getAbsolutePath());
+		}
 		defaults.add(LOPT_CACHE_DIR, defaultCacheDirectory().getAbsolutePath());
 	}
 

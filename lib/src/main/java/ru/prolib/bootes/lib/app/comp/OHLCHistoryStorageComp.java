@@ -1,5 +1,7 @@
 package ru.prolib.bootes.lib.app.comp;
 
+import java.io.File;
+
 import ru.prolib.aquila.core.data.Candle;
 import ru.prolib.aquila.core.data.TFSymbol;
 import ru.prolib.aquila.data.storage.MDStorage;
@@ -27,13 +29,16 @@ public class OHLCHistoryStorageComp extends CommonComp {
 	public void init() throws Throwable {
 		AppConfig2 app_conf = serviceLocator.getConfig();
 		OHLCHistoryConfig2 conf = app_conf.getSection(CONFIG_SECTION_ID);
-		MDStorage<TFSymbol, Candle> storage = new FinamData()
-			.createCachingOHLCV(
-				conf.getDataDirectory(),
-				conf.getCacheDirectory(),
-				serviceLocator.getPriceScaleDB()
-			);
-		serviceLocator.setOHLCHistoryStorage(storage);
+		File data_dir = conf.getDataDirectory(), cache_dir = conf.getCacheDirectory();
+		if ( data_dir != null && cache_dir != null ) {
+			MDStorage<TFSymbol, Candle> storage = new FinamData()
+				.createCachingOHLCV(
+					conf.getDataDirectory(),
+					conf.getCacheDirectory(),
+					serviceLocator.getPriceScaleDB()
+				);
+			serviceLocator.setOHLCHistoryStorage(storage);
+		}
 	}
 
 	@Override

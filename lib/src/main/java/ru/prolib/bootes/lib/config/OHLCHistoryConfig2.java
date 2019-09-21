@@ -14,11 +14,11 @@ public class OHLCHistoryConfig2 {
 	}
 	
 	public File getDataDirectory() throws Exception {
-		return options.getFileNotNull(OHLCHistoryConfig2Section.LOPT_DATA_DIR);
+		return options.getFile(OHLCHistoryConfig2Section.LOPT_DATA_DIR);
 	}
 	
 	public File getCacheDirectory() throws Exception {
-		return options.getFileNotNull(OHLCHistoryConfig2Section.LOPT_CACHE_DIR);
+		return options.getFile(OHLCHistoryConfig2Section.LOPT_CACHE_DIR);
 	}
 
 	@Override

@@ -90,9 +90,18 @@ public class KinakoBotService extends TelegramLongPollingBot {
 				.toString();
 	}
 	
+	private String formatTimingMessage(long tg_time) {
+		return new StringBuilder().append("Timing TG:").append(tg_time).toString();
+	}
+	
 	public void sendNotification(ImapMessageEvent event) {
 		long tg_time = send(formatMessage(event.getMessage()));
 		send(formatTimingMessage(event, tg_time));
+	}
+	
+	public void sendNotification(String message_text) {
+		long tg_time = send(message_text);
+		send(formatTimingMessage(tg_time));
 	}
 
 }

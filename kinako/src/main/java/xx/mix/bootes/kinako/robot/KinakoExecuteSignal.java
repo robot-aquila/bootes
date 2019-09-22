@@ -175,7 +175,11 @@ public class KinakoExecuteSignal extends SMStateHandlerEx implements SMExitActio
 	 * @return symbol of local security or null if no suitable security was found
 	 */
 	private Symbol findLocalSymbol(String recom_symbol) {
+		Terminal terminal = serviceLocator.getTerminal();
 		Symbol dummy_symbol = new Symbol(recom_symbol), x;
+		if ( terminal.isSecurityExists(dummy_symbol) ) {
+			return dummy_symbol;
+		}
 		String code = dummy_symbol.getCode();
 		String exchange_id = dummy_symbol.getExchangeID();
 		String currency_code = dummy_symbol.getCurrencyCode();
@@ -186,7 +190,6 @@ public class KinakoExecuteSignal extends SMStateHandlerEx implements SMExitActio
 		if ( type == null ) {
 			type = SymbolType.STOCK;
 		}
-		Terminal terminal = serviceLocator.getTerminal();
 		if ( exchange_id != null ) {
 			x = new Symbol(code, exchange_id, currency_code, type);
 			return terminal.isSecurityExists(x) ? x : null;

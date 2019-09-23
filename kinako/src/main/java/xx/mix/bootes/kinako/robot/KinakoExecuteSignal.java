@@ -87,6 +87,7 @@ public class KinakoExecuteSignal extends SMStateHandlerEx implements SMExitActio
 		this.kinakoServiceLocator = kinako_service_locator;
 		this.data = robot_data;
 		registerExit(E_OK);
+		setExitAction(this);
 		inTimeout = registerInput(new OnTimeout(this));
 		inOrderDone = registerInput(new OnOrderDone(this));
 	}

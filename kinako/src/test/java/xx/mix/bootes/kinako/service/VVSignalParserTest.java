@@ -51,5 +51,32 @@ public class VVSignalParserTest {
 		
 		service.parse(text, SOME_TIME);
 	}
+	
+	@Test
+	public void testParse_CanParseFortsSymbols() throws Exception {
+		String text = FileUtils.readFileToString(new File("fixture/vvsignalparser3.txt"), "UTF8");
+		
+		VVSignal actual = service.parse(text,  SOME_TIME);
+		
+		VVSignal expected = new VVSignalBuilder()
+				.withTime(SOME_TIME)
+				.addOrderRecom(VVOrderType.SELL_LONG, 12, "RTS-12.19")
+				.addOrderRecom(VVOrderType.BUY_LONG, 10, "Si-9.19")
+				.build();
+		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void testParse_CanParseAquilaSymbolFormat() throws Exception {
+		String text = FileUtils.readFileToString(new File("fixture/vvsignalparser4.txt"), "UTF8");
+		
+		VVSignal actual = service.parse(text,  SOME_TIME);
+		
+		VVSignal expected = new VVSignalBuilder()
+				.withTime(SOME_TIME)
+				.addOrderRecom(VVOrderType.SELL_LONG, 58, "S:AAPL@NASDAQ:USD")
+				.build();
+		assertEquals(expected, actual);
+	}
 
 }

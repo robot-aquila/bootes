@@ -1,0 +1,9 @@
+
+The following order recommendations have been generated for the VectorVest =
+Account named demo 1:
+
+- sell long 12 shares of RTS-12.19
+- buy long 10 shares of Si-9.19
+
+Please log into VectorVest7 in order to reconcile these recommendations wit=
+h your account.

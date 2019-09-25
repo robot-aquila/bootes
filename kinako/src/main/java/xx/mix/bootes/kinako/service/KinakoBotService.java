@@ -15,15 +15,26 @@ public class KinakoBotService extends TelegramLongPollingBot {
 	}
 	
 	private final String botUsername, botToken, botChatId;
+	private final boolean suppressMessages;
 	
 	public KinakoBotService(String botUsername,
 							String botToken,
-							String botChatId)
+							String botChatId,
+							boolean suppress_chat_messages)
 	{
 		this.botUsername = botUsername;
 		this.botToken = botToken;
 		this.botChatId = botChatId;
+		this.suppressMessages = suppress_chat_messages;
 	}
+	
+	public KinakoBotService(String botUsername,
+			String botToken,
+			String botChatId)
+	{
+		this(botUsername, botToken, botChatId, false);
+	}
+
 
 	@Override
 	public void onUpdateReceived(Update update) {
@@ -46,12 +57,15 @@ public class KinakoBotService extends TelegramLongPollingBot {
 	}
 	
 	/**
-	 * Send message to bot chat.
+	 * Send message to bot chat. Will skip if message suppressing is enabled.
 	 * <p>
 	 * @param msg - message
 	 * @return time used to send messages in milliseconds
 	 */
 	private long send(SendMessage msg) {
+		if ( suppressMessages ) {
+			return 0L;
+		}
 		long curr = System.currentTimeMillis();
 		try {
 			execute(msg);

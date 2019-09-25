@@ -1,0 +1,8 @@
+
+The following order recommendations have been generated for the VectorVest =
+Account named demo 1:
+
+- sell long 58 shares of S:AAPL@NASDAQ:USD
+
+Please log into VectorVest7 in order to reconcile these recommendations wit=
+h your account.

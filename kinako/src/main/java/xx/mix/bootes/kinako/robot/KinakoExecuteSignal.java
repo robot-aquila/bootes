@@ -1,6 +1,5 @@
 package xx.mix.bootes.kinako.robot;
 
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -20,7 +19,6 @@ import ru.prolib.aquila.core.BusinessEntities.OrderEvent;
 import ru.prolib.aquila.core.BusinessEntities.OrderException;
 import ru.prolib.aquila.core.BusinessEntities.PortfolioException;
 import ru.prolib.aquila.core.BusinessEntities.Symbol;
-import ru.prolib.aquila.core.BusinessEntities.SymbolType;
 import ru.prolib.aquila.core.BusinessEntities.Terminal;
 import ru.prolib.aquila.core.sm.SMExit;
 import ru.prolib.aquila.core.sm.SMExitAction;
@@ -28,11 +26,14 @@ import ru.prolib.aquila.core.sm.SMInput;
 import ru.prolib.aquila.core.sm.SMInputAction;
 import ru.prolib.aquila.core.sm.SMStateHandlerEx;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
+import ru.prolib.aquila.core.sm.OnTimeoutAction;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import xx.mix.bootes.kinako.service.VVOrderRecom;
 import xx.mix.bootes.kinako.service.VVOrderType;
 
-public class KinakoExecuteSignal extends SMStateHandlerEx implements SMExitAction {
+public class KinakoExecuteSignal extends SMStateHandlerEx
+	implements SMExitAction, OnTimeoutAction.Handler
+{
 	private static final Logger logger;
 	
 	static {
@@ -40,20 +41,6 @@ public class KinakoExecuteSignal extends SMStateHandlerEx implements SMExitActio
 	}
 	
 	public static final String E_OK = "OK";
-	
-	static class OnTimeout implements SMInputAction {
-		private final KinakoExecuteSignal owner;
-		
-		OnTimeout(KinakoExecuteSignal owner) {
-			this.owner = owner;
-		}
-
-		@Override
-		public SMExit input(Object data) {
-			return owner.onTimeout((Instant) data);
-		}
-
-	}
 	
 	static class OnOrderDone implements SMInputAction {
 		private final KinakoExecuteSignal owner;
@@ -88,7 +75,7 @@ public class KinakoExecuteSignal extends SMStateHandlerEx implements SMExitActio
 		this.data = robot_data;
 		registerExit(E_OK);
 		setExitAction(this);
-		inTimeout = registerInput(new OnTimeout(this));
+		inTimeout = registerInput(new OnTimeoutAction(this));
 		inOrderDone = registerInput(new OnOrderDone(this));
 	}
 	
@@ -143,7 +130,8 @@ public class KinakoExecuteSignal extends SMStateHandlerEx implements SMExitActio
 		}
 	}
 	
-	private SMExit onTimeout(Instant time) {
+	@Override
+	public SMExit onTimeout(Object time) {
 		cancelQuietlyAll();
 		return null;
 	}
@@ -176,33 +164,12 @@ public class KinakoExecuteSignal extends SMStateHandlerEx implements SMExitActio
 	 * @return symbol of local security or null if no suitable security was found
 	 */
 	private Symbol findLocalSymbol(String recom_symbol) {
-		Terminal terminal = serviceLocator.getTerminal();
-		Symbol dummy_symbol = new Symbol(recom_symbol), x;
-		if ( terminal.isSecurityExists(dummy_symbol) ) {
-			return dummy_symbol;
+		SymbolAliases selected_symbols = data.getSelectedSymbols();
+		if ( ! selected_symbols.isKnownAlias(recom_symbol) ) {
+			return null;
 		}
-		String code = dummy_symbol.getCode();
-		String exchange_id = dummy_symbol.getExchangeID();
-		String currency_code = dummy_symbol.getCurrencyCode();
-		SymbolType type = dummy_symbol.getType();
-		if ( currency_code == null ) {
-			currency_code = "USD";
-		}
-		if ( type == null ) {
-			type = SymbolType.STOCK;
-		}
-		if ( exchange_id != null ) {
-			x = new Symbol(code, exchange_id, currency_code, type);
-			return terminal.isSecurityExists(x) ? x : null;
-		}
-		
-		x = new Symbol(code, "NASDAQ", currency_code, type);
-		if ( terminal.isSecurityExists(x) ) {
-			return x;
-		}
-		x = new Symbol(code, "NYSE", currency_code, type);
-		if ( terminal.isSecurityExists(x) ) {
-			return x;
+		for ( Symbol symbol : selected_symbols.getSymbols(recom_symbol) ) {
+			return symbol;
 		}
 		return null;
 	}

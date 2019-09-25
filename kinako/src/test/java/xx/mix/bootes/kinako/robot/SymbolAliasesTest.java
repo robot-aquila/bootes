@@ -159,5 +159,41 @@ public class SymbolAliasesTest {
 		
 		service.getAlias(symbol3);
 	}
+	
+	@Test
+	public void testIsKnownSymbol() {
+		service.addAlias("Apple", symbol1)
+			.addAlias("Microsoft", symbol2)
+			.addAlias("XXLA", symbol3)
+			.addAlias("XXLA", symbol4)
+			.addAlias("XXLA", symbol5)
+			.addAlias("Kukumber", symbol6);
+
+		assertTrue(service.isKnownSymbol(symbol1));
+		assertTrue(service.isKnownSymbol(symbol2));
+		assertTrue(service.isKnownSymbol(symbol3));
+		assertTrue(service.isKnownSymbol(symbol4));
+		assertTrue(service.isKnownSymbol(symbol5));
+		assertTrue(service.isKnownSymbol(symbol6));
+		assertFalse(service.isKnownSymbol(new Symbol("SBRF")));
+		assertFalse(service.isKnownSymbol(new Symbol("RTS-12.19")));
+	}
+	
+	@Test
+	public void testIsKnownAlias() {
+		service.addAlias("Apple", symbol1)
+			.addAlias("Microsoft", symbol2)
+			.addAlias("XXLA", symbol3)
+			.addAlias("XXLA", symbol4)
+			.addAlias("XXLA", symbol5)
+			.addAlias("Kukumber", symbol6);
+
+		assertTrue(service.isKnownAlias("Apple"));
+		assertTrue(service.isKnownAlias("Microsoft"));
+		assertTrue(service.isKnownAlias("XXLA"));
+		assertTrue(service.isKnownAlias("Kukumber"));
+		assertFalse(service.isKnownAlias("Tomahawk"));
+		assertFalse(service.isKnownAlias("Akatsia"));
+	}
 
 }

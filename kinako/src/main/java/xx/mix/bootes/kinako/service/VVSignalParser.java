@@ -18,7 +18,7 @@ public class VVSignalParser {
 	static {
 		// example string is:
 		//- sell long 58 shares of MKTX
-		pattern = Pattern.compile("^- (sell long|sell short|buy long|cover short) (\\d+) shares of (\\w+)$");
+		pattern = Pattern.compile("^- (sell long|sell short|buy long|cover short) (\\d+) shares of (.+)");
 		type_map = new HashMap<>();
 		type_map.put("sell long",   VVOrderType.SELL_LONG);
 		type_map.put("sell short",  VVOrderType.SELL_SHORT);

@@ -59,7 +59,8 @@ public class KINAKORobotComp implements AppComponent {
 		bots.registerBot(botService = new KinakoBotService(
 				options.getStringNotNull("tg.bot_username", null),
 				options.getStringNotNull("tg.bot_token", null),
-				options.getStringNotNull("tg.bot_chat_id", null)
+				options.getStringNotNull("tg.bot_chat_id", null),
+				options.getBoolean("tg.supress_chat_messages")
 			));
 		messageService = new ImapMessageService(serviceLocator.getEventQueue(), options);
 

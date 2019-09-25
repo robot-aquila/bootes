@@ -55,5 +55,13 @@ public class SymbolAliases {
 		}
 		return alias;
 	}
+	
+	public synchronized boolean isKnownSymbol(Symbol symbol) {
+		return mapSymbolToAlias.containsKey(symbol);
+	}
+	
+	public synchronized boolean isKnownAlias(String alias) {
+		return mapAliasToOptions.containsKey(alias);
+	}
 
 }

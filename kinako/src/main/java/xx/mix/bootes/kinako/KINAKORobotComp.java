@@ -30,10 +30,30 @@ import xx.mix.bootes.kinako.robot.KinakoRobotData;
 import xx.mix.bootes.kinako.robot.KinakoRobotServiceLocator;
 
 public class KINAKORobotComp implements AppComponent {
+	public static final String CONFIG_SECTION_ID = "kinako";
 	private static final Logger logger;
 	
 	static {
 		logger = LoggerFactory.getLogger(KINAKORobotComp.class);
+	}
+	
+	static class DummyListener implements EventListener {
+
+		@Override
+		public void onEvent(Event e) {
+			ImapMessageEvent event = (ImapMessageEvent) e;
+			ImapMessage imap_msg = event.getMessage();
+			Object args[] = {
+					imap_msg.getReceived(),
+					imap_msg.getSender(),
+					imap_msg.getSubject(),
+					imap_msg.getBody()
+			};
+			if ( logger.isDebugEnabled() ) {
+				logger.debug("message dispatched: time={} sender={} subject={} body={}", args);
+			}
+		}
+		
 	}
 	
 	private final AppServiceLocator serviceLocator;
@@ -68,22 +88,7 @@ public class KINAKORobotComp implements AppComponent {
 		kinakoServiceLocator.setBotService(botService);
 		kinakoServiceLocator.setMessageService(messageService);
 		
-		messageService.onMessage().addListener(new EventListener() {
-
-			@Override
-			public void onEvent(Event e) {
-				//ImapMessageEvent event = (ImapMessageEvent) e;
-				//ImapMessage imap_msg = event.getMessage();
-				//Object args[] = {
-				//		imap_msg.getReceived(),
-				//		imap_msg.getSender(),
-				//		imap_msg.getSubject(),
-				//		imap_msg.getBody()
-				//};
-				//logger.debug("message dispatched: time={} sender={} subject={} body={}", args);
-			}
-			
-		});
+		//messageService.onMessage().addListener(new DummyListener());
 		
 		robot = new KinakoRobotBuilder(serviceLocator, kinakoServiceLocator).build();
 		//robot.getAutomat().setId("PROTOS");
@@ -120,7 +125,7 @@ public class KINAKORobotComp implements AppComponent {
 
 	@Override
 	public void registerConfig(AppConfigService2 config_service) {
-		
+		config_service.addSection(CONFIG_SECTION_ID, new KINAKORobotConfigSection());
 	}
 
 }

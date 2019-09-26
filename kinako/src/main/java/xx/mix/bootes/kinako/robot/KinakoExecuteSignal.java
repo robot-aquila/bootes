@@ -18,6 +18,8 @@ import ru.prolib.aquila.core.BusinessEntities.OrderAction;
 import ru.prolib.aquila.core.BusinessEntities.OrderEvent;
 import ru.prolib.aquila.core.BusinessEntities.OrderException;
 import ru.prolib.aquila.core.BusinessEntities.PortfolioException;
+import ru.prolib.aquila.core.BusinessEntities.Security;
+import ru.prolib.aquila.core.BusinessEntities.SecurityException;
 import ru.prolib.aquila.core.BusinessEntities.Symbol;
 import ru.prolib.aquila.core.BusinessEntities.Terminal;
 import ru.prolib.aquila.core.sm.SMExit;
@@ -28,6 +30,8 @@ import ru.prolib.aquila.core.sm.SMStateHandlerEx;
 import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.aquila.core.sm.OnTimeoutAction;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
+import xx.mix.bootes.kinako.KINAKORobotComp;
+import xx.mix.bootes.kinako.KINAKORobotConfig;
 import xx.mix.bootes.kinako.service.VVOrderRecom;
 import xx.mix.bootes.kinako.service.VVOrderType;
 
@@ -114,6 +118,11 @@ public class KinakoExecuteSignal extends SMStateHandlerEx
 		return 300L; // 5 minutes
 	}
 	
+	private boolean isUseLimitOrders() {
+		KINAKORobotConfig conf = serviceLocator.getConfig().getSection(KINAKORobotComp.CONFIG_SECTION_ID);
+		return conf.isUseLimitOrders();
+	}
+	
 	private void cancelQuietly(Order order) {
 		if ( ! order.getStatus().isFinal() ) {
 			try {
@@ -174,6 +183,14 @@ public class KinakoExecuteSignal extends SMStateHandlerEx
 		return null;
 	}
 	
+	private Security getSecurity(Symbol symbol) {
+		try {
+			return serviceLocator.getTerminal().getSecurity(symbol);
+		} catch ( SecurityException e ) {
+			throw new IllegalStateException("Unexpected exception: ", e);
+		}
+	}
+	
 	@Override
 	public SMExit enter(SMTriggerRegistry triggers) {
 		super.enter(triggers);
@@ -181,6 +198,8 @@ public class KinakoExecuteSignal extends SMStateHandlerEx
 		triggers.add(newTriggerOnEvent(terminal.onOrderDone(), inOrderDone));
 		triggers.add(newTriggerOnTimer(terminal, terminal.getCurrentTime().plusSeconds(getTimeoutSeconds()), inTimeout));
 		Account account = getAccount();
+		Order order = null;
+		boolean use_limit = isUseLimitOrders();
 		for ( VVOrderRecom recom : data.getCurrentSignal().getRecommendations() ) {
 			Symbol local_symbol = findLocalSymbol(recom.getSymbol());
 			OrderRecomState recom_state = new OrderRecomState(
@@ -196,12 +215,30 @@ public class KinakoExecuteSignal extends SMStateHandlerEx
 				continue;
 			}
 			recomStateMap.put(local_symbol, recom_state);
-			Order order = terminal.createOrder(
-					account,
-					local_symbol,
-					toOrderAction(recom.getType()),
-					recom.getVolume()
-				);
+			if ( use_limit ) {
+				OrderAction action = toOrderAction(recom.getType());
+				Security security = getSecurity(local_symbol);
+				CDecimal max_price = security.getUpperPriceLimit(), min_price = security.getLowerPriceLimit();
+				if ( max_price == null || min_price == null ) {
+					recom_state.setStatus(OrderRecomStatus.ERROR);
+					recom_state.setComment("Min/max price not defined: " + local_symbol);
+					continue;
+				}
+				order = terminal.createOrder(
+						account,
+						local_symbol,
+						action,
+						recom.getVolume(),
+						(action == OrderAction.BUY || action == OrderAction.COVER) ? max_price : min_price
+					);
+			} else {
+				order = terminal.createOrder(
+						account,
+						local_symbol,
+						toOrderAction(recom.getType()),
+						recom.getVolume()
+					);
+			}
 			try {
 				terminal.placeOrder(order);
 				recom_state.setStatus(OrderRecomStatus.ACTIVE);

@@ -132,9 +132,8 @@ public class KinakoSubscribeSymbols extends SMStateHandlerEx
 			if ( found_symbol != null ) {
 				logger.debug("Symbol selected (exists): {} -> {}", alias, found_symbol);
 				selected_symbols.addAlias(alias, found_symbol);
-			} else {
-				symbols_to_subscribe.addAll(involved_symbols.getSymbols(alias));
 			}
+			symbols_to_subscribe.addAll(involved_symbols.getSymbols(alias));
 		}
 		
 		for ( Symbol symbol : symbols_to_subscribe ) {

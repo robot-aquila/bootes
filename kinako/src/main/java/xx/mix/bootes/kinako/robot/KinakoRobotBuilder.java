@@ -44,7 +44,7 @@ public class KinakoRobotBuilder {
 				.addFinal(S_SET_INVOLVED_SYMBOLS, KinakoSetInvolvedSymbols.E_INTERRUPT)
 				
 				.addTrans(S_SUBSCRIBE_SYMBOLS, KinakoSubscribeSymbols.E_OK, S_EXEC_SIGNAL)
-				.addTrans(S_SUBSCRIBE_SYMBOLS, KinakoSubscribeSymbols.E_NOT_FOUND, S_WAIT_SIGNAL)
+				.addTrans(S_SUBSCRIBE_SYMBOLS, KinakoSubscribeSymbols.E_NOT_FOUND, S_UNSUBSCRIBE_SYMBOLS)
 				.addFinal(S_SUBSCRIBE_SYMBOLS, KinakoSubscribeSymbols.E_ERROR)
 				.addFinal(S_SUBSCRIBE_SYMBOLS, KinakoSubscribeSymbols.E_INTERRUPT)
 				

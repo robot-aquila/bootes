@@ -6,11 +6,15 @@ import org.ini4j.Wini;
 import ru.prolib.aquila.core.BusinessEntities.BasicTerminalBuilder;
 import ru.prolib.aquila.core.BusinessEntities.EditableTerminal;
 import ru.prolib.aquila.transaq.impl.TQDataProviderImpl;
+import ru.prolib.aquila.transaq.impl.TQDirectory;
+import ru.prolib.aquila.transaq.ui.TQServiceMenu;
 import ru.prolib.bootes.lib.app.AppConfigService2;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.app.comp.CommonComp;
+import ru.prolib.bootes.lib.config.AppConfig2;
 import ru.prolib.bootes.lib.config.TQTerminalConfig;
 import ru.prolib.bootes.lib.config.TQTerminalConfigSection;
+import ru.prolib.bootes.lib.service.UIService;
 import ru.prolib.bootes.lib.service.ars.ARSHandler;
 import ru.prolib.bootes.lib.service.ars.ARSHandlerBuilder;
 import ru.prolib.bootes.lib.service.task.StartTerminal;
@@ -30,7 +34,8 @@ public class TQTerminalOnlyComp extends CommonComp {
 		if ( "transaq".equals(serviceLocator.getConfig().getBasicConfig().getDriver()) == false ) {
 			return;
 		}
-		TQTerminalConfig term_conf = serviceLocator.getConfig().getSection(CONFIG_SECTION_ID);
+		AppConfig2 app_conf = serviceLocator.getConfig();
+		TQTerminalConfig term_conf = app_conf.getSection(CONFIG_SECTION_ID);
 		Section tq_conf = new Wini().add("dummy_section");
 		tq_conf.put("log_path", term_conf.getLogPath().getAbsolutePath());
 		tq_conf.put("log_level", Integer.toString(term_conf.getLogLevel()));
@@ -39,13 +44,20 @@ public class TQTerminalOnlyComp extends CommonComp {
 		tq_conf.put("host", term_conf.getHost());
 		tq_conf.put("port", Integer.toString(term_conf.getPort()));
 		
+		TQDirectory directory = new TQDirectory(serviceLocator.getEventQueue());
 		EditableTerminal terminal = new BasicTerminalBuilder()
 				.withEventQueue(serviceLocator.getEventQueue())
 				.withScheduler(serviceLocator.getScheduler())
 				.withTerminalID(serviceID)
-				.withDataProvider(new TQDataProviderImpl(tq_conf))
+				.withDataProvider(new TQDataProviderImpl(tq_conf, directory))
 				.buildTerminal();
 		serviceLocator.setTerminal(terminal);
+		
+		if ( ! app_conf.getBasicConfig().isHeadless() ) {
+			UIService uis = serviceLocator.getUIService();
+			uis.getMainMenu().add(new TQServiceMenu(uis.getMessages(), uis.getFrame(), directory).create());
+		}
+		
 		handler = new ARSHandlerBuilder()
 				.withID(serviceID)
 				.addStartupAction(new StartTerminal(terminal))

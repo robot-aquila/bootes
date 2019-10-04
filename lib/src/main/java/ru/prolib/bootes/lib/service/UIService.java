@@ -6,6 +6,7 @@ import java.time.ZoneId;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
@@ -20,13 +21,15 @@ public class UIService {
 	protected final JFrame frame = new JFrame();
 	protected final JPanel mainPanel = new JPanel();
 	protected final JPanel topPanel = new JPanel();
-	protected final JTabbedPane tabPanel = new JTabbedPane();;
+	protected final JTabbedPane tabPanel = new JTabbedPane();
+	protected final JMenuBar mainMenu = new JMenuBar();
 	
 	public UIService(ZoneId zoneID) {
 		this.zoneID = zoneID;
 		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		frame.setSize(800,  600);
 		frame.setTitle(DEFAULT_TITLE);
+		frame.setJMenuBar(mainMenu);
 
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         mainPanel.setLayout(new BorderLayout());
@@ -80,6 +83,15 @@ public class UIService {
 	 */
 	public JTabbedPane getTabPanel() {
 		return tabPanel;
+	}
+	
+	/**
+	 * Get main menu bar.
+	 * <p>
+	 * @return main menu
+	 */
+	public JMenuBar getMainMenu() {
+		return mainMenu;
 	}
 
 }

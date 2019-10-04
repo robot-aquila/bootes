@@ -20,7 +20,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<aquila.version>0.1.51</aquila.version>
+		<aquila.version>0.1.53</aquila.version>
 		<aquila-experimental.version>0.0.2</aquila-experimental.version>
     </properties>
 

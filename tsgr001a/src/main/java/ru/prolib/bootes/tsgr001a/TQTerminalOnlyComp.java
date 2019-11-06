@@ -9,7 +9,6 @@ import ru.prolib.aquila.core.BusinessEntities.EditableTerminal;
 import ru.prolib.aquila.transaq.engine.Engine;
 import ru.prolib.aquila.transaq.engine.EngineBuilder;
 import ru.prolib.aquila.transaq.engine.ServiceLocator;
-import ru.prolib.aquila.transaq.impl.TQConnector;
 import ru.prolib.aquila.transaq.impl.TQConnectorFactory;
 import ru.prolib.aquila.transaq.impl.TQDataProviderImpl;
 import ru.prolib.aquila.transaq.ui.TQServiceMenu;
@@ -53,14 +52,14 @@ public class TQTerminalOnlyComp extends CommonComp {
 		Pair<ServiceLocator, Engine> eng_res = eng_builder.build();
 		ServiceLocator eng_services = eng_res.getLeft();
 		Engine eng = eng_res.getRight();
-		TQConnector connector = new TQConnectorFactory().createInstance(tq_conf, eng);
+		eng_services.setConnector(new TQConnectorFactory().createInstance(tq_conf, eng));
 		eng_builder.initPrimary(eng_services, serviceLocator.getEventQueue());
 		
 		EditableTerminal terminal = new BasicTerminalBuilder()
 				.withEventQueue(serviceLocator.getEventQueue())
 				.withScheduler(serviceLocator.getScheduler())
 				.withTerminalID(serviceID)
-				.withDataProvider(new TQDataProviderImpl(connector, eng, eng_builder, eng_services))
+				.withDataProvider(new TQDataProviderImpl(eng, eng_builder, eng_services))
 				.buildTerminal();
 		serviceLocator.setTerminal(terminal);
 		

@@ -6,6 +6,7 @@ import java.util.Set;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ru.prolib.aquila.core.BusinessEntities.MDLevel;
 import ru.prolib.aquila.core.BusinessEntities.SecurityEvent;
 import ru.prolib.aquila.core.BusinessEntities.SecurityException;
 import ru.prolib.aquila.core.BusinessEntities.Symbol;
@@ -138,7 +139,7 @@ public class KinakoSubscribeSymbols extends SMStateHandlerEx
 		
 		for ( Symbol symbol : symbols_to_subscribe ) {
 			logger.debug("Subscribe for symbol: {}", symbol);
-			terminal.subscribe(symbol);
+			terminal.subscribe(symbol, MDLevel.L1_BBO);
 		}
 		data.setSubscribedSymbols(symbols_to_subscribe);
 		

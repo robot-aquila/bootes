@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.threeten.extra.Interval;
 
+import ru.prolib.aquila.core.BusinessEntities.MDLevel;
 import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.core.BusinessEntities.SecurityException;
 import ru.prolib.aquila.core.BusinessEntities.Symbol;
@@ -91,10 +92,10 @@ public class BOOTESWaitForContract extends SMStateHandlerEx
 		logger.debug("Contract selected: {} at time {}", currSymbol, currTime);
 		if ( ! currSymbol.equals(prevSymbol) ) {
 			if ( prevSymbol != null ) {
-				terminal.unsubscribe(prevSymbol);
+				terminal.unsubscribe(prevSymbol, MDLevel.L1);
 				logger.debug("Unsubscribed: {}", prevSymbol);
 			}
-			terminal.subscribe(currSymbol);
+			terminal.subscribe(currSymbol, MDLevel.L1);
 			logger.debug("Subscribed: {}", currSymbol);
 		}
 		state.setContractParams(currParams);

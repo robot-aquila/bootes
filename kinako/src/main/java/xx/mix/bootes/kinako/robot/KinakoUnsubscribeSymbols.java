@@ -3,6 +3,7 @@ package xx.mix.bootes.kinako.robot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import ru.prolib.aquila.core.BusinessEntities.MDLevel;
 import ru.prolib.aquila.core.BusinessEntities.Symbol;
 import ru.prolib.aquila.core.BusinessEntities.Terminal;
 import ru.prolib.aquila.core.sm.SMExit;
@@ -36,7 +37,7 @@ public class KinakoUnsubscribeSymbols extends SMStateHandlerEx {
 		super.enter(triggers);
 		Terminal terminal = serviceLocator.getTerminal();
 		for ( Symbol symbol : data.getSubscribedSymbols() ) {
-			terminal.unsubscribe(symbol);
+			terminal.unsubscribe(symbol, MDLevel.L1_BBO);
 			logger.debug("Unsubscribe symbol: {}", symbol);
 		}
 		return getExit(E_OK);

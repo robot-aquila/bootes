@@ -45,7 +45,7 @@ public class PROTOS_IT {
 			"--probe-stop-time=" + INTERVAL.getEnd(),
 			"--probe-auto-shutdown",
 			"--probe-auto-start",
-			"--reports-dir=" + rd_pass1,
+			"--report-dir=" + rd_pass1,
 			};
 		new PROTOS().run(args_pass1);
 		
@@ -56,7 +56,7 @@ public class PROTOS_IT {
 			"--probe-stop-time=" + INTERVAL.getEnd(),
 			"--probe-auto-shutdown",
 			"--probe-auto-start",
-			"--reports-dir=" + rd_pass2,
+			"--report-dir=" + rd_pass2,
 			"--headless",
 		};
 		new PROTOS().run(args_pass2);

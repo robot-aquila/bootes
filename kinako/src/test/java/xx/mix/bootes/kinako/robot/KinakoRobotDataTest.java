@@ -91,5 +91,13 @@ public class KinakoRobotDataTest {
 		
 		assertSame(symbols, service.getSelectedSymbols());
 	}
+	
+	@Test
+	public void testGetSymbolSubscrHandlers_ThrowsIfNotDefined() {
+		eex.expect(NullPointerException.class);
+		eex.expectMessage("No symbol subscription handlers defined");
+		
+		service.getSymbolSubscrHandlers();
+	}
 
 }

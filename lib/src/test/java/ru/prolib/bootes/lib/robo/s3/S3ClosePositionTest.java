@@ -28,6 +28,7 @@ import ru.prolib.aquila.core.BusinessEntities.OrderStatus;
 import ru.prolib.aquila.core.BusinessEntities.Portfolio;
 import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.core.BusinessEntities.SecurityField;
+import ru.prolib.aquila.core.BusinessEntities.SubscrHandler;
 import ru.prolib.aquila.core.BusinessEntities.Symbol;
 import ru.prolib.aquila.core.BusinessEntities.Tick;
 import ru.prolib.aquila.core.BusinessEntities.TickType;
@@ -136,6 +137,16 @@ public class S3ClosePositionTest {
 
 		@Override
 		public IRMContractStrategy getContractStrategy() {
+			throw new IllegalStateException("Operation not supported");
+		}
+
+		@Override
+		public SubscrHandler getContractSubscrHandler() {
+			throw new IllegalStateException("Operation not supported");
+		}
+
+		@Override
+		public void setContractSubscrHandler(SubscrHandler handler) {
 			throw new IllegalStateException("Operation not supported");
 		}
 		

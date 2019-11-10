@@ -3,6 +3,7 @@ package ru.prolib.bootes.lib.robo.s3;
 import ru.prolib.aquila.core.BusinessEntities.Account;
 import ru.prolib.aquila.core.BusinessEntities.Portfolio;
 import ru.prolib.aquila.core.BusinessEntities.Security;
+import ru.prolib.aquila.core.BusinessEntities.SubscrHandler;
 import ru.prolib.bootes.lib.cr.ContractParams;
 import ru.prolib.bootes.lib.cr.ContractResolver;
 import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
@@ -16,7 +17,7 @@ import ru.prolib.bootes.lib.robo.s3.statereq.IS3Speculative;
 import ru.prolib.bootes.lib.robo.sh.statereq.ISessionDataTrackable;
 
 /**
- * Comon S3 robot state.
+ * Common S3 robot state.
  */
 public class S3RobotState implements
 	IS3Speculative,
@@ -36,6 +37,7 @@ public class S3RobotState implements
 	private IFilterSet<S3TradeSignal> signalFilter;
 	private IRMContractStrategy contractStrategy;
 	private RMContractStrategyPositionParams positionParams;
+	private SubscrHandler symbolSubsHandler;
 	
 	public S3RobotState(S3RobotStateListenerComp listener) {
 		this.stateListener = listener;
@@ -206,6 +208,16 @@ public class S3RobotState implements
 	@Override
 	public synchronized void setPositionParams(RMContractStrategyPositionParams params) {
 		this.positionParams = params;
+	}
+
+	@Override
+	public synchronized SubscrHandler getContractSubscrHandler() {
+		return symbolSubsHandler;
+	}
+
+	@Override
+	public synchronized void setContractSubscrHandler(SubscrHandler handler) {
+		this.symbolSubsHandler = handler;
 	}
 
 }

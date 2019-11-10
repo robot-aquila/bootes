@@ -10,6 +10,7 @@ import org.junit.Test;
 import ru.prolib.aquila.core.BusinessEntities.Account;
 import ru.prolib.aquila.core.BusinessEntities.Portfolio;
 import ru.prolib.aquila.core.BusinessEntities.Security;
+import ru.prolib.aquila.core.BusinessEntities.SubscrHandler;
 import ru.prolib.bootes.lib.cr.ContractParams;
 import ru.prolib.bootes.lib.cr.ContractResolver;
 import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
@@ -201,6 +202,20 @@ public class S3RobotStateTest {
 		RMContractStrategyPositionParams expected = control.createMock(RMContractStrategyPositionParams.class);
 		service.setPositionParams(expected);
 		assertSame(expected, service.getPositionParams());
+	}
+	
+	@Test
+	public void testGetContractSubscrHandler() {
+		SubscrHandler actual = service.getContractSubscrHandler();
+		
+		assertNull(actual);
+		
+		SubscrHandler expected = control.createMock(SubscrHandler.class);
+		service.setContractSubscrHandler(expected);
+		
+		actual = service.getContractSubscrHandler();
+		
+		assertEquals(expected, actual);
 	}
 
 }

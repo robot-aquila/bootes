@@ -9,6 +9,7 @@ import org.threeten.extra.Interval;
 import ru.prolib.aquila.core.BusinessEntities.MDLevel;
 import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.core.BusinessEntities.SecurityException;
+import ru.prolib.aquila.core.BusinessEntities.SubscrHandler;
 import ru.prolib.aquila.core.BusinessEntities.Symbol;
 import ru.prolib.aquila.core.BusinessEntities.Terminal;
 import ru.prolib.aquila.core.sm.SMExit;
@@ -91,11 +92,12 @@ public class BOOTESWaitForContract extends SMStateHandlerEx
 		Symbol prevSymbol = prevParams == null ? null : prevParams.getSymbol();
 		logger.debug("Contract selected: {} at time {}", currSymbol, currTime);
 		if ( ! currSymbol.equals(prevSymbol) ) {
-			if ( prevSymbol != null ) {
-				terminal.unsubscribe(prevSymbol, MDLevel.L1);
+			SubscrHandler subs = state.getContractSubscrHandler();
+			if ( subs != null ) {
+				subs.close();
 				logger.debug("Unsubscribed: {}", prevSymbol);
 			}
-			terminal.subscribe(currSymbol, MDLevel.L1);
+			state.setContractSubscrHandler(subs = terminal.subscribe(currSymbol, MDLevel.L1));
 			logger.debug("Subscribed: {}", currSymbol);
 		}
 		state.setContractParams(currParams);

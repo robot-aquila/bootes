@@ -2,6 +2,7 @@ package xx.mix.bootes.kinako.robot;
 
 import java.util.Set;
 
+import ru.prolib.aquila.core.BusinessEntities.SubscrHandler;
 import ru.prolib.aquila.core.BusinessEntities.Symbol;
 import xx.mix.bootes.kinako.service.VVSignal;
 
@@ -9,6 +10,7 @@ public class KinakoRobotData {
 	private VVSignal currentSignal;
 	private SymbolAliases involvedSymbols, selectedSymbols;
 	private Set<Symbol> subscribedSymbols;
+	private Set<SubscrHandler> symbolSubscrHandlers;
 	
 	public synchronized VVSignal getCurrentSignal() {
 		if ( currentSignal == null ) {
@@ -53,6 +55,17 @@ public class KinakoRobotData {
 	
 	public synchronized void setSelectedSymbols(SymbolAliases symbols) {
 		this.selectedSymbols = symbols;
+	}
+	
+	public synchronized Set<SubscrHandler> getSymbolSubscrHandlers() {
+		if ( symbolSubscrHandlers == null ) {
+			throw new NullPointerException("No symbol subscription handlers defined");
+		}
+		return symbolSubscrHandlers;
+	}
+	
+	public synchronized void setSymbolSubscrHandler(Set<SubscrHandler> handlers) {
+		this.symbolSubscrHandlers = handlers;
 	}
 
 }

@@ -38,7 +38,7 @@ public class QFTerminalOnlyComp extends CommonComp {
 						term_conf.getDataDirectory(),
 						serviceLocator.getPriceScaleDB()
 					);
-		QFBuilder qfb = new QFBuilder();
+		QFBuilder qfb = new QFBuilder().withEventQueue(serviceLocator.getEventQueue());
 		EditableTerminal terminal = new BasicTerminalBuilder()
 			.withEventQueue(serviceLocator.getEventQueue())
 			.withScheduler(serviceLocator.getScheduler())

@@ -1,12 +1,18 @@
 package ru.prolib.bootes.lib.app.comp;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.table.TableRowSorter;
 
 import ru.prolib.aquila.core.BusinessEntities.Terminal;
+import ru.prolib.aquila.core.BusinessEntities.TerminalRegistry;
 import ru.prolib.aquila.core.text.IMessages;
 import ru.prolib.aquila.qforts.ui.QFPortfolioListTableModel;
 import ru.prolib.aquila.qforts.ui.QFPositionListTableModel;
@@ -16,6 +22,8 @@ import ru.prolib.aquila.ui.form.OrderListTableModel;
 import ru.prolib.aquila.ui.form.PortfolioListTableModel;
 import ru.prolib.aquila.ui.form.PositionListTableModel;
 import ru.prolib.aquila.ui.form.SecurityListTableModel;
+import ru.prolib.aquila.ui.msg.CommonMsg;
+import ru.prolib.aquila.ui.subman.SymbolSubscrDialog;
 import ru.prolib.bootes.lib.app.AppConfigService2;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.config.AppConfig2;
@@ -72,6 +80,22 @@ public class TerminalUIComp extends CommonComp {
 		table.setRowSorter(new TableRowSorter<PositionListTableModel>(positionTableModel));
 		tabPanel.add("Positions", new JScrollPane(table));
 		new TableModelController(positionTableModel, frame);
+		
+		JMenuItem item = null;
+		JMenu menu = new JMenu(messages.get(CommonMsg.MANAGE));
+		menu.add(item = new JMenuItem(messages.get(CommonMsg.SUBSCRIBE_FOR_SYMBOL)));
+		item.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				TerminalRegistry registry = new TerminalRegistry();
+				registry.register(serviceLocator.getTerminal());
+				SymbolSubscrDialog dialog = new SymbolSubscrDialog(frame, messages, registry);
+				dialog.setResizable(false);
+				dialog.setModal(true);
+				dialog.setVisible(true);
+			}
+		});
+		uis.getMainMenu().add(menu);
 	}
 
 	@Override

@@ -23,13 +23,15 @@ import ru.prolib.aquila.ui.form.PortfolioListTableModel;
 import ru.prolib.aquila.ui.form.PositionListTableModel;
 import ru.prolib.aquila.ui.form.SecurityListTableModel;
 import ru.prolib.aquila.ui.msg.CommonMsg;
-import ru.prolib.aquila.ui.subman.SymbolSubscrDialog;
+import ru.prolib.aquila.ui.subman.SSDescRepo;
+import ru.prolib.aquila.ui.subman.SSDescDialog;
 import ru.prolib.bootes.lib.app.AppConfigService2;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.config.AppConfig2;
 import ru.prolib.bootes.lib.service.UIService;
 
 public class TerminalUIComp extends CommonComp {
+	private SSDescRepo manualSymbolSubscr;
 
 	public TerminalUIComp(AppServiceLocator serviceLocator, String serviceID) {
 		super(serviceLocator, serviceID);
@@ -81,15 +83,18 @@ public class TerminalUIComp extends CommonComp {
 		tabPanel.add("Positions", new JScrollPane(table));
 		new TableModelController(positionTableModel, frame);
 		
+		TerminalRegistry registry = new TerminalRegistry();
+		registry.register(terminal);
+		manualSymbolSubscr = new SSDescRepo(registry, serviceLocator.getEventQueue());
 		JMenuItem item = null;
 		JMenu menu = new JMenu(messages.get(CommonMsg.MANAGE));
-		menu.add(item = new JMenuItem(messages.get(CommonMsg.SUBSCRIBE_FOR_SYMBOL)));
+		menu.add(item = new JMenuItem(messages.get(CommonMsg.MANUAL_SYMBOL_SUBSCRIPTIONS)));
 		item.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				TerminalRegistry registry = new TerminalRegistry();
 				registry.register(serviceLocator.getTerminal());
-				SymbolSubscrDialog dialog = new SymbolSubscrDialog(frame, messages, registry);
+				SSDescDialog dialog = new SSDescDialog(frame, messages, registry, manualSymbolSubscr);
 				dialog.setResizable(false);
 				dialog.setModal(true);
 				dialog.setVisible(true);

@@ -1,15 +1,11 @@
 package ru.prolib.bootes.tsgr001a;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.ini4j.Profile.Section;
 import org.ini4j.Wini;
 
 import ru.prolib.aquila.core.BusinessEntities.BasicTerminalBuilder;
 import ru.prolib.aquila.core.BusinessEntities.EditableTerminal;
-import ru.prolib.aquila.transaq.engine.Engine;
-import ru.prolib.aquila.transaq.engine.EngineBuilder;
-import ru.prolib.aquila.transaq.engine.ServiceLocator;
-import ru.prolib.aquila.transaq.impl.TQConnectorFactory;
+import ru.prolib.aquila.transaq.TransaqBuilder;
 import ru.prolib.aquila.transaq.impl.TQDataProviderImpl;
 import ru.prolib.aquila.transaq.ui.TQServiceMenu;
 import ru.prolib.bootes.lib.app.AppConfigService2;
@@ -48,18 +44,16 @@ public class TQTerminalOnlyComp extends CommonComp {
 		tq_conf.put("host", term_conf.getHost());
 		tq_conf.put("port", Integer.toString(term_conf.getPort()));
 		
-		EngineBuilder eng_builder = new EngineBuilder();
-		Pair<ServiceLocator, Engine> eng_res = eng_builder.build();
-		ServiceLocator eng_services = eng_res.getLeft();
-		Engine eng = eng_res.getRight();
-		eng_services.setConnector(new TQConnectorFactory().createInstance(tq_conf, eng));
-		eng_builder.initPrimary(eng_services, serviceLocator.getEventQueue());
-		
+		TQDataProviderImpl data_provider = (TQDataProviderImpl) new TransaqBuilder()
+				.withServiceID(serviceID)
+				.withEventQueue(serviceLocator.getEventQueue())
+				.withConnectorFactoryStd(tq_conf)
+				.build();
 		EditableTerminal terminal = new BasicTerminalBuilder()
 				.withEventQueue(serviceLocator.getEventQueue())
 				.withScheduler(serviceLocator.getScheduler())
 				.withTerminalID(serviceID)
-				.withDataProvider(new TQDataProviderImpl(eng, eng_builder, eng_services))
+				.withDataProvider(data_provider)
 				.buildTerminal();
 		serviceLocator.setTerminal(terminal);
 		
@@ -68,7 +62,7 @@ public class TQTerminalOnlyComp extends CommonComp {
 			uis.getMainMenu().add(new TQServiceMenu(
 					uis.getMessages(),
 					uis.getFrame(),
-					eng_services.getDirectory()
+					data_provider.getServices().getDirectory()
 				).create());
 		}
 		

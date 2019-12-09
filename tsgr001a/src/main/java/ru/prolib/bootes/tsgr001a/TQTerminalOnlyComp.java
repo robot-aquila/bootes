@@ -17,6 +17,7 @@ import ru.prolib.bootes.lib.config.TQTerminalConfigSection;
 import ru.prolib.bootes.lib.service.UIService;
 import ru.prolib.bootes.lib.service.ars.ARSHandler;
 import ru.prolib.bootes.lib.service.ars.ARSHandlerBuilder;
+import ru.prolib.bootes.lib.service.task.CloseTerminal;
 import ru.prolib.bootes.lib.service.task.StartTerminal;
 import ru.prolib.bootes.lib.service.task.StopTerminal;
 
@@ -70,6 +71,7 @@ public class TQTerminalOnlyComp extends CommonComp {
 				.withID(serviceID)
 				.addStartupAction(new StartTerminal(terminal))
 				.addShutdownAction(new StopTerminal(terminal))
+				.addShutdownAction(new CloseTerminal(terminal))
 				.build();
 	}
 

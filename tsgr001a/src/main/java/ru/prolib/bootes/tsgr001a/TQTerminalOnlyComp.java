@@ -7,6 +7,9 @@ import ru.prolib.aquila.core.BusinessEntities.BasicTerminalBuilder;
 import ru.prolib.aquila.core.BusinessEntities.EditableTerminal;
 import ru.prolib.aquila.transaq.TransaqBuilder;
 import ru.prolib.aquila.transaq.impl.TQDataProviderImpl;
+import ru.prolib.aquila.transaq.remote.MessageInterceptor;
+import ru.prolib.aquila.transaq.remote.MessageInterceptorStub;
+import ru.prolib.aquila.transaq.remote.SessionLogger;
 import ru.prolib.aquila.transaq.ui.TQServiceMenu;
 import ru.prolib.bootes.lib.app.AppConfigService2;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
@@ -45,10 +48,16 @@ public class TQTerminalOnlyComp extends CommonComp {
 		tq_conf.put("host", term_conf.getHost());
 		tq_conf.put("port", Integer.toString(term_conf.getPort()));
 		
+		MessageInterceptor interceptor = new MessageInterceptorStub();
+		if ( term_conf.isMsgDumpEnabled() ) {
+			interceptor = term_conf.getMsgDumpFile() == null
+					? new SessionLogger() : new SessionLogger(term_conf.getMsgDumpFile());
+		}
+		
 		TQDataProviderImpl data_provider = (TQDataProviderImpl) new TransaqBuilder()
 				.withServiceID(serviceID)
 				.withEventQueue(serviceLocator.getEventQueue())
-				.withConnectorFactoryStd(tq_conf)
+				.withConnectorFactoryStd(tq_conf, interceptor)
 				.build();
 		EditableTerminal terminal = new BasicTerminalBuilder()
 				.withEventQueue(serviceLocator.getEventQueue())

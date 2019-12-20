@@ -46,7 +46,7 @@ public class TQTerminalConfigSectionTest {
 		
 		service.configureOptions(options);
 
-		assertEquals(6, options.getOptions().size());
+		assertEquals(8, options.getOptions().size());
 		
 		Option actual = options.getOption("transaq-log-path");
 		assertEquals(Option.builder()
@@ -102,6 +102,21 @@ public class TQTerminalConfigSectionTest {
 				.build(), actual);
 		assertTrue(actual.hasArg());
 
+		actual = options.getOption("transaq-msg-dump-enable");
+		assertEquals(Option.builder()
+				.longOpt("transaq-msg-dump-enable")
+				.desc("Enable dumping all protocol messages. By default will dump to STDOUT.")
+				.build(), actual);
+		assertFalse(actual.hasArg());
+		
+		actual = options.getOption("transaq-msg-dump-file");
+		assertEquals(Option.builder()
+				.longOpt("transaq-msg-dump-file")
+				.hasArg()
+				.argName("file")
+				.desc("Dump all protocol messages to file instead of STDOUT.")
+				.build(), actual);
+		assertTrue(actual.hasArg());
 	}
 
 	@Test

@@ -130,6 +130,28 @@ public class TQTerminalConfigTest {
 	}
 	
 	@Test
+	public void testIsMsgDumpEnabled() throws Exception {
+		assertFalse(service1.isMsgDumpEnabled());
+		
+		options1.put("transaq-msg-dump-enable", "1");
+		assertTrue(service1.isMsgDumpEnabled());
+		
+		options1.put("transaq-msg-dump-enable", "0");
+		assertFalse(service1.isMsgDumpEnabled());
+		
+		options1.put("transaq-msg-dump-enable", null);
+		assertFalse(service1.isMsgDumpEnabled());
+	}
+	
+	@Test
+	public void testGetMsgDumpFile() {
+		assertNull(service1.getMsgDumpFile());
+		
+		options1.put("transaq-msg-dump-file", "zulu/charlie");
+		assertEquals(new File("zulu/charlie"), service1.getMsgDumpFile());
+	}
+	
+	@Test
 	public void testEquals() {
 		OptionProvider
 			opMock1 = control.createMock(OptionProvider.class),

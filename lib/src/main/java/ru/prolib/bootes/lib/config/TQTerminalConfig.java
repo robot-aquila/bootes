@@ -38,6 +38,14 @@ public class TQTerminalConfig {
 		return options.getIntegerPositiveNonZeroNotNull(TQTerminalConfigSection.LOPT_PORT);
 	}
 	
+	public boolean isMsgDumpEnabled() throws ConfigException {
+		return options.getBoolean(TQTerminalConfigSection.LOPT_MESSAGE_DUMP_ENABLE);
+	}
+	
+	public File getMsgDumpFile() {
+		return options.getFile(TQTerminalConfigSection.LOPT_MESSAGE_DUMP_FILE);
+	}
+	
 	@Override
 	public boolean equals(Object other) {
 		if ( other == this ) {

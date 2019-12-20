@@ -14,6 +14,8 @@ public class TQTerminalConfigSection implements ConfigSection {
 	public static final String LOPT_PASSWORD = "transaq-password";
 	public static final String LOPT_HOST = "transaq-host";
 	public static final String LOPT_PORT = "transaq-port";
+	public static final String LOPT_MESSAGE_DUMP_ENABLE = "transaq-msg-dump-enable";
+	public static final String LOPT_MESSAGE_DUMP_FILE = "transaq-msg-dump-file";
 
 	@Override
 	public void configureDefaults(KVWritableStore defaults, OptionProvider op) throws ConfigException {
@@ -58,6 +60,16 @@ public class TQTerminalConfigSection implements ConfigSection {
 				.hasArg()
 				.argName("port")
 				.desc("Transaq port.")
+				.build());
+		options.addOption(Option.builder()
+				.longOpt(LOPT_MESSAGE_DUMP_ENABLE)
+				.desc("Enable dumping all protocol messages. By default will dump to STDOUT.")
+				.build());
+		options.addOption(Option.builder()
+				.longOpt(LOPT_MESSAGE_DUMP_FILE)
+				.hasArg()
+				.argName("file")
+				.desc("Dump all protocol messages to file instead of STDOUT.")
 				.build());
 	}
 

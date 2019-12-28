@@ -72,7 +72,7 @@ public class TQTerminalOnlyComp extends CommonComp {
 			uis.getMainMenu().add(new TQServiceMenu(
 					uis.getMessages(),
 					uis.getFrame(),
-					data_provider.getServices().getDirectory()
+					data_provider.getDirectory()
 				).create());
 		}
 		

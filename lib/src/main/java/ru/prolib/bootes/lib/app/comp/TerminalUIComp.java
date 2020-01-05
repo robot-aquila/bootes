@@ -21,6 +21,7 @@ import ru.prolib.aquila.ui.form.MenuFactory;
 import ru.prolib.aquila.ui.form.OrderListTableModel;
 import ru.prolib.aquila.ui.form.PortfolioListTableModel;
 import ru.prolib.aquila.ui.form.PositionListTableModel;
+import ru.prolib.aquila.ui.form.SecurityListMarketDepthActivator;
 import ru.prolib.aquila.ui.form.SecurityListTableModel;
 import ru.prolib.aquila.ui.msg.CommonMsg;
 import ru.prolib.aquila.ui.subman.SSDescRepo;
@@ -55,6 +56,7 @@ public class TerminalUIComp extends CommonComp {
 		JTable table = new JTable(securityTableModel);
 		table.setShowGrid(true);
 		table.setRowSorter(new TableRowSorter<SecurityListTableModel>(securityTableModel));
+		table.addMouseListener(new SecurityListMarketDepthActivator(messages));
 		tabPanel.add("Securities", new JScrollPane(table));
 		new TableModelController(securityTableModel, frame);
 		

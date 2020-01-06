@@ -14,6 +14,8 @@ import ru.prolib.bootes.lib.report.s3rep.IS3Report;
 import ru.prolib.bootes.lib.report.s3rep.S3Report;
 import ru.prolib.bootes.lib.report.summarep.ISummaryReportTracker;
 import ru.prolib.bootes.lib.report.summarep.SummaryReportTracker;
+import ru.prolib.bootes.lib.report.sysinfo.SysInfoBlockPrinter;
+import ru.prolib.bootes.lib.report.sysinfo.SysInfoReportHandler;
 import ru.prolib.bootes.lib.robo.rh.EquityCurveReportHandler;
 import ru.prolib.bootes.lib.robo.s3.rh.S3ReportHandler;
 import ru.prolib.bootes.lib.robo.s3.rh.S3SummaryReportHandler;
@@ -23,6 +25,7 @@ import ru.prolib.bootes.lib.robo.s3.rh.S3SummaryReportHandler;
  */
 public class S3CommonReports {
 	private final AppServiceLocator serviceLocator;
+	private final SysInfoReportHandler sysInfoHandler;
 	private final ISummaryReportTracker srt;
 	private final IS3Report atr;
 	private final OHLCScalableSeries erc, erf;
@@ -36,6 +39,7 @@ public class S3CommonReports {
 		atr = new S3Report();
 		erc = new OHLCScalableSeries(queue, "EQUITY_CURVE_COMP",   50, zone_id);
 		erf = new OHLCScalableSeries(queue, "EQUITY_CURVE_FULL", 1000, zone_id);
+		sysInfoHandler = new SysInfoReportHandler();
 	}
 	
 	public ISummaryReportTracker getSummaryReportTracker() {
@@ -64,6 +68,7 @@ public class S3CommonReports {
 		stateListener.addListener(new S3ReportHandler(state, atr));
 		stateListener.addListener(new EquityCurveReportHandler(state, erf));
 		stateListener.addListener(new EquityCurveReportHandler(state, erc));
+		stateListener.addListener(sysInfoHandler);
 	}
 	
 	public void save(File report_dir, String filename) throws IOException {
@@ -77,7 +82,8 @@ public class S3CommonReports {
 		if ( hello != null ) {
 			printer.addHello(hello);
 		}
-		printer.add(srt.getCurrentStats(), "Summary")
+		printer.add(new SysInfoBlockPrinter(sysInfoHandler))
+			.add(srt.getCurrentStats(), "Summary")
 			.add(atr, "Trades")
 			.add(erc, "Equity")
 			.save(report_file);

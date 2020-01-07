@@ -1,6 +1,5 @@
 package ru.prolib.bootes.tsgr001a.robot;
 
-import ru.prolib.aquila.core.BusinessEntities.Symbol;
 import ru.prolib.aquila.core.data.Candle;
 import ru.prolib.aquila.core.data.TSeries;
 import ru.prolib.aquila.core.data.ZTFrame;
@@ -8,9 +7,9 @@ import ru.prolib.aquila.core.data.tseries.QEMATSeriesFast;
 import ru.prolib.aquila.core.data.tseries.STSeries;
 import ru.prolib.aquila.core.data.tseries.TSeriesCacheController;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
-import ru.prolib.bootes.lib.data.SecurityChartSetupTX;
+import ru.prolib.bootes.lib.robo.sh.statereq.IContractDeterminable;
 
-public class SetupT1 extends SecurityChartSetupTX {
+public class SetupT1 extends SetupTX {
 	public static final ZTFrame CONF_TFRAME = ZTFrame.H1MSK;
 	public static final int CONF_EMA_PERIOD = 70;
 	public static final int CONF_LOAD_HISTORY_DEPTH = CONF_EMA_PERIOD * 2;
@@ -18,8 +17,8 @@ public class SetupT1 extends SecurityChartSetupTX {
 	public static final String SID_SHARED = "T1";
 	public static final String SID_EMA = "EMA";
 	
-	public SetupT1(AppServiceLocator serviceLocator, Symbol symbol) {
-		super(serviceLocator, symbol);
+	public SetupT1(AppServiceLocator serviceLocator, IContractDeterminable state) {
+		super(serviceLocator, state);
 	}
 
 	@Override

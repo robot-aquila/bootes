@@ -5,6 +5,7 @@ import java.io.File;
 import ru.prolib.aquila.core.data.Candle;
 import ru.prolib.aquila.core.data.TFSymbol;
 import ru.prolib.aquila.data.storage.MDStorage;
+import ru.prolib.aquila.data.storage.MDStorageSimpleWarmer;
 import ru.prolib.aquila.web.utils.finam.data.FinamData;
 import ru.prolib.bootes.lib.app.AppConfigService2;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
@@ -37,7 +38,7 @@ public class OHLCHistoryStorageComp extends CommonComp {
 					conf.getCacheDirectory(),
 					serviceLocator.getPriceScaleDB()
 				);
-			serviceLocator.setOHLCHistoryStorage(storage);
+			serviceLocator.setOHLCHistoryStorage(new MDStorageSimpleWarmer<TFSymbol, Candle>(storage));
 		}
 	}
 

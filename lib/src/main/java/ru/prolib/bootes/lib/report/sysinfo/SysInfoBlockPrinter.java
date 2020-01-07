@@ -38,11 +38,12 @@ public class SysInfoBlockPrinter implements IReportBlockPrinter {
 	@Override
 	public void print(PrintStream stream) {
 		SysInfoReport report = handler.getReport();
-		Instant started = null, finished = null;
-		stream.println(" Job started: " + dtf.format(started = report.getJobStarted()));
-		stream.println("Job finished: " + dtf.format(finished = report.getJobFinished()));
+		String na = "N/A";
+		Instant started = report.getJobStarted(), finished = report.getJobFinished();
+		stream.println(" Job started: " + (started == null ? na : dtf.format(started)));
+		stream.println("Job finished: " + (finished == null ? na : dtf.format(finished)));
 		stream.println("  Time spent: " + (started == null || finished == null
-				? "N/A" : ChronoUnit.SECONDS.between(started, finished) + " seconds"));
+				? na : ChronoUnit.SECONDS.between(started, finished) + " seconds"));
 	}
 
 }

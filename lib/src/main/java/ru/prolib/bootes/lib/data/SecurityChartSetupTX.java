@@ -7,6 +7,7 @@ import ru.prolib.aquila.core.BusinessEntities.Symbol;
 import ru.prolib.aquila.core.BusinessEntities.Terminal;
 import ru.prolib.aquila.core.data.Candle;
 import ru.prolib.aquila.core.data.EditableTSeries;
+import ru.prolib.aquila.core.data.SeriesUtils;
 import ru.prolib.aquila.core.data.TFSymbol;
 import ru.prolib.aquila.core.data.TSeries;
 import ru.prolib.aquila.core.data.tseries.CandleCloseTSeries;
@@ -28,6 +29,7 @@ public abstract class SecurityChartSetupTX implements SecurityChartDataHandler.H
 	public static final String SID_CLOSE_PRICE = "CLOSE_PRICE";
 	public static final String SID_VOLUME = "VOLUME";
 	
+	protected final SeriesUtils seriesUtils = new SeriesUtils();
 	protected final AppServiceLocator serviceLocator;
 	protected final Symbol symbol;
 	protected TSeries<CDecimal> close, volume;
@@ -85,9 +87,7 @@ public abstract class SecurityChartSetupTX implements SecurityChartDataHandler.H
 					length,
 					serviceLocator.getTerminal().getCurrentTime()) )
 			{
-				while ( it.next() ) {
-					ohlc.set(it.item().getStartTime(), it.item());
-				}
+				seriesUtils.copy(it, ohlc);
 			} catch ( Exception e ) {
 				throw new RuntimeException("Error loading OHLC history", e);
 			}

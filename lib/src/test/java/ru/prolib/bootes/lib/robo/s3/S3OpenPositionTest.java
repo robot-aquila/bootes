@@ -1,16 +1,14 @@
 package ru.prolib.bootes.lib.robo.s3;
 
-import static org.easymock.EasyMock.createStrictControl;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
-import static ru.prolib.aquila.core.BusinessEntities.CDecimalBD.of;
-import static ru.prolib.aquila.core.BusinessEntities.CDecimalBD.ofRUB5;
+import static ru.prolib.aquila.core.BusinessEntities.CDecimalBD.*;
 
 import java.time.Instant;
 import java.util.List;
 
 import org.apache.log4j.BasicConfigurator;
+import org.easymock.Capture;
 import org.easymock.IMocksControl;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -273,11 +271,10 @@ public class S3OpenPositionTest {
 		expect(terminalMock.createOrder(ACCOUNT, SYMBOL, OrderAction.BUY, of(10L), of("121.96"))).andReturn(orderMock);
 		expect(terminalMock.getCurrentTime()).andReturn(T("2019-03-06T19:13:30Z"));
 		expect(orderMock.onDone()).andReturn(eventTypeMock);
-		tregMock.add(new SMTriggerOnEvent(eventTypeMock, new SMInput(service, new OnFinishAction(service))));
-		tregMock.add(new SMTriggerOnTimer(terminalMock,
-				T("2019-03-06T19:18:30Z"),
-				new SMInput(service, new OnTimeoutAction(service))
-			));
+		Capture<SMTriggerOnEvent> cap1 = Capture.newInstance();
+		Capture<SMTriggerOnTimer> cap2 = Capture.newInstance();
+		tregMock.add(capture(cap1));
+		tregMock.add(capture(cap2));
 		terminalMock.placeOrder(orderMock);
 		control.replay();
 		
@@ -285,6 +282,8 @@ public class S3OpenPositionTest {
 		
 		control.verify();
 		assertSame(orderMock, service.getOrder());
+		assertTrue(new SMTriggerOnEvent(eventTypeMock, new SMInput(service, new OnFinishAction(service))).isEqualTo(cap1.getValue()));
+		assertTrue(new SMTriggerOnTimer(terminalMock, T("2019-03-06T19:18:30Z"), new SMInput(service, new OnTimeoutAction(service))).isEqualTo(cap2.getValue()));
 	}
 	
 	@Test
@@ -305,11 +304,10 @@ public class S3OpenPositionTest {
 		expect(terminalMock.createOrder(ACCOUNT, SYMBOL, OrderAction.SELL, of(10L), of("119.96"))).andReturn(orderMock);
 		expect(terminalMock.getCurrentTime()).andReturn(T("2019-03-06T19:13:30Z"));
 		expect(orderMock.onDone()).andReturn(eventTypeMock);
-		tregMock.add(new SMTriggerOnEvent(eventTypeMock, new SMInput(service, new OnFinishAction(service))));
-		tregMock.add(new SMTriggerOnTimer(terminalMock,
-				T("2019-03-06T19:18:30Z"),
-				new SMInput(service, new OnTimeoutAction(service))
-			));
+		Capture<SMTriggerOnEvent> cap1 = Capture.newInstance();
+		Capture<SMTriggerOnTimer> cap2 = Capture.newInstance();
+		tregMock.add(capture(cap1));
+		tregMock.add(capture(cap2));
 		terminalMock.placeOrder(orderMock);
 		control.replay();
 		
@@ -317,6 +315,8 @@ public class S3OpenPositionTest {
 		
 		control.verify();
 		assertSame(orderMock, service.getOrder());
+		assertTrue(new SMTriggerOnEvent(eventTypeMock, new SMInput(service, new OnFinishAction(service))).isEqualTo(cap1.getValue()));
+		assertTrue(new SMTriggerOnTimer(terminalMock, T("2019-03-06T19:18:30Z"), new SMInput(service, new OnTimeoutAction(service))).isEqualTo(cap2.getValue()));
 	}
 	
 	@Test
@@ -337,11 +337,10 @@ public class S3OpenPositionTest {
 		expect(terminalMock.createOrder(ACCOUNT, SYMBOL, OrderAction.SELL, of(10L), of("119.96"))).andReturn(orderMock);
 		expect(terminalMock.getCurrentTime()).andReturn(T("2019-03-06T19:13:30Z"));
 		expect(orderMock.onDone()).andReturn(eventTypeMock);
-		tregMock.add(new SMTriggerOnEvent(eventTypeMock, new SMInput(service, new OnFinishAction(service))));
-		tregMock.add(new SMTriggerOnTimer(terminalMock,
-				T("2019-03-06T19:18:30Z"),
-				new SMInput(service, new OnTimeoutAction(service))
-			));
+		Capture<SMTriggerOnEvent> cap1 = Capture.newInstance();
+		Capture<SMTriggerOnTimer> cap2 = Capture.newInstance();
+		tregMock.add(capture(cap1));
+		tregMock.add(capture(cap2));
 		terminalMock.placeOrder(orderMock);
 		expectLastCall().andThrow(new OrderException("Test error"));
 		control.replay();
@@ -350,6 +349,8 @@ public class S3OpenPositionTest {
 		
 		control.verify();
 		assertSame(orderMock, service.getOrder());
+		assertTrue(new SMTriggerOnEvent(eventTypeMock, new SMInput(service, new OnFinishAction(service))).isEqualTo(cap1.getValue()));
+		assertTrue(new SMTriggerOnTimer(terminalMock, T("2019-03-06T19:18:30Z"), new SMInput(service, new OnTimeoutAction(service))).isEqualTo(cap2.getValue()));
 	}
 	
 	@Test

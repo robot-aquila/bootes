@@ -8,7 +8,10 @@ public class SysInfoReportHandler implements S3RobotStateListener {
 	private Instant started, stopped;
 	
 	public synchronized SysInfoReport getReport() {
-		return new SysInfoReport(started, stopped);
+		return new SysInfoReport(
+				started == null ? Instant.now() : started,
+				stopped == null ? Instant.now() : stopped
+			);
 	}
 
 	@Override

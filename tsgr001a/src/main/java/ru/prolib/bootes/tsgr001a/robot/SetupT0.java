@@ -1,6 +1,5 @@
 package ru.prolib.bootes.tsgr001a.robot;
 
-import ru.prolib.aquila.core.BusinessEntities.Symbol;
 import ru.prolib.aquila.core.data.Candle;
 import ru.prolib.aquila.core.data.EditableTSeries;
 import ru.prolib.aquila.core.data.TSeries;
@@ -12,13 +11,13 @@ import ru.prolib.aquila.core.data.tseries.TSeriesCacheController;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.data.PVCluster;
 import ru.prolib.bootes.lib.data.PVClusterSeriesByLastTrade;
-import ru.prolib.bootes.lib.data.SecurityChartSetupTX;
 import ru.prolib.bootes.lib.data.WeightedAverageTSeries;
+import ru.prolib.bootes.lib.robo.sh.statereq.IContractDeterminable;
 
 /**
  * Setup of data handler of primary timeframe (T=T0=TZ).
  */
-public class SetupT0 extends SecurityChartSetupTX {
+public class SetupT0 extends SetupTX {
 	public static final ZTFrame CONF_TFRAME = ZTFrame.M5MSK;
 	public static final int CONF_ATR_PERIOD = 10;
 	public static final int CONF_EMA_PERIOD = 252; // 252 is number of M5 bars of 1.5 trading day
@@ -32,8 +31,8 @@ public class SetupT0 extends SecurityChartSetupTX {
 	
 	private PVClusterSeriesByLastTrade pvcProducer;
 
-	public SetupT0(AppServiceLocator serviceLocator, Symbol symbol) {
-		super(serviceLocator, symbol);
+	public SetupT0(AppServiceLocator serviceLocator, IContractDeterminable state) {
+		super(serviceLocator, state);
 	}
 
 	@Override

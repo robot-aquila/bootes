@@ -1,6 +1,5 @@
 package ru.prolib.bootes.tsgr001a.robot;
 
-import ru.prolib.aquila.core.BusinessEntities.Symbol;
 import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
 import ru.prolib.aquila.core.data.tseries.SecurityChartDataHandler;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
@@ -20,11 +19,10 @@ public class TSGR001ADataHandler implements ISessionDataHandler {
 	
 	@Override
 	public synchronized boolean startSession() {
-		Symbol symbol = state.getContractParams().getSymbol();
 		try {
-			t0 = create(new SetupT0(serviceLocator, symbol));
-			t1 = create(new SetupT1(serviceLocator, symbol));
-			t2 = create(new SetupT2(serviceLocator, symbol));
+			t0 = create(new SetupT0(serviceLocator, state));
+			t1 = create(new SetupT1(serviceLocator, state));
+			t2 = create(new SetupT2(serviceLocator, state));
 			return true;
 		} catch ( Throwable t ) {
 			cleanSession();

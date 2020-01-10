@@ -3,8 +3,7 @@ package ru.prolib.bootes.lib.app.comp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ru.prolib.aquila.core.EventQueueImpl;
-import ru.prolib.aquila.core.eque.EventQueueStats;
+import ru.prolib.aquila.core.*;
 import ru.prolib.aquila.ui.form.EventQueueStatePanel;
 import ru.prolib.bootes.lib.app.AppConfigService2;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
@@ -19,7 +18,7 @@ public class EventQueueComp extends CommonComp {
 	}
 	
 	private static final String DEFAULT_ID = "BOOTES-QUEUE";
-	private EventQueueImpl queue;
+	private EventQueue queue;
 
 	public EventQueueComp(AppServiceLocator serviceLocator, String serviceID) {
 		super(serviceLocator, serviceID);
@@ -32,7 +31,7 @@ public class EventQueueComp extends CommonComp {
 	@Override
 	public void init() throws Throwable {
 		AppConfig2 app_conf = serviceLocator.getConfig();
-		serviceLocator.setEventQueue(queue = new EventQueueImpl(serviceID));
+		serviceLocator.setEventQueue(queue = new EventQueueFactory().createDefault(serviceID));
 		if ( ! app_conf.getBasicConfig().isHeadless() ) {
 			UIService uis = serviceLocator.getUIService();
 			uis.getTopPanel().add(new EventQueueStatePanel(uis.getMessages(), queue));
@@ -48,13 +47,13 @@ public class EventQueueComp extends CommonComp {
 	public void shutdown() throws Throwable {
 		EventQueueStats stats = queue.getStats();
 		if ( stats != null ) {
-			logger.debug("            Events sent: {}", stats.getTotalEventsSent());
-			logger.debug("      Events dispatched: {}", stats.getTotalEventsDispatched());
-			logger.debug("Building task list time: {} ns", stats.getBuildingTaskListTime());
-			logger.debug("       Dispatching time: {} ns", stats.getDispatchingTime());
-			logger.debug("        Delivering time: {} ns", stats.getDeliveryTime());
-			stats.dumpSecondaryStats();
+			logger.debug("      Events sent: {}", stats.getTotalEventsSent());
+			logger.debug("Events dispatched: {}", stats.getTotalEventsDispatched());
+			logger.debug("   Preparing time: {} ns", stats.getPreparingTime());
+			logger.debug(" Dispatching time: {} ns", stats.getDispatchingTime());
+			logger.debug("  Delivering time: {} ns", stats.getDeliveryTime());
 		}
+		queue.shutdown();
 	}
 
 	@Override

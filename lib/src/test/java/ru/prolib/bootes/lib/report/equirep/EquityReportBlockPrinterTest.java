@@ -18,7 +18,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import ru.prolib.aquila.core.EventQueueImpl;
+import ru.prolib.aquila.core.*;
 import ru.prolib.aquila.core.data.OHLCScalableSeries;
 import ru.prolib.aquila.core.data.timeframe.ZTFHours;
 
@@ -29,13 +29,13 @@ public class EquityReportBlockPrinterTest {
 		return LocalDateTime.parse(timeString).atZone(zoneID).toInstant();
 	}
 	
-	private EventQueueImpl queue;
+	private EventQueue queue;
 	private OHLCScalableSeries report;
 	private EquityReportBlockPrinter service;
 
 	@Before
 	public void setUp() throws Exception {
-		queue = new EventQueueImpl();
+		queue = new EventQueueFactory().createDefault();
 		report = new OHLCScalableSeries(queue, "TEST", 10, zoneID);
 		service = new EquityReportBlockPrinter(report, "Test Report");
 	}

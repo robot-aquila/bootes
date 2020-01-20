@@ -16,12 +16,14 @@ import ru.prolib.aquila.core.BusinessEntities.TStamped;
  */
 public class S3TradeSignal implements TStamped {
 	private final SignalType type;
-	private Instant time;
+	private final Instant time;
+	private final int index;
 	private final CDecimal expectedPrice, expectedQty, takeProfitPts,  stopLossPts, slippagePts,
 		baseCap, goalCap, lossCap;
 	
 	public S3TradeSignal(SignalType type,
 			Instant time,
+			int index,
 			CDecimal expectedPrice,
 			CDecimal expectedQty,
 			CDecimal takeProfitPts,
@@ -33,6 +35,7 @@ public class S3TradeSignal implements TStamped {
 	{
 		this.type = type;
 		this.time = time;
+		this.index = index;
 		this.expectedPrice = expectedPrice;
 		this.expectedQty = expectedQty;
 		this.takeProfitPts = takeProfitPts;
@@ -60,6 +63,10 @@ public class S3TradeSignal implements TStamped {
 	@Override
 	public Instant getTime() {
 		return time;
+	}
+	
+	public int getIndex() {
+		return index;
 	}
 	
 	/**
@@ -144,6 +151,7 @@ public class S3TradeSignal implements TStamped {
 		return new HashCodeBuilder(9007861, 419)
 				.append(type)
 				.append(time)
+				.append(index)
 				.append(expectedPrice)
 				.append(expectedQty)
 				.append(takeProfitPts)
@@ -167,11 +175,15 @@ public class S3TradeSignal implements TStamped {
 		return new EqualsBuilder()
 				.append(o.type, type)
 				.append(o.time, time)
+				.append(o.index, index)
 				.append(o.expectedPrice, expectedPrice)
 				.append(o.expectedQty, expectedQty)
 				.append(o.takeProfitPts, takeProfitPts)
 				.append(o.stopLossPts, stopLossPts)
 				.append(o.slippagePts, slippagePts)
+				.append(o.baseCap, baseCap)
+				.append(o.goalCap, goalCap)
+				.append(o.lossCap, lossCap)
 				.build();
 	}
 

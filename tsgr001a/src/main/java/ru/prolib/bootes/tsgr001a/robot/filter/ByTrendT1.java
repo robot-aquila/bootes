@@ -1,14 +1,13 @@
 package ru.prolib.bootes.tsgr001a.robot.filter;
 
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
-import ru.prolib.aquila.core.BusinessEntities.Security;
-import ru.prolib.aquila.core.BusinessEntities.Tick;
 import ru.prolib.aquila.core.data.TSeries;
 import ru.prolib.aquila.core.data.ValueException;
 import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
 import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 import ru.prolib.bootes.lib.data.ts.filter.impl.AbstractFilter;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
+import ru.prolib.bootes.tsgr001a.robot.SetupT0;
 import ru.prolib.bootes.tsgr001a.robot.SetupT1;
 
 public class ByTrendT1 extends AbstractFilter<S3TradeSignal> {
@@ -21,32 +20,32 @@ public class ByTrendT1 extends AbstractFilter<S3TradeSignal> {
 
 	@Override
 	public boolean approve(S3TradeSignal signal) {
-		TSeries<CDecimal> ma_s;
-		Security security;
+		TSeries<CDecimal> t1_ma, t0_close;
 		synchronized ( state ) {
-			STSeriesHandler h = state.getSessionDataHandler().getSeriesHandlerT1();
-			if ( h == null ) {
+			STSeriesHandler
+					t1_h = state.getSessionDataHandler().getSeriesHandlerT1(),
+					t0_h = state.getSessionDataHandler().getSeriesHandlerT0();
+			if ( t1_h == null || t0_h == null ) {
 				return false;
 			}
-			ma_s = h.getSeries().getSeries(SetupT1.SID_EMA);
-			security = state.getSecurity();
+			t1_ma = t1_h.getSeries().getSeries(SetupT1.SID_EMA);
+			t0_close = t0_h.getSeries().getSeries(SetupT0.SID_CLOSE_PRICE);
 		}
-		CDecimal ma_val;
+		CDecimal t1_ma_val, t0_close_val;
 		try {
-			ma_val = ma_s.get(-1);
+			t1_ma_val = t1_ma.getFirstBefore(signal.getTime());
+			t0_close_val = t0_close.get(signal.getIndex());
 		} catch ( ValueException e ) {
 			throw new IllegalStateException(e);
 		}
-		Tick last_trade = security.getLastTrade();
-		if ( last_trade == null ) {
+		if ( t1_ma_val == null || t0_close_val == null ) {
 			return false;
 		}
-		CDecimal last_price = last_trade.getPrice();
 		switch ( signal.getType() ) {
 		case BUY:
-			return last_price.compareTo(ma_val) >= 0;
+			return t0_close_val.compareTo(t1_ma_val) >= 0;
 		case SELL:
-			return last_price.compareTo(ma_val) <= 0;
+			return t0_close_val.compareTo(t1_ma_val) <= 0;
 		default:
 			return false;
 		}

@@ -25,14 +25,9 @@ public class SimOpenPosition extends CommonHandler {
 	@Override
 	public SMExit enter(SMTriggerRegistry triggers) {
 		super.enter(triggers);
-		S3Speculation spec = null;
-		Security security = null;
-		S3RobotStateListener listener = null;
-		synchronized ( state ) {
-			spec = state.getActiveSpeculation();
-			security = state.getSecurity();
-			listener = state.getStateListener();
-		}
+		S3Speculation spec = state.getActiveSpeculation();
+		Security security = state.getSecurity();
+		S3RobotStateListener listener = state.getStateListener();
 		synchronized ( spec ) {
 			S3TradeSignal signal = spec.getTradeSignal();
 			CDecimal price = signal.getExpectedPrice();

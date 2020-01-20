@@ -19,6 +19,7 @@ import ru.prolib.bootes.tsgr001a.robot.TSGR001ASigTriggerObjectLocator;
 import ru.prolib.bootes.tsgr001a.robot.TSGR001AReports;
 import ru.prolib.bootes.tsgr001a.config.TSGR001AInstConfig;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
+import ru.prolib.bootes.tsgr001a.robot.SetupT0;
 import ru.prolib.bootes.tsgr001a.robot.TSGR001ADataHandler;
 import ru.prolib.bootes.tsgr001a.robot.filter.S3TSFilterFactory;
 import ru.prolib.bootes.tsgr001a.robot.filter.S3TSFilterSetFactory;
@@ -69,7 +70,7 @@ public class TSGR001AInit extends CommonHandler {
 		state.setContractStrategy(new RMContractStrategy(csp, ol, ps, ltt));
 		state.setContractStrategyParams(csp);
 		
-		state.setSignalTrigger(new S3CESDSignalTrigger(new TSGR001ASigTriggerObjectLocator(state)));
+		state.setSignalTrigger(new S3CESDSignalTrigger(new TSGR001ASigTriggerObjectLocator(state, SetupT0.SID_CLOSE_PRICE)));
 		state.setSignalFilter(new S3TSFilterSetFactory(new S3TSFilterFactory(reports, state))
 				//.produce("CoolDown30, SLgtATR, MADevLim, ByTrendT1, FCSD"));
 				.produce(config.getFilterDefs()));

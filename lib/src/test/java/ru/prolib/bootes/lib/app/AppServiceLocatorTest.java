@@ -18,6 +18,7 @@ import ru.prolib.aquila.core.data.Candle;
 import ru.prolib.aquila.core.data.TFSymbol;
 import ru.prolib.aquila.core.text.IMessages;
 import ru.prolib.aquila.core.utils.PriceScaleDB;
+import ru.prolib.aquila.data.replay.CandleReplayService;
 import ru.prolib.aquila.data.storage.MDStorage;
 import ru.prolib.bootes.lib.config.AppConfig2;
 import ru.prolib.bootes.lib.service.UIService;
@@ -158,13 +159,13 @@ public class AppServiceLocatorTest {
 	}
 	
 	@Test (expected=NullPointerException.class)
-	public void testGetOHLCHistoryStorage() throws Exception {
+	public void testGetOHLCHistoryStorage_ThrowsIfNotDefined() throws Exception {
 		service.getOHLCHistoryStorage();
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Test
-	public void testGetOHLCHistoryStorage_ThrowsIfNotDefined() {
+	public void testGetOHLCHistoryStorage() {
 		MDStorage<TFSymbol, Candle> storageMock = control.createMock(MDStorage.class);
 		service.setOHLCHistoryStorage(storageMock);
 		
@@ -173,6 +174,23 @@ public class AppServiceLocatorTest {
 		assertNotNull(actual);
 		assertSame(storageMock, actual);
 		assertSame(actual, service.getOHLCHistoryStorage());
+	}
+
+	@Test (expected=NullPointerException.class)
+	public void testGetOHLCReplayService_ThrowsIfNotDefined() {
+		service.getOHLCReplayService();
+	}
+	
+	@Test
+	public void testGetOHLCReplayService() {
+		CandleReplayService crsMock = control.createMock(CandleReplayService.class);
+		service.setOHLCReplayService(crsMock);
+		
+		CandleReplayService actual = service.getOHLCReplayService();
+		
+		assertNotNull(actual);
+		assertSame(crsMock, actual);
+		assertSame(actual, service.getOHLCReplayService());
 	}
 	
 	@Test

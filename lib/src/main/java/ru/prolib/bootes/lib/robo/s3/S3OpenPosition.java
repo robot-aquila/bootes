@@ -117,14 +117,10 @@ public class S3OpenPosition extends SMStateHandlerEx implements
 	public SMExit enter(SMTriggerRegistry triggers) {
 		super.enter(triggers);
 		
-		S3Speculation spec;
-		Security security;
-		Portfolio portfolio;
-		synchronized ( state ) {
-			spec = state.getActiveSpeculation();
-			security = state.getSecurity();
-			portfolio = state.getPortfolio();
-		}
+		S3Speculation spec = state.getActiveSpeculation();
+		Security security = state.getSecurity();
+		Portfolio portfolio = state.getPortfolio();
+			
 		S3TradeSignal signal;
 		synchronized ( spec ) {
 			signal = spec.getTradeSignal();
@@ -163,7 +159,7 @@ public class S3OpenPosition extends SMStateHandlerEx implements
 		
 		Instant cancell_at = terminal.getCurrentTime().plusSeconds(TIMEOUT_SECONDS);
 		triggers.add(newTriggerOnEvent(order.onDone(), inFinish));
-		triggers.add(newExitOnTimer(terminal, cancell_at, inTimeout));
+		triggers.add(newTriggerOnTimer(terminal, cancell_at, inTimeout));
 		
 		try {
 			terminal.placeOrder(order);

@@ -214,6 +214,7 @@ public class S3OpenPositionTest {
 		S3Speculation spec = new S3Speculation(new S3TradeSignal(
 				SignalType.BUY,
 				T("2019-03-06T19:13:00Z"),
+				-1,
 				of("120.96"),
 				of(0L),
 				of("13.00"),
@@ -236,6 +237,7 @@ public class S3OpenPositionTest {
 		S3Speculation spec = new S3Speculation(new S3TradeSignal(
 				SignalType.NONE,
 				T("2019-03-06T19:13:00Z"),
+				-1,
 				of("120.96"),
 				of(10L),
 				of("13.00"),
@@ -258,6 +260,7 @@ public class S3OpenPositionTest {
 		S3Speculation spec = new S3Speculation(new S3TradeSignal(
 				SignalType.BUY,
 				T("2019-03-06T19:13:00Z"),
+				-1,
 				of("120.96"),
 				of(10L),
 				of("13.00"),
@@ -291,6 +294,7 @@ public class S3OpenPositionTest {
 		S3Speculation spec = new S3Speculation(new S3TradeSignal(
 				SignalType.SELL,
 				T("2019-03-06T19:13:00Z"),
+				-1,
 				of("120.96"),
 				of(10L),
 				of("13.00"),
@@ -324,6 +328,7 @@ public class S3OpenPositionTest {
 		S3Speculation spec = new S3Speculation(new S3TradeSignal(
 				SignalType.SELL,
 				T("2019-03-06T19:13:00Z"),
+				-1,
 				of("120.96"),
 				of(10L),
 				of("13.00"),
@@ -373,6 +378,7 @@ public class S3OpenPositionTest {
 		S3Speculation spec = new S3Speculation(new S3TradeSignal(
 				SignalType.SELL,
 				T("2019-03-06T19:13:00Z"),
+				-1,
 				of("120.96"),
 				of(10L),
 				of("13.00"),
@@ -409,6 +415,7 @@ public class S3OpenPositionTest {
 		S3Speculation spec = new S3Speculation(new S3TradeSignal(
 				SignalType.SELL,
 				T("2019-03-06T19:13:00Z"),
+				-1,
 				of("120.96"),
 				of(10L),
 				of("13.00"),

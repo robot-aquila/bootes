@@ -6,7 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
-import ru.prolib.aquila.core.BusinessEntities.Scheduler;
+import ru.prolib.aquila.core.BusinessEntities.MDLevel;
+import ru.prolib.aquila.core.BusinessEntities.SubscrHandler;
 import ru.prolib.aquila.core.BusinessEntities.TStampedVal;
 import ru.prolib.aquila.core.sm.SMExit;
 import ru.prolib.aquila.core.sm.SMExitAction;
@@ -37,6 +38,7 @@ public class S3TrackPosition extends SMStateHandlerEx implements
 	private S3TradeSignal sig;
 	private CDecimal stopLoss, takeProfit, breakEven;
 	private TStampedVal<CDecimal> low, high;
+	private SubscrHandler subscription;
 
 	public S3TrackPosition(AppServiceLocator serviceLocator,
 							IS3Speculative state)
@@ -51,16 +53,14 @@ public class S3TrackPosition extends SMStateHandlerEx implements
 	@Override
 	public SMExit enter(SMTriggerRegistry triggers) {
 		super.enter(triggers);
-		Scheduler scheduler = serviceLocator.getScheduler();
-		Instant curr_time = scheduler.getCurrentTime();
-		synchronized ( state ) {
-			triggers.add(newExitOnTimer(scheduler, state.getContractStrategy()
-					.getTradingTimetable()
-					.getActiveOrComing(curr_time)
-					.getEnd(), in));
-			triggers.add(newTriggerOnEvent(state.getSecurity().onLastTrade(), in));
-			spec = state.getActiveSpeculation();
-		}
+		Instant curr_time = serviceLocator.getScheduler().getCurrentTime();
+		subscription = serviceLocator.getTerminal().subscribe(state.getSecurity().getSymbol(), MDLevel.L1);
+		triggers.add(newTriggerOnTimer(serviceLocator.getScheduler(), state.getContractStrategy()
+				.getTradingTimetable()
+				.getActiveOrComing(curr_time)
+				.getEnd(), in));
+		triggers.add(newTriggerOnEvent(state.getSecurity().onLastTrade(), in));
+		spec = state.getActiveSpeculation();
 		
 		high = null;
 		low = null;
@@ -96,7 +96,7 @@ public class S3TrackPosition extends SMStateHandlerEx implements
 	@Override
 	public SMExit input(Object data) {
 		Instant curr_time = serviceLocator.getScheduler().getCurrentTime();
-		CDecimal last_price = state.getSecurity().getLastTrade().getPrice();
+		CDecimal last_price = state.getSecurity().getLastPrice();
 		S3Speculation spec = state.getActiveSpeculation();
 		synchronized ( spec ) {
 			if ( data instanceof Instant ) {
@@ -163,6 +163,7 @@ public class S3TrackPosition extends SMStateHandlerEx implements
 
 	@Override
 	public void exit() {
+		subscription.close();
 		logger.debug(" low={}", low);
 		logger.debug("high={}", high);
 	}

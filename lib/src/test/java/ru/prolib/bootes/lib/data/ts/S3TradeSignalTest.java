@@ -27,6 +27,7 @@ public class S3TradeSignalTest {
 		service = new S3TradeSignal(
 				SignalType.SELL,
 				T("2019-01-04T04:33:42Z"),
+				215,
 				of("50.34"),
 				of("1.0"),
 				of("20.00"),
@@ -42,6 +43,7 @@ public class S3TradeSignalTest {
 	public void testGetters() {
 		assertEquals(SignalType.SELL, service.getType());
 		assertEquals(T("2019-01-04T04:33:42Z"), service.getTime());
+		assertEquals(215, service.getIndex());
 		assertEquals(of("50.34"), service.getExpectedPrice());
 		assertEquals(of("1.0"), service.getExpectedQty());
 		assertEquals(of("20.00"), service.getTakeProfitPts());
@@ -58,6 +60,7 @@ public class S3TradeSignalTest {
 				.append("S3TradeSignal[")
 				.append("type=SELL,")
 				.append("time=2019-01-04T04:33:42Z,")
+				.append("index=215,")
 				.append("expectedPrice=50.34,")
 				.append("expectedQty=1.0,")
 				.append("takeProfitPts=20.00,")
@@ -77,6 +80,7 @@ public class S3TradeSignalTest {
 		int expected = new HashCodeBuilder(9007861, 419)
 				.append(SignalType.SELL)
 				.append(T("2019-01-04T04:33:42Z"))
+				.append(215)
 				.append(of("50.34"))
 				.append(of("1.0"))
 				.append(of("20.00"))
@@ -110,13 +114,15 @@ public class S3TradeSignalTest {
 			vBCap = new Variant<>(vSLI, ofRUB5("10000"), ofUSD5("7000")),
 			vGCap = new Variant<>(vBCap, ofRUB5("7500"), ofUSD2("400")),
 			vLCap = new Variant<>(vGCap, ofRUB5("1200"), ofUSD5("200"));
-		Variant<?> iterator = vSLP;
+		Variant<Integer> vIdx = new Variant<>(vLCap, 215, -1, 26);
+		Variant<?> iterator = vIdx;
 		int foundCnt = 0;
 		S3TradeSignal x, found = null;
 		do {
 			x = new S3TradeSignal(
 					vType.get(),
 					vTime.get(),
+					vIdx.get(),
 					vEPR.get(),
 					vEQT.get(),
 					vTPP.get(),
@@ -134,6 +140,7 @@ public class S3TradeSignalTest {
 		assertEquals(1, foundCnt);
 		assertEquals(SignalType.SELL, found.getType());
 		assertEquals(T("2019-01-04T04:33:42Z"), found.getTime());
+		assertEquals(215, found.getIndex());
 		assertEquals(of("50.34"), found.getExpectedPrice());
 		assertEquals(of("1.0"), found.getExpectedQty());
 		assertEquals(of("20.00"), found.getTakeProfitPts());

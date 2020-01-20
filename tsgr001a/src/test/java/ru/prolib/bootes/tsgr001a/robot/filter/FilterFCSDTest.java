@@ -30,10 +30,11 @@ public class FilterFCSDTest {
 	private static Symbol SYMBOL = new Symbol("AQLA");
 	private static ZTFrame TFRAME = ZTFrame.M5;
 	
-	static S3TradeSignal ofType(SignalType type, Instant time) {
+	static S3TradeSignal ofType(SignalType type, Instant time, int index) {
 		return new S3TradeSignal(
 				type,
 				time,
+				index,
 				of("100.00"),
 				of(1000L),
 				of("50.00"),
@@ -45,28 +46,28 @@ public class FilterFCSDTest {
 			);
 	}
 	
-	static S3TradeSignal ofTypeBuy(Instant time) {
-		return ofType(SignalType.BUY, time);
+	static S3TradeSignal ofTypeBuy(Instant time, int index) {
+		return ofType(SignalType.BUY, time, index);
 	}
 	
-	static S3TradeSignal ofTypeBuy(String timeString) {
-		return ofTypeBuy(T(timeString));
+	static S3TradeSignal ofTypeBuy(String timeString, int index) {
+		return ofTypeBuy(T(timeString), index);
 	}
 	
-	static S3TradeSignal ofTypeBuy() {
-		return ofTypeBuy(Instant.EPOCH);
+	static S3TradeSignal ofTypeBuy(int index) {
+		return ofTypeBuy(Instant.EPOCH, index);
 	}
 	
-	static S3TradeSignal ofTypeSell(Instant time) {
-		return ofType(SignalType.SELL, time);
+	static S3TradeSignal ofTypeSell(Instant time, int index) {
+		return ofType(SignalType.SELL, time, index);
 	}
 	
-	static S3TradeSignal ofTypeSell(String timeString) {
-		return ofTypeSell(T(timeString));
+	static S3TradeSignal ofTypeSell(String timeString, int index) {
+		return ofTypeSell(T(timeString), index);
 	}
 	
-	static S3TradeSignal ofTypeSell() {
-		return ofTypeSell(Instant.EPOCH);
+	static S3TradeSignal ofTypeSell(int index) {
+		return ofTypeSell(Instant.EPOCH, index);
 	}
 	
 	static Instant T(String timeString) {
@@ -137,7 +138,7 @@ public class FilterFCSDTest {
 		expect(dhMock.getSeriesHandlerT0()).andStubReturn(null);
 		control.replay();
 		
-		assertFalse(service.approve(ofTypeBuy()));
+		assertFalse(service.approve(ofTypeBuy(-1)));
 		
 		control.verify();
 	}
@@ -151,7 +152,7 @@ public class FilterFCSDTest {
 		addOHLC("2019-03-08T08:55:00Z", "58.80", "59.95");
 		//addOHLC("2019-03-08T09:00:00Z", "59.94", "59.99");
 		
-		assertFalse(service.approve(ofTypeBuy("2019-03-08T09:00:00Z")));
+		assertFalse(service.approve(ofTypeBuy("2019-03-08T09:00:00Z", -1)));
 		
 		control.verify();
 	}
@@ -164,7 +165,7 @@ public class FilterFCSDTest {
 		addOHLC("2019-03-08T08:55:00Z", "58.80", "59.95");
 		addOHLC("2019-03-08T09:00:00Z", "59.94", "59.99");
 		
-		assertFalse(service.approve(ofTypeBuy("2019-03-08T09:00:00Z")));
+		assertFalse(service.approve(ofTypeBuy("2019-03-08T09:00:00Z", 1)));
 		
 		control.verify();
 	}
@@ -178,7 +179,7 @@ public class FilterFCSDTest {
 		addOHLC("2019-03-08T08:55:00Z", "51.80", "59.95");
 		addOHLC("2019-03-08T09:00:00Z", "59.94", "59.99");
 		
-		assertFalse(service.approve(ofTypeBuy("2019-03-08T09:00:00Z")));
+		assertFalse(service.approve(ofTypeBuy("2019-03-08T09:00:00Z", 2)));
 		
 		control.verify();
 	}
@@ -192,7 +193,7 @@ public class FilterFCSDTest {
 		addOHLC("2019-03-08T08:55:00Z", "58.80", "59.95");
 		addOHLC("2019-03-08T09:00:00Z", "59.94", "59.99");
 		
-		assertTrue(service.approve(ofTypeBuy("2019-03-08T09:00:00Z")));
+		assertTrue(service.approve(ofTypeBuy("2019-03-08T09:00:00Z", 2)));
 		
 		control.verify();
 	}
@@ -206,7 +207,7 @@ public class FilterFCSDTest {
 		addOHLC("2019-03-08T08:55:00Z", "58.80", "51.95");
 		addOHLC("2019-03-08T09:00:00Z", "51.94", "50.99");
 		
-		assertFalse(service.approve(ofTypeSell("2019-03-08T09:00:00Z")));
+		assertFalse(service.approve(ofTypeSell("2019-03-08T09:00:00Z", 2)));
 		
 		control.verify();
 	}
@@ -220,7 +221,7 @@ public class FilterFCSDTest {
 		addOHLC("2019-03-08T08:55:00Z", "53.80", "51.95");
 		addOHLC("2019-03-08T09:00:00Z", "51.94", "50.99");
 		
-		assertTrue(service.approve(ofTypeSell("2019-03-08T09:00:00Z")));
+		assertTrue(service.approve(ofTypeSell("2019-03-08T09:00:00Z", 2)));
 		
 		control.verify();
 	}

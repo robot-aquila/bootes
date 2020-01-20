@@ -36,19 +36,19 @@ public class S3CESDSignalTriggerTest {
 		source.set(T("2019-01-04T03:05:00Z"), of("14.92"));
 		source.set(T("2019-01-04T03:10:00Z"), of("15.01"));
 		
-		assertEquals(SignalType.NONE, service.getSignal(T("2019-01-04T03:15:00Z")));
+		assertNull(service.getSignal(T("2019-01-01T00:00:00Z")));
 	}
 	
 	@Test
 	public void testGetSignal_SkipIf0Elements() {
-		assertEquals(SignalType.NONE, service.getSignal(T("2019-01-04T03:15:00Z")));
+		assertNull(service.getSignal(T("2019-01-04T03:15:00Z")));
 	}
 	
 	@Test
 	public void testGetSignal_SkipIf1Elements() {
 		source.set(T("2019-01-04T02:55:00Z"), of("14.12"));
 		
-		assertEquals(SignalType.NONE, service.getSignal(T("2019-01-04T02:55:00Z")));
+		assertNull(service.getSignal(T("2019-01-04T02:55:00Z")));
 	}
 	
 	@Test
@@ -56,16 +56,7 @@ public class S3CESDSignalTriggerTest {
 		source.set(T("2019-01-04T02:55:00Z"), of("14.12"));
 		source.set(T("2019-01-04T03:00:00Z"), of("14.23"));
 		
-		assertEquals(SignalType.NONE, service.getSignal(T("2019-01-04T03:00:00Z")));
-	}
-	
-	@Test
-	public void testGetSignal_SkipIf3Elements() {
-		source.set(T("2019-01-04T02:55:00Z"), of("14.12"));
-		source.set(T("2019-01-04T03:00:00Z"), of("14.23"));
-		source.set(T("2019-01-04T03:05:00Z"), of("14.92"));
-		
-		assertEquals(SignalType.NONE, service.getSignal(T("2019-01-04T03:05:00Z")));
+		assertNull(service.getSignal(T("2019-01-04T03:00:00Z")));
 	}
 	
 	@Test
@@ -73,9 +64,8 @@ public class S3CESDSignalTriggerTest {
 		source.set(T("2019-01-04T02:55:00Z"), null);
 		source.set(T("2019-01-04T03:00:00Z"), of("14.23"));
 		source.set(T("2019-01-04T03:05:00Z"), of("14.92"));
-		source.set(T("2019-01-04T03:10:00Z"), of("15.01"));
 		
-		assertEquals(SignalType.NONE, service.getSignal(T("2019-01-04T03:10:00Z")));
+		assertNull(service.getSignal(T("2019-01-04T03:10:00Z")));
 	}
 	
 	@Test
@@ -83,9 +73,8 @@ public class S3CESDSignalTriggerTest {
 		source.set(T("2019-01-04T02:55:00Z"), of("14.12"));
 		source.set(T("2019-01-04T03:00:00Z"), null);
 		source.set(T("2019-01-04T03:05:00Z"), of("14.92"));
-		source.set(T("2019-01-04T03:10:00Z"), of("15.01"));
 		
-		assertEquals(SignalType.NONE, service.getSignal(T("2019-01-04T03:10:00Z")));
+		assertNull(service.getSignal(T("2019-01-04T03:10:00Z")));
 	}
 	
 	@Test
@@ -93,9 +82,8 @@ public class S3CESDSignalTriggerTest {
 		source.set(T("2019-01-04T02:55:00Z"), of("14.12"));
 		source.set(T("2019-01-04T03:00:00Z"), of("14.23"));
 		source.set(T("2019-01-04T03:05:00Z"), null);
-		source.set(T("2019-01-04T03:10:00Z"), of("15.01"));
 		
-		assertEquals(SignalType.NONE, service.getSignal(T("2019-01-04T03:10:00Z")));
+		assertNull(service.getSignal(T("2019-01-04T03:10:00Z")));
 	}
 	
 	@Test
@@ -103,9 +91,14 @@ public class S3CESDSignalTriggerTest {
 		source.set(T("2019-01-04T02:55:00Z"), of("14.12"));
 		source.set(T("2019-01-04T03:00:00Z"), of("14.23"));
 		source.set(T("2019-01-04T03:05:00Z"), of("14.92"));
-		source.set(T("2019-01-04T03:10:00Z"), of("13.99"));
+		source.set(T("2019-01-04T03:10:00Z"), of("13.99")); // consider incomplete element
 		
-		assertEquals(SignalType.BUY, service.getSignal(T("2019-01-04T03:10:00Z")));
+		TSignal
+		expected = new TSignal(T("2019-01-04T03:10:00Z"), 2, SignalType.BUY, of("14.92"));
+		assertEquals(expected, service.getSignal(T("2019-01-04T03:10:00Z")));
+		
+		expected = new TSignal(T("2019-01-04T03:13:29Z"), 2, SignalType.BUY, of("14.92"));
+		assertEquals(expected, service.getSignal(T("2019-01-04T03:13:29Z")));
 	}
 	
 	@Test
@@ -115,7 +108,7 @@ public class S3CESDSignalTriggerTest {
 		source.set(T("2019-01-04T03:05:00Z"), of("14.92"));
 		source.set(T("2019-01-04T03:10:00Z"), of("13.99"));
 		
-		assertEquals(SignalType.NONE, service.getSignal(T("2019-01-04T03:10:00Z")));
+		assertNull(service.getSignal(T("2019-01-04T03:10:00Z")));
 	}
 
 	@Test
@@ -125,7 +118,7 @@ public class S3CESDSignalTriggerTest {
 		source.set(T("2019-01-04T03:05:00Z"), of("14.22"));
 		source.set(T("2019-01-04T03:10:00Z"), of("13.99"));
 		
-		assertEquals(SignalType.NONE, service.getSignal(T("2019-01-04T03:10:00Z")));
+		assertNull(service.getSignal(T("2019-01-04T03:10:00Z")));
 	}
 
 	@Test
@@ -135,7 +128,9 @@ public class S3CESDSignalTriggerTest {
 		source.set(T("2019-01-04T03:05:00Z"), of("14.01"));
 		source.set(T("2019-01-04T03:10:00Z"), of("15.34"));
 		
-		assertEquals(SignalType.SELL, service.getSignal(T("2019-01-04T03:10:00Z")));
+		TSignal
+		expected = new TSignal(T("2019-01-04T03:10:00Z"), 2, SignalType.SELL, of("14.01"));
+		assertEquals(expected, service.getSignal(T("2019-01-04T03:10:00Z")));
 	}
 	
 	@Test
@@ -145,7 +140,7 @@ public class S3CESDSignalTriggerTest {
 		source.set(T("2019-01-04T03:05:00Z"), of("14.01"));
 		source.set(T("2019-01-04T03:10:00Z"), of("15.34"));
 		
-		assertEquals(SignalType.NONE, service.getSignal(T("2019-01-04T03:10:00Z")));
+		assertNull(service.getSignal(T("2019-01-04T03:10:00Z")));
 	}
 	
 	@Test
@@ -155,7 +150,17 @@ public class S3CESDSignalTriggerTest {
 		source.set(T("2019-01-04T03:05:00Z"), of("14.54"));
 		source.set(T("2019-01-04T03:10:00Z"), of("15.34"));
 		
-		assertEquals(SignalType.NONE, service.getSignal(T("2019-01-04T03:10:00Z")));
+		assertNull(service.getSignal(T("2019-01-04T03:10:00Z")));
+	}
+	
+	@Test
+	public void testGetSignal_IfTimeNotFoundButHasEntriesBeforeThatTime() {
+		source.set(T("2019-01-04T02:55:00Z"), of("14.12"));
+		source.set(T("2019-01-04T03:00:00Z"), of("14.09"));
+		source.set(T("2019-01-04T03:05:00Z"), of("14.01"));
+		source.set(T("2019-01-04T03:10:00Z"), of("15.34"));
+
+		assertNull(service.getSignal(T("2019-01-05T00:00:00Z")));
 	}
 
 }

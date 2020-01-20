@@ -16,6 +16,7 @@ import ru.prolib.aquila.core.sm.SMTriggerRegistry;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.data.ts.S3TradeSignal;
 import ru.prolib.bootes.lib.data.ts.SignalType;
+import ru.prolib.bootes.lib.data.ts.TSignal;
 import ru.prolib.bootes.lib.data.ts.filter.IFilterSetState;
 import ru.prolib.bootes.lib.rm.RMContractStrategyPositionParams;
 import ru.prolib.bootes.lib.robo.s3.statereq.IS3SignalDeterminable;
@@ -54,7 +55,7 @@ abstract public class S3WaitForMarketSignal extends SMStateHandlerEx implements 
 	}
 
 	private CDecimal getLastPrice() {
-		return state.getSecurity().getLastTrade().getPrice();
+		return state.getSecurity().getLastPrice();
 	}
 
 	@Override
@@ -66,7 +67,11 @@ abstract public class S3WaitForMarketSignal extends SMStateHandlerEx implements 
 			return null; // Outside of trading period
 		}
 		
-		SignalType sig_type = state.getSignalTrigger().getSignal(curr_time);
+		TSignal t_sig = state.getSignalTrigger().getSignal(curr_time);
+		if ( t_sig == null ) {
+			return null;
+		}
+		SignalType sig_type = t_sig.getType();
 		if ( sig_type == null || sig_type == SignalType.NONE ) {
 			return null;
 		}
@@ -74,7 +79,8 @@ abstract public class S3WaitForMarketSignal extends SMStateHandlerEx implements 
 		S3TradeSignal signal = new S3TradeSignal(
 				sig_type,
 				curr_time,
-				getLastPrice(),
+				t_sig.getIndex(),
+				t_sig.getPrice() == null ? getLastPrice() : t_sig.getPrice(),
 				CDecimalBD.of((long) cspp.getNumberOfContracts()),
 				cspp.getTakeProfitPts(),
 				cspp.getStopLossPts(),

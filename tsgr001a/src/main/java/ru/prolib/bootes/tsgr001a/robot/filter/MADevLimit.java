@@ -44,7 +44,7 @@ public class MADevLimit extends AbstractFilter<S3TradeSignal> {
 				return false;
 			}
 			try {
-				ma = ma_s.get(-1);
+				ma = ma_s.get(signal.getIndex());
 			} catch ( ValueException e ) {
 				throw new IllegalStateException(e);
 			}

@@ -43,6 +43,9 @@ public class PriceChartTitleOverlay implements TextOverlay {
 	}
 	
 	protected String getText(int categoryIndex, Candle candle) throws Exception {
+		if ( candle == null ) {
+			return "";
+		}
 		return new StringBuilder()
 				.append(prefix)
 				.append(" ")

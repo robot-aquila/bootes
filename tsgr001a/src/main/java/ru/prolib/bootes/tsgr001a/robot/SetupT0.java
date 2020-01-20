@@ -26,10 +26,10 @@ public class SetupT0 extends SetupTX {
 	public static final String SID_SHARED = "TZ";
 	public static final String SID_ATR = "ATR";
 	public static final String SID_EMA = "EMA";
-	public static final String SID_PVC_RAW = "PVC_RAW";
-	public static final String SID_PVC_WAVG = "PVC_WAVG";
+	//public static final String SID_PVC_RAW = "PVC_RAW";
+	//public static final String SID_PVC_WAVG = "PVC_WAVG";
 	
-	private PVClusterSeriesByLastTrade pvcProducer;
+	//private PVClusterSeriesByLastTrade pvcProducer;
 
 	public SetupT0(AppServiceLocator serviceLocator, IContractDeterminable state) {
 		super(serviceLocator, state);
@@ -57,9 +57,9 @@ public class SetupT0 extends SetupTX {
 	{
 		super.createDerivedSeries(source, cache, ohlc);
 		
-		EditableTSeries<PVCluster> pvc_raw = source.createSeries(SID_PVC_RAW, false);
-		WeightedAverageTSeries pvc_wavg = new WeightedAverageTSeries(pvc_raw, SID_PVC_WAVG);
-		pvcProducer = new PVClusterSeriesByLastTrade(pvc_raw, getTerminal(), symbol);
+		//EditableTSeries<PVCluster> pvc_raw = source.createSeries(SID_PVC_RAW, false);
+		//WeightedAverageTSeries pvc_wavg = new WeightedAverageTSeries(pvc_raw, SID_PVC_WAVG);
+		//pvcProducer = new PVClusterSeriesByLastTrade(pvc_raw, getTerminal(), symbol);
 		
 		QATRTSeriesFast atr = new QATRTSeriesFast(SID_ATR, ohlc, CONF_ATR_PERIOD, CONF_SCALE);
 		QEMATSeriesFast ema = new QEMATSeriesFast(SID_EMA, close, CONF_EMA_PERIOD, CONF_SCALE);
@@ -67,7 +67,7 @@ public class SetupT0 extends SetupTX {
 		cache.addCache(atr);
 		cache.addCache(ema);
 	
-		source.registerRawSeries(pvc_wavg);
+		//source.registerRawSeries(pvc_wavg);
 		source.registerRawSeries(atr);
 		source.registerRawSeries(ema);
 	}
@@ -75,12 +75,12 @@ public class SetupT0 extends SetupTX {
 	@Override
 	public void onStart() {
 		super.onStart();
-		pvcProducer.start();
+		//pvcProducer.start();
 	}
 	
 	@Override
 	public void onStop() {
-		pvcProducer.stop();
+		//pvcProducer.stop();
 		super.onStop();
 	}
 

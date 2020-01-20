@@ -33,15 +33,16 @@ public class CMASignalTriggerTest {
 	@Test
 	public void testGetSignal() {
 		Instant t = Instant.EPOCH;
+		expect(fastMock.getLength()).andStubReturn(248);
 		expect(mathMock.cross(fastMock, slowMock, t))
 			.andReturn( 0)
 			.andReturn(-1)
 			.andReturn( 1);
 		control.replay();
 		
-		assertEquals(SignalType.NONE, service.getSignal(t));
-		assertEquals(SignalType.SELL, service.getSignal(t));
-		assertEquals(SignalType.BUY,  service.getSignal(t));
+		assertEquals(new TSignal(t, 247, SignalType.NONE, null), service.getSignal(t));
+		assertEquals(new TSignal(t, 247, SignalType.SELL, null), service.getSignal(t));
+		assertEquals(new TSignal(t, 247, SignalType.BUY,  null), service.getSignal(t));
 		
 		control.verify();
 	}

@@ -25,7 +25,7 @@ public class ChartT0 extends SecurityChartPanel {
 	private final IBlockReportStorage reportStorage;
 	private BarChart atrChart;
 	private BarChartLayer lyrEma, lyrAtr, lyrAtrCursorCat, lyrPriceTitle,
-		lyrAtrTitle, lyrPvc, lyrBlockrep;
+		lyrAtrTitle, /*lyrPvc,*/ lyrBlockrep;
 	private SWValueAxisRulerRenderer atrValueRulerRenderer;
 	
 	public ChartT0(ZoneId zoneID, IBlockReportStorage reportStorage) {
@@ -56,7 +56,7 @@ public class ChartT0 extends SecurityChartPanel {
 					chartPanel.getCategoryTracker()
 				)
 			));
-			lyrPvc = priceChart.addPolyLine(source.getSeries(SetupT0.SID_PVC_WAVG)).setColor(Color.ORANGE);
+			//lyrPvc = priceChart.addPolyLine(source.getSeries(SetupT0.SID_PVC_WAVG)).setColor(Color.ORANGE);
 			lyrBlockrep = priceChart.addLayer(new BlockReportLayer("MS_REPORT", reportStorage, source));
 		}
 		if ( atrChart != null ) {
@@ -82,10 +82,10 @@ public class ChartT0 extends SecurityChartPanel {
 			priceChart.dropLayer(lyrPriceTitle.getId());
 			lyrPriceTitle = null;
 		}
-		if ( lyrPvc != null ) {
-			priceChart.dropLayer(lyrPvc.getId());
-			lyrPvc = null;
-		}
+		//if ( lyrPvc != null ) {
+		//	priceChart.dropLayer(lyrPvc.getId());
+		//	lyrPvc = null;
+		//}
 		if ( lyrBlockrep != null ) {
 			priceChart.dropLayer(lyrBlockrep.getId());
 			lyrBlockrep = null;

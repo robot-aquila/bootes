@@ -1,6 +1,7 @@
 package ru.prolib.bootes.lib.data;
 
 import ru.prolib.aquila.core.Event;
+import ru.prolib.aquila.core.BusinessEntities.MDLevel;
 import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.core.BusinessEntities.SecurityTickEvent;
 import ru.prolib.aquila.core.BusinessEntities.Symbol;
@@ -52,6 +53,11 @@ public class PVClusterSeriesByLastTrade extends FillBySecurityEvent<PVCluster> {
 	@Override
 	protected void startListening(Security security) {
 		security.onLastTrade().addListener(this);
+	}
+
+	@Override
+	protected MDLevel requiredMDLevel() {
+		return MDLevel.L1;
 	}
 
 }

@@ -28,7 +28,7 @@ public class StopLossGtATR extends AbstractFilter<S3TradeSignal> {
 					return false;
 				}
 				try {
-					atr = atr_s.get(-1);
+					atr = atr_s.get(signal.getIndex());
 				} catch ( ValueException e ) {
 					throw new IllegalStateException(e);
 				}

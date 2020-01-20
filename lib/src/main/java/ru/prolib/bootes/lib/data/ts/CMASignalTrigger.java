@@ -45,11 +45,13 @@ public class CMASignalTrigger implements SignalTrigger {
 	}
 	
 	@Override
-	public SignalType getSignal(Instant current_time) {
+	public TSignal getSignal(Instant current_time) {
+		TSeries<CDecimal> fast = locator.getFast();
+		int index = fast.getLength() - 1;
 		switch ( math.cross(locator.getFast(), locator.getSlow(), current_time) ) {
-			case -1: return SignalType.SELL;
-			case  1: return SignalType.BUY;
-			default: return SignalType.NONE;
+			case -1: return new TSignal(current_time, index, SignalType.SELL, null);
+			case  1: return new TSignal(current_time, index, SignalType.BUY,  null);
+			default: return new TSignal(current_time, index, SignalType.NONE, null);
 		}
 	}
 

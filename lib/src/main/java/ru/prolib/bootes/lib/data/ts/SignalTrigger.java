@@ -4,6 +4,6 @@ import java.time.Instant;
 
 public interface SignalTrigger {
 	
-	SignalType getSignal(Instant currentTime);
+	TSignal getSignal(Instant currentTime);
 
 }

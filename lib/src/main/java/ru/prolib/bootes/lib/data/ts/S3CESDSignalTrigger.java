@@ -37,22 +37,22 @@ public class S3CESDSignalTrigger implements SignalTrigger {
 	}
 
 	@Override
-	public synchronized SignalType getSignal(Instant currentTime) {
+	public synchronized TSignal getSignal(Instant currentTime) {
 		TSeries<CDecimal> source = locator.getSource();
-		int index = source.toIndex(currentTime);
-		if ( index < 3 ) {
-			return SignalType.NONE;
+		int index = source.getFirstIndexBefore(currentTime);
+		if ( index < 2 ) {
+			return null;
 		}
 		CDecimal v1, v2, v3;
 		try {
-			v1 = source.get(index - 3);
-			v2 = source.get(index - 2);
-			v3 = source.get(index - 1);
+			v1 = source.get(index - 2);
+			v2 = source.get(index - 1);
+			v3 = source.get(index - 0);
 		} catch ( ValueException e ) {
 			throw new IllegalStateException("Unexpected exception: ", e);
 		}
 		if ( v1 == null || v2 == null || v3 == null ) {
-			return SignalType.NONE;
+			return null;
 		}
 		int v2_cr = v2.compareTo(v1);
 		int v3_cr = v3.compareTo(v2);
@@ -63,7 +63,10 @@ public class S3CESDSignalTrigger implements SignalTrigger {
 		if ( v2_cr < 0 && v3_cr < 0 ) {
 			result = SignalType.SELL;
 		}
-		return result;
+		if ( result == SignalType.NONE ) {
+			return null;
+		}
+		return new TSignal(currentTime, index, result, v3);
 	}
 
 }

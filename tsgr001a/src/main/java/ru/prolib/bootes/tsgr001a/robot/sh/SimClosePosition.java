@@ -49,15 +49,10 @@ public class SimClosePosition extends CommonHandler {
 	@Override
 	public SMExit enter(SMTriggerRegistry triggers) {
 		super.enter(triggers);
-		S3Speculation spec = null;
-		Security security = null;
-		S3RobotStateListener listener = null;
-		synchronized ( state ) {
-			spec = state.getActiveSpeculation();
-			security = state.getSecurity();
-			listener = state.getStateListener();
-		}
-		CDecimal last_price = security.getLastTrade().getPrice(), result;
+		S3Speculation spec = state.getActiveSpeculation();
+		Security security = state.getSecurity();
+		S3RobotStateListener listener = state.getStateListener();
+		CDecimal last_price = security.getLastPrice(), result;
 		Instant curr_time = serviceLocator.getTerminal().getCurrentTime();
 		synchronized ( spec ) {
 			CDecimal qty = spec.getEntryPoint().getSize();

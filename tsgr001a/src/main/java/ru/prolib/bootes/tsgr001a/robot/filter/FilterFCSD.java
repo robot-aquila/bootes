@@ -39,11 +39,11 @@ public class FilterFCSD extends AbstractFilter<S3TradeSignal> {
 			}
 			ohlc_s = handler.getSeriesHandlerT0().getSeries().getSeries(SetupT0.SID_OHLC);
 		}
-		int index = ohlc_s.toIndex(signal.getTime());
+		int index = signal.getIndex();
 		if ( index < 0 ) {
 			return false;
 		}
-		int first = index - number;
+		int first = index + 1 - number;
 		if ( first < 0 ) {
 			return false;
 		}

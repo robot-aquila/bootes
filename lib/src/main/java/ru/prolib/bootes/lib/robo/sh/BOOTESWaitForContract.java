@@ -97,7 +97,8 @@ public class BOOTESWaitForContract extends SMStateHandlerEx
 				subs.close();
 				logger.debug("Unsubscribed: {}", prevSymbol);
 			}
-			state.setContractSubscrHandler(subs = terminal.subscribe(currSymbol, MDLevel.L0)); // TODO: should be L0
+			state.setContractSubscrHandler(subs = terminal.subscribe(currSymbol, MDLevel.L0));
+			subs.getConfirmation().join();
 			logger.debug("Subscribed: {}", currSymbol);
 		}
 		state.setContractParams(currParams);

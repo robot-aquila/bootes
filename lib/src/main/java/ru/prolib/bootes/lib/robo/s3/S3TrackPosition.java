@@ -55,6 +55,7 @@ public class S3TrackPosition extends SMStateHandlerEx implements
 		super.enter(triggers);
 		Instant curr_time = serviceLocator.getScheduler().getCurrentTime();
 		subscription = serviceLocator.getTerminal().subscribe(state.getSecurity().getSymbol(), MDLevel.L1);
+		subscription.getConfirmation().join();
 		triggers.add(newTriggerOnTimer(serviceLocator.getScheduler(), state.getContractStrategy()
 				.getTradingTimetable()
 				.getActiveOrComing(curr_time)

@@ -35,8 +35,8 @@ public class PROTOSInit extends SMStateHandlerEx {
 	@Override
 	public SMExit enter(SMTriggerRegistry triggers) {
 		super.enter(triggers);
-		final String contract_name = "RTS", account_name = "QFORTS-TEST";
-		state.setRobotTitle("PROTOS-" + contract_name);
+		final String contract_name = "RTS", account_name = state.getRobotID() + "-TEST";
+		state.setRobotTitle(state.getRobotID() + "-" + contract_name);
 		state.setContractResolver(new MOEXContractResolverRegistry().getResolver(contract_name));
 		state.setAccount(new Account(account_name));
 		

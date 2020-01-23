@@ -22,6 +22,7 @@ import com.github.difflib.patch.Patch;
 
 public class PROTOS_IT {
 	static Interval INTERVAL;
+	static File EXPECTED = new File("fixture", "expected-protos.rep");
 	
 	static Instant T(String timeString) {
 		return Instant.parse(timeString);
@@ -83,9 +84,7 @@ public class PROTOS_IT {
 //	}
 
 	@Test
-	public void test_() throws Throwable {
-		File expected = new File("fixture", "expected-protos.rep");
-		
+	public void testPass1() throws Throwable {
 		File rd_pass1 = new File(tempDir, "pass1");
 		String[] args_pass1 = {
 			"--data-dir=fixture",
@@ -94,10 +93,13 @@ public class PROTOS_IT {
 			"--probe-auto-shutdown",
 			"--probe-auto-start",
 			"--report-dir=" + rd_pass1,
-			};
+		};
 		new PROTOS().run(args_pass1);
-		assertReportFiles(expected, new File(rd_pass1, "protos.report"));
-		
+		assertReportFiles(EXPECTED, new File(rd_pass1, "protos1.report"));
+	}
+	
+	@Test
+	public void testPass2() throws Throwable {
 		File rd_pass2 = new File(tempDir, "pass2");
 		String[] args_pass2 = {
 			"--data-dir=fixture",
@@ -109,7 +111,26 @@ public class PROTOS_IT {
 			"--headless",
 		};
 		new PROTOS().run(args_pass2);
-		assertReportFiles(expected, new File(rd_pass2, "protos.report"));
+		assertReportFiles(EXPECTED, new File(rd_pass2, "protos1.report"));
+	}
+	
+	@Test
+	public void testPass3() throws Throwable {
+		File rd_pass3 = new File(tempDir, "pass3");
+		String[] args_pass3 = {
+			"--data-dir=fixture",
+			"--probe-initial-time=" + INTERVAL.getStart(),
+			"--probe-stop-time=" + INTERVAL.getEnd(),
+			"--probe-auto-shutdown",
+			"--probe-auto-start",
+			"--report-dir=" + rd_pass3,
+			"--headless",
+			"--qforts-liquidity-mode=1"
+		};
+		new PROTOS(3).run(args_pass3);
+		assertReportFiles(EXPECTED, new File(rd_pass3, "protos1.report"));
+		assertReportFiles(EXPECTED, new File(rd_pass3, "protos2.report"));
+		assertReportFiles(EXPECTED, new File(rd_pass3, "protos3.report"));
 	}
 
 }

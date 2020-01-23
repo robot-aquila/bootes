@@ -33,8 +33,8 @@ public class PROTOSRobotBuilder {
 		this.serviceLocator = serviceLocator;
 	}
 	
-	public Robot<PROTOSRobotState> build() {
-		PROTOSRobotState state = new PROTOSRobotState();
+	public Robot<PROTOSRobotState> build(String robot_id) {
+		PROTOSRobotState state = new PROTOSRobotState(robot_id);
 		SMBuilder builder = new SMBuilder()
 			.addState(new PROTOSInit(serviceLocator, state), S_INIT)
 			.addState(new BOOTESWaitForAccount(serviceLocator, state), S_WAIT_ACCOUNT)

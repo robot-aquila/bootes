@@ -15,20 +15,22 @@ import ru.prolib.bootes.lib.service.UIService;
 import ru.prolib.bootes.protos.ui.PROTOSRobotUI;
 
 public class PROTOSRobotComp implements AppComponent {
+	protected final String id;
 	protected final AppServiceLocator serviceLocator;
 	private Robot<PROTOSRobotState> robot;
 	private S3CommonReports reports;
 	private FastOrderPanel orderPanel;
 
-	public PROTOSRobotComp(AppServiceLocator serviceLocator) {
+	public PROTOSRobotComp(String id, AppServiceLocator serviceLocator) {
+		this.id = id;
 		this.serviceLocator = serviceLocator;
 	}
 	
 	@Override
 	public void init() throws Throwable {
 		reports = new S3CommonReports(serviceLocator);
-		robot = new PROTOSRobotBuilder(serviceLocator).build();
-		robot.getAutomat().setId("PROTOS");
+		robot = new PROTOSRobotBuilder(serviceLocator).build(id);
+		robot.getAutomat().setId(id);
 		robot.getAutomat().setDebug(true);
 		PROTOSRobotState state = robot.getState();
 		S3RobotStateListenerComp stateListener = state.getStateListener();
@@ -70,7 +72,7 @@ public class PROTOSRobotComp implements AppComponent {
 		}
 		// TODO: Here! Wait for automat finished work.
 		AppConfig2 app_conf = serviceLocator.getConfig();
-		reports.save(app_conf.getBasicConfig().getReportDirectory(), "protos.report");
+		reports.save(app_conf.getBasicConfig().getReportDirectory(), id + ".report");
 	}
 
 	@Override

@@ -8,6 +8,15 @@ import ru.prolib.bootes.lib.app.AppComponent;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 
 public class PROTOS extends App {
+	private final int numRobots;
+	
+	public PROTOS(int num_robots) {
+		this.numRobots = num_robots;
+	}
+	
+	public PROTOS() {
+		this(1);
+	}
 
 	public static void main(String[] args) throws Throwable {
 		System.exit(new PROTOS().run(args));
@@ -15,7 +24,9 @@ public class PROTOS extends App {
 
 	@Override
 	protected void registerApplications(List<AppComponent> list) {
-		list.add(new PROTOSRobotComp(getServiceLocator()));
+		for ( int i = 1; i <= numRobots; i ++ ) {
+			list.add(new PROTOSRobotComp("protos" + i, getServiceLocator()));
+		}
 	}
 	
 	@Override

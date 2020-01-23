@@ -19,6 +19,7 @@ import ru.prolib.aquila.core.config.ConfigException;
 import ru.prolib.aquila.core.config.KVStoreHash;
 import ru.prolib.aquila.core.config.OptionProvider;
 import ru.prolib.aquila.core.config.OptionProviderKvs;
+import ru.prolib.aquila.qforts.impl.QForts;
 
 public class QFTerminalConfigTest {
 	
@@ -85,6 +86,27 @@ public class QFTerminalConfigTest {
 		eex.expectMessage("qforts-data-dir option expected to be not null");
 		
 		service2.getDataDirectory();
+	}
+	
+	@Test
+	public void testGetLiquidityMode() throws Exception {
+		options1.put("qforts-liquidity-mode", "0");
+		assertEquals(QForts.LIQUIDITY_LIMITED, service1.getLiquidityMode());
+		
+		options1.put("qforts-liquidity-mode", "1");
+		assertEquals(QForts.LIQUIDITY_APPLY_TO_ORDER, service1.getLiquidityMode());
+		
+		options1.put("qforts-liquidity-mode", "2");
+		assertEquals(QForts.LIQUIDITY_UNLIMITED, service1.getLiquidityMode());
+	}
+	
+	@Test
+	public void testGetLiquidityMode_ThrowsIfModeIsNotKnown() throws Exception {
+		eex.expect(ConfigException.class);
+		eex.expectMessage("qforts-liquidity-mode expected to be 0, 1 or 2 but: 3");
+		options1.put("qforts-liquidity-mode", "3");
+		
+		service1.getLiquidityMode();
 	}
 	
 	@Test

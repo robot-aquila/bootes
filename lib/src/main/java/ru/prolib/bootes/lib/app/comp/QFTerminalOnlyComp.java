@@ -5,12 +5,14 @@ import ru.prolib.aquila.core.BusinessEntities.EditableTerminal;
 //import ru.prolib.aquila.core.BusinessEntities.Symbol;
 import ru.prolib.aquila.data.DataSource;
 import ru.prolib.aquila.qforts.impl.QFBuilder;
+import ru.prolib.aquila.qforts.ui.QFServiceMenu;
 import ru.prolib.aquila.web.utils.WUDataFactory;
 import ru.prolib.bootes.lib.app.AppConfigService2;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.config.AppConfig2;
 import ru.prolib.bootes.lib.config.QFTerminalConfig;
 import ru.prolib.bootes.lib.config.QFTerminalConfigSection;
+import ru.prolib.bootes.lib.service.UIService;
 import ru.prolib.bootes.lib.service.ars.ARSHandler;
 import ru.prolib.bootes.lib.service.ars.ARSHandlerBuilder;
 import ru.prolib.bootes.lib.service.task.StartTerminal;
@@ -60,6 +62,11 @@ public class QFTerminalOnlyComp extends CommonComp {
 		//}
 		
 		serviceLocator.setTerminal(terminal);
+		
+		if ( conf.getBasicConfig().isHeadless() == false ) {
+			UIService uis = serviceLocator.getUIService();
+			uis.getMainMenu().add(new QFServiceMenu(uis.getFrame(), uis.getMessages()).create(terminal));
+		}
 		
 		handler = new ARSHandlerBuilder()
 				.withID(serviceID)

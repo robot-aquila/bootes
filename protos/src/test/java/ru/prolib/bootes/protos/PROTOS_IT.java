@@ -20,6 +20,9 @@ import com.github.difflib.DiffUtils;
 import com.github.difflib.patch.AbstractDelta;
 import com.github.difflib.patch.Patch;
 
+import ru.prolib.bootes.lib.report.ReportComparator;
+import ru.prolib.bootes.lib.report.STRCmpResult;
+
 public class PROTOS_IT {
 	static Interval INTERVAL;
 	static File EXPECTED = new File("fixture", "expected-protos.rep");
@@ -47,6 +50,7 @@ public class PROTOS_IT {
 		}
 	}
 	
+	@Deprecated
 	private static List<String> removeSysInfoReport(List<String> lines) {
 		for ( int i = 0; i < lines.size(); i ++ ) {
 			String line = lines.get(i);
@@ -61,7 +65,7 @@ public class PROTOS_IT {
 		return lines;
 	}
 	
-	private static void assertReportFiles(File expected, File actual) throws Exception {
+	static void assertReportFiles_V1(File expected, File actual) throws Exception {
 		List<String> expected_lines = removeSysInfoReport(Files.readAllLines(expected.toPath()));
 		List<String> actual_lines = removeSysInfoReport(Files.readAllLines(actual.toPath()));
 		Patch<String> patch = DiffUtils.diff(expected_lines, actual_lines);
@@ -72,6 +76,15 @@ public class PROTOS_IT {
 		}
 		String found_deltas = StringUtils.join(deltas, "," + System.lineSeparator());
 		assertEquals("Reports are differ: ", "", found_deltas);
+	}
+	
+	static void assertReportFiles_V2(File expected, File actual) throws Exception {
+		STRCmpResult result = ReportComparator.getInstance().compare(expected, actual);
+		assertTrue(result.toString(), result.identical());		
+	}
+	
+	private static void assertReportFiles(File expected, File actual) throws Exception {
+		assertReportFiles_V2(expected, actual);
 	}
 	
 //	@Test

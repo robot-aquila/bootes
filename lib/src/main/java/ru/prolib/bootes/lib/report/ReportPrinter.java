@@ -18,10 +18,11 @@ import ru.prolib.bootes.lib.report.summarep.ISummaryReport;
 import ru.prolib.bootes.lib.report.summarep.SummaryReportBlockPrinter;
 
 public class ReportPrinter {
+	public static final String DEFAULT_TITLE = "Default";
 	private final ZoneId zoneID;
-	private final List<IReportBlockPrinter> blocks;
+	private final List<STRBHandler<IReportBlockPrinter>> blocks;
 	
-	ReportPrinter(ZoneId zoneID, List<IReportBlockPrinter> blocks) {
+	ReportPrinter(ZoneId zoneID, List<STRBHandler<IReportBlockPrinter>> blocks) {
 		this.zoneID = zoneID;
 		this.blocks = blocks;
 	}
@@ -34,35 +35,44 @@ public class ReportPrinter {
 		this(ZoneId.systemDefault());
 	}
 	
+	public ReportPrinter add(IReportBlockPrinter block_printer, String title) {
+		blocks.add(new STRBHandler<>(block_printer.getReportID(), title, block_printer));
+		return this;
+	}
+	
 	public ReportPrinter add(IReportBlockPrinter block_printer) {
-		blocks.add(block_printer);
+		blocks.add(new STRBHandler<>(block_printer.getReportID(), DEFAULT_TITLE, block_printer));
 		return this;
 	}
 	
 	public ReportPrinter add(IS3Report report, String title) {
-		return add(new S3ReportBlockPrinter(report, title, zoneID));
+		return add(new S3ReportBlockPrinter(report, title, zoneID), title);
 	}
 	
 	public ReportPrinter add(ISummaryReport report, String title) {
-		return add(new SummaryReportBlockPrinter(report, title, zoneID));
+		return add(new SummaryReportBlockPrinter(report, title, zoneID), title);
 	}
 	
 	public ReportPrinter add(OHLCScalableSeries equity_report, String title) {
-		return add(new EquityReportBlockPrinter(equity_report, title));
+		return add(new EquityReportBlockPrinter(equity_report, title), title);
 	}
 	
 	public ReportPrinter addHello(String text) {
 		return add(new HelloBlockPrinter(text));
 	}
 	
+	private void printBlock(PrintStream stream, STRBHandler<IReportBlockPrinter> block) {
+		stream.println(new StringBuilder()
+			.append("# ReportID=").append(block.getHeader().getReportID())
+			.append(" Title=").append(block.getHeader().getTitle())
+			.toString());
+		block.getHandler().print(stream);
+		stream.println();		
+	}
+	
 	public void print(PrintStream stream) {
-		for ( IReportBlockPrinter block_printer : blocks ) {
-			stream.println(new StringBuilder()
-				.append("# ReportID=").append(block_printer.getReportID())
-				.append(" Title=" + block_printer.getTitle())
-				.toString());
-			block_printer.print(stream);
-			stream.println();
+		for ( STRBHandler<IReportBlockPrinter> block : blocks ) {
+			printBlock(stream, block);
 		}
 	}
 	

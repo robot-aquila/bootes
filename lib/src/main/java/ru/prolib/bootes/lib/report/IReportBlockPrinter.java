@@ -4,6 +4,7 @@ import java.io.PrintStream;
 
 public interface IReportBlockPrinter {
 	String getReportID();
+	@Deprecated
 	String getTitle();
 	void print(PrintStream stream);
 }

@@ -1,5 +1,8 @@
 package ru.prolib.bootes.lib.app.comp;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ru.prolib.aquila.core.BusinessEntities.BasicTerminalBuilder;
 import ru.prolib.aquila.core.BusinessEntities.EditableTerminal;
 //import ru.prolib.aquila.core.BusinessEntities.Symbol;
@@ -19,6 +22,7 @@ import ru.prolib.bootes.lib.service.task.StartTerminal;
 import ru.prolib.bootes.lib.service.task.StopTerminal;
 
 public class QFTerminalOnlyComp extends CommonComp {
+	static final Logger logger = LoggerFactory.getLogger(QFTerminalOnlyComp.class);
 	private static final String CONFIG_SECTION_ID = "qforts-terminal";
 	private ARSHandler handler;
 
@@ -43,6 +47,10 @@ public class QFTerminalOnlyComp extends CommonComp {
 		QFBuilder qfb = new QFBuilder()
 				.withEventQueue(serviceLocator.getEventQueue())
 				.withLiquidityMode(term_conf.getLiquidityMode());
+		if ( term_conf.isLegacySymbolDataService() ) {
+			qfb.withLegacySymbolDataService(true);
+			logger.debug("Selected legacy symbol data service. Possible long execution.");
+		}
 		EditableTerminal terminal = new BasicTerminalBuilder()
 			.withEventQueue(serviceLocator.getEventQueue())
 			.withScheduler(serviceLocator.getScheduler())

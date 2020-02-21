@@ -1,0 +1,32 @@
+pipeline {
+    agent {
+        dockerfile {
+            args '-v /root/.m2:/root/.m2'
+        }
+    }
+    environment {
+        MAVEN_OPTS='-Xmx1024m -Xms256m'
+    }
+    stages {
+        stage('Prepare') {
+            steps {
+                sh 'printenv | sort'
+            }
+        }
+        stage('Build') { 
+            steps {
+                sh 'mvn -B -DskipTests clean package' 
+            }
+        }
+        stage('IT') {
+            steps {
+                sh 'xvfb-run -s \"-screen 0 1920x1080x16\" mvn -B -DskipTests -DskipITs=false verify'
+            }
+            post {
+                always {
+                    junit '**/target/failsafe-reports/*.xml'
+                }
+            }
+        }
+    }
+}

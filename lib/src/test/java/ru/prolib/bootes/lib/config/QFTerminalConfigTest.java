@@ -110,6 +110,20 @@ public class QFTerminalConfigTest {
 	}
 	
 	@Test
+	public void testIsLegacySymbolDataService() throws Exception {
+		assertFalse(service1.isLegacySymbolDataService());
+		
+		options1.put("qforts-legacy-sds", "1");
+		assertTrue(service1.isLegacySymbolDataService());
+		
+		options1.put("qforts-legacy-sds", "false");
+		assertFalse(service1.isLegacySymbolDataService());
+		
+		options1.put("qforts-legacy-sds", "");
+		assertFalse(service1.isLegacySymbolDataService());
+	}
+	
+	@Test
 	public void testEquals() {
 		OptionProvider
 			opMock1 = control.createMock(OptionProvider.class),

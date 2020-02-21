@@ -45,6 +45,10 @@ public class QFTerminalConfig {
 		return mode;
 	}
 	
+	public boolean isLegacySymbolDataService() throws ConfigException {
+		return options.getBoolean(QFTerminalConfigSection.LOPT_LEGACY_SDS);
+	}
+	
 	@Override
 	public boolean equals(Object other) {
 		if ( other == this ) {

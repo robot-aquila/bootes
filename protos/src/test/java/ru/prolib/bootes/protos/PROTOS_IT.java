@@ -6,6 +6,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -50,8 +51,12 @@ public class PROTOS_IT {
 		}
 	}
 	
-	@Deprecated
-	private static List<String> removeSysInfoReport(List<String> lines) {
+	public String[] args(String... args) {
+		List<String> arg_list = new ArrayList<>(Arrays.asList(args));
+		return arg_list.toArray(new String[0]);
+	}
+	
+	static List<String> removeSysInfoReport(List<String> lines) {
 		for ( int i = 0; i < lines.size(); i ++ ) {
 			String line = lines.get(i);
 			if ( line.startsWith("# ReportID=SysInfoReport_") ) {
@@ -83,67 +88,105 @@ public class PROTOS_IT {
 		assertTrue(result.toString(), result.identical());		
 	}
 	
-	private static void assertReportFiles(File expected, File actual) throws Exception {
+	static void assertReportFiles(File expected, File actual) throws Exception {
 		assertReportFiles_V2(expected, actual);
 	}
 	
-//	@Test
-//	public void testAssertReportFiles() throws Exception {
-//		File base_dir = new File("D:/work/_test_reports/202001_replay_optim");
-//		
-//		File expected = new File(base_dir, "20200106044814/TSGR001A-ALLF.report");
-//		File actual = new File(base_dir, "20200107204333-ctrl1/TSGR001A-ALLF.report");
-//		assertReportFiles(expected, actual);
-//	}
-
 	@Test
 	public void testPass1() throws Throwable {
 		File rd_pass1 = new File(tempDir, "pass1");
-		String[] args_pass1 = {
-			"--data-dir=fixture",
-			"--probe-initial-time=" + INTERVAL.getStart(),
-			"--probe-stop-time=" + INTERVAL.getEnd(),
-			"--probe-auto-shutdown",
-			"--probe-auto-start",
-			"--report-dir=" + rd_pass1,
-		};
-		new PROTOS().run(args_pass1);
+		new PROTOS().run(args(
+				"--data-dir=fixture",
+				"--probe-initial-time=" + INTERVAL.getStart(),
+				"--probe-stop-time=" + INTERVAL.getEnd(),
+				"--probe-auto-shutdown",
+				"--probe-auto-start",
+				"--report-dir=" + rd_pass1
+			));
 		assertReportFiles(EXPECTED, new File(rd_pass1, "protos1.report"));
+	}
+	
+	@Test
+	public void testPass1_WithLegacySDS() throws Throwable {
+		File report_dir = new File(tempDir, "pass1_legacy_sds");
+		new PROTOS().run(args(
+				"--data-dir=fixture",
+				"--probe-initial-time=" + INTERVAL.getStart(),
+				"--probe-stop-time=" + INTERVAL.getEnd(),
+				"--probe-auto-shutdown",
+				"--probe-auto-start",
+				"--report-dir=" + report_dir,
+				"--qforts-legacy-sds"
+			));
+		assertReportFiles(EXPECTED, new File(report_dir, "protos1.report"));
 	}
 	
 	@Test
 	public void testPass2() throws Throwable {
 		File rd_pass2 = new File(tempDir, "pass2");
-		String[] args_pass2 = {
-			"--data-dir=fixture",
-			"--probe-initial-time=" + INTERVAL.getStart(),
-			"--probe-stop-time=" + INTERVAL.getEnd(),
-			"--probe-auto-shutdown",
-			"--probe-auto-start",
-			"--report-dir=" + rd_pass2,
-			"--headless",
-		};
-		new PROTOS().run(args_pass2);
+		new PROTOS().run(args(
+				"--data-dir=fixture",
+				"--probe-initial-time=" + INTERVAL.getStart(),
+				"--probe-stop-time=" + INTERVAL.getEnd(),
+				"--probe-auto-shutdown",
+				"--probe-auto-start",
+				"--report-dir=" + rd_pass2,
+				"--headless"
+			));
 		assertReportFiles(EXPECTED, new File(rd_pass2, "protos1.report"));
+	}
+	
+	@Test
+	public void testPass2_WithLegacySDS() throws Throwable {
+		File report_dir = new File(tempDir, "pass2");
+		new PROTOS().run(args(
+				"--data-dir=fixture",
+				"--probe-initial-time=" + INTERVAL.getStart(),
+				"--probe-stop-time=" + INTERVAL.getEnd(),
+				"--probe-auto-shutdown",
+				"--probe-auto-start",
+				"--report-dir=" + report_dir,
+				"--headless",
+				"--qforts-legacy-sds"
+			));
+		assertReportFiles(EXPECTED, new File(report_dir, "protos1.report"));
 	}
 	
 	@Test
 	public void testPass3() throws Throwable {
 		File rd_pass3 = new File(tempDir, "pass3");
-		String[] args_pass3 = {
-			"--data-dir=fixture",
-			"--probe-initial-time=" + INTERVAL.getStart(),
-			"--probe-stop-time=" + INTERVAL.getEnd(),
-			"--probe-auto-shutdown",
-			"--probe-auto-start",
-			"--report-dir=" + rd_pass3,
-			"--headless",
-			"--qforts-liquidity-mode=1"
-		};
-		new PROTOS(3).run(args_pass3);
+		new PROTOS(3).run(args(
+				"--data-dir=fixture",
+				"--probe-initial-time=" + INTERVAL.getStart(),
+				"--probe-stop-time=" + INTERVAL.getEnd(),
+				"--probe-auto-shutdown",
+				"--probe-auto-start",
+				"--report-dir=" + rd_pass3,
+				"--headless",
+				"--qforts-liquidity-mode=1"
+			));
 		assertReportFiles(EXPECTED, new File(rd_pass3, "protos1.report"));
 		assertReportFiles(EXPECTED, new File(rd_pass3, "protos2.report"));
 		assertReportFiles(EXPECTED, new File(rd_pass3, "protos3.report"));
+	}
+	
+	@Test
+	public void testPass3_WithLegacySDS() throws Throwable {
+		File report_dir = new File(tempDir, "pass3");
+		new PROTOS(3).run(args(
+				"--data-dir=fixture",
+				"--probe-initial-time=" + INTERVAL.getStart(),
+				"--probe-stop-time=" + INTERVAL.getEnd(),
+				"--probe-auto-shutdown",
+				"--probe-auto-start",
+				"--report-dir=" + report_dir,
+				"--headless",
+				"--qforts-liquidity-mode=1",
+				"--qforts-legacy-sds"
+			));
+		assertReportFiles(EXPECTED, new File(report_dir, "protos1.report"));
+		assertReportFiles(EXPECTED, new File(report_dir, "protos2.report"));
+		assertReportFiles(EXPECTED, new File(report_dir, "protos3.report"));
 	}
 
 }

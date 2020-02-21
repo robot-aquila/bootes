@@ -40,6 +40,7 @@ public class QFTerminalConfigSectionTest {
 		expected.put("qforts-test-balance", "1000000.00");
 		expected.put("qforts-data-dir", "/foo/bar");
 		expected.put("qforts-liquidity-mode", "0");
+		expected.put("qforts-legacy-sds", "false");
 		assertEquals(expected, defaults_data);
 	}
 	
@@ -49,7 +50,7 @@ public class QFTerminalConfigSectionTest {
 		
 		service.configureOptions(options);
 		
-		assertEquals(4, options.getOptions().size());
+		assertEquals(5, options.getOptions().size());
 		
 		Option actual = options.getOption("qforts-data-dir");
 		assertEquals(Option.builder()
@@ -87,6 +88,13 @@ public class QFTerminalConfigSectionTest {
 					+ " 1 - APPLY_TO_ORDER, 2 - UNLIMITED. Default is LIMITED.")
 				.build(), actual);
 		assertTrue(actual.hasArg());
+		
+		actual = options.getOption("qforts-legacy-sds");
+		assertEquals(Option.builder()
+				.longOpt("qforts-legacy-sds")
+				.desc("Enable legacy symbol data service.")
+				.build(), actual);
+		assertFalse(actual.hasArg());
 	}
 	
 	@Test

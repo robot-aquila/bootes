@@ -14,6 +14,7 @@ import ru.prolib.aquila.core.BusinessEntities.CDecimalBD;
 import ru.prolib.aquila.core.utils.Variant;
 
 public class TerminalConfigTest {
+	static final String fs = File.separator;
 	private TerminalConfig service;
 
 	@Before
@@ -22,8 +23,8 @@ public class TerminalConfigTest {
 				"default",
 				new Account("FOO-TEST-001"),
 				CDecimalBD.ofRUB2("150000"),
-				new File("foo/data"),
-				new File("D:\\phantom\\logs"),
+				new File("foo" + fs + "data"),
+				new File("D:" + fs + "phantom" + fs + "logs"),
 				2,
 				"user",
 				"12345",
@@ -37,8 +38,8 @@ public class TerminalConfigTest {
 		assertEquals("default", service.getDriverID());
 		assertEquals(new Account("FOO-TEST-001"), service.getQForstTestAccount());
 		assertEquals(CDecimalBD.ofRUB2("150000"), service.getQForstTestBalance());
-		assertEquals(new File("foo/data"), service.getQFortsDataDirectory());
-		assertEquals(new File("D:\\phantom\\logs"), service.getTransaqLogPath());
+		assertEquals(new File("foo" + fs + "data"), service.getQFortsDataDirectory());
+		assertEquals(new File("D:" + fs + "phantom" + fs + "logs"), service.getTransaqLogPath());
 		assertEquals(2, service.getTransaqLogLevel());
 		assertEquals("user", service.getTransaqLogin());
 		assertEquals("12345", service.getTransaqPassword());
@@ -58,9 +59,9 @@ public class TerminalConfigTest {
 		Variant<String> vDrv = new Variant<>("default", "qforts");
 		Variant<Account> vQFAcc = new Variant<>(vDrv, new Account("FOO-TEST-001"), new Account("BAR-12"));
 		Variant<CDecimal> vQFBal = new Variant<>(vQFAcc, CDecimalBD.ofRUB2("150000"), CDecimalBD.ofRUB2("300000"));
-		Variant<File> vQFDir = new Variant<>(vQFBal, new File("foo/data"), new File("foo/data.txt"));
+		Variant<File> vQFDir = new Variant<>(vQFBal, new File("foo" + fs + "data"), new File("foo/data.txt"));
 		Variant<File> vTQLogPath = new Variant<File>(vQFDir)
-				.add(new File("D:\\phantom\\logs"))
+				.add(new File("D:" + fs + "phantom" + fs + "logs"))
 				.add(new File("C:\\paramount\\caboose"));
 		Variant<Integer> vTQLogLevel = new Variant<Integer>(vTQLogPath, 2, 0);
 		Variant<String> vTQLogin = new Variant<>(vTQLogLevel, "user", "boo");
@@ -92,8 +93,8 @@ public class TerminalConfigTest {
 		assertEquals("default", found.getDriverID());
 		assertEquals(new Account("FOO-TEST-001"), found.getQForstTestAccount());
 		assertEquals(CDecimalBD.ofRUB2("150000"), found.getQForstTestBalance());
-		assertEquals(new File("foo/data"), found.getQFortsDataDirectory());
-		assertEquals(new File("D:\\phantom\\logs"), found.getTransaqLogPath());
+		assertEquals(new File("foo" + fs + "data"), found.getQFortsDataDirectory());
+		assertEquals(new File("D:" + fs + "phantom" + fs + "logs"), found.getTransaqLogPath());
 		assertEquals(2, found.getTransaqLogLevel());
 		assertEquals("user", found.getTransaqLogin());
 		assertEquals("12345", found.getTransaqPassword());
@@ -107,8 +108,8 @@ public class TerminalConfigTest {
 			.append("default")
 			.append(new Account("FOO-TEST-001"))
 			.append(CDecimalBD.ofRUB2("150000"))
-			.append(new File("foo/data"))
-			.append(new File("D:\\phantom\\logs"))
+			.append(new File("foo" + fs + "data"))
+			.append(new File("D:" + fs + "phantom" + fs + "logs"))
 			.append(2)
 			.append("user")
 			.append("12345")
@@ -121,7 +122,6 @@ public class TerminalConfigTest {
 	
 	@Test
 	public void testToString() {
-		String fs = File.separator;
 		String expected = new StringBuilder()
 				.append("TerminalConfig[")
 				.append("driverID=default,")

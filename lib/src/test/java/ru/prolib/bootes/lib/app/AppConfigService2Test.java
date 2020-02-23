@@ -132,7 +132,7 @@ public class AppConfigService2Test {
 
 		ConfigSection2Data conf2 = config.getSection("section2");
 		assertEquals(true, conf2.getFoo());
-		assertEquals(new File("D:\\temp"), conf2.getBar());
+		assertEquals(new File("D:" + File.separator + "temp"), conf2.getBar());
 	}
 
 }

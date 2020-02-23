@@ -19,7 +19,7 @@ pipeline {
                 sh 'mvn -B -DskipTests clean package' 
             }
         }
-        stage('IT') {
+        stage('Test') {
             steps {
                 sh 'xvfb-run -s \"-screen 0 1920x1080x16\" mvn -B test'
             }

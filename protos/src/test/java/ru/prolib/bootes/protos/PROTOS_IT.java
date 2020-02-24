@@ -25,6 +25,7 @@ import ru.prolib.bootes.lib.report.ReportComparator;
 import ru.prolib.bootes.lib.report.STRCmpResult;
 
 public class PROTOS_IT {
+	static final File dataDir = new File("./../shared/canned-data");
 	static Interval INTERVAL;
 	static File EXPECTED = new File("fixture", "expected-protos.rep");
 	
@@ -96,7 +97,7 @@ public class PROTOS_IT {
 	public void testPass1() throws Throwable {
 		File rd_pass1 = new File(tempDir, "pass1");
 		new PROTOS().run(args(
-				"--data-dir=fixture",
+				"--data-dir=" + dataDir,
 				"--probe-initial-time=" + INTERVAL.getStart(),
 				"--probe-stop-time=" + INTERVAL.getEnd(),
 				"--probe-auto-shutdown",
@@ -110,7 +111,7 @@ public class PROTOS_IT {
 	public void testPass1_WithLegacySDS() throws Throwable {
 		File report_dir = new File(tempDir, "pass1_legacy_sds");
 		new PROTOS().run(args(
-				"--data-dir=fixture",
+				"--data-dir=" + dataDir,
 				"--probe-initial-time=" + INTERVAL.getStart(),
 				"--probe-stop-time=" + INTERVAL.getEnd(),
 				"--probe-auto-shutdown",
@@ -125,7 +126,7 @@ public class PROTOS_IT {
 	public void testPass2() throws Throwable {
 		File rd_pass2 = new File(tempDir, "pass2");
 		new PROTOS().run(args(
-				"--data-dir=fixture",
+				"--data-dir=" + dataDir,
 				"--probe-initial-time=" + INTERVAL.getStart(),
 				"--probe-stop-time=" + INTERVAL.getEnd(),
 				"--probe-auto-shutdown",
@@ -140,7 +141,7 @@ public class PROTOS_IT {
 	public void testPass2_WithLegacySDS() throws Throwable {
 		File report_dir = new File(tempDir, "pass2");
 		new PROTOS().run(args(
-				"--data-dir=fixture",
+				"--data-dir=" + dataDir,
 				"--probe-initial-time=" + INTERVAL.getStart(),
 				"--probe-stop-time=" + INTERVAL.getEnd(),
 				"--probe-auto-shutdown",
@@ -156,7 +157,7 @@ public class PROTOS_IT {
 	public void testPass3() throws Throwable {
 		File rd_pass3 = new File(tempDir, "pass3");
 		new PROTOS(3).run(args(
-				"--data-dir=fixture",
+				"--data-dir=" + dataDir,
 				"--probe-initial-time=" + INTERVAL.getStart(),
 				"--probe-stop-time=" + INTERVAL.getEnd(),
 				"--probe-auto-shutdown",
@@ -174,7 +175,7 @@ public class PROTOS_IT {
 	public void testPass3_WithLegacySDS() throws Throwable {
 		File report_dir = new File(tempDir, "pass3");
 		new PROTOS(3).run(args(
-				"--data-dir=fixture",
+				"--data-dir=" + dataDir,
 				"--probe-initial-time=" + INTERVAL.getStart(),
 				"--probe-stop-time=" + INTERVAL.getEnd(),
 				"--probe-auto-shutdown",

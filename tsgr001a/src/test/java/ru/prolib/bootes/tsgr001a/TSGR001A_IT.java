@@ -72,6 +72,28 @@ public class TSGR001A_IT {
 		assertReports(new File("fixture/4inst-lm0-MINF-DUP2.report"), new File(my_reports, "TSGR001A-MINF-DUP2.report"));
 	}
 	
+	@Test
+	public void testPass_QF_2017HY_4Inst_LM0_ModSDS_Headless() throws Throwable {
+		File my_reports = new File(reportDir, "4inst-lm0-modsds-headless");
+		new TSGR001A().run(args(
+				"--data-dir=" + dataDir,
+				"--driver=qforts",
+				"--probe-initial-time=2017-01-01T00:00:00Z",
+				"--probe-stop-time=2017-06-01T00:00:00Z",
+				"--probe-auto-start",
+				"--probe-auto-shutdown",
+				"--report-dir=" + my_reports,
+				"--tsgr001a-inst-config=fixture/4inst.ini",
+				"--qforts-liquidity-mode=0",
+				"--headless"
+			));
+		// Compare in same order as in ini file
+		assertReports(new File("fixture/4inst-lm0-NOF.report"), new File(my_reports, "TSGR001A-NOF.report"));
+		assertReports(new File("fixture/4inst-lm0-MINF-DUP1.report"), new File(my_reports, "TSGR001A-MINF-DUP1.report"));
+		assertReports(new File("fixture/4inst-lm0-ALLF.report"), new File(my_reports, "TSGR001A-ALLF.report"));
+		assertReports(new File("fixture/4inst-lm0-MINF-DUP2.report"), new File(my_reports, "TSGR001A-MINF-DUP2.report"));
+	}
+	
 	@Ignore
 	@Test
 	public void testModernSDS() {

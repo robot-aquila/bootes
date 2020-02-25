@@ -26,6 +26,7 @@ pipeline {
             post {
                 always {
                     junit '**/target/failsafe-reports/*.xml'
+                    archiveArtifacts artifacts: '**/it-reports/**/*.report', fingerprint: true
                 }
             }
         }

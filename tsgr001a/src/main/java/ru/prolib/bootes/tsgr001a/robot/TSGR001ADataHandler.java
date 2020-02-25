@@ -1,5 +1,8 @@
 package ru.prolib.bootes.tsgr001a.robot;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ru.prolib.aquila.core.Starter;
 import ru.prolib.aquila.core.data.Candle;
 import ru.prolib.aquila.core.data.EditableTSeries;
@@ -13,6 +16,12 @@ import ru.prolib.bootes.lib.robo.ISessionDataHandler;
 import ru.prolib.bootes.lib.robo.sh.statereq.IContractDeterminable;
 
 public class TSGR001ADataHandler implements ISessionDataHandler {
+	static final Logger logger;
+	
+	static {
+		logger = LoggerFactory.getLogger(TSGR001ADataHandler.class);
+	}
+	
 	private final AppServiceLocator serviceLocator;
 	private final IContractDeterminable state;
 	private STSeriesHandler t0, t1, t2;
@@ -30,6 +39,7 @@ public class TSGR001ADataHandler implements ISessionDataHandler {
 			t2 = create(new SetupT2(serviceLocator, state));
 			return true;
 		} catch ( Throwable t ) {
+			logger.error("Unexpected exception: ", t);
 			cleanSession();
 			return false;
 		}

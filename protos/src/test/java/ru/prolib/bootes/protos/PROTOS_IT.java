@@ -14,7 +14,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.threeten.extra.Interval;
 
 import com.github.difflib.DiffUtils;
 import com.github.difflib.patch.AbstractDelta;
@@ -26,8 +25,8 @@ import ru.prolib.bootes.lib.report.STRCmpResult;
 public class PROTOS_IT {
 	static final File dataDir = new File("./../shared/canned-data");
 	static final File reportDir = new File("tmp/it-reports");
-	static Interval INTERVAL;
-	static File EXPECTED = new File("fixture", "expected-protos.rep");
+	static final File EXPECTED_LONG = new File("fixture", "protos-long.rep");
+	static final File EXPECTED_SHORT = new File("fixture", "protos-short.rep");
 	
 	static Instant T(String timeString) {
 		return Instant.parse(timeString);
@@ -35,7 +34,6 @@ public class PROTOS_IT {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		INTERVAL = Interval.of(T("2017-01-01T00:00:00Z"), T("2017-06-01T00:00:00Z"));
 		if ( reportDir.exists() ) {
 			FileUtils.forceDelete(reportDir);
 		}
@@ -84,7 +82,7 @@ public class PROTOS_IT {
 		assertTrue(String.format("exp: %s\nact: %s\n%s", expected, actual, result.toString()), result.identical());		
 	}
 	
-	static void assertReportFiles(File expected, File actual) throws Exception {
+	static void assertReports(File expected, File actual) throws Exception {
 		assertReportFiles_V2(expected, actual);
 	}
 	
@@ -93,13 +91,13 @@ public class PROTOS_IT {
 		File rd_pass1 = new File(reportDir, "pass1");
 		new PROTOS().run(args(
 				"--data-dir=" + dataDir,
-				"--probe-initial-time=" + INTERVAL.getStart(),
-				"--probe-stop-time=" + INTERVAL.getEnd(),
+				"--report-dir=" + rd_pass1,
+				"--probe-initial-time=2017-01-01T00:00:00Z",
+				"--probe-stop-time=2017-02-01T00:00:00Z",
 				"--probe-auto-shutdown",
-				"--probe-auto-start",
-				"--report-dir=" + rd_pass1
+				"--probe-auto-start"
 			));
-		assertReportFiles(EXPECTED, new File(rd_pass1, "protos1.report"));
+		assertReports(EXPECTED_SHORT, new File(rd_pass1, "protos1.report"));
 	}
 	
 	@Test
@@ -107,14 +105,14 @@ public class PROTOS_IT {
 		File report_dir = new File(reportDir, "pass1_legacy_sds");
 		new PROTOS().run(args(
 				"--data-dir=" + dataDir,
-				"--probe-initial-time=" + INTERVAL.getStart(),
-				"--probe-stop-time=" + INTERVAL.getEnd(),
+				"--report-dir=" + report_dir,
+				"--probe-initial-time=2017-01-01T00:00:00Z",
+				"--probe-stop-time=2017-02-01T00:00:00Z",
 				"--probe-auto-shutdown",
 				"--probe-auto-start",
-				"--report-dir=" + report_dir,
 				"--qforts-legacy-sds"
 			));
-		assertReportFiles(EXPECTED, new File(report_dir, "protos1.report"));
+		assertReports(EXPECTED_SHORT, new File(report_dir, "protos1.report"));
 	}
 	
 	@Test
@@ -122,30 +120,30 @@ public class PROTOS_IT {
 		File rd_pass2 = new File(reportDir, "pass2");
 		new PROTOS().run(args(
 				"--data-dir=" + dataDir,
-				"--probe-initial-time=" + INTERVAL.getStart(),
-				"--probe-stop-time=" + INTERVAL.getEnd(),
+				"--report-dir=" + rd_pass2,
+				"--probe-initial-time=2017-01-01T00:00:00Z",
+				"--probe-stop-time=2017-02-01T00:00:00Z",
 				"--probe-auto-shutdown",
 				"--probe-auto-start",
-				"--report-dir=" + rd_pass2,
 				"--headless"
 			));
-		assertReportFiles(EXPECTED, new File(rd_pass2, "protos1.report"));
+		assertReports(EXPECTED_SHORT, new File(rd_pass2, "protos1.report"));
 	}
 	
 	@Test
 	public void testPass2_WithLegacySDS() throws Throwable {
-		File report_dir = new File(reportDir, "pass2");
+		File report_dir = new File(reportDir, "pass2_legacy_sds");
 		new PROTOS().run(args(
 				"--data-dir=" + dataDir,
-				"--probe-initial-time=" + INTERVAL.getStart(),
-				"--probe-stop-time=" + INTERVAL.getEnd(),
+				"--report-dir=" + report_dir,
+				"--probe-initial-time=2017-01-01T00:00:00Z",
+				"--probe-stop-time=2017-02-01T00:00:00Z",
 				"--probe-auto-shutdown",
 				"--probe-auto-start",
-				"--report-dir=" + report_dir,
 				"--headless",
 				"--qforts-legacy-sds"
 			));
-		assertReportFiles(EXPECTED, new File(report_dir, "protos1.report"));
+		assertReports(EXPECTED_SHORT, new File(report_dir, "protos1.report"));
 	}
 	
 	@Test
@@ -153,36 +151,51 @@ public class PROTOS_IT {
 		File rd_pass3 = new File(reportDir, "pass3");
 		new PROTOS(3).run(args(
 				"--data-dir=" + dataDir,
-				"--probe-initial-time=" + INTERVAL.getStart(),
-				"--probe-stop-time=" + INTERVAL.getEnd(),
+				"--report-dir=" + rd_pass3,
+				"--probe-initial-time=2017-01-01T00:00:00Z",
+				"--probe-stop-time=2017-02-01T00:00:00Z",
 				"--probe-auto-shutdown",
 				"--probe-auto-start",
-				"--report-dir=" + rd_pass3,
 				"--headless",
 				"--qforts-liquidity-mode=1"
 			));
-		assertReportFiles(EXPECTED, new File(rd_pass3, "protos1.report"));
-		assertReportFiles(EXPECTED, new File(rd_pass3, "protos2.report"));
-		assertReportFiles(EXPECTED, new File(rd_pass3, "protos3.report"));
+		assertReports(EXPECTED_SHORT, new File(rd_pass3, "protos1.report"));
+		assertReports(EXPECTED_SHORT, new File(rd_pass3, "protos2.report"));
+		assertReports(EXPECTED_SHORT, new File(rd_pass3, "protos3.report"));
 	}
 	
 	@Test
 	public void testPass3_WithLegacySDS() throws Throwable {
-		File report_dir = new File(reportDir, "pass3");
+		File report_dir = new File(reportDir, "pass3_legacy_sds");
 		new PROTOS(3).run(args(
 				"--data-dir=" + dataDir,
-				"--probe-initial-time=" + INTERVAL.getStart(),
-				"--probe-stop-time=" + INTERVAL.getEnd(),
+				"--report-dir=" + report_dir,
+				"--probe-initial-time=2017-01-01T00:00:00Z",
+				"--probe-stop-time=2017-02-01T00:00:00Z",
 				"--probe-auto-shutdown",
 				"--probe-auto-start",
-				"--report-dir=" + report_dir,
 				"--headless",
 				"--qforts-liquidity-mode=1",
 				"--qforts-legacy-sds"
 			));
-		assertReportFiles(EXPECTED, new File(report_dir, "protos1.report"));
-		assertReportFiles(EXPECTED, new File(report_dir, "protos2.report"));
-		assertReportFiles(EXPECTED, new File(report_dir, "protos3.report"));
+		assertReports(EXPECTED_SHORT, new File(report_dir, "protos1.report"));
+		assertReports(EXPECTED_SHORT, new File(report_dir, "protos2.report"));
+		assertReports(EXPECTED_SHORT, new File(report_dir, "protos3.report"));
+	}
+
+	@Test
+	public void testPass4_Long() throws Throwable {
+		File report_dir = new File(reportDir, "pass4_long");
+		new PROTOS().run(args(
+				"--data-dir=" + dataDir,
+				"--report-dir=" + report_dir,
+				"--probe-initial-time=2017-01-01T00:00:00Z",
+				"--probe-stop-time=2017-06-01T00:00:00Z",
+				"--probe-auto-shutdown",
+				"--probe-auto-start",
+				"--headless"
+			));
+		assertReports(EXPECTED_LONG, new File(report_dir, "protos1.report"));
 	}
 
 }

@@ -12,7 +12,6 @@ import java.util.List;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.threeten.extra.Interval;
@@ -26,6 +25,7 @@ import ru.prolib.bootes.lib.report.STRCmpResult;
 
 public class PROTOS_IT {
 	static final File dataDir = new File("./../shared/canned-data");
+	static final File reportDir = new File("tmp/it-reports");
 	static Interval INTERVAL;
 	static File EXPECTED = new File("fixture", "expected-protos.rep");
 	
@@ -36,20 +36,15 @@ public class PROTOS_IT {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		INTERVAL = Interval.of(T("2017-01-01T00:00:00Z"), T("2017-06-01T00:00:00Z"));
-	}
-	
-	private File tempDir;
-
-	@Before
-	public void setUp() throws Exception {
-		tempDir = new File(FileUtils.getTempDirectory(), "protos-temp-" + System.nanoTime());
+		if ( reportDir.exists() ) {
+			FileUtils.forceDelete(reportDir);
+		}
+		reportDir.mkdirs();
 	}
 	
 	@After
 	public void tearDown() throws Exception {
-		if ( tempDir.exists() ) {
-			FileUtils.forceDelete(tempDir);
-		}
+
 	}
 	
 	public String[] args(String... args) {
@@ -86,7 +81,7 @@ public class PROTOS_IT {
 	
 	static void assertReportFiles_V2(File expected, File actual) throws Exception {
 		STRCmpResult result = ReportComparator.getInstance().compare(expected, actual);
-		assertTrue(result.toString(), result.identical());		
+		assertTrue(String.format("exp: %s\nact: %s\n%s", expected, actual, result.toString()), result.identical());		
 	}
 	
 	static void assertReportFiles(File expected, File actual) throws Exception {
@@ -95,7 +90,7 @@ public class PROTOS_IT {
 	
 	@Test
 	public void testPass1() throws Throwable {
-		File rd_pass1 = new File(tempDir, "pass1");
+		File rd_pass1 = new File(reportDir, "pass1");
 		new PROTOS().run(args(
 				"--data-dir=" + dataDir,
 				"--probe-initial-time=" + INTERVAL.getStart(),
@@ -109,7 +104,7 @@ public class PROTOS_IT {
 	
 	@Test
 	public void testPass1_WithLegacySDS() throws Throwable {
-		File report_dir = new File(tempDir, "pass1_legacy_sds");
+		File report_dir = new File(reportDir, "pass1_legacy_sds");
 		new PROTOS().run(args(
 				"--data-dir=" + dataDir,
 				"--probe-initial-time=" + INTERVAL.getStart(),
@@ -124,7 +119,7 @@ public class PROTOS_IT {
 	
 	@Test
 	public void testPass2() throws Throwable {
-		File rd_pass2 = new File(tempDir, "pass2");
+		File rd_pass2 = new File(reportDir, "pass2");
 		new PROTOS().run(args(
 				"--data-dir=" + dataDir,
 				"--probe-initial-time=" + INTERVAL.getStart(),
@@ -139,7 +134,7 @@ public class PROTOS_IT {
 	
 	@Test
 	public void testPass2_WithLegacySDS() throws Throwable {
-		File report_dir = new File(tempDir, "pass2");
+		File report_dir = new File(reportDir, "pass2");
 		new PROTOS().run(args(
 				"--data-dir=" + dataDir,
 				"--probe-initial-time=" + INTERVAL.getStart(),
@@ -155,7 +150,7 @@ public class PROTOS_IT {
 	
 	@Test
 	public void testPass3() throws Throwable {
-		File rd_pass3 = new File(tempDir, "pass3");
+		File rd_pass3 = new File(reportDir, "pass3");
 		new PROTOS(3).run(args(
 				"--data-dir=" + dataDir,
 				"--probe-initial-time=" + INTERVAL.getStart(),
@@ -173,7 +168,7 @@ public class PROTOS_IT {
 	
 	@Test
 	public void testPass3_WithLegacySDS() throws Throwable {
-		File report_dir = new File(tempDir, "pass3");
+		File report_dir = new File(reportDir, "pass3");
 		new PROTOS(3).run(args(
 				"--data-dir=" + dataDir,
 				"--probe-initial-time=" + INTERVAL.getStart(),

@@ -23,7 +23,7 @@ public class TSGR001A_IT {
 	
 	static void assertReports(File expected, File actual) throws Exception {
 		STRCmpResult result = ReportComparator.getInstance().compare(expected, actual);
-		assertTrue(result.toString(), result.identical());
+		assertTrue(String.format("exp: %s\nact: %s\n%s", expected, actual, result.toString()), result.identical());
 	}
 	
 	static String[] args(String... args) {

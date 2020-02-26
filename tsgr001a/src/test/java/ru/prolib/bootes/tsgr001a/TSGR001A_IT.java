@@ -49,6 +49,7 @@ public class TSGR001A_IT {
 
 	}
 
+	@Ignore
 	@Test
 	public void testPass_QF_2017HY_4Inst_LM0_LegSDS_Headless() throws Throwable {
 		File my_reports = new File(reportDir, "4inst-lm0-legsds-headless");
@@ -72,6 +73,7 @@ public class TSGR001A_IT {
 		assertReports(new File("fixture/4inst-lm0-MINF-DUP2.report"), new File(my_reports, "TSGR001A-MINF-DUP2.report"));
 	}
 	
+	@Ignore
 	@Test
 	public void testPass_QF_2017HY_4Inst_LM0_ModSDS_Headless() throws Throwable {
 		File my_reports = new File(reportDir, "4inst-lm0-modsds-headless");
@@ -94,22 +96,9 @@ public class TSGR001A_IT {
 		assertReports(new File("fixture/4inst-lm0-MINF-DUP2.report"), new File(my_reports, "TSGR001A-MINF-DUP2.report"));
 	}
 	
-	@Ignore
 	@Test
-	public void testModernSDS() {
-		fail();
-	}
-	
-	@Ignore
-	@Test
-	public void testLiquidityModes() {
-		fail();
-	}
-
-	@Ignore
-	@Test
-	public void test() {
-		fail("Not yet implemented");
+	public void testX() {
+		System.out.println("Temporarily disabled");
 	}
 
 }

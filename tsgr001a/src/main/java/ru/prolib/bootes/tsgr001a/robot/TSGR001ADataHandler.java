@@ -3,14 +3,10 @@ package ru.prolib.bootes.tsgr001a.robot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ru.prolib.aquila.core.Starter;
-import ru.prolib.aquila.core.data.Candle;
-import ru.prolib.aquila.core.data.EditableTSeries;
 import ru.prolib.aquila.core.data.tseries.STSeriesHandler;
 import ru.prolib.aquila.core.data.tseries.SecurityChartDataHandler;
-import ru.prolib.aquila.core.data.tseries.SecurityChartDataHandler.HandlerSetup;
-import ru.prolib.aquila.data.replay.CandleReplayToSeriesStarter;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
+import ru.prolib.bootes.lib.data.OhlcProviderProducerFactory;
 import ru.prolib.bootes.lib.data.SecurityChartSetupTX;
 import ru.prolib.bootes.lib.robo.ISessionDataHandler;
 import ru.prolib.bootes.lib.robo.sh.statereq.IContractDeterminable;
@@ -64,28 +60,9 @@ public class TSGR001ADataHandler implements ISessionDataHandler {
 		return t2;
 	}
 	
-	static class MyFactory extends SecurityChartDataHandler.FactoryImpl {
-		protected final AppServiceLocator services;
-
-		public MyFactory(AppServiceLocator services, HandlerSetup setup) {
-			super(setup);
-			this.services = services;
-		}
-		
-		@Override
-		public Starter createOhlcProducer(EditableTSeries<Candle> ohlc) {
-			return new CandleReplayToSeriesStarter(
-					services.getOHLCReplayService(),
-					setup.getSymbol(),
-					ohlc
-				);
-		}
-		
-	}
-	
 	private STSeriesHandler create(SecurityChartSetupTX setup) {
 		//STSeriesHandler h = new SecurityChartDataHandler(setup);
-		STSeriesHandler h = new SecurityChartDataHandler(setup, new MyFactory(serviceLocator, setup));
+		STSeriesHandler h = new SecurityChartDataHandler(setup, new OhlcProviderProducerFactory(serviceLocator, setup));
 		try {
 			h.initialize();
 			h.startDataHandling();

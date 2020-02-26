@@ -197,5 +197,22 @@ public class PROTOS_IT {
 			));
 		assertReports(EXPECTED_LONG, new File(report_dir, "protos1.report"));
 	}
+	
+	@Test
+	public void testPass5_OhlcProviderProducer_WithLegacySDS() throws Throwable {
+		File report_dir = new File(reportDir, "pass5_ohlc_prov_prod");
+		new PROTOS().run(args(
+				"--data-dir=" + dataDir,
+				"--report-dir=" + report_dir,
+				"--probe-initial-time=2017-01-01T00:00:00Z",
+				"--probe-stop-time=2017-02-01T00:00:00Z",
+				"--probe-auto-shutdown",
+				"--probe-auto-start",
+				"--headless",
+				"--qforts-legacy-sds",
+				"--protos-use-ohlc-provider"
+			));
+		assertReports(EXPECTED_SHORT, new File(report_dir, "protos1.report"));
+	}
 
 }

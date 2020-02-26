@@ -1,6 +1,6 @@
 package ru.prolib.bootes.protos;
 
-import static ru.prolib.aquila.core.BusinessEntities.CDecimalBD.of;
+import static ru.prolib.aquila.core.BusinessEntities.CDecimalBD.*;
 
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -19,6 +19,7 @@ import ru.prolib.bootes.lib.rm.RMContractStrategy;
 import ru.prolib.bootes.lib.rm.RMContractStrategyParams;
 import ru.prolib.bootes.lib.rm.RMPriceStats;
 import ru.prolib.bootes.lib.robo.s3.S3RMCSObjectLocator;
+import ru.prolib.bootes.protos.config.ProtosConfig;
 
 public class PROTOSInit extends SMStateHandlerEx {
 	public static final String E_OK = "OK";
@@ -39,8 +40,8 @@ public class PROTOSInit extends SMStateHandlerEx {
 		state.setRobotTitle(state.getRobotID() + "-" + contract_name);
 		state.setContractResolver(new MOEXContractResolverRegistry().getResolver(contract_name));
 		state.setAccount(new Account(account_name));
-		
-		PROTOSDataHandler data_handler = new PROTOSDataHandler(serviceLocator, state);
+		ProtosConfig conf = serviceLocator.getConfig().getSection(PROTOSRobotComp.CONFIG_SECTION_ID);
+		PROTOSDataHandler data_handler = new PROTOSDataHandler(serviceLocator, state, conf.isUseOhlcProvider());
 		RMContractStrategyParams csp = new RMContractStrategyParams(
 				of("0.075"),
 				of("0.012"),

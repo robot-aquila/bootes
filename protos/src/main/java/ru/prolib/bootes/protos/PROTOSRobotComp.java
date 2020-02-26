@@ -12,9 +12,11 @@ import ru.prolib.bootes.lib.robo.Robot;
 import ru.prolib.bootes.lib.robo.s3.S3CommonReports;
 import ru.prolib.bootes.lib.robo.s3.S3RobotStateListenerComp;
 import ru.prolib.bootes.lib.service.UIService;
+import ru.prolib.bootes.protos.config.ProtosConfigSection;
 import ru.prolib.bootes.protos.ui.PROTOSRobotUI;
 
 public class PROTOSRobotComp implements AppComponent {
+	public static final String CONFIG_SECTION_ID = "protos";
 	protected final String id;
 	protected final AppServiceLocator serviceLocator;
 	private Robot<PROTOSRobotState> robot;
@@ -77,7 +79,7 @@ public class PROTOSRobotComp implements AppComponent {
 
 	@Override
 	public void registerConfig(AppConfigService2 config_service) {
-		
+		config_service.addSection(CONFIG_SECTION_ID, new ProtosConfigSection());
 	}
 
 }

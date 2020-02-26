@@ -134,6 +134,12 @@ public class S3OpenPosition extends SMStateHandlerEx implements
 		SignalType sig_type = signal.getType();
 		OrderAction action;
 		CDecimal price = signal.getExpectedPrice();
+		if ( price == null ) {
+			throw new NullPointerException("Expected price was not defined");
+		}
+		if ( signal.getSlippagePts() == null ) {
+			throw new NullPointerException("Slippage PTS was not defined");
+		}
 		switch ( sig_type ) {
 		case BUY:
 			action = OrderAction.BUY;

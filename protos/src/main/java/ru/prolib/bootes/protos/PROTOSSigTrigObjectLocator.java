@@ -27,4 +27,12 @@ public class PROTOSSigTrigObjectLocator implements CMASignalTrigger.ObjectLocato
 				.getSeries(PROTOSSetupT0.SID_MA_SLOW);
 	}
 
+	@Override
+	public TSeries<CDecimal> getPrice() {
+		return state.getSessionDataHandler()
+				.getSeriesHandlerT0()
+				.getSeries()
+				.getSeries(PROTOSSetupT0.SID_CLOSE_PRICE);
+	}
+
 }

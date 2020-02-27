@@ -5,6 +5,7 @@ import ru.prolib.aquila.core.utils.PriceScaleDBTB;
 import ru.prolib.bootes.lib.app.AppConfigService2;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 
+@Deprecated
 public class PriceScaleDBComp extends CommonComp {
 	private static final String DEFAULT_ID = "PRICE-SCALE-DB";
 	private final PriceScaleDBLazy db;

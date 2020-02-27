@@ -34,11 +34,7 @@ public class OHLCHistoryStorageComp extends CommonComp {
 		File data_dir = conf.getDataDirectory(), cache_dir = conf.getCacheDirectory();
 		if ( data_dir != null && cache_dir != null ) {
 			MDStorage<TFSymbol, Candle> storage = new MDStorageSimpleWarmer<>(new FinamData()
-				.createCachingOHLCV(
-					conf.getDataDirectory(),
-					conf.getCacheDirectory(),
-					serviceLocator.getPriceScaleDB()
-				));
+				.createCachingOHLCV(conf.getDataDirectory(), conf.getCacheDirectory()));
 			
 			serviceLocator.setOHLCHistoryStorage(storage);
 			serviceLocator.setOHLCReplayService(new CandleReplayServiceImpl(serviceLocator.getScheduler(), storage));

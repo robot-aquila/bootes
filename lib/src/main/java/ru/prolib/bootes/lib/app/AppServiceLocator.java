@@ -45,10 +45,12 @@ public class AppServiceLocator {
 		return config;
 	}
 	
+	@Deprecated
 	public synchronized void setPriceScaleDB(PriceScaleDB scaleDB) {
 		this.scaleDB = scaleDB;
 	}
 	
+	@Deprecated
 	public synchronized PriceScaleDB getPriceScaleDB() {
 		if ( scaleDB == null ) {
 			throw new NullPointerException();

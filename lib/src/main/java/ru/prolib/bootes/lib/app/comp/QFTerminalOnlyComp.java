@@ -39,11 +39,8 @@ public class QFTerminalOnlyComp extends CommonComp {
 			return;
 		}
 		WUDataFactory wu_factory = new WUDataFactory();
-		DataSource data_source = wu_factory.createForSymbolAndL1DataReplayFM(
-						serviceLocator.getScheduler(),
-						term_conf.getDataDirectory(),
-						serviceLocator.getPriceScaleDB()
-					);
+		DataSource data_source = wu_factory.createForSymbolAndL1DataReplayFM(serviceLocator.getScheduler(),
+				term_conf.getDataDirectory());
 		QFBuilder qfb = new QFBuilder()
 				.withEventQueue(serviceLocator.getEventQueue())
 				.withLiquidityMode(term_conf.getLiquidityMode());

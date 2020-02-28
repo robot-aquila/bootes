@@ -13,6 +13,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import com.github.difflib.DiffUtils;
@@ -183,6 +184,7 @@ public class PROTOS_IT {
 		assertReports(EXPECTED_SHORT, new File(report_dir, "protos3.report"));
 	}
 
+	@Ignore
 	@Test
 	public void testPass4_Long() throws Throwable {
 		File report_dir = new File(reportDir, "pass4_long");
@@ -198,6 +200,7 @@ public class PROTOS_IT {
 		assertReports(EXPECTED_LONG, new File(report_dir, "protos1.report"));
 	}
 	
+	@Ignore
 	@Test
 	public void testPass5_OhlcProviderProducer_WithLegacySDS() throws Throwable {
 		File report_dir = new File(reportDir, "pass5_ohlc_prov_prod");

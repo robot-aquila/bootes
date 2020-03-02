@@ -1,4 +1,4 @@
-package ru.prolib.bootes.lib.robo.rh;
+package ru.prolib.bootes.lib.robo.s3.rh;
 
 import java.time.Instant;
 import java.util.concurrent.locks.Lock;
@@ -15,10 +15,10 @@ import ru.prolib.aquila.core.BusinessEntities.SPRunnable;
 import ru.prolib.aquila.core.BusinessEntities.TaskHandler;
 import ru.prolib.aquila.core.data.OHLCScalableSeries;
 import ru.prolib.aquila.core.data.ValueException;
-import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
+import ru.prolib.bootes.lib.robo.s3.S3RobotStateListenerStub;
 import ru.prolib.bootes.lib.robo.sh.statereq.IAccountDeterminable;
 
-public class EquityCurveReportHandler implements S3RobotStateListener, EventListener, SPRunnable {
+public class EquityCurveReportHandler extends S3RobotStateListenerStub implements EventListener, SPRunnable {
 	private static final Logger logger;
 	
 	static {
@@ -46,11 +46,6 @@ public class EquityCurveReportHandler implements S3RobotStateListener, EventList
 	{
 		this(state, report, false);
 	}
-	
-	@Override
-	public void robotStarted() {
-		
-	}
 
 	@Override
 	public void accountSelected() {
@@ -68,41 +63,6 @@ public class EquityCurveReportHandler implements S3RobotStateListener, EventList
 		} finally {
 			lock.unlock();
 		}
-	}
-
-	@Override
-	public void contractSelected() {
-		
-	}
-
-	@Override
-	public void sessionDataAvailable() {
-		
-	}
-
-	@Override
-	public void riskManagementUpdate() {
-		
-	}
-
-	@Override
-	public void speculationOpened() {
-		
-	}
-
-	@Override
-	public void speculationUpdate() {
-		
-	}
-
-	@Override
-	public void speculationClosed() {
-		
-	}
-
-	@Override
-	public void sessionDataCleanup() {
-		
 	}
 
 	@Override

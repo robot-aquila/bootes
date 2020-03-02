@@ -5,11 +5,11 @@ import ru.prolib.bootes.lib.report.blockrep.Block;
 import ru.prolib.bootes.lib.report.blockrep.BlockReport;
 import ru.prolib.bootes.lib.report.blockrep.IBlockReport;
 import ru.prolib.bootes.lib.report.blockrep.IBlockReportStorage;
-import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
+import ru.prolib.bootes.lib.robo.s3.S3RobotStateListenerStub;
 import ru.prolib.bootes.lib.robo.s3.S3Speculation;
 import ru.prolib.bootes.lib.robo.s3.statereq.IS3Speculative;
 
-public class S3BlockReportHandler implements S3RobotStateListener {
+public class S3BlockReportHandler extends S3RobotStateListenerStub {
 	private static final String ID_OPEN = "OPEN";
 	private static final String ID_CLOSE = "CLOSE";
 	private static final String ID_TAKE_PROFIT = "TAKE_PROFIT";
@@ -36,31 +36,6 @@ public class S3BlockReportHandler implements S3RobotStateListener {
 	
 	private S3Speculation getSpeculation() {
 		return state.getActiveSpeculation();
-	}
-
-	@Override
-	public void robotStarted() {
-		
-	}
-
-	@Override
-	public void accountSelected() {
-		
-	}
-
-	@Override
-	public void contractSelected() {
-		
-	}
-
-	@Override
-	public void sessionDataAvailable() {
-		
-	}
-
-	@Override
-	public void riskManagementUpdate() {
-		
 	}
 
 	@Override
@@ -99,11 +74,6 @@ public class S3BlockReportHandler implements S3RobotStateListener {
 	@Override
 	public void sessionDataCleanup() {
 		// TODO: add cleanup data outside of T0 chart view
-	}
-
-	@Override
-	public void robotStopped() {
-		
 	}
 
 }

@@ -5,9 +5,9 @@ import org.slf4j.LoggerFactory;
 
 import ru.prolib.bootes.lib.report.summarep.ISummaryReport;
 import ru.prolib.bootes.lib.report.summarep.ISummaryReportTracker;
-import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
+import ru.prolib.bootes.lib.robo.s3.S3RobotStateListenerStub;
 
-public class SummaryReportDumpAtShutdown implements S3RobotStateListener {
+public class SummaryReportDumpAtShutdown extends S3RobotStateListenerStub {
 	private static final Logger logger;
 	
 	static {
@@ -18,51 +18,6 @@ public class SummaryReportDumpAtShutdown implements S3RobotStateListener {
 	
 	public SummaryReportDumpAtShutdown(ISummaryReportTracker tracker) {
 		this.tracker = tracker;
-	}
-
-	@Override
-	public void robotStarted() {
-
-	}
-
-	@Override
-	public void accountSelected() {
-
-	}
-
-	@Override
-	public void contractSelected() {
-
-	}
-
-	@Override
-	public void sessionDataAvailable() {
-
-	}
-
-	@Override
-	public void riskManagementUpdate() {
-
-	}
-
-	@Override
-	public void speculationOpened() {
-		
-	}
-	
-	@Override
-	public void speculationUpdate() {
-		
-	}
-
-	@Override
-	public void speculationClosed() {
-
-	}
-
-	@Override
-	public void sessionDataCleanup() {
-
 	}
 
 	@Override

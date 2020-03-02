@@ -3,6 +3,7 @@ package ru.prolib.bootes.lib.robo.s3;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import ru.prolib.aquila.core.BusinessEntities.Order;
 import ru.prolib.bootes.lib.robo.RobotStateListener;
 
 public class S3RobotStateListenerComp implements S3RobotStateListener {
@@ -101,6 +102,13 @@ public class S3RobotStateListenerComp implements S3RobotStateListener {
 	public void robotStopped() {
 		for ( RobotStateListener listener : _getListeners() ) {
 			listener.robotStopped();
+		}
+	}
+
+	@Override
+	public void orderFinished(Order order) {
+		for ( RobotStateListener listener : _getListeners() ) {
+			listener.orderFinished(order);
 		}
 	}
 

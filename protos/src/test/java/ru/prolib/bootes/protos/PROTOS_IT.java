@@ -100,7 +100,7 @@ public class PROTOS_IT {
 			));
 		assertReports(EXPECTED_SHORT, new File(rd_pass1, "protos1.report"));
 	}
-	
+
 	@Test
 	public void testPass1_WithLegacySDS() throws Throwable {
 		File report_dir = new File(reportDir, "pass1_legacy_sds");
@@ -201,6 +201,23 @@ public class PROTOS_IT {
 	}
 	
 	@Ignore
+	@Test
+	public void testPass4_Long_WithLegacySDS() throws Throwable {
+		File report_dir = new File(reportDir, "pass4_long_legacy_sds");
+		new PROTOS().run(args(
+				"--data-dir=" + dataDir,
+				"--report-dir=" + report_dir,
+				"--probe-initial-time=2017-01-01T00:00:00Z",
+				"--probe-stop-time=2017-06-01T00:00:00Z",
+				"--probe-auto-shutdown",
+				"--probe-auto-start",
+				"--headless",
+				"--qforts-legacy-sds"
+			));
+		assertReports(EXPECTED_LONG, new File(report_dir, "protos1.report"));
+	}
+	
+	//@Ignore
 	@Test
 	public void testPass5_OhlcProviderProducer_WithLegacySDS() throws Throwable {
 		File report_dir = new File(reportDir, "pass5_ohlc_prov_prod");

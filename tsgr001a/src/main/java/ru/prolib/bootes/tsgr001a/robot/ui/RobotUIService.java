@@ -10,14 +10,14 @@ import javax.swing.SwingUtilities;
 import ru.prolib.aquila.core.text.IMessages;
 import ru.prolib.aquila.core.utils.RunnableStub;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
-import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
+import ru.prolib.bootes.lib.robo.s3.S3RobotStateListenerStub;
 import ru.prolib.bootes.lib.service.UIService;
 import ru.prolib.bootes.lib.ui.BOOTESCommonMsg;
 import ru.prolib.bootes.lib.ui.EquityCurveView;
 import ru.prolib.bootes.tsgr001a.robot.TSGR001AReports;
 import ru.prolib.bootes.tsgr001a.robot.RobotState;
 
-public class RobotUIService implements S3RobotStateListener {
+public class RobotUIService extends S3RobotStateListenerStub {
 	private final AppServiceLocator serviceLocator;
 	private final TSGR001AReports roboServices;
 	private final RobotState state;
@@ -71,11 +71,6 @@ public class RobotUIService implements S3RobotStateListener {
 	public void robotStarted() {
 		SwingUtilities.invokeLater(new Runnable() { public void run() { initialize(); } });
 	}
-	
-	@Override
-	public void accountSelected() {
-		
-	}
 
 	@Override
 	public void contractSelected() {
@@ -97,11 +92,6 @@ public class RobotUIService implements S3RobotStateListener {
 		SwingUtilities.invokeLater(chartsViewUpdateConfig);
 		// Do not clear to avoid blinking
 		// Do not repaint to keep chart data on screen
-	}
-
-	@Override
-	public void robotStopped() {
-
 	}
 	
 	@Override

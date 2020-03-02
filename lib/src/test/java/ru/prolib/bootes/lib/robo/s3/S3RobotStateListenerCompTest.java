@@ -11,6 +11,7 @@ import org.easymock.IMocksControl;
 import org.junit.Before;
 import org.junit.Test;
 
+import ru.prolib.aquila.core.BusinessEntities.Order;
 import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
 import ru.prolib.bootes.lib.robo.s3.S3RobotStateListenerComp;
 
@@ -189,6 +190,20 @@ public class S3RobotStateListenerCompTest {
 		control.replay();
 		
 		service.robotStopped();
+		
+		control.verify();
+	}
+	
+	@Test
+	public void testOrderFinished() {
+		Order orderMock = control.createMock(Order.class);
+		listeners.add(listenerMock1);
+		listeners.add(listenerMock3);
+		listenerMock1.orderFinished(orderMock);
+		listenerMock3.orderFinished(orderMock);
+		control.replay();
+		
+		service.orderFinished(orderMock);
 		
 		control.verify();
 	}

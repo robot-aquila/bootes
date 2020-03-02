@@ -1,5 +1,7 @@
 package ru.prolib.bootes.lib.robo;
 
+import ru.prolib.aquila.core.BusinessEntities.Order;
+
 public interface RobotStateListener {
 
 	void robotStarted();
@@ -15,5 +17,7 @@ public interface RobotStateListener {
 	void sessionDataCleanup();
 
 	void robotStopped();
+	
+	void orderFinished(Order order);
 
 }

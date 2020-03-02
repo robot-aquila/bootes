@@ -173,15 +173,17 @@ public class S3ClosePosition extends SMStateHandlerEx implements
 	
 	@Override
 	public void exit() {
-		CDecimal filled_volume = order.getInitialVolume().subtract(order.getCurrentVolume());
-		if ( filled_volume.compareTo(CDecimalBD.ZERO) == 0 ) {
-			return;
-		}
 		S3Speculation spec;
 		S3RobotStateListener listener;
 		synchronized ( state ) {
 			spec = state.getActiveSpeculation();
 			listener = state.getStateListener();
+		}
+
+		listener.orderFinished(order);
+		CDecimal filled_volume = order.getInitialVolume().subtract(order.getCurrentVolume());
+		if ( filled_volume.compareTo(CDecimalBD.ZERO) == 0 ) {
+			return;
 		}
 		
 		CDecimal cum_price = null;

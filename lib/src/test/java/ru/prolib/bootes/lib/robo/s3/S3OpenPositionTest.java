@@ -366,6 +366,7 @@ public class S3OpenPositionTest {
 				.withToken(OrderField.CURRENT_VOLUME, of(20L))
 				.buildUpdate());
 		service.setOrder(order);
+		rlistenerMock.orderFinished(order);
 		control.replay();
 		
 		service.exit();
@@ -398,6 +399,7 @@ public class S3OpenPositionTest {
 				.buildUpdate());
 		order.addExecution(1001L, "1002", T("2019-03-06T21:27:01Z"), of("19.17"), of(15L), of("575.10"));
 		service.setOrder(order);
+		rlistenerMock.orderFinished(order);
 		rlistenerMock.speculationOpened();
 		control.replay();
 		
@@ -436,6 +438,7 @@ public class S3OpenPositionTest {
 		order.addExecution(1000L, "1000", T("2019-03-06T21:27:00Z"), of("19.15"), of( 5L), of("191.50"));
 		order.addExecution(1001L, "1002", T("2019-03-06T21:27:01Z"), of("19.17"), of(15L), of("575.10"));
 		service.setOrder(order);
+		rlistenerMock.orderFinished(order);
 		rlistenerMock.speculationOpened();
 		control.replay();
 		

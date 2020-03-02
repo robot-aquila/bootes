@@ -21,6 +21,8 @@ import ru.prolib.aquila.core.data.OHLCScalableSeries;
 import ru.prolib.aquila.core.data.timeframe.ZTFMinutes;
 import ru.prolib.bootes.lib.report.equirep.EquityReportBlockPrinter;
 import ru.prolib.bootes.lib.report.hello.HelloBlockPrinter;
+import ru.prolib.bootes.lib.report.order.OrderReport;
+import ru.prolib.bootes.lib.report.order.OrderReportPrinter;
 import ru.prolib.bootes.lib.report.s3rep.IS3Report;
 import ru.prolib.bootes.lib.report.s3rep.S3ReportBlockPrinter;
 import ru.prolib.bootes.lib.report.summarep.ISummaryReport;
@@ -146,6 +148,19 @@ public class ReportPrinterTest {
 		control.replay();
 		printer.print(streamMock);
 		control.verify();
+	}
+	
+	@Test
+	public void testAdd2_OrderReport() {
+		OrderReport report = new OrderReport();
+		
+		assertSame(service, service.add(report, "foobar"));
+		
+		STRBHandler<IReportBlockPrinter> actual = blocks.get(0);
+		assertEquals(new STRBHeader(OrderReportPrinter.REPORT_ID, "foobar"), actual.getHeader());
+		OrderReportPrinter printer = (OrderReportPrinter) actual.getHandler();
+		assertEquals(report, printer.getReport());
+		assertEquals("foobar", printer.getTitle());
 	}
 
 	@Test

@@ -10,6 +10,7 @@ import org.easymock.IMocksControl;
 import org.junit.Before;
 import org.junit.Test;
 
+import ru.prolib.aquila.core.BusinessEntities.Order;
 import ru.prolib.aquila.core.BusinessEntities.Tick;
 import ru.prolib.bootes.lib.report.blockrep.Block;
 import ru.prolib.bootes.lib.report.blockrep.BlockReport;
@@ -156,6 +157,16 @@ public class S3BlockReportHandlerTest {
 		control.replay();
 		
 		service.robotStopped();
+		
+		control.verify();
+	}
+	
+	@Test
+	public void testOrderFinished() {
+		Order orderMock = control.createMock(Order.class);
+		control.replay();
+		
+		service.orderFinished(orderMock);
 		
 		control.verify();
 	}

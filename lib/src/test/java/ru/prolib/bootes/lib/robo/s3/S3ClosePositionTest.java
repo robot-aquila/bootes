@@ -544,6 +544,7 @@ public class S3ClosePositionTest {
 				.withToken(OrderField.CURRENT_VOLUME, of(20L))
 				.buildUpdate());
 		service.setOrder(order);
+		rlistenerMock.orderFinished(order);
 		control.replay();
 		
 		service.exit();
@@ -578,6 +579,7 @@ public class S3ClosePositionTest {
 		order.addExecution(1000L, "1000", T("2019-03-06T21:27:00Z"), of("19.15"), of( 5L), of("191.50"));
 		order.addExecution(1001L, "1002", T("2019-03-06T21:27:01Z"), of("19.17"), of(15L), of("575.10"));
 		service.setOrder(order);
+		rlistenerMock.orderFinished(order);
 		rlistenerMock.speculationClosed();
 		control.replay();
 		
@@ -617,6 +619,7 @@ public class S3ClosePositionTest {
 		order.addExecution(1000L, "1000", T("2019-03-06T21:27:00Z"), of("19.15"), of( 5L), of("191.50"));
 		order.addExecution(1001L, "1002", T("2019-03-06T21:27:01Z"), of("19.17"), of( 5L), of("191.70"));
 		service.setOrder(order);
+		rlistenerMock.orderFinished(order);
 		control.replay();
 		
 		service.exit();
@@ -655,6 +658,7 @@ public class S3ClosePositionTest {
 				.buildUpdate());
 		order.addExecution(1000L, "1000", T("2019-03-06T21:27:00Z"), of("19.15"), of(10L), of("383.00"));
 		service.setOrder(order);
+		rlistenerMock.orderFinished(order);
 		rlistenerMock.speculationClosed();
 		control.replay();
 		
@@ -693,6 +697,7 @@ public class S3ClosePositionTest {
 				.withToken(OrderField.EXECUTED_VALUE, of("190.20"))
 				.buildUpdate());
 		order.addExecution(1000L, "1000", T("2019-03-06T21:27:00Z"), of("19.02"), of(5L), of("190.20"));
+		rlistenerMock.orderFinished(order);
 		service.setOrder(order);
 		control.replay();
 		
@@ -732,6 +737,7 @@ public class S3ClosePositionTest {
 		order.addExecution(1000L, "1000", T("2019-03-06T21:27:00Z"), of("19.15"), of( 5L), of("191.50"));
 		order.addExecution(1001L, "1002", T("2019-03-06T21:27:01Z"), of("19.17"), of(15L), of("575.10"));
 		service.setOrder(order);
+		rlistenerMock.orderFinished(order);
 		rlistenerMock.speculationClosed();
 		control.replay();
 		
@@ -770,6 +776,7 @@ public class S3ClosePositionTest {
 				.buildUpdate());
 		order.addExecution(1000L, "1000", T("2019-03-06T21:27:00Z"), of("19.15"), of( 5L), of("191.50"));
 		service.setOrder(order);
+		rlistenerMock.orderFinished(order);
 		control.replay();
 		
 		service.exit();
@@ -808,6 +815,7 @@ public class S3ClosePositionTest {
 				.buildUpdate());
 		order.addExecution(1000L, "1000", T("2019-03-06T21:27:00Z"), of("19.11"), of(10L), of("382.20"));
 		service.setOrder(order);
+		rlistenerMock.orderFinished(order);
 		rlistenerMock.speculationClosed();
 		control.replay();
 		
@@ -847,6 +855,7 @@ public class S3ClosePositionTest {
 				.buildUpdate());
 		order.addExecution(1000L, "1000", T("2019-03-06T21:27:00Z"), of("19.11"), of(5L), of("191.10"));
 		service.setOrder(order);
+		rlistenerMock.orderFinished(order);
 		control.replay();
 		
 		service.exit();

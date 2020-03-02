@@ -12,6 +12,8 @@ import java.util.List;
 import ru.prolib.aquila.core.data.OHLCScalableSeries;
 import ru.prolib.bootes.lib.report.equirep.EquityReportBlockPrinter;
 import ru.prolib.bootes.lib.report.hello.HelloBlockPrinter;
+import ru.prolib.bootes.lib.report.order.OrderReport;
+import ru.prolib.bootes.lib.report.order.OrderReportPrinter;
 import ru.prolib.bootes.lib.report.s3rep.IS3Report;
 import ru.prolib.bootes.lib.report.s3rep.S3ReportBlockPrinter;
 import ru.prolib.bootes.lib.report.summarep.ISummaryReport;
@@ -59,6 +61,10 @@ public class ReportPrinter {
 	
 	public ReportPrinter addHello(String text) {
 		return add(new HelloBlockPrinter(text));
+	}
+	
+	public ReportPrinter add(OrderReport report, String title) {
+		return add(new OrderReportPrinter(report, title), title);
 	}
 	
 	private void printBlock(PrintStream stream, STRBHandler<IReportBlockPrinter> block) {

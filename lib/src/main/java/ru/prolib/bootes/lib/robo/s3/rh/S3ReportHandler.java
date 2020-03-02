@@ -10,11 +10,11 @@ import ru.prolib.bootes.lib.report.s3rep.S3RRecord;
 import ru.prolib.bootes.lib.report.s3rep.S3RRecordCreate;
 import ru.prolib.bootes.lib.report.s3rep.S3RRecordUpdateLast;
 import ru.prolib.bootes.lib.report.s3rep.S3RType;
-import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
+import ru.prolib.bootes.lib.robo.s3.S3RobotStateListenerStub;
 import ru.prolib.bootes.lib.robo.s3.S3Speculation;
 import ru.prolib.bootes.lib.robo.s3.statereq.IS3Speculative;
 
-public class S3ReportHandler implements S3RobotStateListener {
+public class S3ReportHandler extends S3RobotStateListenerStub {
 	private static final Logger logger;
 	
 	static {
@@ -42,36 +42,6 @@ public class S3ReportHandler implements S3RobotStateListener {
 	
 	private S3Speculation getSpeculation() {
 		return state.getActiveSpeculation();
-	}
-
-	@Override
-	public void robotStarted() {
-		
-	}
-
-	@Override
-	public void accountSelected() {
-		
-	}
-
-	@Override
-	public void contractSelected() {
-		
-	}
-
-	@Override
-	public void sessionDataAvailable() {
-		
-	}
-
-	@Override
-	public void riskManagementUpdate() {
-		
-	}
-
-	@Override
-	public void speculationOpened() {
-		
 	}
 
 	@Override
@@ -106,11 +76,6 @@ public class S3ReportHandler implements S3RobotStateListener {
 				);
 		}
 		report.update(request);
-	}
-
-	@Override
-	public void sessionDataCleanup() {
-		
 	}
 
 	@Override

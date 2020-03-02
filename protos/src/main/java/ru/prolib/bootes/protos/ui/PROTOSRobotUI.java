@@ -11,14 +11,14 @@ import ru.prolib.aquila.core.text.IMessages;
 import ru.prolib.aquila.core.utils.RunnableStub;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.robo.s3.S3CommonReports;
-import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
+import ru.prolib.bootes.lib.robo.s3.S3RobotStateListenerStub;
 import ru.prolib.bootes.lib.robo.s3.ui.S3CommonReportsView;
 import ru.prolib.bootes.lib.service.UIService;
 import ru.prolib.bootes.lib.ui.BOOTESCommonMsg;
 import ru.prolib.bootes.lib.ui.EquityCurveView;
 import ru.prolib.bootes.protos.PROTOSRobotState;
 
-public class PROTOSRobotUI implements S3RobotStateListener  {
+public class PROTOSRobotUI extends S3RobotStateListenerStub  {
 	private final AppServiceLocator serviceLocator;
 	private final PROTOSRobotState state;
 	private final S3CommonReports reports;
@@ -69,34 +69,14 @@ public class PROTOSRobotUI implements S3RobotStateListener  {
 	}
 
 	@Override
-	public void accountSelected() {
-		
-	}
-
-	@Override
-	public void contractSelected() {
-		
-	}
-
-	@Override
 	public void sessionDataAvailable() {
 		SwingUtilities.invokeLater(chartsViewUpdateAll);		
-	}
-
-	@Override
-	public void riskManagementUpdate() {
-		
 	}
 
 	@Override
 	public void sessionDataCleanup() {
 		// Do not clear to avoid blinking
 		// Do not repaint to keep chart data on screen
-	}
-
-	@Override
-	public void robotStopped() {
-		
 	}
 
 	@Override

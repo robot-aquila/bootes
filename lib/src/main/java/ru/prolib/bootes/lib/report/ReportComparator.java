@@ -10,6 +10,7 @@ import java.util.Map;
 
 import ru.prolib.bootes.lib.report.equirep.EquityReportBlockPrinter;
 import ru.prolib.bootes.lib.report.hello.HelloBlockPrinter;
+import ru.prolib.bootes.lib.report.order.OrderReportPrinter;
 import ru.prolib.bootes.lib.report.s3rep.S3ReportBlockPrinter;
 import ru.prolib.bootes.lib.report.summarep.SummaryReportBlockPrinter;
 import ru.prolib.bootes.lib.report.sysinfo.SysInfoBlockPrinter;
@@ -32,6 +33,7 @@ public class ReportComparator {
 		dumb(comparators, EquityReportBlockPrinter.REPORT_ID);
 		dumb(comparators, SummaryReportBlockPrinter.REPORT_ID);
 		dumb(comparators, S3ReportBlockPrinter.REPORT_ID); // TODO: 
+		dumb(comparators, OrderReportPrinter.REPORT_ID);
 		return new STRComparatorImpl(comparators);
 	}
 	

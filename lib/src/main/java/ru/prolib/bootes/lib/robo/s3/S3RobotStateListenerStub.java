@@ -1,41 +1,8 @@
 package ru.prolib.bootes.lib.robo.s3;
 
-public class S3RobotStateListenerStub implements S3RobotStateListener {
+import ru.prolib.bootes.lib.robo.RobotStateListenerStub;
 
-	@Override
-	public void robotStarted() {
-
-	}
-	
-	@Override
-	public void accountSelected() {
-		
-	}
-
-	@Override
-	public void contractSelected() {
-
-	}
-
-	@Override
-	public void sessionDataAvailable() {
-
-	}
-	
-	@Override
-	public void riskManagementUpdate() {
-		
-	}
-
-	@Override
-	public void sessionDataCleanup() {
-
-	}
-
-	@Override
-	public void robotStopped() {
-
-	}
+public class S3RobotStateListenerStub extends RobotStateListenerStub implements S3RobotStateListener {
 	
 	@Override
 	public void speculationOpened() {

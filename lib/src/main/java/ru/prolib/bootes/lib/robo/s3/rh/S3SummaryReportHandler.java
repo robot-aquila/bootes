@@ -3,11 +3,11 @@ package ru.prolib.bootes.lib.robo.s3.rh;
 import ru.prolib.bootes.lib.data.ts.SignalType;
 import ru.prolib.bootes.lib.report.summarep.ISummaryReportTracker;
 import ru.prolib.bootes.lib.report.summarep.SREntry;
-import ru.prolib.bootes.lib.robo.s3.S3RobotStateListener;
+import ru.prolib.bootes.lib.robo.s3.S3RobotStateListenerStub;
 import ru.prolib.bootes.lib.robo.s3.S3Speculation;
 import ru.prolib.bootes.lib.robo.s3.statereq.IS3Speculative;
 
-public class S3SummaryReportHandler implements S3RobotStateListener {
+public class S3SummaryReportHandler extends S3RobotStateListenerStub {
 	private final IS3Speculative state;
 	private final ISummaryReportTracker tracker;
 	
@@ -22,41 +22,6 @@ public class S3SummaryReportHandler implements S3RobotStateListener {
 		synchronized ( state ) {
 			return state.getActiveSpeculation();
 		}
-	}
-
-	@Override
-	public void robotStarted() {
-		
-	}
-
-	@Override
-	public void accountSelected() {
-		
-	}
-
-	@Override
-	public void contractSelected() {
-		
-	}
-
-	@Override
-	public void sessionDataAvailable() {
-		
-	}
-
-	@Override
-	public void riskManagementUpdate() {
-		
-	}
-
-	@Override
-	public void speculationOpened() {
-		
-	}
-
-	@Override
-	public void speculationUpdate() {
-		
 	}
 
 	@Override
@@ -75,16 +40,6 @@ public class S3SummaryReportHandler implements S3RobotStateListener {
 		synchronized ( tracker ) {
 			tracker.add(tr);
 		}
-	}
-
-	@Override
-	public void sessionDataCleanup() {
-		
-	}
-
-	@Override
-	public void robotStopped() {
-		
 	}
 
 }

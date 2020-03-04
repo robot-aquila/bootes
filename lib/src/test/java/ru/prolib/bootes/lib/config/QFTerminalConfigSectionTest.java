@@ -41,6 +41,7 @@ public class QFTerminalConfigSectionTest {
 		expected.put("qforts-data-dir", "/foo/bar");
 		expected.put("qforts-liquidity-mode", "0");
 		expected.put("qforts-legacy-sds", "false");
+		expected.put("qforts-order-exec-trigger-mode", "0");
 		assertEquals(expected, defaults_data);
 	}
 	
@@ -50,7 +51,7 @@ public class QFTerminalConfigSectionTest {
 		
 		service.configureOptions(options);
 		
-		assertEquals(5, options.getOptions().size());
+		assertEquals(6, options.getOptions().size());
 		
 		Option actual = options.getOption("qforts-data-dir");
 		assertEquals(Option.builder()
@@ -95,6 +96,17 @@ public class QFTerminalConfigSectionTest {
 				.desc("Enable legacy symbol data service.")
 				.build(), actual);
 		assertFalse(actual.hasArg());
+		
+		actual = options.getOption("qforts-order-exec-trigger-mode");
+		assertEquals(Option.builder()
+				.longOpt("qforts-order-exec-trigger-mode")
+				.hasArg()
+				.argName("mode")
+				.desc("Order execution trigger mode. Available modes are: "
+						+ "0 - USE_LAST_TRADE_EVENT_OF_SECURITY, "
+						+ "1 - USE_L1UPDATES_WHEN_ORDER_APPEARS")
+				.build(), actual);
+		assertTrue(actual.hasArg());
 	}
 	
 	@Test

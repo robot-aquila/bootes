@@ -3,6 +3,7 @@ package ru.prolib.bootes.lib.config;
 import static org.easymock.EasyMock.*;
 import static org.junit.Assert.*;
 import static ru.prolib.aquila.core.BusinessEntities.CDecimalBD.*;
+import static ru.prolib.aquila.qforts.impl.QFOrderExecutionTriggerMode.*;
 
 import java.io.File;
 import java.util.LinkedHashMap;
@@ -109,6 +110,24 @@ public class QFTerminalConfigTest {
 		service1.getLiquidityMode();
 	}
 	
+	@Test
+	public void testGetOrderExecTriggerMode() throws Exception {
+		options1.put("qforts-order-exec-trigger-mode", "0");
+		assertEquals(USE_LAST_TRADE_EVENT_OF_SECURITY, service1.getOrderExecTriggerMode());
+		
+		options1.put("qforts-order-exec-trigger-mode", "1");
+		assertEquals(USE_L1UPDATES_WHEN_ORDER_APPEARS, service1.getOrderExecTriggerMode());
+	}
+
+	@Test
+	public void testGetOrderExecTriggerMode_ThrowsIfNodeIsNotKnown() throws Exception {
+		eex.expect(ConfigException.class);
+		eex.expectMessage("qforts-order-exec-trigger-mode expected to be 0 or 1 but: 3");
+		options1.put("qforts-order-exec-trigger-mode", "3");
+		
+		service1.getOrderExecTriggerMode();
+	}
+
 	@Test
 	public void testIsLegacySymbolDataService() throws Exception {
 		assertFalse(service1.isLegacySymbolDataService());

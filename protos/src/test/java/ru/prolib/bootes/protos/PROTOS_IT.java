@@ -88,19 +88,72 @@ public class PROTOS_IT {
 	}
 	
 	@Test
-	public void testPass1() throws Throwable {
-		File rd_pass1 = new File(reportDir, "pass1");
+	public void testPass1_OldOrderExecTriggerMode() throws Throwable {
+		File rd_pass1 = new File(reportDir, "pass1_old-oetm");
 		new PROTOS().run(args(
 				"--data-dir=" + dataDir,
 				"--report-dir=" + rd_pass1,
 				"--probe-initial-time=2017-01-01T00:00:00Z",
 				"--probe-stop-time=2017-02-01T00:00:00Z",
 				"--probe-auto-shutdown",
-				"--probe-auto-start"
+				"--probe-auto-start",
+				"--qforts-order-exec-trigger-mode=0"
 			));
 		assertReports(EXPECTED_SHORT, new File(rd_pass1, "protos1.report"));
 	}
 
+	@Test
+	public void testPass1_NewOrderExecTriggerMode() throws Throwable {
+		File rd_pass1 = new File(reportDir, "pass1_new-oetm");
+		new PROTOS().run(args(
+				"--data-dir=" + dataDir,
+				"--report-dir=" + rd_pass1,
+				"--probe-initial-time=2017-01-01T00:00:00Z",
+				"--probe-stop-time=2017-02-01T00:00:00Z",
+				"--probe-auto-shutdown",
+				"--probe-auto-start",
+				"--qforts-order-exec-trigger-mode=1"
+			));
+		assertReports(EXPECTED_SHORT, new File(rd_pass1, "protos1.report"));
+	}
+
+	@Test
+	public void testPass1_OldOrderExecTriggerMode_ohlc() throws Throwable {
+		File rd_pass1 = new File(reportDir, "pass1_old-oetm_ohlc");
+		new PROTOS().run(args(
+				"--data-dir=" + dataDir,
+				"--report-dir=" + rd_pass1,
+				"--probe-initial-time=2017-01-01T00:00:00Z",
+				"--probe-stop-time=2017-02-01T00:00:00Z",
+				"--probe-auto-shutdown",
+				"--probe-auto-start",
+				"--qforts-order-exec-trigger-mode=0",
+				"--protos-use-ohlc-provider"
+			));
+		assertReports(EXPECTED_SHORT, new File(rd_pass1, "protos1.report"));
+	}
+
+	@Test
+	public void testPass1_NewOrderExecTriggerMode_ohlc() throws Throwable {
+		File rd_pass1 = new File(reportDir, "pass1_new-oetm_ohlc");
+		new PROTOS().run(args(
+				"--data-dir=" + dataDir,
+				"--report-dir=" + rd_pass1,
+				"--probe-initial-time=2017-01-01T00:00:00Z",
+				"--probe-stop-time=2017-02-01T00:00:00Z",
+				"--probe-auto-shutdown",
+				"--probe-auto-start",
+				"--qforts-order-exec-trigger-mode=1",
+				"--protos-use-ohlc-provider"
+			));
+		assertReports(EXPECTED_SHORT, new File(rd_pass1, "protos1.report"));
+	}
+
+	
+	
+	
+	
+	@Ignore
 	@Test
 	public void testPass1_WithLegacySDS() throws Throwable {
 		File report_dir = new File(reportDir, "pass1_legacy_sds");
@@ -116,6 +169,7 @@ public class PROTOS_IT {
 		assertReports(EXPECTED_SHORT, new File(report_dir, "protos1.report"));
 	}
 	
+	@Ignore
 	@Test
 	public void testPass2() throws Throwable {
 		File rd_pass2 = new File(reportDir, "pass2");
@@ -131,6 +185,7 @@ public class PROTOS_IT {
 		assertReports(EXPECTED_SHORT, new File(rd_pass2, "protos1.report"));
 	}
 	
+	@Ignore
 	@Test
 	public void testPass2_WithLegacySDS() throws Throwable {
 		File report_dir = new File(reportDir, "pass2_legacy_sds");
@@ -147,6 +202,7 @@ public class PROTOS_IT {
 		assertReports(EXPECTED_SHORT, new File(report_dir, "protos1.report"));
 	}
 	
+	@Ignore
 	@Test
 	public void testPass3() throws Throwable {
 		File rd_pass3 = new File(reportDir, "pass3");
@@ -165,6 +221,7 @@ public class PROTOS_IT {
 		assertReports(EXPECTED_SHORT, new File(rd_pass3, "protos3.report"));
 	}
 	
+	@Ignore
 	@Test
 	public void testPass3_WithLegacySDS() throws Throwable {
 		File report_dir = new File(reportDir, "pass3_legacy_sds");
@@ -217,7 +274,7 @@ public class PROTOS_IT {
 		assertReports(EXPECTED_LONG, new File(report_dir, "protos1.report"));
 	}
 	
-	//@Ignore
+	@Ignore
 	@Test
 	public void testPass5_OhlcProviderProducer_WithLegacySDS() throws Throwable {
 		File report_dir = new File(reportDir, "pass5_ohlc_prov_prod");

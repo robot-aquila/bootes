@@ -43,7 +43,8 @@ public class QFTerminalOnlyComp extends CommonComp {
 				term_conf.getDataDirectory());
 		QFBuilder qfb = new QFBuilder()
 				.withEventQueue(serviceLocator.getEventQueue())
-				.withLiquidityMode(term_conf.getLiquidityMode());
+				.withLiquidityMode(term_conf.getLiquidityMode())
+				.withOrderExecutionTriggerMode(term_conf.getOrderExecTriggerMode());
 		if ( term_conf.isLegacySymbolDataService() ) {
 			qfb.withLegacySymbolDataService(true);
 			logger.debug("Selected legacy symbol data service. Possible long execution.");

@@ -23,9 +23,10 @@ public class OrderInfo extends OrderExecInfo {
 			CDecimal price,
 			CDecimal qty,
 			CDecimal value,
+			String ext_id,
 			Collection<OrderExecInfo> executions)
 	{
-		super(num, time, price, qty, value);
+		super(num, time, price, qty, value, ext_id);
 		this.action = action;
 		this.symbol = symbol;
 		this.executions = executions;
@@ -53,6 +54,7 @@ public class OrderInfo extends OrderExecInfo {
 				.append(price)
 				.append(qty)
 				.append(value)
+				.append(extID)
 				.append(executions)
 				.build();
 	}
@@ -74,6 +76,7 @@ public class OrderInfo extends OrderExecInfo {
 				.append(o.price, price)
 				.append(o.qty, qty)
 				.append(o.value, value)
+				.append(o.extID, extID)
 				.append(o.executions, executions)
 				.build();
 	}

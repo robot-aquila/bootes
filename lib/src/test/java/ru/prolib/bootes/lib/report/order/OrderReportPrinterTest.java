@@ -72,23 +72,23 @@ public class OrderReportPrinterTest {
 	@Test
 	public void testPrint() throws Exception {
 		report.addOrder(new OrderInfo(OrderAction.BUY, new Symbol("RTS-3.18"), 3, T("2020-02-29T08:06:33.901Z"),
-				of(120980L), of(11L), ofRUB2("459871.13"), Arrays.asList(
-					new OrderExecInfo(1, T("2020-02-29T08:06:33.957Z"), of(120950L), of(5L), ofRUB2("218623.02")),
-					new OrderExecInfo(2, T("2020-02-29T08:49:17.208Z"), of(120980L), of(2L), ofRUB2( "81806.45")),
-					new OrderExecInfo(3, T("2020-02-29T09:15:29.102Z"), of(120870L), of(4L), ofRUB2("159441.66"))
-				)
-			));
+			of(120980L), of(11L), ofRUB2("459871.13"), "o1", Arrays.asList(
+				new OrderExecInfo(1, T("2020-02-29T08:06:33.957Z"), of(120950L), of(5L), ofRUB2("218623.02"), "o1e1"),
+				new OrderExecInfo(2, T("2020-02-29T08:49:17.208Z"), of(120980L), of(2L), ofRUB2( "81806.45"), "o1e2"),
+				new OrderExecInfo(3, T("2020-02-29T09:15:29.102Z"), of(120870L), of(4L), ofRUB2("159441.66"), "o1e3")
+			)
+		));
 		report.addOrder(new OrderInfo(OrderAction.SELL, new Symbol("Si-3.19"), 2, T("2020-03-01T12:01:12.707Z"),
-				of(131010L), of( 3L), ofRUB2("135907.12"), Arrays.asList(
-					new OrderExecInfo(1, T("2020-03-01T12:02:14.089Z"), of(131140L), of(2L), ofRUB2( "90600.02")),
-					new OrderExecInfo(2, T("2020-03-01T12:04:47.190Z"), of(131140L), of(1L), ofRUB2( "45307.10"))
-				)
-			));
+			of(131010L), of( 3L), ofRUB2("135907.12"), "o2", Arrays.asList(
+				new OrderExecInfo(1, T("2020-03-01T12:02:14.089Z"), of(131140L), of(2L), ofRUB2( "90600.02"), "o2e1"),
+				new OrderExecInfo(2, T("2020-03-01T12:04:47.190Z"), of(131140L), of(1L), ofRUB2( "45307.10"), "o2e2")
+			)
+		));
 		report.addOrder(new OrderInfo(OrderAction.BUY, new Symbol("GAZP"), 1, T("2020-04-27T05:10:35.144Z"),
-				null, of(10L), ofRUB2("54297.06"), Arrays.asList(
-					new OrderExecInfo(1, T("2020-04-27T05:10:35.482Z"), of( 98120L), of(10L), ofRUB2("54297.06"))
-				)
-			));
+			null, of(10L), ofRUB2("54297.06"), "o3", Arrays.asList(
+				new OrderExecInfo(1, T("2020-04-27T05:10:35.482Z"), of( 98120L), of(10L), ofRUB2("54297.06"), "o3e1")
+			)
+		));
 		
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		

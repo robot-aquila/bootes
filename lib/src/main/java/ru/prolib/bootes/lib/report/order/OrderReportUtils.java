@@ -17,7 +17,13 @@ public class OrderReportUtils {
 		List<OrderExecInfo> execs = new ArrayList<>();
 		int num = 1;
 		for ( OrderExecution exec : order.getExecutions() ) {
-			execs.add(new OrderExecInfo(num, exec.getTime(), exec.getPricePerUnit(), exec.getVolume(), exec.getValue()));
+			execs.add(new OrderExecInfo(num,
+					exec.getTime(),
+					exec.getPricePerUnit(),
+					exec.getVolume(),
+					exec.getValue(),
+					exec.getExternalID()
+				));
 			num ++;
 		}
 		return new OrderInfo(
@@ -28,6 +34,7 @@ public class OrderReportUtils {
 				order.getPrice(),
 				order.getInitialVolume(),
 				order.getExecutedValue(),
+				order.getExternalID(),
 				execs
 			);
 	}

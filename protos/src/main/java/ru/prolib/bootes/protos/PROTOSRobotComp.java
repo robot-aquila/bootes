@@ -28,6 +28,10 @@ public class PROTOSRobotComp implements AppComponent {
 		this.serviceLocator = serviceLocator;
 	}
 	
+	public S3CommonReports getReports() {
+		return reports;
+	}
+	
 	@Override
 	public void init() throws Throwable {
 		reports = new S3CommonReports(serviceLocator);

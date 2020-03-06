@@ -65,6 +65,10 @@ public class OrderReportPrinter implements IReportBlockPrinter {
 		return title;
 	}
 	
+	static String toString(String value) {
+		return value == null ? NOT_AVAILABLE : value;
+	}
+	
 	static String toString(OrderAction action) {
 		return action.toString();
 	}
@@ -112,7 +116,8 @@ public class OrderReportPrinter implements IReportBlockPrinter {
 				"Time",
 				"Price",
 				"Qty",
-				"Value"
+				"Value",
+				"Ext.ID"
 		};
 		int col_width[] = new int[cols.length];
 		maxColWidths(cols, col_width);
@@ -129,7 +134,8 @@ public class OrderReportPrinter implements IReportBlockPrinter {
 					timeFormat.format(order_info.getTime()),
 					toStringPrice(order_info.getPrice()),
 					toString(order_info.getQty()),
-					toString(order_info.getValue())
+					toString(order_info.getValue()),
+					toString(order_info.getExternalID())
 			};
 			rows.add(h_row);
 			maxColWidths(h_row, col_width);
@@ -141,7 +147,8 @@ public class OrderReportPrinter implements IReportBlockPrinter {
 					timeFormat.format(exec_info.getTime()),
 					toString(exec_info.getPrice()),
 					toString(exec_info.getQty()),
-					toString(exec_info.getValue())
+					toString(exec_info.getValue()),
+					toString(exec_info.getExternalID())
 				};
 				rows.add(e_row);
 				maxColWidths(e_row, col_width);

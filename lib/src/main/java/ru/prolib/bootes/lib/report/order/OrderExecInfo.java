@@ -13,13 +13,15 @@ public class OrderExecInfo {
 	protected final long num;
 	protected final Instant time;
 	protected final CDecimal price, qty, value;
+	protected final String extID;
 	
-	public OrderExecInfo(long num, Instant time, CDecimal price, CDecimal qty, CDecimal value) {
+	public OrderExecInfo(long num, Instant time, CDecimal price, CDecimal qty, CDecimal value, String ext_id) {
 		this.num = num;
 		this.time = time;
 		this.price = price;
 		this.qty = qty;
 		this.value = value;
+		this.extID = ext_id;
 	}
 	
 	/**
@@ -47,6 +49,10 @@ public class OrderExecInfo {
 		return value;
 	}
 	
+	public String getExternalID() {
+		return extID;
+	}
+	
 	@Override
 	public boolean equals(Object other) {
 		if ( other == this ) {
@@ -62,6 +68,7 @@ public class OrderExecInfo {
 				.append(o.price, price)
 				.append(o.qty, qty)
 				.append(o.value, value)
+				.append(o.extID, extID)
 				.build();
 	}
 	
@@ -78,6 +85,7 @@ public class OrderExecInfo {
 				.append(price)
 				.append(qty)
 				.append(value)
+				.append(extID)
 				.build();
 	}
 

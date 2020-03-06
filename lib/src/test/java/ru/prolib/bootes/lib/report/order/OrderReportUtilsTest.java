@@ -55,6 +55,7 @@ public class OrderReportUtilsTest {
 		order.consume(new DeltaUpdateBuilder()
 				.withToken(OrderField.TIME, T("2020-03-01T23:17:45Z"))
 				.withToken(OrderField.EXECUTED_VALUE, ofRUB2("102.37"))
+				.withToken(OrderField.EXTERNAL_ID, "charlie-508")
 				.buildUpdate());
 		order.addExecution(101L, "x01", T("2020-03-01T23:17:59.204Z"), of(110240L), of(2L), ofRUB2("16.08"));
 		order.addExecution(102L, "x02", T("2020-03-01T23:25:04.003Z"), of(110250L), of(1L), ofRUB2("8.04"));
@@ -70,11 +71,12 @@ public class OrderReportUtilsTest {
 				of(110250L),
 				of(12L),
 				ofRUB2("102.37"),
+				"charlie-508",
 				Arrays.asList(
-						new OrderExecInfo(1L, T("2020-03-01T23:17:59.204Z"), of(110240L), of(2L), ofRUB2("16.08")),
-						new OrderExecInfo(2L, T("2020-03-01T23:25:04.003Z"), of(110250L), of(1L), ofRUB2( "8.04")),
-						new OrderExecInfo(3L, T("2020-03-01T23:47:19.026Z"), of(110230L), of(9L), ofRUB2("72.12"))
-					)
+					new OrderExecInfo(1L, T("2020-03-01T23:17:59.204Z"), of(110240L), of(2L), ofRUB2("16.08"), "x01"),
+					new OrderExecInfo(2L, T("2020-03-01T23:25:04.003Z"), of(110250L), of(1L), ofRUB2( "8.04"), "x02"),
+					new OrderExecInfo(3L, T("2020-03-01T23:47:19.026Z"), of(110230L), of(9L), ofRUB2("72.12"), "x03")
+				)
 			);
 		assertEquals(expected, actual);
 	}

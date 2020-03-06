@@ -49,6 +49,7 @@ public class OrderInfoTest {
 				of("12.44"),
 				of(10L),
 				ofRUB2("24.88"),
+				"checky-checky",
 				execs1
 			);
 	}
@@ -62,6 +63,7 @@ public class OrderInfoTest {
 		assertEquals(of("12.44"), service.getPrice());
 		assertEquals(of(10L), service.getQty());
 		assertEquals(ofRUB2("24.88"), service.getValue());
+		assertEquals("checky-checky", service.getExternalID());
 		assertEquals(execs1, service.getExecutions());
 		assertNotSame(execs1, service.getExecutions());
 	}
@@ -73,7 +75,7 @@ public class OrderInfoTest {
 				.append(execMock1).append(", ")
 				.append(execMock2).append(", ")
 				.append(execMock3)
-				.append("],num=20,time=2020-03-01T17:41:00Z,price=12.44,qty=10,value=24.88 RUB]")
+				.append("],num=20,time=2020-03-01T17:41:00Z,price=12.44,qty=10,value=24.88 RUB,extID=checky-checky]")
 				.toString();
 		
 		assertEquals(expected, service.toString());
@@ -89,6 +91,7 @@ public class OrderInfoTest {
 				.append(of("12.44"))
 				.append(of(10L))
 				.append(ofRUB2("24.88"))
+				.append("checky-checky")
 				.append(execs1)
 				.build();
 		
@@ -112,13 +115,14 @@ public class OrderInfoTest {
 		Variant<CDecimal> vPr = new Variant<>(vTm, of("12.44"), of("420.97"));
 		Variant<CDecimal> vQty = new Variant<>(vPr, of(10L), of(240L));
 		Variant<CDecimal> vVal = new Variant<>(vQty, ofRUB2("24.88"), ofUSD5("0.11256"));
-		Variant<List<OrderExecInfo>> vExe = new Variant<>(vVal, execs1, execs2);
+		Variant<String> vEID = new Variant<>(vVal, "checky-checky", "bao");
+		Variant<List<OrderExecInfo>> vExe = new Variant<>(vEID, execs1, execs2);
 		Variant<?> iterator = vExe;
 		int found_cnt = 0;
 		OrderInfo x, found = null;
 		do {
 			x = new OrderInfo(vAct.get(), vSym.get(), vNum.get(), vTm.get(), vPr.get(),
-					vQty.get(), vVal.get(), vExe.get());
+					vQty.get(), vVal.get(), vEID.get(), vExe.get());
 			if ( service.equals(x) ) {
 				found_cnt ++;
 				found = x;
@@ -133,6 +137,7 @@ public class OrderInfoTest {
 		assertEquals(of("12.44"), found.getPrice());
 		assertEquals(of(10L), found.getQty());
 		assertEquals(ofRUB2("24.88"), found.getValue());
+		assertEquals("checky-checky", found.getExternalID());
 		assertEquals(execs1, found.getExecutions());
 	}
 

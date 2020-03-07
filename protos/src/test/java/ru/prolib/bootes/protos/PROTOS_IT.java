@@ -28,6 +28,12 @@ import com.github.difflib.patch.AbstractDelta;
 import com.github.difflib.patch.Patch;
 
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
+import ru.prolib.aquila.core.BusinessEntities.CloseableIterator;
+import ru.prolib.aquila.core.BusinessEntities.L1Update;
+import ru.prolib.aquila.core.BusinessEntities.OrderAction;
+import ru.prolib.aquila.core.BusinessEntities.Tick;
+import ru.prolib.aquila.probe.datasim.l1.L1UpdateReaderFactory;
+import ru.prolib.aquila.web.utils.finam.data.FinamData;
 import ru.prolib.bootes.lib.report.ReportComparator;
 import ru.prolib.bootes.lib.report.STRCmpResult;
 import ru.prolib.bootes.lib.report.order.OrderExecInfo;
@@ -39,6 +45,7 @@ public class PROTOS_IT {
 	static final File reportDir = new File("tmp/it-reports");
 	static final File EXPECTED_LONG = new File("fixture", "protos-long.rep");
 	static final File EXPECTED_SHORT = new File("fixture", "protos-short.rep");
+	static L1UpdateReaderFactory l1uReaderFactory;
 	
 	static Instant T(String timeString) {
 		return Instant.parse(timeString);
@@ -50,6 +57,7 @@ public class PROTOS_IT {
 			FileUtils.forceDelete(reportDir);
 		}
 		reportDir.mkdirs();
+		l1uReaderFactory = new FinamData().createUpdateReaderFactory(dataDir);
 	}
 	
 	static void assertOrderHasNoExecutionsInThePast(OrderReport report) {
@@ -166,6 +174,25 @@ public class PROTOS_IT {
 		assertReportFiles_V2(expected, actual);
 	}
 	
+	static Tick searchSuitableTick(CloseableIterator<L1Update> it, OrderAction action, CDecimal price) throws Exception {
+		for ( ;; ) {
+			assertTrue("No more ticks", it.next());
+			Tick tick = it.item().getTick();
+			if ( action == OrderAction.BUY || action == OrderAction.COVER ) {
+				if ( price.compareTo(tick.getPrice()) >= 0 ) {
+					//System.out.println("For action " + action + " and price " + price + " found tick: " + tick);
+					return tick;
+				}
+			}
+			if ( action == OrderAction.SELL || action == OrderAction.SELL_SHORT ) {
+				if ( price.compareTo(tick.getPrice()) <= 0 ) {
+					//System.out.println("For action " + action + " and price " + price + " found tick: " + tick);
+					return tick;
+				}
+			}
+		}
+	}
+	
 	@Test
 	public void testPass1_OldOrderExecTriggerMode_L1AGGR() throws Throwable {
 		File rd_pass1 = new File(reportDir, "pass1_old-oetm");
@@ -265,7 +292,6 @@ public class PROTOS_IT {
 		assertReports(new File("fixture", "protos-short_new-oetm_l1aggr.rep"), new File(rd_pass1, "protos1.report"));
 	}
 	
-	@Ignore
 	@Test
 	public void testPass1_NewOrderExecTriggerMode_OHLC() throws Throwable {
 		File rd_pass1 = new File(reportDir, "pass1_new-oetm_ohlc");
@@ -286,8 +312,41 @@ public class PROTOS_IT {
 		assertOrderHasNoExecutionsInThePast(report);
 		assertAllOrdersExecutedCompletely(report);
 		// first execution should start from first tick
+		List<OrderInfo> orders = new ArrayList<>(report.getOrders());
+		for ( int j = 0; j < orders.size(); j ++ ) {
+			if ( j % 2 != 0 ) {
+				// Нет смысла проверять закрывающую заявку, так как в большинстве случаев ее выставление
+				// является результатом анализа последовательности тиков. Условие выхода из позиции
+				// может сработать на любом тике последовательности, не обязательно на первом (скорее обязательно
+				// не на первом). Проверять можно только четные, открывающие  заявки, так как они всегда выровнены
+				// по границе свечи.
+				continue;
+			}
+			OrderInfo order = orders.get(j);
+			try ( CloseableIterator<L1Update> it = l1uReaderFactory.createReader(order.getSymbol(), order.getTime()) ) {
+				List<OrderExecInfo> executions = new ArrayList<>(order.getExecutions());
+				for ( int i = 0; i < executions.size(); i ++ ) {
+					boolean is_last_exec = i == executions.size() - 1;
+					OrderExecInfo exec = executions.get(i);
+					Tick tick = searchSuitableTick(it, order.getAction(), order.getPrice());
+					assertEquals(new StringBuilder()
+							.append("Order ")
+							.append(j + 1)
+							.append(" execution ")
+							.append(i + 1)
+							.append(" price mismatch")
+							.toString(), exec.getPrice(), tick.getPrice());
+					if ( is_last_exec ) {
+						//assertThat(tick.getSize().compareTo(exec.getQty()), greaterThanOrEqualTo(0));
+						assertThat(tick.getSize(), greaterThanOrEqualTo(exec.getQty()));
+					} else {
+						assertEquals(tick.getSize(), exec.getQty());
+					}
+				}
+			}
+		}
 		
-		assertReports(EXPECTED_SHORT, new File(rd_pass1, "protos1.report"));
+		assertReports(new File("fixture", "protos-short_new-oetm_ohlc.rep"), new File(rd_pass1, "protos1.report"));
 	}
 
 /*

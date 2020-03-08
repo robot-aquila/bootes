@@ -18,11 +18,7 @@ public class OhlcProviderProducerFactory extends SecurityChartDataHandler.Factor
 	
 	@Override
 	public Starter createOhlcProducer(EditableTSeries<Candle> ohlc) {
-		return new CandleReplayToSeriesStarter(
-				services.getOHLCReplayService(),
-				setup.getSymbol(),
-				ohlc
-			);
+		return new CandleReplayToSeriesStarter(services.getOHLCProvider(), setup.getSymbol(), ohlc);
 	}
 	
 }

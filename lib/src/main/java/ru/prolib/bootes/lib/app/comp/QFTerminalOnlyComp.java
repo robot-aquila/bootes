@@ -5,8 +5,10 @@ import org.slf4j.LoggerFactory;
 
 import ru.prolib.aquila.core.BusinessEntities.BasicTerminalBuilder;
 import ru.prolib.aquila.core.BusinessEntities.EditableTerminal;
+import ru.prolib.aquila.core.BusinessEntities.Scheduler;
 //import ru.prolib.aquila.core.BusinessEntities.Symbol;
 import ru.prolib.aquila.data.DataSource;
+import ru.prolib.aquila.data.replay.CandleReplayServiceImpl;
 import ru.prolib.aquila.qforts.impl.QFBuilder;
 import ru.prolib.aquila.qforts.ui.QFServiceMenu;
 import ru.prolib.aquila.web.utils.WUDataFactory;
@@ -39,8 +41,8 @@ public class QFTerminalOnlyComp extends CommonComp {
 			return;
 		}
 		WUDataFactory wu_factory = new WUDataFactory();
-		DataSource data_source = wu_factory.createForSymbolAndL1DataReplayFM(serviceLocator.getScheduler(),
-				term_conf.getDataDirectory());
+		Scheduler scheduler = serviceLocator.getScheduler();
+		DataSource data_source = wu_factory.createForSymbolAndL1DataReplayFM(scheduler, term_conf.getDataDirectory());
 		QFBuilder qfb = new QFBuilder()
 				.withEventQueue(serviceLocator.getEventQueue())
 				.withLiquidityMode(term_conf.getLiquidityMode())
@@ -51,11 +53,13 @@ public class QFTerminalOnlyComp extends CommonComp {
 		}
 		EditableTerminal terminal = new BasicTerminalBuilder()
 			.withEventQueue(serviceLocator.getEventQueue())
-			.withScheduler(serviceLocator.getScheduler())
+			.withScheduler(scheduler)
 			.withTerminalID(serviceID)
 			.withDataProvider(qfb.withDataSource(data_source).buildDataProvider())
 			.buildTerminal();
 		qfb.buildEnvironment(terminal).createPortfolio(term_conf.getTestAccount(), term_conf.getTestBalance());
+		
+		serviceLocator.setOHLCProvider(new CandleReplayServiceImpl(scheduler, serviceLocator.getOHLCHistoryStorage()));
 		
 		// TODO: In that form this does not make big sense because it will not give securities in AVAILABLE state.
 		// If we'll add subscription on symbol data here it will give huge overhead on reading and dispatching lot data.

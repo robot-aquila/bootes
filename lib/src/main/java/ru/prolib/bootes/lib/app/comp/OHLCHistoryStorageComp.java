@@ -4,7 +4,6 @@ import java.io.File;
 
 import ru.prolib.aquila.core.data.Candle;
 import ru.prolib.aquila.core.data.TFSymbol;
-import ru.prolib.aquila.data.replay.CandleReplayServiceImpl;
 import ru.prolib.aquila.data.storage.MDStorage;
 import ru.prolib.aquila.data.storage.MDStorageSimpleWarmer;
 import ru.prolib.aquila.web.utils.finam.data.FinamData;
@@ -37,7 +36,6 @@ public class OHLCHistoryStorageComp extends CommonComp {
 				.createCachingOHLCV(conf.getDataDirectory(), conf.getCacheDirectory()));
 			
 			serviceLocator.setOHLCHistoryStorage(storage);
-			serviceLocator.setOHLCReplayService(new CandleReplayServiceImpl(serviceLocator.getScheduler(), storage));
 		}
 	}
 

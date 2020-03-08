@@ -6,7 +6,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 import java.io.File;
-import java.nio.file.Files;
 import java.time.Instant;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -17,15 +16,9 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.After;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
-
-import com.github.difflib.DiffUtils;
-import com.github.difflib.patch.AbstractDelta;
-import com.github.difflib.patch.Patch;
 
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 import ru.prolib.aquila.core.BusinessEntities.CloseableIterator;
@@ -136,33 +129,6 @@ public class PROTOS_IT {
 	public String[] args(String... args) {
 		List<String> arg_list = new ArrayList<>(Arrays.asList(args));
 		return arg_list.toArray(new String[0]);
-	}
-	
-	static List<String> removeSysInfoReport(List<String> lines) {
-		for ( int i = 0; i < lines.size(); i ++ ) {
-			String line = lines.get(i);
-			if ( line.startsWith("# ReportID=SysInfoReport_") ) {
-				lines.remove(i); // header
-				lines.remove(i); // job started
-				lines.remove(i); // job finished
-				lines.remove(i); // time spent
-				lines.remove(i); // empty line
-			}
-		}
-		return lines;
-	}
-	
-	static void assertReportFiles_V1(File expected, File actual) throws Exception {
-		List<String> expected_lines = removeSysInfoReport(Files.readAllLines(expected.toPath()));
-		List<String> actual_lines = removeSysInfoReport(Files.readAllLines(actual.toPath()));
-		Patch<String> patch = DiffUtils.diff(expected_lines, actual_lines);
-		
-		List<String> deltas = new ArrayList<>();
-		for ( AbstractDelta<String> delta : patch.getDeltas() ) {
-			deltas.add(delta.toString());
-		}
-		String found_deltas = StringUtils.join(deltas, "," + System.lineSeparator());
-		assertEquals("Reports are differ: ", "", found_deltas);
 	}
 	
 	static void assertReportFiles_V2(File expected, File actual) throws Exception {
@@ -348,6 +314,25 @@ public class PROTOS_IT {
 		
 		assertReports(new File("fixture", "protos-short_new-oetm_ohlc.rep"), new File(rd_pass1, "protos1.report"));
 	}
+	
+	@Test
+	public void testPass3_OldOETM_SevaralRobots_LiquidityMode1() throws Throwable {
+		File rd_pass3 = new File(reportDir, "pass3_old-oetm_sev-robots_lm1");
+		new PROTOS(3).run(args(
+				"--data-dir=" + dataDir,
+				"--report-dir=" + rd_pass3,
+				"--probe-initial-time=2017-01-01T00:00:00Z",
+				"--probe-stop-time=2017-02-01T00:00:00Z",
+				"--probe-auto-shutdown",
+				"--probe-auto-start",
+				"--headless",
+				"--qforts-liquidity-mode=1",
+				"--qforts-order-exec-trigger-mode=0"
+			));
+		assertReports(EXPECTED_SHORT, new File(rd_pass3, "protos1.report"));
+		assertReports(EXPECTED_SHORT, new File(rd_pass3, "protos2.report"));
+		assertReports(EXPECTED_SHORT, new File(rd_pass3, "protos3.report"));
+	}
 
 /*
 	@Test
@@ -416,25 +401,6 @@ public class PROTOS_IT {
 				"--qforts-legacy-sds"
 			));
 		assertReports(EXPECTED_SHORT, new File(report_dir, "protos1.report"));
-	}
-	
-	@Ignore
-	@Test
-	public void testPass3() throws Throwable {
-		File rd_pass3 = new File(reportDir, "pass3");
-		new PROTOS(3).run(args(
-				"--data-dir=" + dataDir,
-				"--report-dir=" + rd_pass3,
-				"--probe-initial-time=2017-01-01T00:00:00Z",
-				"--probe-stop-time=2017-02-01T00:00:00Z",
-				"--probe-auto-shutdown",
-				"--probe-auto-start",
-				"--headless",
-				"--qforts-liquidity-mode=1"
-			));
-		assertReports(EXPECTED_SHORT, new File(rd_pass3, "protos1.report"));
-		assertReports(EXPECTED_SHORT, new File(rd_pass3, "protos2.report"));
-		assertReports(EXPECTED_SHORT, new File(rd_pass3, "protos3.report"));
 	}
 	
 	@Ignore

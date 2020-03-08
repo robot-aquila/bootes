@@ -15,10 +15,10 @@ import ru.prolib.aquila.core.EventQueue;
 import ru.prolib.aquila.core.BusinessEntities.Scheduler;
 import ru.prolib.aquila.core.BusinessEntities.Terminal;
 import ru.prolib.aquila.core.data.Candle;
+import ru.prolib.aquila.core.data.CandleProvider;
 import ru.prolib.aquila.core.data.TFSymbol;
 import ru.prolib.aquila.core.text.IMessages;
 import ru.prolib.aquila.core.utils.PriceScaleDB;
-import ru.prolib.aquila.data.replay.CandleReplayService;
 import ru.prolib.aquila.data.storage.MDStorage;
 import ru.prolib.bootes.lib.config.AppConfig2;
 import ru.prolib.bootes.lib.service.UIService;
@@ -177,20 +177,20 @@ public class AppServiceLocatorTest {
 	}
 
 	@Test (expected=NullPointerException.class)
-	public void testGetOHLCReplayService_ThrowsIfNotDefined() {
-		service.getOHLCReplayService();
+	public void testGetOHLCProvider_ThrowsIfNotDefined() {
+		service.getOHLCProvider();
 	}
 	
 	@Test
-	public void testGetOHLCReplayService() {
-		CandleReplayService crsMock = control.createMock(CandleReplayService.class);
-		service.setOHLCReplayService(crsMock);
+	public void testGetOHLCProvider() {
+		CandleProvider crsMock = control.createMock(CandleProvider.class);
+		service.setOHLCProvider(crsMock);
 		
-		CandleReplayService actual = service.getOHLCReplayService();
+		CandleProvider actual = service.getOHLCProvider();
 		
 		assertNotNull(actual);
 		assertSame(crsMock, actual);
-		assertSame(actual, service.getOHLCReplayService());
+		assertSame(actual, service.getOHLCProvider());
 	}
 	
 	@Test

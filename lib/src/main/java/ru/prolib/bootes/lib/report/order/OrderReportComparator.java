@@ -10,7 +10,6 @@ import ru.prolib.bootes.lib.report.STRBComparatorDumb;
 
 public class OrderReportComparator extends STRBComparatorDumb {
 	private final static Pattern p1 = Pattern.compile("^(\\s*#\\d+\\s*)\\|");
-	private final static Pattern p2 = Pattern.compile("\\|([^\\|]+)$");
 
 	public OrderReportComparator(String report_id) {
 		super(report_id);
@@ -26,20 +25,24 @@ public class OrderReportComparator extends STRBComparatorDumb {
 		return line;
 	}
 	
-	static private String maskExternalID(String line) {
-		Matcher m = p2.matcher(line);
-		if ( m.find() ) {
-			int rep_len = m.group(1).length();
-			int pos = line.length() - rep_len;
-			String replacement = StringUtils.repeat("?", rep_len);
-			line = line.substring(0, pos) + replacement;
+	static int getLengthOfLastCol(List<String> lines) {
+		String[] chunks = StringUtils.split(lines.get(1), "|");
+		if ( chunks.length < 2 ) {
+			throw new IllegalArgumentException("Unexpected format");
 		}
+		return chunks[chunks.length - 1].length();
+	}
+	
+	static private String stripExternalID(String line, int tail_length) {
+		int pos = line.length() - tail_length;
+		line = line.substring(0, pos);
 		return line;
 	}
 	
 	private List<String> fixLines(List<String> lines) {
+		int last_len = getLengthOfLastCol(lines);
 		for ( int i = 0; i < lines.size(); i ++ ) {
-			lines.set(i, maskExecutionNum(maskExternalID(lines.get(i))));
+			lines.set(i, maskExecutionNum(stripExternalID(lines.get(i), last_len)));
 		}
 		return lines;
 	}

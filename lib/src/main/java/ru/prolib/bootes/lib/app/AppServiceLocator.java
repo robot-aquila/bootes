@@ -7,10 +7,10 @@ import ru.prolib.aquila.core.EventQueue;
 import ru.prolib.aquila.core.BusinessEntities.Scheduler;
 import ru.prolib.aquila.core.BusinessEntities.Terminal;
 import ru.prolib.aquila.core.data.Candle;
+import ru.prolib.aquila.core.data.CandleProvider;
 import ru.prolib.aquila.core.data.TFSymbol;
 import ru.prolib.aquila.core.text.IMessages;
 import ru.prolib.aquila.core.utils.PriceScaleDB;
-import ru.prolib.aquila.data.replay.CandleReplayService;
 import ru.prolib.aquila.data.storage.MDStorage;
 import ru.prolib.bootes.lib.config.AppConfig2;
 import ru.prolib.bootes.lib.service.UIService;
@@ -24,7 +24,7 @@ public class AppServiceLocator {
 	private Terminal terminal;
 	private UIService uis;
 	private MDStorage<TFSymbol, Candle> ohlcHistoryStorage;
-	private CandleReplayService ohlcReplayService;
+	private CandleProvider ohlcProvider;
 	private IMessages messages;
 	private ZoneId zoneID;
 	private Connection sqlDBConn;
@@ -117,15 +117,15 @@ public class AppServiceLocator {
 		return ohlcHistoryStorage;
 	}
 	
-	public synchronized void setOHLCReplayService(CandleReplayService service) {
-		this.ohlcReplayService = service;
+	public synchronized void setOHLCProvider(CandleProvider service) {
+		this.ohlcProvider = service;
 	}
 	
-	public synchronized CandleReplayService getOHLCReplayService() {
-		if ( ohlcReplayService == null ) {
+	public synchronized CandleProvider getOHLCProvider() {
+		if ( ohlcProvider == null ) {
 			throw new NullPointerException();
 		}
-		return ohlcReplayService;
+		return ohlcProvider;
 	}
 	
 	public synchronized IMessages getMessages() {

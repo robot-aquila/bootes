@@ -130,10 +130,10 @@ public abstract class App {
 		list.add(new PriceScaleDBComp(getServiceLocator()));
 		list.add(new UIComp(getServiceLocator()));
 		list.add(new EventQueueComp(getServiceLocator()));
+		list.add(new OHLCHistoryStorageComp(getServiceLocator()));
 		TerminalBuilderComp registry = new TerminalBuilderComp(getServiceLocator());
 		registerTerminalServices(registry);
 		list.add(registry);
-		list.add(new OHLCHistoryStorageComp(getServiceLocator()));
 	}
 	
 	protected void registerTerminalServices(DriverRegistry registry) {

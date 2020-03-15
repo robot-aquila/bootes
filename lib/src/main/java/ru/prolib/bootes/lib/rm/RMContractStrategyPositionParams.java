@@ -1,5 +1,7 @@
 package ru.prolib.bootes.lib.rm;
 
+import java.time.Instant;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -8,13 +10,16 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 
 public class RMContractStrategyPositionParams {
+	private final Instant time;
 	private final int numContracts;
 	private final CDecimal takeProfit, stopLoss, slippage,
 		tradeGoalCap, tradeLossCap,
 		avgDailyPriceMove, avgLocalPriceMove,
 		baseCap;
 	
-	public RMContractStrategyPositionParams(int numContracts,
+	public RMContractStrategyPositionParams(
+			Instant time,
+			int numContracts,
 			CDecimal takeProfit,
 			CDecimal stopLoss,
 			CDecimal slippage,
@@ -24,6 +29,7 @@ public class RMContractStrategyPositionParams {
 			CDecimal avgLocalPriceMove,
 			CDecimal baseCap)
 	{
+		this.time = time;
 		this.numContracts = numContracts;
 		this.takeProfit = takeProfit;
 		this.stopLoss = stopLoss;
@@ -33,6 +39,15 @@ public class RMContractStrategyPositionParams {
 		this.avgDailyPriceMove = avgDailyPriceMove;
 		this.avgLocalPriceMove = avgLocalPriceMove;
 		this.baseCap = baseCap;
+	}
+	
+	/**
+	 * Get time when params was generated.
+	 * <p>
+	 * @return time
+	 */
+	public Instant getTime() {
+		return time;
 	}
 	
 	/**
@@ -110,6 +125,7 @@ public class RMContractStrategyPositionParams {
 	@Override
 	public int hashCode() {
 		return new HashCodeBuilder(900127, 91)
+				.append(time)
 				.append(numContracts)
 				.append(takeProfit)
 				.append(stopLoss)
@@ -132,6 +148,7 @@ public class RMContractStrategyPositionParams {
 		}
 		RMContractStrategyPositionParams o = (RMContractStrategyPositionParams) other;
 		return new EqualsBuilder()
+				.append(o.time, time)
 				.append(o.numContracts, numContracts)
 				.append(o.takeProfit, takeProfit)
 				.append(o.stopLoss, stopLoss)

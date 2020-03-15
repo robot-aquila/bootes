@@ -239,6 +239,7 @@ public class RMContractStrategyTest {
 		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
+				TIME,
 				51,
 				of("2200"),
 				of("330"),
@@ -263,6 +264,7 @@ public class RMContractStrategyTest {
 		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
+				TIME,
 				29,
 				of("1980"),
 				of("300"), // 10 * 12537.36 / 29 / 13.23588 - 10 * 3 = 300
@@ -287,6 +289,7 @@ public class RMContractStrategyTest {
 		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
+				TIME,
 				452,
 				of("173"),
 				of("23"),
@@ -311,6 +314,7 @@ public class RMContractStrategyTest {
 		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
+				TIME,
 				148,
 				of("528"),
 				of("80"), // 1 * 12537.36 / 148 / 1 - 1 * 5 = 80
@@ -335,6 +339,7 @@ public class RMContractStrategyTest {
 		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
+				TIME,
 				65,
 				of("1.79"),
 				of("0.28"), // 0.01 * 12537.36 / 66 / 6.66046 - 1 * 0.01 = 0.28520 - 0.01 = 0.28
@@ -359,6 +364,7 @@ public class RMContractStrategyTest {
 		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
+				TIME,
 				145,
 				of("537"),
 				of("84"), // 1 * 12537.36 / 146 / 1 - 2 * 1 = 86 - 2 = 84
@@ -383,6 +389,7 @@ public class RMContractStrategyTest {
 		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
+				TIME,
 				182,
 				of("6.5"),
 				of("0.7"), // 0.1 / 12537.36 / 182 / 6.61794 - 3 * 0.1 = 1.0 - 0.3 = 0.7
@@ -410,6 +417,7 @@ public class RMContractStrategyTest {
 		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
+				TIME,
 				0,
 				of(0L),
 				of(0L),
@@ -441,6 +449,7 @@ public class RMContractStrategyTest {
 		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
+				TIME,
 				0,
 				of(0L),
 				of(0L),
@@ -472,6 +481,7 @@ public class RMContractStrategyTest {
 		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
+				TIME,
 				0,
 				of(0L),
 				of(0L),
@@ -500,6 +510,7 @@ public class RMContractStrategyTest {
 		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
+				TIME,
 				0,
 				of(0L),
 				of(0L),
@@ -528,6 +539,7 @@ public class RMContractStrategyTest {
 		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
+				TIME,
 				0,
 				of(0L),
 				of(0L),
@@ -559,6 +571,7 @@ public class RMContractStrategyTest {
 		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
+				TIME,
 				0,
 				of(0L),
 				of(0L),
@@ -590,6 +603,7 @@ public class RMContractStrategyTest {
 		RMContractStrategyPositionParams actual = service.getPositionParams(TIME);
 		
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
+				TIME,
 				0,
 				of(0L),
 				of(0L),
@@ -625,6 +639,7 @@ public class RMContractStrategyTest {
 
 		// strategy cap = 1044780.17 * 0.4 = 417912.06800
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
+				TIME,
 				11, 				// contracts: 10 * 31343.41 / 13.23588 / 1980 = 11.95992 = 11 
 				of("1980"),			// TP: daily price move * 0.6 
 				of("310"), 			// SL: 10 * 5014.94 / 11 / 13.23588 - 10 * 3 = 310
@@ -658,6 +673,7 @@ public class RMContractStrategyTest {
 		// strategy cap = 1044780.17 * 0.4 = 417912.06800
 		// max contracts 417912.06800 / 17710.50000 = 23
 		RMContractStrategyPositionParams expected = new RMContractStrategyPositionParams(
+				TIME,
 				23, 				// contracts: 10 * 31343.41 / 13.23588 / 480.43591 = 49 so use max = 23
 				of("480"),			// TP: 800.72651 * 0.6 = 480.43591 
 				of("130"), 			// SL: 10 * 5014.94 / 23 / 13.23588 - 10 * 3 = 130

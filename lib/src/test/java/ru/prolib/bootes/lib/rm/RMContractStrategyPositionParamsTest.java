@@ -3,6 +3,8 @@ package ru.prolib.bootes.lib.rm;
 import static org.junit.Assert.*;
 import static ru.prolib.aquila.core.BusinessEntities.CDecimalBD.*;
 
+import java.time.Instant;
+
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,11 +14,17 @@ import ru.prolib.aquila.core.utils.Variant;
 import ru.prolib.bootes.lib.rm.RMContractStrategyPositionParams;
 
 public class RMContractStrategyPositionParamsTest {
+	
+	static Instant T(String time_string) {
+		return Instant.parse(time_string);
+	}
+	
 	private RMContractStrategyPositionParams service;
 
 	@Before
 	public void setUp() throws Exception {
 		service = new RMContractStrategyPositionParams(
+				T("2020-03-15T10:02:15.307Z"),
 				52,
 				of(2200L),
 				of(250L),
@@ -30,6 +38,7 @@ public class RMContractStrategyPositionParamsTest {
 	
 	@Test
 	public void testCtor() {
+		assertEquals(T("2020-03-15T10:02:15.307Z"), service.getTime());
 		assertEquals(52, service.getNumberOfContracts());
 		assertEquals(of(2200L), service.getTakeProfitPts());
 		assertEquals(of(250L), service.getStopLossPts());
@@ -45,6 +54,7 @@ public class RMContractStrategyPositionParamsTest {
 	public void testToString() {
 		String expected = new StringBuilder()
 				.append("RMContractStrategyPositionParams[")
+				.append("time=2020-03-15T10:02:15.307Z,")
 				.append("numContracts=52,takeProfit=2200,stopLoss=250,slippage=30,")
 				.append("tradeGoalCap=12350.04 RUB,tradeLossCap=3002.19 RUB,")
 				.append("avgDailyPriceMove=2271.976112,")
@@ -59,6 +69,7 @@ public class RMContractStrategyPositionParamsTest {
 	@Test
 	public void testHashCode() {
 		int expected = new HashCodeBuilder(900127, 91)
+				.append(T("2020-03-15T10:02:15.307Z"))
 				.append(52)
 				.append(of(2200L))
 				.append(of(250L))
@@ -82,7 +93,8 @@ public class RMContractStrategyPositionParamsTest {
 
 	@Test
 	public void testEquals() {
-		Variant<Integer> vCN = new Variant<>(52, 107);
+		Variant<Instant> vTM = new Variant<>(T("2020-03-15T10:02:15.307Z"), T("1997-02-13T14:32:17.080Z"));
+		Variant<Integer> vCN = new Variant<>(vTM, 52, 107);
 		Variant<CDecimal>
 			vTP = new Variant<>(vCN, of(2200L), of(150L)),
 			vSL = new Variant<>(vTP, of(250L), of(500L)),
@@ -97,6 +109,7 @@ public class RMContractStrategyPositionParamsTest {
 		RMContractStrategyPositionParams x, found = null;
 		do {
 			x = new RMContractStrategyPositionParams(
+					vTM.get(),
 					vCN.get(),
 					vTP.get(),
 					vSL.get(),
@@ -113,6 +126,7 @@ public class RMContractStrategyPositionParamsTest {
 			}
 		} while ( iterator.next() );
 		assertEquals(1, foundCnt);
+		assertEquals(T("2020-03-15T10:02:15.307Z"), found.getTime());
 		assertEquals(52, found.getNumberOfContracts());
 		assertEquals(of(2200L), found.getTakeProfitPts());
 		assertEquals(of(250L), found.getStopLossPts());

@@ -109,8 +109,9 @@ public class RMContractStrategy implements IRMContractStrategy {
 		return security.getTickSize().multiply(steps);
 	}
 	
-	private RMContractStrategyPositionParams emptyPositionParams() {
+	private RMContractStrategyPositionParams emptyPositionParams(Instant time) {
 		return new RMContractStrategyPositionParams(
+				time,
 				0,
 				stepsToPrice(0),
 				stepsToPrice(0),
@@ -145,14 +146,14 @@ public class RMContractStrategy implements IRMContractStrategy {
 		  || d_price_step_cost.compareTo(ZERO) == 0
 		  || d_exp_local_price_move_per.compareTo(ZERO) == 0 )
 		{
-			return emptyPositionParams();
+			return emptyPositionParams(time);
 		}
 
 		// TODO: От баланса, эквити или свободной маржи?
 		// Скорее всего от эквити, но не более свободной маржи.
 		CDecimal d_basis_value = portfolio.getFreeMargin().multiply(d_strategy_cap_share_per);
 		if ( d_basis_value.toAbstract().compareTo(ZERO) == 0 ) {
-			return emptyPositionParams();
+			return emptyPositionParams(time);
 		}
 		CDecimal d_trade_goal_cap = d_basis_value.multiply(d_trade_goal_cap_per).withScale(2);
 		CDecimal d_trade_loss_cap = d_basis_value.multiply(d_trade_loss_cap_per).withScale(2);
@@ -161,7 +162,7 @@ public class RMContractStrategy implements IRMContractStrategy {
 				.divideExact(d_price_step_size, 0)
 				.multiply(d_price_step_size);
 		if ( d_take_profit_pts.compareTo(ZERO) == 0 ) {
-			return emptyPositionParams();
+			return emptyPositionParams(time);
 		}
 		CDecimal d_num_contracts = d_price_step_size.multiply(d_trade_goal_cap.toAbstract())
 				.divide(d_price_step_cost)
@@ -170,7 +171,7 @@ public class RMContractStrategy implements IRMContractStrategy {
 		CDecimal d_num_contracts_max = d_basis_value.divide(d_init_margin).withScale(0, RoundingMode.DOWN);
 		d_num_contracts = d_num_contracts.min(d_num_contracts_max);
 		if ( d_num_contracts.compareTo(ZERO) == 0 ) {
-			return emptyPositionParams();
+			return emptyPositionParams(time);
 		}
 		
 		CDecimal d_stop_loss_pts = d_price_step_size.multiply(d_trade_loss_cap.toAbstract())
@@ -181,6 +182,7 @@ public class RMContractStrategy implements IRMContractStrategy {
 				.multiply(d_price_step_size);
 		CDecimal d_slippage_pts = d_price_step_size.multiply((long) params.getSlippageStp());
 		return new RMContractStrategyPositionParams(
+				time,
 				d_num_contracts.toBigDecimal().intValue(),
 				d_take_profit_pts,
 				d_stop_loss_pts,

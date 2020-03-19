@@ -1,5 +1,6 @@
 package ru.prolib.bootes.lib.report.order;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,6 +41,7 @@ public class OrderReportComparator extends STRBComparatorDumb {
 	}
 	
 	private List<String> fixLines(List<String> lines) {
+		lines = new ArrayList<>(lines);
 		int last_len = getLengthOfLastCol(lines);
 		for ( int i = 0; i < lines.size(); i ++ ) {
 			lines.set(i, maskExecutionNum(stripExternalID(lines.get(i), last_len)));

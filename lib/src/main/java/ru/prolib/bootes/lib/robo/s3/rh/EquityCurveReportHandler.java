@@ -9,7 +9,9 @@ import org.slf4j.LoggerFactory;
 
 import ru.prolib.aquila.core.Event;
 import ru.prolib.aquila.core.EventListener;
+import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 import ru.prolib.aquila.core.BusinessEntities.Portfolio;
+import ru.prolib.aquila.core.BusinessEntities.PortfolioField;
 import ru.prolib.aquila.core.BusinessEntities.PortfolioUpdateEvent;
 import ru.prolib.aquila.core.BusinessEntities.SPRunnable;
 import ru.prolib.aquila.core.BusinessEntities.TaskHandler;
@@ -101,7 +103,12 @@ public class EquityCurveReportHandler extends S3RobotStateListenerStub implement
 	@Override
 	public void onEvent(Event event) {
 		PortfolioUpdateEvent e = (PortfolioUpdateEvent) event;
-		report.append(e.getPortfolio().getEquity(), e.getTime());
+		if ( e.hasChanged(PortfolioField.EQUITY) ) {
+			CDecimal equity = (CDecimal) e.getNewValues().get(PortfolioField.EQUITY);
+			if ( equity != null ) {
+				report.append(equity, e.getTime());
+			}
+		}
 	}
 
 	@Override
@@ -117,7 +124,7 @@ public class EquityCurveReportHandler extends S3RobotStateListenerStub implement
 	}
 
 	@Override
-	public Instant getNextExecutionTime(Instant current_time) {
+	public Instant getNextExecutionTime(Instant current_time) {	
 		long period = 10000L;
 		return Instant.ofEpochMilli((current_time.toEpochMilli() / period + 1) * period);
 	}

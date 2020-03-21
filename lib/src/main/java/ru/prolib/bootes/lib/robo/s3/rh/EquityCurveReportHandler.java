@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import ru.prolib.aquila.core.Event;
 import ru.prolib.aquila.core.EventListener;
 import ru.prolib.aquila.core.BusinessEntities.Portfolio;
-import ru.prolib.aquila.core.BusinessEntities.PortfolioEvent;
+import ru.prolib.aquila.core.BusinessEntities.PortfolioUpdateEvent;
 import ru.prolib.aquila.core.BusinessEntities.SPRunnable;
 import ru.prolib.aquila.core.BusinessEntities.TaskHandler;
 import ru.prolib.aquila.core.data.OHLCScalableSeries;
@@ -100,7 +100,7 @@ public class EquityCurveReportHandler extends S3RobotStateListenerStub implement
 
 	@Override
 	public void onEvent(Event event) {
-		PortfolioEvent e = (PortfolioEvent) event;
+		PortfolioUpdateEvent e = (PortfolioUpdateEvent) event;
 		report.append(e.getPortfolio().getEquity(), e.getTime());
 	}
 

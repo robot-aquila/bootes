@@ -17,8 +17,12 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import ru.prolib.aquila.core.BusinessEntities.CDecimal;
 import ru.prolib.aquila.core.BusinessEntities.CloseableIterator;
@@ -34,6 +38,12 @@ import ru.prolib.bootes.lib.report.order.OrderInfo;
 import ru.prolib.bootes.lib.report.order.OrderReport;
 
 public class PROTOS_IT {
+	static final Logger logger;
+	
+	static {
+		logger = LoggerFactory.getLogger(PROTOS_IT.class);
+	}
+	
 	static final File dataDir = new File("./../shared/canned-data");
 	static final File reportDir = new File("tmp/it-reports");
 	static final File EXPECTED_LONG = new File("fixture", "protos-long.rep");
@@ -44,13 +54,15 @@ public class PROTOS_IT {
 		return Instant.parse(timeString);
 	}
 	
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-		if ( reportDir.exists() ) {
-			FileUtils.forceDelete(reportDir);
+	static String getTestName(int stack_entry_offset) {
+		StackTraceElement[] trace = Thread.currentThread().getStackTrace();
+		if ( trace.length < stack_entry_offset + 1 ) {
+			throw new IllegalStateException();
 		}
-		reportDir.mkdirs();
-		l1uReaderFactory = new FinamData().createUpdateReaderFactory(dataDir);
+		StackTraceElement elem = trace[stack_entry_offset];
+		return new StringBuilder()
+			.append(elem.getClassName()).append("#").append(elem.getMethodName())
+			.toString();
 	}
 	
 	static void assertOrderHasNoExecutionsInThePast(OrderReport report) {
@@ -121,11 +133,6 @@ public class PROTOS_IT {
 		}
 	}
 	
-	@After
-	public void tearDown() throws Exception {
-
-	}
-	
 	public String[] args(String... args) {
 		List<String> arg_list = new ArrayList<>(Arrays.asList(args));
 		return arg_list.toArray(new String[0]);
@@ -159,8 +166,47 @@ public class PROTOS_IT {
 		}
 	}
 	
+	static List<String> actualRunOrder = new ArrayList<>();
+	private String currentTestName;
+	
+	void markTestStarted() {
+		logger.debug("{} - STARTED", currentTestName = getTestName(3));
+		actualRunOrder.add(currentTestName);
+	}
+	
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		if ( reportDir.exists() ) {
+			FileUtils.forceDelete(reportDir);
+		}
+		reportDir.mkdirs();
+		l1uReaderFactory = new FinamData().createUpdateReaderFactory(dataDir);
+	}
+	
+	
+	@Before
+	public void setUp() throws Exception {
+		currentTestName = null;
+	}
+	
+	@After
+	public void tearDown() throws Exception {
+		if ( currentTestName != null ) {
+			logger.debug("{} - FINISHED", currentTestName);
+		}
+	}
+	
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+		logger.debug("Actual test run order: ");
+		for ( String testName : actualRunOrder ) {
+			logger.debug("Test run: {}", testName);
+		}
+	}
+	
 	@Test
 	public void testPass1_OldOrderExecTriggerMode_L1AGGR() throws Throwable {
+		markTestStarted();
 		File rd_pass1 = new File(reportDir, "pass1_old-oetm");
 		new PROTOS().run(args(
 				"--data-dir=" + dataDir,
@@ -177,6 +223,7 @@ public class PROTOS_IT {
 
 	@Test
 	public void testPass1_NewOrderExecTriggerMode_L1AGGR() throws Throwable {
+		markTestStarted();
 		// Здесь разница с OLD OETM в том, что срабатывает на втором тике.
 		// Поскольку OHLC провайдер здесь на базе тиков L1, то на момент
 		// выставления заявки, при наличии тиков на момент выставления заявки,
@@ -260,6 +307,7 @@ public class PROTOS_IT {
 	
 	@Test
 	public void testPass1_NewOrderExecTriggerMode_OHLC() throws Throwable {
+		markTestStarted();
 		File rd_pass1 = new File(reportDir, "pass1_new-oetm_ohlc");
 		PROTOS protos = new PROTOS();
 		protos.run(args(
@@ -317,6 +365,7 @@ public class PROTOS_IT {
 	
 	@Test
 	public void testPass3_OldOETM_SevaralRobots_LiquidityMode1() throws Throwable {
+		markTestStarted();
 		File rd_pass3 = new File(reportDir, "pass3_old-oetm_sev-robots_lm1");
 		new PROTOS(3).run(args(
 				"--data-dir=" + dataDir,

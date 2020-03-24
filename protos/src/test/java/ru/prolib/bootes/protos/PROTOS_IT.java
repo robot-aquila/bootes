@@ -7,8 +7,10 @@ import static org.hamcrest.Matchers.*;
 
 import java.io.File;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -24,13 +26,14 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ru.prolib.aquila.core.BusinessEntities.CDecimal;
-import ru.prolib.aquila.core.BusinessEntities.CloseableIterator;
-import ru.prolib.aquila.core.BusinessEntities.L1Update;
-import ru.prolib.aquila.core.BusinessEntities.OrderAction;
-import ru.prolib.aquila.core.BusinessEntities.Tick;
+import ru.prolib.aquila.core.Event;
+import ru.prolib.aquila.core.EventListener;
+import ru.prolib.aquila.core.BusinessEntities.*;
 import ru.prolib.aquila.probe.datasim.l1.L1UpdateReaderFactory;
 import ru.prolib.aquila.web.utils.finam.data.FinamData;
+import ru.prolib.bootes.lib.app.AppComponent;
+import ru.prolib.bootes.lib.app.AppConfigService2;
+import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.report.ReportComparator;
 import ru.prolib.bootes.lib.report.STRCmpResult;
 import ru.prolib.bootes.lib.report.order.OrderExecInfo;
@@ -38,6 +41,7 @@ import ru.prolib.bootes.lib.report.order.OrderInfo;
 import ru.prolib.bootes.lib.report.order.OrderReport;
 
 public class PROTOS_IT {
+	static final ZoneId ZONE_ID = ZoneId.of("Europe/Moscow");
 	static final Logger logger;
 	
 	static {
@@ -220,6 +224,62 @@ public class PROTOS_IT {
 			));
 		assertReports(EXPECTED_SHORT, new File(rd_pass1, "protos1.report"));
 	}
+	
+	static class NewOETM_L1AGGR_ScannerComp implements AppComponent, EventListener {
+		private static final CDecimal expected_value = ofRUB5("986376.19418");
+		private AppServiceLocator serviceLocator;
+		private CDecimal registered_low_value;
+		private ZonedDateTime registered_value_time;
+		
+		NewOETM_L1AGGR_ScannerComp(AppServiceLocator locator) {
+			this.serviceLocator = locator;
+		}
+
+		@Override
+		public void init() throws Throwable {
+			
+		}
+
+		@Override
+		public void startup() throws Throwable {
+			serviceLocator.getTerminal().onPortfolioUpdate().addListener(this);
+		}
+
+		@Override
+		public void shutdown() throws Throwable {
+			serviceLocator.getTerminal().onPortfolioUpdate().removeListener(this);
+			logger.debug("DETECTED LOW @ 2017-01-13 is {}", registered_low_value);
+			logger.debug("DETECTED {} @ {}", expected_value, registered_value_time);
+		}
+
+		@Override
+		public void registerConfig(AppConfigService2 config_service) {
+			
+		}
+
+		@Override
+		public void onEvent(Event event) {
+			PortfolioUpdateEvent e = (PortfolioUpdateEvent) event;
+			LocalDate e_date = ZonedDateTime.ofInstant(e.getTime(), ZONE_ID).toLocalDate();
+			Portfolio p = e.getPortfolio();
+			if ( new Account("protos1-TEST").equals(p.getAccount())
+			  && e.hasChanged(PortfolioField.EQUITY) )
+			{
+				CDecimal new_equity = (CDecimal) e.getNewValues().get(PortfolioField.EQUITY);
+				if ( LocalDate.of(2017, 1, 13).equals(e_date) ) {
+					if ( registered_low_value == null ) {
+						registered_low_value = new_equity;
+					} else {
+						registered_low_value = registered_low_value.min(new_equity);
+					}
+				}
+				if ( expected_value.equals(new_equity) ) {
+					registered_value_time = ZonedDateTime.ofInstant(e.getTime(), ZONE_ID);
+				}
+			}
+		}
+		
+	}
 
 	@Test
 	public void testPass1_NewOrderExecTriggerMode_L1AGGR() throws Throwable {
@@ -285,7 +345,13 @@ public class PROTOS_IT {
 		// 4) Время экзекьюшена не должно быть в прошлом относительно времени заявки
 		
 		File rd_pass1 = new File(reportDir, "pass1_new-oetm_l1aggr");
-		PROTOS protos = new PROTOS();
+		PROTOS protos = new PROTOS() {
+			@Override
+			protected void registerApplications(List<AppComponent> list) {
+				super.registerApplications(list);
+				list.add(new NewOETM_L1AGGR_ScannerComp(getServiceLocator()));
+			}
+		};
 		protos.run(args(
 				"--data-dir=" + dataDir,
 				"--report-dir=" + rd_pass1,

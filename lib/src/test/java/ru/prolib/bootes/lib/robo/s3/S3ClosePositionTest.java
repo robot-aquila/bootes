@@ -22,6 +22,7 @@ import ru.prolib.aquila.core.BusinessEntities.DeltaUpdateBuilder;
 import ru.prolib.aquila.core.BusinessEntities.EditableOrder;
 import ru.prolib.aquila.core.BusinessEntities.EditableSecurity;
 import ru.prolib.aquila.core.BusinessEntities.EditableTerminal;
+import ru.prolib.aquila.core.BusinessEntities.Order;
 import ru.prolib.aquila.core.BusinessEntities.OrderAction;
 import ru.prolib.aquila.core.BusinessEntities.OrderException;
 import ru.prolib.aquila.core.BusinessEntities.OrderField;
@@ -135,6 +136,11 @@ public class S3ClosePositionTest {
 		public void setActiveSpeculation(S3Speculation spec) {
 			this.speculation = spec;
 		}
+		
+		@Override
+		public boolean isSpeculationActive() {
+			throw new IllegalStateException("Operation not supported");
+		}
 
 		@Override
 		public IRMContractStrategy getContractStrategy() {
@@ -150,7 +156,17 @@ public class S3ClosePositionTest {
 		public void setContractSubscrHandler(SubscrHandler handler) {
 			throw new IllegalStateException("Operation not supported");
 		}
-		
+
+		@Override
+		public void setLastOrder(Order order) {
+			throw new IllegalStateException("Operation not supported");
+		}
+
+		@Override
+		public Order getLastOrder() {
+			throw new IllegalStateException("Operation not supported");
+		}
+
 	}
 	
 	private IMocksControl control;

@@ -1,5 +1,11 @@
 package ru.prolib.bootes.protos;
 
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import ru.prolib.aquila.core.sm.SMStateHandlerEx;
 import ru.prolib.aquila.core.sm.SMStateMachine;
 import ru.prolib.aquila.ui.FastOrder.FastOrderPanel;
@@ -16,6 +22,7 @@ import ru.prolib.bootes.protos.config.ProtosConfigSection;
 import ru.prolib.bootes.protos.ui.PROTOSRobotUI;
 
 public class PROTOSRobotComp implements AppComponent {
+	private static final Logger logger = LoggerFactory.getLogger(PROTOSRobotComp.class);
 	public static final String CONFIG_SECTION_ID = "protos";
 	protected final String id;
 	protected final AppServiceLocator serviceLocator;
@@ -76,7 +83,11 @@ public class PROTOSRobotComp implements AppComponent {
 				automat.input(sh.getInterrupt(), null);
 			}
 		}
-		// TODO: Here! Wait for automat finished work.
+		try {
+			automat.waitForFinish(30, TimeUnit.SECONDS); // TODO: move timeouts to config
+		} catch ( TimeoutException e ) {
+			logger.warn("Has no more time to wait to robot finished: ", e);
+		}
 		AppConfig2 app_conf = serviceLocator.getConfig();
 		reports.save(app_conf.getBasicConfig().getReportDirectory(), id + ".report");
 	}

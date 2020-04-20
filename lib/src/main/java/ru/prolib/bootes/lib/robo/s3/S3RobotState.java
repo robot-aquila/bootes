@@ -1,6 +1,7 @@
 package ru.prolib.bootes.lib.robo.s3;
 
 import ru.prolib.aquila.core.BusinessEntities.Account;
+import ru.prolib.aquila.core.BusinessEntities.Order;
 import ru.prolib.aquila.core.BusinessEntities.Portfolio;
 import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.core.BusinessEntities.SubscrHandler;
@@ -38,6 +39,7 @@ public class S3RobotState implements
 	private IRMContractStrategy contractStrategy;
 	private RMContractStrategyPositionParams positionParams;
 	private SubscrHandler symbolSubsHandler;
+	private Order lastOrder;
 	
 	public S3RobotState(S3RobotStateListenerComp listener) {
 		this.stateListener = listener;
@@ -133,6 +135,11 @@ public class S3RobotState implements
 		this.activeSpeculation = spec;
 	}
 	
+	@Override
+	public synchronized boolean isSpeculationActive() {
+		return activeSpeculation != null;
+	}
+	
 	public synchronized String getRobotTitle() {
 		if ( robotTitle == null ) {
 			throw new NullPointerException();
@@ -218,6 +225,16 @@ public class S3RobotState implements
 	@Override
 	public synchronized void setContractSubscrHandler(SubscrHandler handler) {
 		this.symbolSubsHandler = handler;
+	}
+
+	@Override
+	public synchronized void setLastOrder(Order order) {
+		lastOrder = order;
+	}
+
+	@Override
+	public synchronized Order getLastOrder() {
+		return lastOrder;
 	}
 
 }

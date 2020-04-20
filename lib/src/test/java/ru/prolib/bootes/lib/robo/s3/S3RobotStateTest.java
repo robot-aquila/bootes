@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import ru.prolib.aquila.core.BusinessEntities.Account;
+import ru.prolib.aquila.core.BusinessEntities.Order;
 import ru.prolib.aquila.core.BusinessEntities.Portfolio;
 import ru.prolib.aquila.core.BusinessEntities.Security;
 import ru.prolib.aquila.core.BusinessEntities.SubscrHandler;
@@ -124,6 +125,16 @@ public class S3RobotStateTest {
 		assertSame(expected, service.getActiveSpeculation());
 	}
 	
+	@Test
+	public void testIsSpeculationActive() {
+		S3Speculation specMock = control.createMock(S3Speculation.class);
+		assertFalse(service.isSpeculationActive());
+		service.setActiveSpeculation(specMock);
+		assertTrue(service.isSpeculationActive());
+		service.setActiveSpeculation(null);
+		assertFalse(service.isSpeculationActive());
+	}
+	
 	@Test (expected=NullPointerException.class)
 	public void testGetRobotTitle_ThrowsIfNotDefined() {
 		service.getRobotTitle();
@@ -216,6 +227,16 @@ public class S3RobotStateTest {
 		actual = service.getContractSubscrHandler();
 		
 		assertEquals(expected, actual);
+	}
+	
+	@Test
+	public void testGetLastOrder() {
+		assertNull(service.getLastOrder());
+		
+		Order orderMock = control.createMock(Order.class);
+		
+		service.setLastOrder(orderMock);
+		assertSame(orderMock, service.getLastOrder());
 	}
 
 }

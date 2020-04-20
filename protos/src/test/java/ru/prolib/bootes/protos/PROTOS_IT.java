@@ -4,25 +4,15 @@ import static org.junit.Assert.*;
 import static ru.prolib.aquila.core.BusinessEntities.CDecimalBD.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static ru.prolib.bootes.protos.SOSTestUtils.*;
 
 import java.io.File;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.time.*;
+import java.util.*;
+import java.util.regex.*;
 
 import org.apache.commons.io.FileUtils;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,7 +31,6 @@ import ru.prolib.bootes.lib.report.order.OrderInfo;
 import ru.prolib.bootes.lib.report.order.OrderReport;
 
 public class PROTOS_IT {
-	static final ZoneId ZONE_ID = ZoneId.of("Europe/Moscow");
 	static final Logger logger;
 	
 	static {
@@ -53,10 +42,6 @@ public class PROTOS_IT {
 	static final File EXPECTED_LONG = new File("fixture", "protos-long.rep");
 	static final File EXPECTED_SHORT = new File("fixture", "protos-short.rep");
 	static L1UpdateReaderFactory l1uReaderFactory;
-	
-	static Instant T(String timeString) {
-		return Instant.parse(timeString);
-	}
 	
 	static String getTestName(int stack_entry_offset) {
 		StackTraceElement[] trace = Thread.currentThread().getStackTrace();
@@ -135,11 +120,6 @@ public class PROTOS_IT {
 				}
 			}
 		}
-	}
-	
-	public String[] args(String... args) {
-		List<String> arg_list = new ArrayList<>(Arrays.asList(args));
-		return arg_list.toArray(new String[0]);
 	}
 	
 	static void assertReportFiles_V2(File expected, File actual) throws Exception {
@@ -466,9 +446,6 @@ public class PROTOS_IT {
 		assertReports(EXPECTED_SHORT, new File(rd_pass1, "protos1.report"));
 	}
 	
-	
-	
-	
 	@Ignore
 	@Test
 	public void testPass1_WithLegacySDS() throws Throwable {
@@ -589,4 +566,5 @@ public class PROTOS_IT {
 		assertReports(EXPECTED_SHORT, new File(report_dir, "protos1.report"));
 	}
 	*/
+		
 }

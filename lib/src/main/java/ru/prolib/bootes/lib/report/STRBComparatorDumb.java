@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.difflib.DiffUtils;
-import com.github.difflib.algorithm.DiffException;
 import com.github.difflib.patch.AbstractDelta;
 import com.github.difflib.patch.ChangeDelta;
 import com.github.difflib.patch.Chunk;
@@ -137,11 +136,7 @@ public class STRBComparatorDumb implements STRBComparator {
 			actual_pos = actual.size() > 0 ? actual.get(0).getLineNo() : -1;
 		Patch<String> patch;
 		List<String> expected_lines = readLines(expected), actual_lines = readLines(actual);
-		try {
-			patch = DiffUtils.diff(fixExpectedLines(expected_lines), fixActualLines(actual_lines));
-		} catch ( DiffException e ) {
-			throw new IOException("Diff failed", e);
-		}
+		patch = DiffUtils.diff(fixExpectedLines(expected_lines), fixActualLines(actual_lines));
 		return fixDeltaPos(fixResultDeltas(patch.getDeltas(), expected_lines, actual_lines), expected_pos, actual_pos);
 	}
 

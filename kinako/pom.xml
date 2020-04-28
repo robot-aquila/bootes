@@ -31,7 +31,7 @@
 		<dependency>
 			<groupId>org.telegram</groupId>
 			<artifactId>telegrambots</artifactId>
-			<version>4.7</version>
+			<version>4.8.1</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/org.jsoup/jsoup -->
 		<dependency>
@@ -42,7 +42,7 @@
 		<dependency>
 			<groupId>ru.prolib.aquila</groupId>
 			<artifactId>aquila-exante</artifactId>
-			<version>0.1.58</version>
+			<version>0.1.59</version>
         </dependency>
 		
 	</dependencies>

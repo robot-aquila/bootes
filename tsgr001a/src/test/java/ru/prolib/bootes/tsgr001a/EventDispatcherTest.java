@@ -370,7 +370,7 @@ public class EventDispatcherTest {
 		System.out.println("testSeggregateByKnownTypeAndWaitForCompletion_SinglePass");
 		System.out.println(stats);
 		// total time used: 2539 - плохо
-		// fast total time: 1688 / 5 = 337,6 - плохо
+		// fast total time: 1688
 		// slow total time: 7692 / 5 = 1538,4 - плохо
 		//   slowest event: 2539
 	}
@@ -607,7 +607,7 @@ public class EventDispatcherTest {
 	public void testSortByTypeDetectFasterAndSendByPriorityAndForget() throws Exception {
 		// Этого кейса нет, так как потребуется более сложная логика определения быстрого:
 		// при последовательной подаче событий пул будет забит предыдущими
-		// и такая простая провеки как в предыдущем кейсе не сработает
+		// и такая простая провеки как в реализации с подтверждением не сработает
 		// По этому, для финального теста мы используем реализации с подтверждениями
 	}
 	
@@ -632,11 +632,38 @@ public class EventDispatcherTest {
 		System.out.println("testSeggregateByKnownTypeAndWaitForCompletion_MultiPass");
 		System.out.println(stats);
 		
-		// total time used: 125168 <- 5 * 500 * 50 = 125000
+		// total time used: 125168 <- 5 * 500 * 50 = 125000 <- макс производительность по медленным
 		// fast total time: 75494
 		// slow total time: 375548
 		//   slowest event: 2534
 
+	}
+	
+	@Test
+	public void testSortByTypeDetectFasterAndSendByPriorityWaitForCompletion_MultiPass() throws Exception {
+		int num_events = 50, num_listeners_each_type = 5;
+		dispatcher = new SortByTypeDetectFasterAndSendByPriorityWaitForCompletion();
+		CountDownLatch finished = new CountDownLatch(num_listeners_each_type * 2 * num_events);
+		for ( int i = 0; i < num_listeners_each_type; i ++ ) {
+			list.add(new SimpleListenerFast(finished, stats));
+			list.add(new SimpleListenerSlow(finished, stats));
+		}
+		subscribeInRandomOrder();
+
+		stats.start();
+		for ( int i = 0; i < num_events; i ++ ) {
+			dispatcher.fireEvent(new Event());
+		}
+		assertTrue(finished.await(1, TimeUnit.MINUTES));
+		stats.stop();
+		
+		System.out.println("testSortByTypeDetectFasterAndSendByPriorityWaitForCompletion_MultiPass");
+		System.out.println(stats);
+		
+		// total time used: 75204 <- (5 * 100 + 5 * 500) * 50 = 150000 / 2 = 75000 <- производительность по ресурсам
+		// fast total time: 75558 
+		// slow total time: 275661
+		//   slowest event: 1547
 	}
 	
 	@Test
@@ -659,38 +686,14 @@ public class EventDispatcherTest {
 		
 		System.out.println("testSeggregateByKnownTypeSendAndForget_MultiPass");
 		System.out.println(stats);
-		
-		// total time used: 125156
+
+		// Этот тест просто для демонстрации: даже в самом эффективном
+		// виде простая сегрегация проблему не решает, а создает
+
+		// total time used: 125156 <--
 		// fast total time: 3153338
 		// slow total time: 15702638
 		//   slowest event: 125123
-	}
-
-	@Test
-	public void testSortByTypeDetectFasterAndSendByPriorityWaitForCompletion_MultiPass() throws Exception {
-		int num_events = 50, num_listeners_each_type = 5;
-		dispatcher = new SortByTypeDetectFasterAndSendByPriorityWaitForCompletion();
-		CountDownLatch finished = new CountDownLatch(num_listeners_each_type * 2 * num_events);
-		for ( int i = 0; i < num_listeners_each_type; i ++ ) {
-			list.add(new SimpleListenerFast(finished, stats));
-			list.add(new SimpleListenerSlow(finished, stats));
-		}
-		subscribeInRandomOrder();
-
-		stats.start();
-		for ( int i = 0; i < num_events; i ++ ) {
-			dispatcher.fireEvent(new Event());
-		}
-		assertTrue(finished.await(1, TimeUnit.MINUTES));
-		stats.stop();
-		
-		System.out.println("testSortByTypeDetectFasterAndSendByPriorityWaitForCompletion_MultiPass");
-		System.out.println(stats);
-		
-		// total time used: 75204 <- (5 * 100 + 5 * 500) * 50 = 150000 / 2 = 75000
-		// fast total time: 75558 
-		// slow total time: 275661
-		//   slowest event: 1547
 	}
 
 }

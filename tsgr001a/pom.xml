@@ -17,11 +17,13 @@
 			<artifactId>bootes-lib</artifactId>
 			<version>0.0.1</version>
 		</dependency>
+		<!--
 		<dependency>
 		  <groupId>ru.prolib.aquila</groupId>
 		  <artifactId>aquila-transaq</artifactId>
 		  <version>0.1.1</version>
 		</dependency>
+		-->
 	</dependencies>
 	
 	<build>

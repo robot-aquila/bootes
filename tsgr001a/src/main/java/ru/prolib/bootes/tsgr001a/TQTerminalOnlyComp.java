@@ -5,12 +5,12 @@ import org.ini4j.Wini;
 
 import ru.prolib.aquila.core.BusinessEntities.BasicTerminalBuilder;
 import ru.prolib.aquila.core.BusinessEntities.EditableTerminal;
-import ru.prolib.aquila.transaq.TransaqBuilder;
-import ru.prolib.aquila.transaq.impl.TQDataProviderImpl;
-import ru.prolib.aquila.transaq.remote.MessageInterceptor;
-import ru.prolib.aquila.transaq.remote.MessageInterceptorStub;
-import ru.prolib.aquila.transaq.remote.SessionLogger;
-import ru.prolib.aquila.transaq.ui.TQServiceMenu;
+//import ru.prolib.aquila.transaq.TransaqBuilder;
+//import ru.prolib.aquila.transaq.impl.TQDataProviderImpl;
+//import ru.prolib.aquila.transaq.remote.MessageInterceptor;
+//import ru.prolib.aquila.transaq.remote.MessageInterceptorStub;
+//import ru.prolib.aquila.transaq.remote.SessionLogger;
+//import ru.prolib.aquila.transaq.ui.TQServiceMenu;
 import ru.prolib.bootes.lib.app.AppConfigService2;
 import ru.prolib.bootes.lib.app.AppServiceLocator;
 import ru.prolib.bootes.lib.app.comp.CommonComp;
@@ -48,33 +48,35 @@ public class TQTerminalOnlyComp extends CommonComp {
 		tq_conf.put("host", term_conf.getHost());
 		tq_conf.put("port", Integer.toString(term_conf.getPort()));
 		
-		MessageInterceptor interceptor = new MessageInterceptorStub();
-		if ( term_conf.isMsgDumpEnabled() ) {
-			interceptor = term_conf.getMsgDumpFile() == null
-					? new SessionLogger() : new SessionLogger(term_conf.getMsgDumpFile());
-		}
+		EditableTerminal terminal = null; 
+//		MessageInterceptor interceptor = new MessageInterceptorStub();
+//		if ( term_conf.isMsgDumpEnabled() ) {
+//			interceptor = term_conf.getMsgDumpFile() == null
+//					? new SessionLogger() : new SessionLogger(term_conf.getMsgDumpFile());
+//		}
+//		
+//		TQDataProviderImpl data_provider = (TQDataProviderImpl) new TransaqBuilder()
+//				.withServiceID(serviceID)
+//				.withEventQueue(serviceLocator.getEventQueue())
+//				.withConnectorFactoryStd(tq_conf, interceptor)
+//				.build();
 		
-		TQDataProviderImpl data_provider = (TQDataProviderImpl) new TransaqBuilder()
-				.withServiceID(serviceID)
-				.withEventQueue(serviceLocator.getEventQueue())
-				.withConnectorFactoryStd(tq_conf, interceptor)
-				.build();
-		EditableTerminal terminal = new BasicTerminalBuilder()
-				.withEventQueue(serviceLocator.getEventQueue())
-				.withScheduler(serviceLocator.getScheduler())
-				.withTerminalID(serviceID)
-				.withDataProvider(data_provider)
-				.buildTerminal();
-		serviceLocator.setTerminal(terminal);
-		
-		if ( ! app_conf.getBasicConfig().isHeadless() ) {
-			UIService uis = serviceLocator.getUIService();
-			uis.getMainMenu().add(new TQServiceMenu(
-					uis.getMessages(),
-					uis.getFrame(),
-					data_provider.getDirectory()
-				).create());
-		}
+//		EditableTerminal terminal = new BasicTerminalBuilder()
+//				.withEventQueue(serviceLocator.getEventQueue())
+//				.withScheduler(serviceLocator.getScheduler())
+//				.withTerminalID(serviceID)
+//				.withDataProvider(data_provider)
+//				.buildTerminal();
+//		serviceLocator.setTerminal(terminal);
+//		
+//		if ( ! app_conf.getBasicConfig().isHeadless() ) {
+//			UIService uis = serviceLocator.getUIService();
+//			uis.getMainMenu().add(new TQServiceMenu(
+//					uis.getMessages(),
+//					uis.getFrame(),
+//					data_provider.getDirectory()
+//				).create());
+//		}
 		
 		handler = new ARSHandlerBuilder()
 				.withID(serviceID)
@@ -82,6 +84,7 @@ public class TQTerminalOnlyComp extends CommonComp {
 				.addShutdownAction(new StopTerminal(terminal))
 				.addShutdownAction(new CloseTerminal(terminal))
 				.build();
+		throw new UnsupportedOperationException("JTransaq support is ended");
 	}
 
 	@Override
